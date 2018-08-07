@@ -1,0 +1,3 @@
+[submodule "SupportingFiles"]
+	path = SupportingFiles
+	url = https://gitlab.com/amerigo14/AmosEngine.git
