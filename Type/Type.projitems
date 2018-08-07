@@ -9,5 +9,15 @@
     <Import_RootNamespace>Type</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Base\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Objects\Enemies\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Objects\Player\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Objects\Projectiles\" />
+    <Folder Include="$(MSBuildThisFileDirectory)States\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Scenes\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game.cs" />
   </ItemGroup>
 </Project>

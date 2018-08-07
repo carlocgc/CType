@@ -46,7 +46,45 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\Assets\Graphics\KenPixel\KenPixel.json">
+      <Link>Content\Graphics\KenPixel\KenPixel.json</Link>
+    </None>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SupportingFiles\AmosDesktop\AmosDesktop.csproj">
+      <Project>{b4b23ae1-df74-49d9-b85d-62033515baa5}</Project>
+      <Name>AmosDesktop</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Content\Audio\" />
+    <Folder Include="Content\XML\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\Assets\Graphics\background.png">
+      <Link>Content\Graphics\background.png</Link>
+    </Content>
+    <Content Include="..\Assets\Graphics\bullet.png">
+      <Link>Content\Graphics\bullet.png</Link>
+    </Content>
+    <Content Include="..\Assets\Graphics\enemy1.png">
+      <Link>Content\Graphics\enemy1.png</Link>
+    </Content>
+    <Content Include="..\Assets\Graphics\enemy2.png">
+      <Link>Content\Graphics\enemy2.png</Link>
+    </Content>
+    <Content Include="..\Assets\Graphics\enemy3.png">
+      <Link>Content\Graphics\enemy3.png</Link>
+    </Content>
+    <Content Include="..\Assets\Graphics\KenPixel\KenPixel.png">
+      <Link>Content\Graphics\KenPixel\KenPixel.png</Link>
+    </Content>
+    <Content Include="..\Assets\Graphics\player.png">
+      <Link>Content\Graphics\player.png</Link>
+    </Content>
+  </ItemGroup>
+  <Import Project="..\SupportingFiles\AmosShared\AmosShared.projitems" Label="Shared" />
+  <Import Project="..\Type\Type.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
