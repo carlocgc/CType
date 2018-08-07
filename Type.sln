@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2037
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Type", "Type\Type.shproj", "{5B90CE8E-F31D-497A-9276-F0FB500192FF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Type.Desktop", "Type.Desktop\Type.Desktop.csproj", "{F5036172-FFFB-49AA-8142-E1FD3C6D0462}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Type.Android", "Type.Android\Type.Android.csproj", "{3DAE946F-A62D-4CCC-81EB-E8661F7AB186}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Type\Type.projitems*{5b90ce8e-f31d-497a-9276-f0fb500192ff}*SharedItemsImports = 13
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F5036172-FFFB-49AA-8142-E1FD3C6D0462}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5036172-FFFB-49AA-8142-E1FD3C6D0462}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5036172-FFFB-49AA-8142-E1FD3C6D0462}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5036172-FFFB-49AA-8142-E1FD3C6D0462}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DAE946F-A62D-4CCC-81EB-E8661F7AB186}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DAE946F-A62D-4CCC-81EB-E8661F7AB186}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DAE946F-A62D-4CCC-81EB-E8661F7AB186}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{3DAE946F-A62D-4CCC-81EB-E8661F7AB186}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DAE946F-A62D-4CCC-81EB-E8661F7AB186}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DAE946F-A62D-4CCC-81EB-E8661F7AB186}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1BB235AE-A11B-4A35-97B6-0C04307171CD}
+	EndGlobalSection
+EndGlobal
