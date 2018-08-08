@@ -1,7 +1,3 @@
-*Type.Android/obj/*
-*Type.Android/bin/*
-*Type.Desktop/obj/*
-*Type.Desktop/bin/*
 */obj/*
 */bin/*
 *.suo
