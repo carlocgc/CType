@@ -1,2 +1,0 @@
-C:\Users\carlo\source\repos\Type\Type.Desktop\obj\Debug\Type.Desktop.csprojResolveAssemblyReference.cache
-C:\Users\carlo\source\repos\Type\Type.Desktop\obj\Debug\Type.Desktop.csproj.CoreCompileInputs.cache

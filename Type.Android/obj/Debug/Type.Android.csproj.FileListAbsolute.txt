@@ -1,2 +1,0 @@
-C:\Users\carlo\source\repos\Type\Type.Android\obj\Debug\Type.Android.csprojResolveAssemblyReference.cache
-C:\Users\carlo\source\repos\Type\Type.Android\obj\Debug\Type.Android.csproj.CoreCompileInputs.cache
