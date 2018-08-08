@@ -1,6 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using AmosShared.Graphics;
+using AmosShared.Graphics.Drawables;
+using OpenTK;
+using Type.Base;
+using Type.Controllers;
+using Type.Objects.Projectiles;
+#if DESKTOP
+using OpenTK.Input;
+#endif
 
 namespace Type.Objects.Player
 {
@@ -46,7 +55,7 @@ namespace Type.Objects.Player
         /// <summary> Position of the player </summary>
         public Player(Action onDeath)
         {
-            AddSprite(new Sprite(TestGame.MainCanvas, Constants.ZOrders.PLAYER, Texture.GetTexture("Content/Graphics/player.png"))
+            AddSprite(new Sprite(Game.MainCanvas, Constants.ZOrders.PLAYER, Texture.GetTexture("Content/Graphics/player.png"))
             {
                 Visible = true,
             });
@@ -96,7 +105,7 @@ namespace Type.Objects.Player
                     _TimeSinceLastFired = TimeSpan.Zero;
                 }
             }
-
+#if DESKTOP
             if (Keyboard.GetState().IsKeyDown(Key.Right))
             {
                 if (Position.X <= (1920 / 2) - GetSprite().Width)
@@ -131,6 +140,7 @@ namespace Type.Objects.Player
                 if (_IsWeaponLocked) return;
                 FireForward();
             }
+#endif
         }
 
         public override void Dispose()

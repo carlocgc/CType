@@ -5,6 +5,9 @@ using AmosShared.Base;
 using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
 using OpenTK;
+#if DESKTOP
+using OpenTK.Input;
+#endif
 
 namespace Type.Scenes
 {
@@ -61,6 +64,8 @@ namespace Type.Scenes
 
         public override void Update(TimeSpan timeSinceUpdate)
         {
+#if DESKTOP
+            
 
             if (Keyboard.GetState().IsKeyUp(Key.Space)) IsKeyboardReset = true;
 
@@ -71,6 +76,7 @@ namespace Type.Scenes
                     IsGameStarted = true;
                 }
             }
+#endif
         }
     }
 }
