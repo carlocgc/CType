@@ -32,6 +32,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FarseerPhysics">
+      <HintPath>..\SupportingFiles\Libraries\Desktop\FarseerPhysics.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenTK">
+      <HintPath>..\SupportingFiles\Libraries\Desktop\OpenTK.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -84,7 +90,6 @@
       <Link>Content\Graphics\player.png</Link>
     </Content>
   </ItemGroup>
-  <Import Project="..\SupportingFiles\AmosShared\AmosShared.projitems" Label="Shared" />
   <Import Project="..\Type\Type.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

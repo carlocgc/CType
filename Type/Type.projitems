@@ -9,15 +9,21 @@
     <Import_RootNamespace>Type</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)Base\" />
-    <Folder Include="$(MSBuildThisFileDirectory)Objects\Enemies\" />
-    <Folder Include="$(MSBuildThisFileDirectory)Objects\Player\" />
-    <Folder Include="$(MSBuildThisFileDirectory)Objects\Projectiles\" />
-    <Folder Include="$(MSBuildThisFileDirectory)States\" />
-    <Folder Include="$(MSBuildThisFileDirectory)Scenes\" />
-  </ItemGroup>
-  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Base\GameObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controllers\CollisionController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\BaseEnemy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\EnemyA.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\EnemyFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Player\Player.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Projectiles\Bullet.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\GameOverScene.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\GameScene.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\MainMenuScene.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)States\GameOverState.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)States\MainMenuState.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)States\PlayingState.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\FpsCounter.cs" />
   </ItemGroup>
 </Project>

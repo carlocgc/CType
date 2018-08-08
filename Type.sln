@@ -32,7 +32,6 @@ Global
 		SupportingFiles\AmosShared\AmosShared.projitems*{b4b23ae1-df74-49d9-b85d-62033515baa5}*SharedItemsImports = 4
 		SupportingFiles\AmosShared\AmosShared.projitems*{e1141dba-30ad-45c0-ac94-b0cb1de7aacf}*SharedItemsImports = 4
 		SupportingFiles\AmosShared\AmosShared.projitems*{f182814d-0301-46c6-8f8c-b0ba7f45ce2a}*SharedItemsImports = 13
-		SupportingFiles\AmosShared\AmosShared.projitems*{f5036172-fffb-49aa-8142-e1fd3c6d0462}*SharedItemsImports = 4
 		Type\Type.projitems*{f5036172-fffb-49aa-8142-e1fd3c6d0462}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -64,6 +64,8 @@
       <Link>Assets\Graphics\KenPixel\KenPixel.json</Link>
     </AndroidAsset>
     <None Include="GettingStarted.Xamarin" />
+    <None Include="OpenTK.dll.config" />
+    <None Include="packages.config" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Properties\AndroidManifest.xml" />
     <None Include="Assets\AboutAssets.txt" />
