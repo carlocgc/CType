@@ -8,25 +8,27 @@ using OpenTK;
 using Type.Controllers;
 using Type.Objects.Enemies;
 using Type.Objects.Player;
+using Type.UI;
 
 namespace Type.Scenes
 {
     public class GameScene : Scene
     {
-        /// <summary> Whether the player has ran out of lives, ends the playing state </summary>
-        public Boolean IsGameOver;
         /// <summary> THe background for the scene </summary>
         private readonly Sprite _Background;
         /// <summary> The players ship </summary>
         private Player _Player;
-        /// <summary> Amount of times the player can die before game over </summary>
-        private Int32 _PlayerLives;
         /// <summary> The players current score</summary>
         private Int32 _Score;
         /// <summary> Text printer that displays the score </summary>
         private TextDisplay _ScoreDisplay;
         /// <summary> THe word score displayed top left of screen </summary>
         private TextDisplay _ScoreText;
+        /// <summary> UI element that displays the amount oif lives remaining </summary>
+        private LifeMeter _LifeMeter;        
+
+        /// <summary> Whether the player has ran out of lives, ends the playing state </summary>
+        public Boolean IsGameOver;
         /// <summary> The enemy factory </summary>
         public EnemyFactory EnemySpawner;
 
@@ -56,6 +58,8 @@ namespace Type.Scenes
             };
             AddDrawable(_ScoreDisplay);
 
+            _LifeMeter = new LifeMeter();
+
             _Player = new Player(OnPlayerDeath);
             EnemySpawner = new EnemyFactory(this);
         }
@@ -66,9 +70,9 @@ namespace Type.Scenes
         private void OnPlayerDeath()
         {
             EnemySpawner.Reset();
-            _PlayerLives--;
+            _LifeMeter.LoseLife();
 
-            if (_PlayerLives <= 0 && !IsGameOver)
+            if (_LifeMeter.PlayerLives <= 0 && !IsGameOver)
             {
                 IsGameOver = true;
             }
@@ -83,7 +87,6 @@ namespace Type.Scenes
         /// </summary>
         public void StartGame()
         {
-            _PlayerLives = 3;
             _Score = 0;
 
             CollisionController.Instance.IsActive = true;

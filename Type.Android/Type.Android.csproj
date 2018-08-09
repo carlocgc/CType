@@ -157,7 +157,6 @@
     <AndroidNativeLibrary Include="Assets\lib\x86\libopenal32.so" />
     <AndroidNativeLibrary Include="Assets\lib\x86_64\libopenal32.so" />
     <None Include="app.config" />
-    <None Include="GettingStarted.Xamarin" />
     <None Include="packages.config" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Properties\AndroidManifest.xml" />
@@ -215,6 +214,12 @@
     </AndroidAsset>
   </ItemGroup>
   <ItemGroup>
+    <AndroidAsset Include="..\Assets\Graphics\lifeicon.png">
+      <Link>Assets\Graphics\lifeicon.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Graphics\MainMenuBG.png">
+      <Link>Assets\Graphics\MainMenuBG.png</Link>
+    </AndroidAsset>
     <Content Include="THIRD-PARTY-NOTICES.txt" />
   </ItemGroup>
   <ItemGroup>

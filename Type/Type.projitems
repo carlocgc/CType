@@ -25,5 +25,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)States\MainMenuState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)States\PlayingState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\FpsCounter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\LifeMeter.cs" />
   </ItemGroup>
 </Project>
