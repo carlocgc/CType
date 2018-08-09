@@ -180,12 +180,6 @@
     <Folder Include="Resources\mipmap-xxxhdpi\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SupportingFiles\AmosAndroid\AmosAndroid.csproj">
-      <Project>{13887a46-7e86-4f55-a5e3-305dfdc1f192}</Project>
-      <Name>AmosAndroid</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <AndroidAsset Include="..\Assets\Graphics\background.png">
       <Link>Assets\Graphics\background.png</Link>
     </AndroidAsset>
@@ -222,6 +216,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="THIRD-PARTY-NOTICES.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SupportingFiles\AmosAndroid\AmosAndroid.csproj">
+      <Project>{13887a46-7e86-4f55-a5e3-305dfdc1f192}</Project>
+      <Name>AmosAndroid</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="..\Type\Type.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
