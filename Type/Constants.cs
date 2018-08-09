@@ -17,8 +17,9 @@ namespace Type
         {
             /// <summary> Show FPS on screen </summary>
             public const Boolean SHOW_FPS = true;
+            /// <summary> Draws white pixels over the game objects </summary>
+            public const Boolean SHOW_SPRITE_AREAS = true;
         }
-
 
         /// <summary>
         /// ZOrders for sprites

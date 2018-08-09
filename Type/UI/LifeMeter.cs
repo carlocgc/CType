@@ -10,7 +10,7 @@ namespace Type.UI
     /// <summary>
     /// Visual object that displays the remaning player lives
     /// </summary>
-    public class LifeMeter : GameObject
+    public class LifeMeter : IDisposable
     {
         /// <summary> Total lives the player can hold </summary>
         private Int32 _MaxLives;
@@ -89,19 +89,14 @@ namespace Type.UI
             }
         }
 
-        public override void Dispose()
+        public void Dispose()
         {
-            base.Dispose();
+ 
             foreach (Sprite lifeSprite in _LifeSprites)
             {
                 lifeSprite.Dispose();
             }
             _LifeSprites.Clear();
-        }
-
-        public override void Update(TimeSpan timeTilUpdate)
-        {
-            base.Update(timeTilUpdate);
         }
     }
 }

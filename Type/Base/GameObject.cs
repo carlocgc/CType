@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using AmosShared.Base;
+using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
 using AmosShared.Interfaces;
 using OpenTK;
@@ -18,6 +19,8 @@ namespace Type.Base
         private Sprite _Sprite;
         /// <summary> Position of the object </summary>
         private Vector2 _Position;
+        /// <summary> White pixels drawn over the collidible area of the object </summary>
+        private Sprite _CollideArea;
 
         protected GameObject(Boolean updateEnabled = true)
         {
@@ -33,6 +36,8 @@ namespace Type.Base
             {
                 _Position = value;
                 _Sprite.Position = value;
+                if (_CollideArea != null)
+                _CollideArea.Position = value;
             }
         }
 
@@ -67,6 +72,11 @@ namespace Type.Base
         {
             _Sprite = sprite;
             _Sprite.Position = Position;
+            _CollideArea = new Sprite(Game.MainCanvas, Int32.MaxValue, Texture.GetPixel())
+            {
+                Scale = new Vector2(_Sprite.Width, _Sprite.Height),
+                Visible = Constants.Global.SHOW_SPRITE_AREAS,
+            };
         }
 
         public virtual void Update(TimeSpan timeTilUpdate)
@@ -77,6 +87,7 @@ namespace Type.Base
         public virtual void Dispose()
         {
             _Sprite?.Dispose();
+            _CollideArea?.Dispose();
             _Sprite = null;
             UpdateEnabled = false;
             UpdateManager.Instance.RemoveUpdatable(this);

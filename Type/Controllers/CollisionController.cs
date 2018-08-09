@@ -190,8 +190,6 @@ namespace Type.Controllers
             }
         }
 
-
-
         /// <summary>
         /// Clears all lists and deactivates the controller
         /// </summary>
