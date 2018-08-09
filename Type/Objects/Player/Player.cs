@@ -83,7 +83,7 @@ namespace Type.Objects.Player
         /// </summary>
         private void FireForward()
         {
-            new Bullet("Content/Graphics/bullet.png", Position, _BulletSpawnPos, new Vector2(1, 0), 700, -1.57f, true);
+            new Bullet("Content/Graphics/bullet.png", Position, _BulletSpawnPos, new Vector2(1, 0), 700, 0, true);
             _IsWeaponLocked = true;
         }
 

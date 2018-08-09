@@ -9,7 +9,7 @@ using OpenTK;
 
 namespace Type.Base
 {
-    public abstract class GameObject : IUpdatable, IPositionable
+    public abstract class GameObject : IUpdatable, IPositionable, IRotatable
     {
         /// <summary> Whether the object is </summary>
         public Boolean IsDisposed { get; set; }
@@ -19,6 +19,8 @@ namespace Type.Base
         private Sprite _Sprite;
         /// <summary> Position of the object </summary>
         private Vector2 _Position;
+        /// <summary> Rotation of the object </summary>
+        private Double _Rotation;
         /// <summary> White pixels drawn over the collidible area of the object </summary>
         private Sprite _CollideArea;
 
@@ -37,7 +39,20 @@ namespace Type.Base
                 _Position = value;
                 _Sprite.Position = value;
                 if (_CollideArea != null)
-                _CollideArea.Position = value;
+                    _CollideArea.Position = value;
+            }
+        }
+
+        public Double Rotation
+        {
+            get => _Rotation;
+
+            set
+            {
+                _Rotation = value;
+                _Sprite.Rotation = value;
+                if (_CollideArea != null)
+                    _CollideArea.Rotation = value;
             }
         }
 
@@ -93,5 +108,7 @@ namespace Type.Base
             UpdateManager.Instance.RemoveUpdatable(this);
             IsDisposed = true;
         }
+
+
     }
 }

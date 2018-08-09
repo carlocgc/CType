@@ -18,8 +18,6 @@ namespace Type.Objects.Projectiles
         private Vector2 _PositionOffset;
         /// <summary> The speed of the bullet </summary>
         private Single _Velocity;
-        /// <summary> Angle of the bullet graphic </summary>
-        private Single _Rotation;
         /// <summary> Direction of the bullet </summary>
         private Vector2 _Direction;
         /// <summary> Whether this bullet was fired from the player ship </summary>
@@ -34,16 +32,14 @@ namespace Type.Objects.Projectiles
         /// <param name="velocity"> SPeed multiplier </param>
         /// <param name="rotation"> Rotation of the bullet graphic </param>
         /// <param name="addbulletWidth"> Wether to add the bullet width to the offset, used for centering the bullet on certain ships </param>
-        public Bullet(String assetPath, Vector2 currentPosition, Vector2 offset, Vector2 direction, Single velocity, Single rotation, Boolean isPlayerBullet, Boolean addbulletWidth = false)
+        public Bullet(String assetPath, Vector2 currentPosition, Vector2 offset, Vector2 direction, Single velocity, Double rotation, Boolean isPlayerBullet, Boolean addbulletWidth = false)
         {
-            _Rotation = rotation;
             _Direction = direction;
             _Velocity = velocity;
 
             AddSprite(new Sprite(Game.MainCanvas, Constants.ZOrders.BULLETS, Texture.GetTexture(assetPath))
             {
                 Visible = true,
-                Rotation = _Rotation,
             });
 
             _IsPlayerBullet = isPlayerBullet;
@@ -58,6 +54,7 @@ namespace Type.Objects.Projectiles
                 _PositionOffset += new Vector2(0, -GetSprite().Width / 2);
             }
             Position = currentPosition - _PositionOffset;
+            Rotation = rotation;
 
             RegisterCollidable();
         }

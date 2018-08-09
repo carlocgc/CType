@@ -17,7 +17,7 @@ namespace Type.Objects.Enemies
         protected override void Fire()
         {
             if (!_IsHostile) return;
-            new Bullet("Content/Graphics/bullet.png", Position, _BulletSpawnPos, new Vector2(-1, 0), 700, 1.57f, false, true);
+            new Bullet("Content/Graphics/bullet.png", Position, _BulletSpawnPos, new Vector2(-1, 0), 700, Math.PI, false, true);
             _IsWeaponLocked = true;
         }
     }
