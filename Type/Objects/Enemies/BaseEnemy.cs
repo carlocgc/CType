@@ -33,9 +33,12 @@ namespace Type.Objects.Enemies
         protected Boolean _IsWeaponLocked;
         /// <summary> Whether the enemy is allowed to fire projectiles </summary>
         protected Boolean _IsHostile;
-
-        /// <summary> Action to perform when destroyed, used to seed new waves </summary>
-        public List<Action> DeathActions;
+        /// <summary> Whether the enemy has been detsroyed by the player </summary>
+        protected Boolean _IsDestroyed;
+        /// <summary> Called when the ship goes out of screen bounds </summary>
+        public Action OnOutOfBounds;
+        /// <summary> List of actions called when the ship is destroyed by the player </summary>
+        public List<Action> OnDestroyedByPlayer;
 
         /// <summary> Whether the enemy is on screen and can be hit </summary>
         public Boolean IsAlive { get; set; }
@@ -63,7 +66,7 @@ namespace Type.Objects.Enemies
             _Speed = speed;
             FireRate = fireRate;
 
-            DeathActions = new List<Action>();
+            OnDestroyedByPlayer = new List<Action>();
 
             _IsHostile = true;
             _IsMoving = true;
@@ -83,6 +86,7 @@ namespace Type.Objects.Enemies
             _HitPoints--;
             if (_HitPoints <= 0)
             {
+                _IsDestroyed = true;
                 Destroy();
             }
         }
@@ -93,10 +97,18 @@ namespace Type.Objects.Enemies
         protected virtual void Destroy()
         {
             IsAlive = false;
-            foreach (Action action in DeathActions)
+            if (_IsDestroyed)
             {
-                action?.Invoke();
+                foreach (Action action in OnDestroyedByPlayer)
+                {
+                    action?.Invoke();
+                }
             }
+            else
+            {
+                OnOutOfBounds?.Invoke();
+            }
+
             Dispose();
         }
 
@@ -148,8 +160,6 @@ namespace Type.Objects.Enemies
 
             if (CheckOutOfBounds()) Destroy();
         }
-
-
 
         public override void Dispose()
         {

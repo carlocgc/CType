@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 
 namespace Type
@@ -9,6 +10,16 @@ namespace Type
     /// </summary>
     public static class Constants
     {
+        /// <summary>
+        /// Global values 
+        /// </summary>
+        public static class Global
+        {
+            /// <summary> Show FPS on screen </summary>
+            public const Boolean SHOW_FPS = true;
+        }
+
+
         /// <summary>
         /// ZOrders for sprites
         /// </summary>

@@ -29,7 +29,7 @@ namespace Type.UI
                     -Renderer.Instance.TargetDimensions.Y / 2 + 60),
                 Visible = true
             };
-            _Display.Visible = false;
+            _Display.Visible = Constants.Global.SHOW_FPS;
         }
 
         public void ToggleVisibility()

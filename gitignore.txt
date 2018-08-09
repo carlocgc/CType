@@ -1,9 +1,0 @@
-obj
-bin
-Type.Android/bin/
-Type.Android/obj/
-Type.Desktop/bin/
-Type.Desktop/obj/
-*.suo
-*.user
-.vs/*

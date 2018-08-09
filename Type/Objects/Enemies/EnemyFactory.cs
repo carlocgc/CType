@@ -112,8 +112,11 @@ namespace Type.Objects.Enemies
                 case 0:
                     {
                         enemy = new EnemyA("Content/Graphics/enemy2.png", _WaveData.SpawnPositions[_DataIndex], 0, new Vector2(-1, 0), 400, TimeSpan.FromSeconds(3));
-                        enemy.DeathActions.Add(OnShipDeath);
-                        enemy.DeathActions.Add(() => _Scene.UpdateScore(enemy.PointValue));
+
+                        enemy.OnOutOfBounds = OnShipDeath;
+
+                        enemy.OnDestroyedByPlayer.Add(OnShipDeath);
+                        enemy.OnDestroyedByPlayer.Add(() => _Scene.UpdateScore(enemy.PointValue));
                         CollisionController.Instance.RegisterEnemy(enemy);
                         break;
                     }

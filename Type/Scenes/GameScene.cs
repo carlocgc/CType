@@ -25,7 +25,9 @@ namespace Type.Scenes
         /// <summary> THe word score displayed top left of screen </summary>
         private TextDisplay _ScoreText;
         /// <summary> UI element that displays the amount oif lives remaining </summary>
-        private LifeMeter _LifeMeter;        
+        private LifeMeter _LifeMeter;
+        /// <summary> UI element that displays the current FPS </summary>
+        private FpsCounter _FPS;
 
         /// <summary> Whether the player has ran out of lives, ends the playing state </summary>
         public Boolean IsGameOver;
@@ -59,6 +61,7 @@ namespace Type.Scenes
             AddDrawable(_ScoreDisplay);
 
             _LifeMeter = new LifeMeter();
+            _FPS = new FpsCounter();
 
             _Player = new Player(OnPlayerDeath);
             EnemySpawner = new EnemyFactory(this);

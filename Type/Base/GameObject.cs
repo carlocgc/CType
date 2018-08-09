@@ -16,8 +16,6 @@ namespace Type.Base
         public Boolean UpdateEnabled { get; protected set; }
         /// <summary> Sprite for the game object </summary>
         private Sprite _Sprite;
-        /// <summary> Whether the sprites position should be updated </summary>
-        private Boolean UpdateSprite;
         /// <summary> Position of the object </summary>
         private Vector2 _Position;
 
@@ -34,10 +32,7 @@ namespace Type.Base
             set
             {
                 _Position = value;
-                if (UpdateSprite)
-                {
-                    _Sprite.Position = value;
-                }
+                _Sprite.Position = value;
             }
         }
 
@@ -54,7 +49,7 @@ namespace Type.Base
         /// </summary>
         public Vector4 GetRect()
         {
-            return new Vector4(Position.X, Position.Y, _Sprite.Width, _Sprite.Height);
+            return new Vector4(_Sprite.Position.X, _Sprite.Position.Y, _Sprite.Width, _Sprite.Height);
         }
 
         /// <summary>
@@ -72,7 +67,6 @@ namespace Type.Base
         {
             _Sprite = sprite;
             _Sprite.Position = Position;
-            UpdateSprite = true;
         }
 
         public virtual void Update(TimeSpan timeTilUpdate)
@@ -82,7 +76,6 @@ namespace Type.Base
 
         public virtual void Dispose()
         {
-            UpdateSprite = false;
             _Sprite?.Dispose();
             _Sprite = null;
             UpdateEnabled = false;
