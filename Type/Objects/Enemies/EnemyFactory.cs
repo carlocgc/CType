@@ -32,13 +32,13 @@ namespace Type.Objects.Enemies
             {
                 SpawnPositions = new[]
                 {
+                    new Vector2(1100, 130),
+                    new Vector2(1100, -210),
                     new Vector2(1100, 300),
-                    new Vector2(1100, 200),
-                    new Vector2(1100, 100),
-                    new Vector2(1100, 0),
-                    new Vector2(1100, -100),
-                    new Vector2(1100, -200),
-                    new Vector2(1100, -300),
+                    new Vector2(1100, -140),
+                    new Vector2(1100, 240),
+                    new Vector2(1100, -270),
+                    new Vector2(1100, 250),
                 };
             }
             else
