@@ -62,12 +62,12 @@ namespace Type.Scenes
 
         public override void Update(TimeSpan timeSinceUpdate)
         {
-//#if DESKTOP
-//            if (Keyboard.GetState().IsKeyDown(Keyboard.Key.Enter) && !IsConfirmed)
-//            {
-//                IsConfirmed = true;
-//            }
-//#endif
+#if DESKTOP
+            if (Keyboard.GetState().IsKeyDown(Key.Enter) && !IsConfirmed)
+            {
+                IsConfirmed = true;
+            }
+#endif
         }
     }
 }
