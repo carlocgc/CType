@@ -14,8 +14,6 @@ namespace Type.Objects.Projectiles
     /// </summary>
     public class Bullet : GameObject
     {
-        /// <summary> Positional offset compared to the object that created the bullet </summary>
-        private Vector2 _PositionOffset;
         /// <summary> The speed of the bullet </summary>
         private Single _Velocity;
         /// <summary> Direction of the bullet </summary>
@@ -23,39 +21,17 @@ namespace Type.Objects.Projectiles
         /// <summary> Whether this bullet was fired from the player ship </summary>
         private Boolean _IsPlayerBullet;
 
-        /// <summary>
-        /// Creates a bullet
-        /// </summary>
-        /// <param name="currentPosition"> Position of the creator </param>
-        /// <param name="offset"> Correction to the position </param>
-        /// <param name="direction"> Direction of the bullet </param>
-        /// <param name="velocity"> SPeed multiplier </param>
-        /// <param name="rotation"> Rotation of the bullet graphic </param>
-        /// <param name="addbulletWidth"> Wether to add the bullet width to the offset, used for centering the bullet on certain ships </param>
-        public Bullet(String assetPath, Vector2 currentPosition, Vector2 offset, Vector2 direction, Single velocity, Double rotation, Boolean isPlayerBullet, Boolean addbulletWidth = false)
+        public Bullet(String assetPath, Vector2 spawnPos, Vector2 direction, Single velocity, Double rotation, Boolean isPlayerBullet)
         {
-            _Direction = direction;
-            _Velocity = velocity;
-
             AddSprite(new Sprite(Game.MainCanvas, Constants.ZOrders.BULLETS, Texture.GetTexture(assetPath))
             {
                 Visible = true,
             });
-
+            _Direction = direction;
+            _Velocity = velocity;
             _IsPlayerBullet = isPlayerBullet;
-
-            _PositionOffset = offset;
-            if (addbulletWidth)
-            {
-                _PositionOffset += new Vector2(0, +GetSprite().Width / 2);
-            }
-            else
-            {
-                _PositionOffset += new Vector2(0, -GetSprite().Width / 2);
-            }
-            Position = currentPosition - _PositionOffset;
+            Position = spawnPos;
             Rotation = rotation;
-
             RegisterCollidable();
         }
 

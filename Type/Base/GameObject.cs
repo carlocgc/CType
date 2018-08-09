@@ -73,6 +73,15 @@ namespace Type.Base
         }
 
         /// <summary>
+        /// Gets the center position of the game object
+        /// </summary>
+        /// <returns></returns>
+        public Vector2 GetCenter()
+        {
+            return new Vector2(_Sprite.Position.X + (_Sprite.Width / 2), _Sprite.Position.Y + (_Sprite.Height / 2));
+        }
+
+        /// <summary>
         /// Whether the object will be updated
         /// </summary>
         public Boolean CanUpdate()

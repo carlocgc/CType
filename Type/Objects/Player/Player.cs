@@ -23,7 +23,7 @@ namespace Type.Objects.Player
         /// <summary> Position on screen where the player is spawned </summary>
         private readonly Vector2 _SpawnPosition = new Vector2(-700, 0);
         /// <summary> Default movement speed </summary>
-        private readonly Single _DefaultMovementSpeed = 350f;
+        private readonly Single _DefaultMovementSpeed = 350f;        
 
         /// <summary> Speed the player will move </summary>
         private Single _MovementSpeed;
@@ -59,7 +59,7 @@ namespace Type.Objects.Player
             {
                 Visible = true,
             });
-            _BulletSpawnPos = new Vector2(0, -GetSprite().Height / 2);
+            _BulletSpawnPos = new Vector2(0, -GetSprite().Height / 4);
             Position = _SpawnPosition;
             _MovementSpeed = _DefaultMovementSpeed;
             FireRate = _DefaultFireRate;
@@ -83,7 +83,7 @@ namespace Type.Objects.Player
         /// </summary>
         private void FireForward()
         {
-            new Bullet("Content/Graphics/bullet.png", Position, _BulletSpawnPos, new Vector2(1, 0), 700, 0, true);
+            new Bullet("Content/Graphics/bullet.png", GetCenter(), new Vector2(1, 0), 700, 0, true);
             _IsWeaponLocked = true;
         }
 
