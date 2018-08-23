@@ -21,13 +21,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Engine", "Engine", "{869F30
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Game", "Game", "{9275A5AC-69C1-45B6-83A2-53E8A1194A77}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProject", "SupportingFiles\TestProject\TestProject.csproj", "{98DA5F1B-43C9-46DD-A80F-8BCFF8DF99FF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestDesktop", "SupportingFiles\TestProject\TestDesktop.csproj", "{98DA5F1B-43C9-46DD-A80F-8BCFF8DF99FF}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		SupportingFiles\AmosShared\AmosShared.projitems*{13887a46-7e86-4f55-a5e3-305dfdc1f192}*SharedItemsImports = 4
 		Type\Type.projitems*{3dae946f-a62d-4ccc-81eb-e8661f7ab186}*SharedItemsImports = 4
 		Type\Type.projitems*{5b90ce8e-f31d-497a-9276-f0fb500192ff}*SharedItemsImports = 13
+		SupportingFiles\TestShared\TestShared.projitems*{98da5f1b-43c9-46dd-a80f-8bcff8df99ff}*SharedItemsImports = 4
 		SupportingFiles\AmosShared\AmosShared.projitems*{b4b23ae1-df74-49d9-b85d-62033515baa5}*SharedItemsImports = 4
 		SupportingFiles\AmosShared\AmosShared.projitems*{e1141dba-30ad-45c0-ac94-b0cb1de7aacf}*SharedItemsImports = 4
 		SupportingFiles\AmosShared\AmosShared.projitems*{f182814d-0301-46c6-8f8c-b0ba7f45ce2a}*SharedItemsImports = 13
