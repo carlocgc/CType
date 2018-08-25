@@ -40,7 +40,7 @@ namespace Type.Scenes
                 Colour = new Vector4(0.5f, 0.5f, 0.5f, 1)
             };
             AddDrawable(_Background);
-            _GameOverText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, "Content/Graphics/KenPixel/", Constants.Font.Map)
+            _GameOverText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
                 Text = "GAME OVER",
                 Position = new Vector2(Renderer.Instance.TargetDimensions.X / 2 - 1700, -Renderer.Instance.TargetDimensions.Y / 2 + 500),
@@ -49,7 +49,7 @@ namespace Type.Scenes
                 Colour = new Vector4(1, 0, 0, 1)
             };
             AddDrawable(_GameOverText);
-            _RestartText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, "Content/Graphics/KenPixel/", Constants.Font.Map)
+            _RestartText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
                 Text = "PRESS ENTER TO GO TO MENU",
                 Position = new Vector2(Renderer.Instance.TargetDimensions.X / 2 - 1550, -Renderer.Instance.TargetDimensions.Y / 2 + 350),
