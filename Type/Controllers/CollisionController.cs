@@ -20,6 +20,7 @@ namespace Type.Controllers
         private static CollisionController _Instance;
         /// <summary> The instance of the Collision Controller </summary>
         public static CollisionController Instance => _Instance ?? (_Instance = new CollisionController());
+
         /// <summary> Whether the collision controller is disposed </summary>
         public Boolean IsDisposed { get; set; }
 
@@ -57,7 +58,16 @@ namespace Type.Controllers
         /// </summary>
         private void CheckCollisions()
         {
-            // Enemy Bullet / Player Collisions
+            CheckBulletsToPlayer();
+            CheckBulletsToEnemies();
+            CheckPlayerToEnemies();
+        }
+
+        /// <summary>
+        /// Checks for enemy bullets hitting the player
+        /// </summary>
+        private void CheckBulletsToPlayer()
+        {
             foreach (Bullet bullet in _EnemyBullets.ToList())
             {
                 if (Intersects(bullet.GetRect(), _Player.GetRect()))
@@ -66,8 +76,13 @@ namespace Type.Controllers
                 }
                 if (bullet.IsDisposed) break;
             }
+        }
 
-            // Player Bullet / Enemy Collisions
+        /// <summary>
+        /// Checks for player bullets hitting enemies
+        /// </summary>
+        private void CheckBulletsToEnemies()
+        {
             foreach (Bullet bullet in _PlayerBullets.ToList())
             {
                 foreach (BaseEnemy enemy in _Enemies.Where(e => e.IsAlive).ToList())
@@ -78,6 +93,20 @@ namespace Type.Controllers
                     }
 
                     if (bullet.IsDisposed) break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Checks if the player ship is colliding with an enemy ship
+        /// </summary>
+        private void CheckPlayerToEnemies()
+        {
+            foreach (BaseEnemy baseEnemy in _Enemies)
+            {
+                if (Intersects(_Player.GetRect(), baseEnemy.GetRect()))
+                {
+                    HandlePlayerHit();
                 }
             }
         }

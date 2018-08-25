@@ -39,7 +39,7 @@ namespace Type.Scenes
                 Visible = true,
             };
             AddDrawable(_Background);
-            _TitleText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, "Content/Graphics/KenPixel/", Constants.Font.Map)
+            _TitleText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
                 Text = "C:TYPE",
                 Position = new Vector2(Renderer.Instance.TargetDimensions.X / 2 - 1450, -Renderer.Instance.TargetDimensions.Y / 2 + 500),
@@ -48,7 +48,7 @@ namespace Type.Scenes
                 Colour = new Vector4(0, 1, 0, 1)
             };
             AddDrawable(_TitleText);
-            _StartText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, "Content/Graphics/KenPixel/", Constants.Font.Map)
+            _StartText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
                 Text = "PRESS SPACE TO START",
                 Position = new Vector2(Renderer.Instance.TargetDimensions.X / 2 - 1400, -Renderer.Instance.TargetDimensions.Y / 2 + 350),
