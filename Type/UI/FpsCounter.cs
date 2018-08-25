@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using AmosShared.Base;
+using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
 using OpenTK;
 using Type.Base;
@@ -23,7 +24,7 @@ namespace Type.UI
         public FpsCounter()
         {
 
-            _Display = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, "Content/Graphics/KenPixel/", Constants.Font.Map)
+            _Display = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
                 Position = new Vector2(Renderer.Instance.TargetDimensions.X / 2 - 100,
                     -Renderer.Instance.TargetDimensions.Y / 2 + 60),

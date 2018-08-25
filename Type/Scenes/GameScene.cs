@@ -42,7 +42,7 @@ namespace Type.Scenes
                 Visible = true,
             };
             AddDrawable(_Background);
-            _ScoreText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, "Content/Graphics/KenPixel/", Constants.Font.Map)
+            _ScoreText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
                 Text = "SCORE: ",
                 Position = new Vector2(Renderer.Instance.TargetDimensions.X / 2 - 1900, -Renderer.Instance.TargetDimensions.Y / 2 + 1000),
@@ -51,7 +51,7 @@ namespace Type.Scenes
                 Colour = new Vector4(1, 0, 0, 1)
             };
             AddDrawable(_ScoreText);
-            _ScoreDisplay = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, "Content/Graphics/KenPixel/", Constants.Font.Map)
+            _ScoreDisplay = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
                 Text = _Score.ToString(),
                 Position = new Vector2(Renderer.Instance.TargetDimensions.X / 2 - 1650, -Renderer.Instance.TargetDimensions.Y / 2 + 1000),
