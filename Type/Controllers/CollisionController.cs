@@ -102,12 +102,13 @@ namespace Type.Controllers
         /// </summary>
         private void CheckPlayerToEnemies()
         {
-            foreach (BaseEnemy baseEnemy in _Enemies.ToList())
+            foreach (BaseEnemy baseEnemy in _Enemies.Where(e => e.IsAlive).ToList())
             {
                 if (Intersects(_Player.GetRect(), baseEnemy.GetRect()))
                 {
                     HandlePlayerHit();
                 }
+                if (_Enemies.Count == 0) break;
             }
         }
 
