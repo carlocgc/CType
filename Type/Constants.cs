@@ -51,17 +51,21 @@ namespace Type
                 {
                     var map = new Dictionary<Char, String>();
                     String alphaBet = "abcdefghijklmnopqrstuvwxyz";
+
+                    for (Int32 i = 0; i < 10; i++)
+                    {                        
+                        map.Add(i.ToString()[0], i.ToString());
+                    }
+
                     for (Int32 i = 0; i < alphaBet.Length; i++)
                     {
                         var c = alphaBet[i];
                         map.Add(c.ToString().ToUpperInvariant()[0], c.ToString().ToUpperInvariant());
-                        if (i > 9) continue;
-                        map.Add(i.ToString()[0], i.ToString());
                     }
-                    map.Add('.', "dot");
                     map.Add(':', "colon");
-                    map.Add(' ', "space");
+                    map.Add('.', "dot");
                     map.Add('%', "percentage");
+                    map.Add(' ', "space");
                     return map;
                 }
             }
