@@ -28,9 +28,9 @@ namespace Type
         public override void LoadContent()
         {
             MainCanvas = new Canvas(new Camera(Vector2.Zero, new Vector2(1920, 1080)), 0,
-                new Shader("Graphics/Shader/DefaultVertexShader.txt", "Graphics/Shader/DefaultFragmentShader.txt"));
+                new Shader());
             UiCanvas = new Canvas(new Camera(Vector2.Zero, new Vector2(1920, 1080)), 1,
-                new Shader("Graphics/Shader/DefaultVertexShader.txt", "Graphics/Shader/DefaultFragmentShader.txt"));
+                new Shader());
 
             SpritesheetLoader.LoadSheet("Content/Graphics/KenPixel/", "KenPixel.png", "KenPixel.json");
 

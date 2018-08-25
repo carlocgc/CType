@@ -69,12 +69,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SupportingFiles\AmosDesktop\AmosDesktop.csproj">
-      <Project>{b4b23ae1-df74-49d9-b85d-62033515baa5}</Project>
-      <Name>AmosDesktop</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="Content\Audio\" />
     <Folder Include="Content\XML\" />
   </ItemGroup>
@@ -115,6 +109,12 @@
       <Link>Content\Graphics\player.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SupportingFiles\AmosDesktop\AmosDesktop.csproj">
+      <Project>{b4b23ae1-df74-49d9-b85d-62033515baa5}</Project>
+      <Name>AmosDesktop</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="..\Type\Type.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
