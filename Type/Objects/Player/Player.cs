@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
 using OpenTK;
@@ -23,7 +21,7 @@ namespace Type.Objects.Player
         /// <summary> Position on screen where the player is spawned </summary>
         private readonly Vector2 _SpawnPosition = new Vector2(-700, 0);
         /// <summary> Default movement speed </summary>
-        private readonly Single _DefaultMovementSpeed = 350f;        
+        private readonly Single _DefaultMovementSpeed = 350f;
 
         /// <summary> Speed the player will move </summary>
         private Single _MovementSpeed;
@@ -79,7 +77,7 @@ namespace Type.Objects.Player
         }
 
         /// <summary>
-        /// Creates a new Bullet 
+        /// Creates a new Bullet
         /// </summary>
         private void FireForward()
         {
@@ -88,7 +86,7 @@ namespace Type.Objects.Player
         }
 
         /// <summary>
-        /// Position is updated every update if movement key press is detected, 
+        /// Position is updated every update if movement key press is detected
         /// bullet is fired if fire key press is detected and parameters are met
         /// </summary>
         /// <param name="timeTilUpdate"></param>

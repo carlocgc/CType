@@ -12,7 +12,7 @@ using Type.Objects.Projectiles;
 namespace Type.Controllers
 {
     /// <summary>
-    /// Checks if registered objects have collided and handles those collisions 
+    /// Checks if registered objects have collided and handles those collisions
     /// </summary>
     public class CollisionController : IUpdatable
     {
@@ -45,7 +45,7 @@ namespace Type.Controllers
         }
 
         /// <summary>
-        /// Returns whether the controller can update 
+        /// Returns whether the controller can update
         /// </summary>
         /// <returns></returns>
         public Boolean CanUpdate()
@@ -113,7 +113,7 @@ namespace Type.Controllers
         }
 
         /// <summary>
-        /// returns true if two rectangles intersects 
+        /// returns true if two rectangles intersects
         /// </summary>
         private Boolean Intersects(Vector4 rectA, Vector4 rectB)
         {

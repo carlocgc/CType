@@ -91,7 +91,6 @@ namespace Type.UI
 
         public void Dispose()
         {
- 
             foreach (Sprite lifeSprite in _LifeSprites)
             {
                 lifeSprite.Dispose();
