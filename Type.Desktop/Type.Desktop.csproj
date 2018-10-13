@@ -67,13 +67,13 @@
       <Link>Content\Graphics\KenPixel\KenPixel.json</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\XML\Level_1.xml" />
     <None Include="App.config" />
     <None Include="packages.config" />
     <None Include="Type.Desktop.ruleset" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\Audio\" />
+    <Folder Include="Content\XML\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\Assets\Graphics\background.png">
