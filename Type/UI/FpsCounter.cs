@@ -11,14 +11,10 @@ namespace Type.UI
 {
     public class FpsCounter : GameObject
     {
+        private readonly TextDisplay _Display;
         private Int32 _Counter;
-
         private DateTime _TimeSinceLastUpdate;
-
-        private TextDisplay _Display;
-
         private TimeSpan _ToggleTimer;
-
         private Boolean _ToggleOnCooldown;
 
         public FpsCounter()

@@ -90,7 +90,7 @@ namespace Type.Base
         }
 
         /// <summary>
-        /// Updates the sprites position with this game object 
+        /// Updates the sprites position with this game object
         /// </summary>
         protected void AddSprite(Sprite sprite)
         {
@@ -117,7 +117,5 @@ namespace Type.Base
             UpdateManager.Instance.RemoveUpdatable(this);
             IsDisposed = true;
         }
-
-
     }
 }

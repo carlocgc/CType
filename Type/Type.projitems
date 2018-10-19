@@ -13,6 +13,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\CollisionController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IDestroyable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IHitable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\BaseEnemy.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\EnemyA.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\EnemyFactory.cs" />

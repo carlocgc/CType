@@ -5,6 +5,7 @@ using System.Text;
 using AmosShared.Base;
 using AmosShared.Interfaces;
 using OpenTK;
+using Type.Interfaces;
 using Type.Objects.Enemies;
 using Type.Objects.Player;
 using Type.Objects.Projectiles;
@@ -72,7 +73,7 @@ namespace Type.Controllers
             {
                 if (Intersects(bullet.GetRect(), _Player.GetRect()))
                 {
-                    HandlePlayerHit();
+                    HandlePlayerHit(bullet);
                 }
                 if (bullet.IsDisposed) break;
             }
@@ -126,8 +127,13 @@ namespace Type.Controllers
         /// <summary>
         /// Handles collisions with the player ship
         /// </summary>
-        private void HandlePlayerHit()
+        private void HandlePlayerHit(Bullet bullet = null)
         {
+            if (bullet != null)
+            {
+                _EnemyBullets.Remove(bullet);
+                bullet.Destroy();
+            }
             _Player.LoseLife();
             ClearProjectiles();
         }
@@ -137,8 +143,8 @@ namespace Type.Controllers
         /// </summary>
         private void HandleEnemyHit(Bullet bullet, BaseEnemy enemy)
         {
-            bullet.Dispose();
             _PlayerBullets.Remove(bullet);
+            bullet.Destroy();
             enemy.Hit();
         }
 

@@ -23,10 +23,6 @@ namespace Type.Objects.Player
         /// <summary> Default movement speed </summary>
         private readonly Single _DefaultMovementSpeed = 350f;
 
-        /// <summary> Speed the player will move </summary>
-        private Single _MovementSpeed;
-        /// <summary> amount of time between firing</summary>
-        private TimeSpan _FireRate;
         /// <summary> Time since the last bullet was fired </summary>
         private TimeSpan _TimeSinceLastFired;
         /// <summary> Whether firing is allowed </summary>
@@ -34,21 +30,13 @@ namespace Type.Objects.Player
         /// <summary> The offset to the front of the ship, used for spawning bullets </summary>
         private Vector2 _BulletSpawnPos;
 
-        private Action OnDeath;
+        private readonly Action OnDeath;
 
-        /// <summary> amount of time between firing</summary>
-        public TimeSpan FireRate
-        {
-            get => _FireRate;
-            set => _FireRate = value;
-        }
+        /// <summary> Amount of time between firing </summary>
+        public TimeSpan FireRate { get; set; }
 
         /// <summary> How fast the player can move in any direction </summary>
-        public Single MovementSpeed
-        {
-            get => _MovementSpeed;
-            set => _MovementSpeed = value;
-        }
+        public Single MovementSpeed { get; set; }
 
         /// <summary> Position of the player </summary>
         public Player(Action onDeath)
@@ -59,7 +47,7 @@ namespace Type.Objects.Player
             });
             _BulletSpawnPos = new Vector2(0, -GetSprite().Height / 4);
             Position = _SpawnPosition;
-            _MovementSpeed = _DefaultMovementSpeed;
+            MovementSpeed = _DefaultMovementSpeed;
             FireRate = _DefaultFireRate;
 
             OnDeath = onDeath;
@@ -108,28 +96,28 @@ namespace Type.Objects.Player
             {
                 if (Position.X <= (1920 / 2) - GetSprite().Width)
                 {
-                    Position += new Vector2(_MovementSpeed * (Single)timeTilUpdate.TotalSeconds, 0);
+                    Position += new Vector2(MovementSpeed * (Single)timeTilUpdate.TotalSeconds, 0);
                 }
             }
             if (Keyboard.GetState().IsKeyDown(Key.Left))
             {
                 if (Position.X >= -(1920 / 2))
                 {
-                    Position -= new Vector2(_MovementSpeed * (Single)timeTilUpdate.TotalSeconds, 0);
+                    Position -= new Vector2(MovementSpeed * (Single)timeTilUpdate.TotalSeconds, 0);
                 }
             }
             if (Keyboard.GetState().IsKeyDown(Key.Up))
             {
                 if (Position.Y <= (1080 / 2) - GetSprite().Height)
                 {
-                    Position += new Vector2(0, _MovementSpeed * (Single)timeTilUpdate.TotalSeconds);
+                    Position += new Vector2(0, MovementSpeed * (Single)timeTilUpdate.TotalSeconds);
                 }
             }
             if (Keyboard.GetState().IsKeyDown(Key.Down))
             {
                 if (Position.Y >= -(1080 / 2))
                 {
-                    Position -= new Vector2(0, _MovementSpeed * (Single)timeTilUpdate.TotalSeconds);
+                    Position -= new Vector2(0, MovementSpeed * (Single)timeTilUpdate.TotalSeconds);
                 }
             }
 
@@ -139,11 +127,6 @@ namespace Type.Objects.Player
                 FireForward();
             }
 #endif
-        }
-
-        public override void Dispose()
-        {
-            base.Dispose();
         }
     }
 }

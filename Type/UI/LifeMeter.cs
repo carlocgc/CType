@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using AmosShared.Graphics;
+﻿using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
 using OpenTK;
-using Type.Base;
+using System;
+using System.Collections.Generic;
 
 namespace Type.UI
 {
@@ -12,43 +11,24 @@ namespace Type.UI
     /// </summary>
     public class LifeMeter : IDisposable
     {
+        /// <summary> Sprites that show the current amount of lifes </summary>
+        private readonly List<Sprite> _LifeSprites;
         /// <summary> Total lives the player can hold </summary>
         private Int32 _MaxLives;
-        /// <summary> Sprites that show the current amount of lifes </summary>
-        private List<Sprite> _LifeSprites;
-
         /// <summary> Amount of times the player can die before game over </summary>
         public Int32 PlayerLives { get; private set; }
 
         public LifeMeter()
         {
             PlayerLives = 3;
-            _LifeSprites = new List<Sprite>();
-            _LifeSprites.Add(new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/lifeicon.png"))
+            _LifeSprites = new List<Sprite>
             {
-                Position = new Vector2(-900, -500),
-                Visible = false,
-            });            
-            _LifeSprites.Add(new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/lifeicon.png"))
-            {
-                Position = new Vector2(-836, -500),
-                Visible = false,
-            });
-            _LifeSprites.Add(new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/lifeicon.png"))
-            {
-                Position = new Vector2(-772, -500),
-                Visible = false,
-            });
-            _LifeSprites.Add(new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/lifeicon.png"))
-            {
-                Position = new Vector2(-708, -500),
-                Visible = false,
-            });
-            _LifeSprites.Add(new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/lifeicon.png"))
-            {
-                Position = new Vector2(-644, -500),
-                Visible = false,
-            });
+                new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/lifeicon.png")) {Position = new Vector2(-900, -500), Visible = false,},
+                new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/lifeicon.png")) {Position = new Vector2(-836, -500), Visible = false,},
+                new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/lifeicon.png")) {Position = new Vector2(-772, -500), Visible = false,},
+                new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/lifeicon.png")) {Position = new Vector2(-708, -500), Visible = false,},
+                new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/lifeicon.png")) {Position = new Vector2(-644, -500), Visible = false,}
+            };
 
             UpdateSprites();
         }
@@ -72,7 +52,7 @@ namespace Type.UI
         }
 
         /// <summary>
-        /// Makes the sprites visibility match the current number of lifes 
+        /// Makes the sprites visibility match the current number of lifes
         /// </summary>
         private void UpdateSprites()
         {

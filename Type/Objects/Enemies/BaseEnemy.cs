@@ -6,13 +6,14 @@ using AmosShared.Graphics.Drawables;
 using OpenTK;
 using Type.Base;
 using Type.Controllers;
+using Type.Interfaces;
 
 namespace Type.Objects.Enemies
 {
     /// <summary>
     /// Base for enemy objects
     /// </summary>
-    public abstract class BaseEnemy : GameObject
+    public abstract class BaseEnemy : GameObject, IHitable
     {
         /// <summary> Time since the last bullet was fired </summary>
         private TimeSpan _TimeSinceLastFired;
@@ -113,7 +114,7 @@ namespace Type.Objects.Enemies
         }
 
         /// <summary>
-        /// Whether the enemy is on screen 
+        /// Whether the enemy is on screen
         /// </summary>
         /// <returns></returns>
         private Boolean CheckOnScreen()

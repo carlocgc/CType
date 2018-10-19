@@ -1,25 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using AmosShared.Graphics;
+﻿using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
 using OpenTK;
+using System;
 using Type.Base;
 using Type.Controllers;
+using Type.Interfaces;
 
 namespace Type.Objects.Projectiles
 {
     /// <summary>
     /// Bullet object, once created it will move in the given direction at the given speed until out of screen bounds
     /// </summary>
-    public class Bullet : GameObject
+    public class Bullet : GameObject, IDestroyable
     {
         /// <summary> The speed of the bullet </summary>
-        private Single _Velocity;
+        private readonly Single _Velocity;
         /// <summary> Direction of the bullet </summary>
-        private Vector2 _Direction;
+        private readonly Vector2 _Direction;
         /// <summary> Whether this bullet was fired from the player ship </summary>
-        private Boolean _IsPlayerBullet;
+        private readonly Boolean _IsPlayerBullet;
 
         public Bullet(String assetPath, Vector2 spawnPos, Vector2 direction, Single velocity, Double rotation, Boolean isPlayerBullet)
         {
@@ -57,7 +56,7 @@ namespace Type.Objects.Projectiles
         /// <summary>
         /// Disposes the bullet
         /// </summary>
-        private void Destroy()
+        public void Destroy()
         {
             CollisionController.Instance.DeregiterBullet(this);
             Dispose();
