@@ -39,6 +39,6 @@ namespace Type.Data
             }
             sr.Close();
             return _Waves;
-        }
+        }   
     }
 }

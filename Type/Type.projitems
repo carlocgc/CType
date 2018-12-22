@@ -19,6 +19,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IHitable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\BaseEnemy.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\EnemyA.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\EnemyB.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\EnemyC.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\EnemyFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Player\Player.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Projectiles\Bullet.cs" />
