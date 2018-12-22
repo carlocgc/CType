@@ -19,28 +19,12 @@ namespace Type.Data
         /// <summary> What type of ships comprise the wave   </summary>
         public Int32 EnemyType;
 
-        public WaveData(TimeSpan interval, Int32 enemyType, Vector2[] spawnPosList = null)
+        public WaveData(TimeSpan interval, Int32 enemyType, Vector2[] spawnPosList)
         {
             ShipCount = spawnPosList.Length;
             SpawnInterval = interval;
             EnemyType = enemyType;
-            if (spawnPosList == null)
-            {
-                SpawnPositions = new[]
-                {
-                        new Vector2(1100, 130),
-                        new Vector2(1100, -210),
-                        new Vector2(1100, 300),
-                        new Vector2(1100, -140),
-                        new Vector2(1100, 240),
-                        new Vector2(1100, -270),
-                        new Vector2(1100, 250)
-                };
-            }
-            else
-            {
-                SpawnPositions = spawnPosList;
-            }
+            SpawnPositions = spawnPosList;
         }
     }
 
