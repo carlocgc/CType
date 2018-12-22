@@ -1,53 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using AmosShared.Base;
 using AmosShared.Interfaces;
 using OpenTK;
 using Type.Controllers;
+using Type.Data;
 using Type.Scenes;
 
 namespace Type.Objects.Enemies
 {
-    /// <summary>
-    /// Data for a ship wave
-    /// </summary>
-    public struct WaveData
-    {
-        /// <summary> Amount of ships in the wave </summary>
-        public Int32 ShipCount;
-        /// <summary> How long between each spawn </summary>
-        public TimeSpan SpawnInterval;
-        /// <summary> List of positions to spawn the ships </summary>
-        public Vector2[] SpawnPositions;
-        /// <summary> What type of ships comprise the wave   </summary>
-        public Int32 EnemyType;
-
-        public WaveData(Int32 amount, TimeSpan interval, Int32 enemyType, Vector2[] spawnPosList = null)
-        {
-            ShipCount = amount;
-            SpawnInterval = interval;
-            EnemyType = enemyType;
-            if (spawnPosList == null)
-            {
-                SpawnPositions = new[]
-                {
-                    new Vector2(1100, 130),
-                    new Vector2(1100, -210),
-                    new Vector2(1100, 300),
-                    new Vector2(1100, -140),
-                    new Vector2(1100, 240),
-                    new Vector2(1100, -270),
-                    new Vector2(1100, 250),
-                };
-            }
-            else
-            {
-                SpawnPositions = spawnPosList;
-            }
-        }
-    }
-
     /// <summary>
     /// Spawns enemy ships from a given <see cref="WaveData"/> object
     /// </summary>
@@ -62,8 +23,10 @@ namespace Type.Objects.Enemies
         private Int32 _DataIndex;
         /// <summary> Time that has passed since the last spawn </summary>
         private TimeSpan _TimeSinceLastSpawn;
+
+        private List<WaveData> _LevelData;
         /// <summary> The data for the current wave </summary>
-        private WaveData _WaveData;
+        private WaveData _CurrentWave;
         /// <summary> Count of the enemies still alive, used to seed the next wave </summary>
         private Int32 _AliveEnemies;
 
@@ -79,15 +42,15 @@ namespace Type.Objects.Enemies
         /// <param name="data"></param>
         public void Seed(WaveData data)
         {
-            _WaveData = data;
-            _AliveEnemies = _WaveData.ShipCount;
+            _CurrentWave = data;
+            _AliveEnemies = _CurrentWave.ShipCount;
             IsActive = true;
             CollisionController.Instance.IsActive = true;
         }
 
         public void ReSeed()
         {
-            Seed(_WaveData);
+            Seed(_CurrentWave);
         }
 
         /// <summary>
@@ -107,11 +70,11 @@ namespace Type.Objects.Enemies
         {
             BaseEnemy enemy;
 
-            switch (_WaveData.EnemyType)
+            switch (_CurrentWave.EnemyType)
             {
                 case 0:
                     {
-                        enemy = new EnemyA("Content/Graphics/enemy2.png", _WaveData.SpawnPositions[_DataIndex], 0, new Vector2(-1, 0), 400, TimeSpan.FromSeconds(3));
+                        enemy = new EnemyA("Content/Graphics/enemy2.png", _CurrentWave.SpawnPositions[_DataIndex], 0, new Vector2(-1, 0), 400, TimeSpan.FromSeconds(3));
                         enemy.OnOutOfBounds = OnShipDeath;
                         enemy.OnDestroyedByPlayer.Add(OnShipDeath);
                         enemy.OnDestroyedByPlayer.Add(() => _Scene.UpdateScore(enemy.PointValue));
@@ -127,7 +90,7 @@ namespace Type.Objects.Enemies
             _TimeSinceLastSpawn = TimeSpan.Zero;
             _DataIndex++;
 
-            if (_DataIndex == _WaveData.ShipCount)
+            if (_DataIndex == _CurrentWave.ShipCount)
             {
                 IsActive = false;
             }
@@ -150,7 +113,7 @@ namespace Type.Objects.Enemies
             {
                 _TimeSinceLastSpawn += timeTilUpdate;
 
-                if (_TimeSinceLastSpawn >= _WaveData.SpawnInterval)
+                if (_TimeSinceLastSpawn >= _CurrentWave.SpawnInterval)
                 {
                     Spawn();
                 }
@@ -159,7 +122,9 @@ namespace Type.Objects.Enemies
             {
                 if (_AliveEnemies == 0)
                 {
-                    Seed(_WaveData);
+                    // TODO Start next wave
+                    // If no wave to move to the level complete
+                    Seed(_CurrentWave);
                 }
             }
         }

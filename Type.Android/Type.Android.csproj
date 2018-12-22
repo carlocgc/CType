@@ -169,7 +169,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\Audio\" />
-    <Folder Include="Assets\XML\" />
     <Folder Include="Resources\drawable\" />
     <Folder Include="Resources\mipmap-hdpi\" />
     <Folder Include="Resources\mipmap-mdpi\" />
@@ -218,6 +217,18 @@
     </AndroidAsset>
     <AndroidAsset Include="..\Assets\Graphics\MainMenuBG.png">
       <Link>Assets\Graphics\MainMenuBG.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Level\level-1.txt">
+      <Link>Assets\Level\level-1.txt</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Level\level-2.txt">
+      <Link>Assets\Level\level-2.txt</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Level\level-3.txt">
+      <Link>Assets\Level\level-3.txt</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Level\level-4.txt">
+      <Link>Assets\Level\level-4.txt</Link>
     </AndroidAsset>
     <Content Include="THIRD-PARTY-NOTICES.txt" />
   </ItemGroup>
