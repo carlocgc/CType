@@ -6,6 +6,7 @@ using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
 using OpenTK;
 using Type.Controllers;
+using Type.Data;
 using Type.Objects.Enemies;
 using Type.Objects.Player;
 using Type.UI;
@@ -31,8 +32,15 @@ namespace Type.Scenes
 
         /// <summary> Whether the player has ran out of lives, ends the playing state </summary>
         public Boolean IsGameOver;
+        /// <summary> Loads wave data from text files </summary>
+        private LevelLoader _LevelLoader;
         /// <summary> The enemy factory </summary>
         public EnemyFactory EnemySpawner;
+        /// <summary> Max level of the game </summary>
+        private Int32 _MaxLevel = 4;
+
+        /// <summary> The current level </summary>
+        public Int32 CurrentLevel { get; private set; }
 
         public GameScene()
         {
@@ -62,8 +70,10 @@ namespace Type.Scenes
 
             _LifeMeter = new LifeMeter();
             _FPS = new FpsCounter();
+            CurrentLevel = 1;
 
             _Player = new Player(OnPlayerDeath);
+            _LevelLoader = new LevelLoader();
             EnemySpawner = new EnemyFactory(this);
         }
 
@@ -81,7 +91,7 @@ namespace Type.Scenes
             }
             else
             {
-                EnemySpawner.ReSeed();
+                 EnemySpawner.StartWave();
             }
         }
 
@@ -93,7 +103,20 @@ namespace Type.Scenes
             _Score = 0;
 
             CollisionController.Instance.IsActive = true;
-            EnemySpawner.Seed(new WaveData(7, TimeSpan.FromSeconds(0.5), 0));
+            EnemySpawner.SetLevelData(_LevelLoader.GetWaveData(CurrentLevel));
+        }
+
+        public void LevelComplete()
+        {
+            CurrentLevel++;
+            if (CurrentLevel >= _MaxLevel)
+            {
+                // TODO Game Complete
+            }
+            else
+            {
+                EnemySpawner.SetLevelData(_LevelLoader.GetWaveData(CurrentLevel));
+            }
         }
 
         /// <summary>
