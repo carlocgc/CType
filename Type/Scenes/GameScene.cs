@@ -21,6 +21,8 @@ namespace Type.Scenes
         private Player _Player;
         /// <summary> The players current score</summary>
         private Int32 _Score;
+        /// <summary> Max level of the game </summary>
+        private Int32 _MaxLevel = 4;
         /// <summary> Text printer that displays the score </summary>
         private TextDisplay _ScoreDisplay;
         /// <summary> THe word score displayed top left of screen </summary>
@@ -29,15 +31,14 @@ namespace Type.Scenes
         private LifeMeter _LifeMeter;
         /// <summary> UI element that displays the current FPS </summary>
         private FpsCounter _FPS;
-
+        /// <summary> Object that shows the current level text </summary>
+        private LevelDisplay _LevelDisplay;
         /// <summary> Whether the player has ran out of lives, ends the playing state </summary>
         public Boolean IsGameOver;
         /// <summary> Loads wave data from text files </summary>
         private LevelLoader _LevelLoader;
         /// <summary> The enemy factory </summary>
         public EnemyFactory EnemySpawner;
-        /// <summary> Max level of the game </summary>
-        private Int32 _MaxLevel = 4;
 
         /// <summary> The current level </summary>
         public Int32 CurrentLevel { get; private set; }
@@ -70,6 +71,7 @@ namespace Type.Scenes
 
             _LifeMeter = new LifeMeter();
             _FPS = new FpsCounter();
+            _LevelDisplay = new LevelDisplay();
             CurrentLevel = 1;
 
             _Player = new Player(OnPlayerDeath);
@@ -91,7 +93,7 @@ namespace Type.Scenes
             }
             else
             {
-                 EnemySpawner.StartWave();
+                EnemySpawner.StartWave();
             }
         }
 
@@ -102,8 +104,11 @@ namespace Type.Scenes
         {
             _Score = 0;
 
-            CollisionController.Instance.IsActive = true;
-            EnemySpawner.SetLevelData(_LevelLoader.GetWaveData(CurrentLevel));
+            _LevelDisplay.ShowLevel(CurrentLevel, TimeSpan.FromSeconds(2), () =>
+            {
+                EnemySpawner.SetLevelData(_LevelLoader.GetWaveData(CurrentLevel));
+                CollisionController.Instance.IsActive = true;
+            });
         }
 
         public void LevelComplete()
@@ -115,7 +120,10 @@ namespace Type.Scenes
             }
             else
             {
-                EnemySpawner.SetLevelData(_LevelLoader.GetWaveData(CurrentLevel));
+                _LevelDisplay.ShowLevel(CurrentLevel, TimeSpan.FromSeconds(2), () =>
+                {
+                    EnemySpawner.SetLevelData(_LevelLoader.GetWaveData(CurrentLevel));
+                });
             }
         }
 

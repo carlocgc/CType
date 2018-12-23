@@ -25,7 +25,6 @@ namespace Type.States
 
         protected override void OnExit()
         {
-
             _Scene.Dispose();
             Dispose();
         }
