@@ -17,11 +17,11 @@ namespace Type.Objects.Player
     public class Player : GameObject
     {
         /// <summary> Default rate of fire </summary>
-        private readonly TimeSpan _DefaultFireRate = TimeSpan.FromMilliseconds(500);
+        private readonly TimeSpan _DefaultFireRate = TimeSpan.FromMilliseconds(100);
         /// <summary> Position on screen where the player is spawned </summary>
         private readonly Vector2 _SpawnPosition = new Vector2(-700, 0);
         /// <summary> Default movement speed </summary>
-        private readonly Single _DefaultMovementSpeed = 350f;
+        private readonly Single _DefaultMovementSpeed = 500;
 
         /// <summary> Time since the last bullet was fired </summary>
         private TimeSpan _TimeSinceLastFired;
