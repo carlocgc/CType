@@ -23,13 +23,15 @@ namespace Type.Objects.World
         {
             _Sprites.Add(new Sprite(Game.MainCanvas, Constants.ZOrders.BACKGROUND, Texture.GetTexture("Content/Graphics/background.png"))
             {
-                Offset = new Vector2(960, 540),
+                //Offset = new Vector2(960, 540),
+                Position = new Vector2(-960, -540),
                 Visible = true,
             });
 
             _Sprites.Add(new Sprite(Game.MainCanvas, Constants.ZOrders.BACKGROUND, Texture.GetTexture("Content/Graphics/background.png"))
             {
-                Offset = new Vector2(-_Sprites[0].Offset.X, 540),
+                //Offset = new Vector2(960, 540),
+                Position = new Vector2(_Sprites[0].Position.X + _Sprites[0].Width / 2, -540),
                 Visible = true,
             });
         }
@@ -43,7 +45,8 @@ namespace Type.Objects.World
         {
             _Sprites.Add(new Sprite(Game.MainCanvas, Constants.ZOrders.BACKGROUND, Texture.GetTexture("Content/Graphics/background.png"))
             {
-                Offset = new Vector2(_Sprites[_Sprites.Count - 1].Offset.X, 540),
+                //Offset = new Vector2(960, 540),
+                Position = new Vector2(960, -540),
                 Visible = true,
             });
         }
@@ -58,16 +61,16 @@ namespace Type.Objects.World
             {
                 if (i == 0)
                 {
-                    _Sprites[i].Offset = new Vector2(_Sprites[i].Offset.X + _Speed, _Sprites[i].Offset.Y);
+                    _Sprites[i].Position = new Vector2(_Sprites[i].Position.X - _Speed, -540);
                 }
                 else
                 {
-                    _Sprites[i].Offset = new Vector2(_Sprites[i -1].Offset.X + _Sprites[i - 1].Width / 2, _Sprites[i].Offset.Y);
+                    _Sprites[i].Position = new Vector2(_Sprites[i -1].Position.X + _Sprites[i -1].Width, -540);
                 }
 
             }
 
-            if (_Sprites[0].Offset.X < -960)
+            if (_Sprites[0].Position.X + _Sprites[0].Width < -960)
             {
                 _Sprites.Remove(_Sprites[0]);
                 CreateSprite();
