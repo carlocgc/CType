@@ -17,20 +17,18 @@ namespace Type.Objects.World
 
         private Boolean _Updating;
 
-        private Single _Speed = 5f;
+        private Single _Speed = 1000f;
 
         public ScrollingBackground() : base()
         {
             _Sprites.Add(new Sprite(Game.MainCanvas, Constants.ZOrders.BACKGROUND, Texture.GetTexture("Content/Graphics/background.png"))
             {
-                //Offset = new Vector2(960, 540),
                 Position = new Vector2(-960, -540),
                 Visible = true,
             });
 
             _Sprites.Add(new Sprite(Game.MainCanvas, Constants.ZOrders.BACKGROUND, Texture.GetTexture("Content/Graphics/background.png"))
             {
-                //Offset = new Vector2(960, 540),
                 Position = new Vector2(_Sprites[0].Position.X + _Sprites[0].Width / 2, -540),
                 Visible = true,
             });
@@ -45,7 +43,6 @@ namespace Type.Objects.World
         {
             _Sprites.Add(new Sprite(Game.MainCanvas, Constants.ZOrders.BACKGROUND, Texture.GetTexture("Content/Graphics/background.png"))
             {
-                //Offset = new Vector2(960, 540),
                 Position = new Vector2(960, -540),
                 Visible = true,
             });
@@ -61,7 +58,7 @@ namespace Type.Objects.World
             {
                 if (i == 0)
                 {
-                    _Sprites[i].Position = new Vector2(_Sprites[i].Position.X - _Speed, -540);
+                    _Sprites[i].Position = new Vector2(_Sprites[i].Position.X - _Speed * (Single)timeTilUpdate.TotalSeconds, -540);
                 }
                 else
                 {
