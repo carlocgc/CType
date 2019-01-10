@@ -22,9 +22,6 @@ namespace Type.Controllers
         /// <summary> The instance of the Collision Controller </summary>
         public static CollisionController Instance => _Instance ?? (_Instance = new CollisionController());
 
-        /// <summary> Whether the collision controller is disposed </summary>
-        public Boolean IsDisposed { get; set; }
-
         /// <summary> List of all active player bullets </summary>
         private List<Bullet> _PlayerBullets;
         /// <summary> List of all active enemy bullets </summary>
@@ -34,8 +31,20 @@ namespace Type.Controllers
         /// <summary> The players ship </summary>
         private Player _Player;
 
+        /// <summary> Whether the collision controller is disposed </summary>
+        public Boolean IsDisposed { get; set; }
+
         /// <summary> Whether the collision controller is active </summary>
         public Boolean IsActive { get; set; }
+
+        /// <summary>
+        /// Returns whether the controller can update
+        /// </summary>
+        /// <returns></returns>
+        public Boolean CanUpdate()
+        {
+            return true;
+        }
 
         private CollisionController()
         {
@@ -46,12 +55,39 @@ namespace Type.Controllers
         }
 
         /// <summary>
-        /// Returns whether the controller can update
+        /// Adds enemy to the collision list
         /// </summary>
-        /// <returns></returns>
-        public Boolean CanUpdate()
+        /// <param name="enemy"></param>
+        public void RegisterEnemy(BaseEnemy enemy)
         {
-            return true;
+            _Enemies.Add(enemy);
+        }
+
+        /// <summary>
+        /// Adds enemy projectile to the enemy projectile list
+        /// </summary>
+        /// <param name="bullet"></param>
+        public void RegisterEnemyBullet(Bullet bullet)
+        {
+            _EnemyBullets.Add(bullet);
+        }
+
+        /// <summary>
+        /// Adds player projectile to the player projectile list
+        /// </summary>
+        /// <param name="bullet"></param>
+        public void RegisterPlayerBullet(Bullet bullet)
+        {
+            _PlayerBullets.Add(bullet);
+        }
+
+        /// <summary>
+        /// Registers the player object to the collision controller
+        /// </summary>
+        /// <param name="player"></param>
+        public void RegisterPlayer(Player player)
+        {
+            _Player = player;
         }
 
         /// <summary>
@@ -163,42 +199,6 @@ namespace Type.Controllers
                 playerBullet.Dispose();
             }
             _PlayerBullets.Clear();
-        }
-
-        /// <summary>
-        /// Adds enemy to the collision list
-        /// </summary>
-        /// <param name="enemy"></param>
-        public void RegisterEnemy(BaseEnemy enemy)
-        {
-            _Enemies.Add(enemy);
-        }
-
-        /// <summary>
-        /// Adds enemy projectile to the enemy projectile list
-        /// </summary>
-        /// <param name="bullet"></param>
-        public void RegisterEnemyBullet(Bullet bullet)
-        {
-            _EnemyBullets.Add(bullet);
-        }
-
-        /// <summary>
-        /// Adds player projectile to the player projectile list
-        /// </summary>
-        /// <param name="bullet"></param>
-        public void RegisterPlayerBullet(Bullet bullet)
-        {
-            _PlayerBullets.Add(bullet);
-        }
-
-        /// <summary>
-        /// Registers the player object to the collision controller
-        /// </summary>
-        /// <param name="player"></param>
-        public void RegisterPlayer(Player player)
-        {
-            _Player = player;
         }
 
         /// <summary>

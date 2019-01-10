@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using AmosShared.Base;
 using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
@@ -9,14 +7,15 @@ using Type.Controllers;
 using Type.Data;
 using Type.Objects.Enemies;
 using Type.Objects.Player;
+using Type.Objects.World;
 using Type.UI;
 
 namespace Type.Scenes
 {
     public class GameScene : Scene
     {
-        /// <summary> THe background for the scene </summary>
-        private readonly Sprite _Background;
+        /// <summary> Scrolling background </summary>
+        private ScrollingBackground _Background;
         /// <summary> The players ship </summary>
         private Player _Player;
         /// <summary> The players current score</summary>
@@ -45,12 +44,8 @@ namespace Type.Scenes
 
         public GameScene()
         {
-            _Background = new Sprite(Game.MainCanvas, Constants.ZOrders.BACKGROUND, Texture.GetTexture("Content/Graphics/background.png"))
-            {
-                Offset = new Vector2(960, 540),
-                Visible = true,
-            };
-            AddDrawable(_Background);
+            _Background = new ScrollingBackground();
+
             _ScoreText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
                 Text = "SCORE: ",
@@ -104,6 +99,8 @@ namespace Type.Scenes
         {
             _Score = 0;
 
+            _Background.Start();
+
             _LevelDisplay.ShowLevel(CurrentLevel, TimeSpan.FromSeconds(2), () =>
             {
                 EnemySpawner.SetLevelData(_LevelLoader.GetWaveData(CurrentLevel));
@@ -146,6 +143,7 @@ namespace Type.Scenes
         {
             base.Dispose();
             _Player.Dispose();
+            _Background.Dispose();
             EnemySpawner.Dispose();
         }
     }
