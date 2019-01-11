@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using AmosShared.Graphics;
+﻿using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
 using OpenTK;
+using System;
+using System.Collections.Generic;
 using Type.Base;
 using Type.Glide;
 
@@ -15,22 +14,29 @@ namespace Type.Objects.World
 
         private readonly List<Sprite> _Sprites = new List<Sprite>();
 
+        private readonly String _AssetPath;
+
         private Boolean _Updating;
 
-        private Single _Speed = 1000f;
+        private Single _Speed;
 
-        public ScrollingBackground() : base()
+        public ScrollingBackground(Single speed, String assetPath) : base()
         {
-            _Sprites.Add(new Sprite(Game.MainCanvas, Constants.ZOrders.BACKGROUND, Texture.GetTexture("Content/Graphics/background.png"))
+            _Speed = speed;
+            _AssetPath = assetPath;
+
+            _Sprites.Add(new Sprite(Game.MainCanvas, Constants.ZOrders.BACKGROUND, Texture.GetTexture(_AssetPath))
             {
                 Position = new Vector2(-960, -540),
                 Visible = true,
+                ZOrder = Constants.ZOrders.BACKGROUND,
             });
 
-            _Sprites.Add(new Sprite(Game.MainCanvas, Constants.ZOrders.BACKGROUND, Texture.GetTexture("Content/Graphics/background.png"))
+            _Sprites.Add(new Sprite(Game.MainCanvas, Constants.ZOrders.BACKGROUND, Texture.GetTexture(_AssetPath))
             {
                 Position = new Vector2(_Sprites[0].Position.X + _Sprites[0].Width / 2, -540),
                 Visible = true,
+                ZOrder = Constants.ZOrders.BACKGROUND,
             });
         }
 
@@ -41,7 +47,7 @@ namespace Type.Objects.World
 
         private void CreateSprite()
         {
-            _Sprites.Add(new Sprite(Game.MainCanvas, Constants.ZOrders.BACKGROUND, Texture.GetTexture("Content/Graphics/background.png"))
+            _Sprites.Add(new Sprite(Game.MainCanvas, Constants.ZOrders.BACKGROUND, Texture.GetTexture(_AssetPath))
             {
                 Position = new Vector2(960, -540),
                 Visible = true,
