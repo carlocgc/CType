@@ -30,6 +30,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Player\Player.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Projectiles\Bullet.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\World\ScrollingBackground.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\World\ScrollingObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\GameOverScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\GameScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\MainMenuScene.cs" />
