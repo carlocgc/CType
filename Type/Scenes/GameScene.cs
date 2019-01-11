@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using AmosShared.Base;
 using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
@@ -15,7 +16,11 @@ namespace Type.Scenes
     public class GameScene : Scene
     {
         /// <summary> Scrolling background </summary>
-        private ScrollingBackground _Background;
+        private ScrollingBackground _BackgroundFar;
+        /// <summary> Scrolling background </summary>
+        private ScrollingBackground _BackgroundNear;
+        /// <summary> Scrolling object </summary>
+        private ScrollingObject _BackgroundObject;
         /// <summary> The players ship </summary>
         private Player _Player;
         /// <summary> The players current score</summary>
@@ -44,7 +49,9 @@ namespace Type.Scenes
 
         public GameScene()
         {
-            _Background = new ScrollingBackground();
+            _BackgroundNear = new ScrollingBackground(125, "Content/Graphics/stars-1.png");
+            _BackgroundFar = new ScrollingBackground(225, "Content/Graphics/stars-2.png");
+            _BackgroundObject = new ScrollingObject();
 
             _ScoreText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
@@ -99,7 +106,9 @@ namespace Type.Scenes
         {
             _Score = 0;
 
-            _Background.Start();
+            _BackgroundNear.Start();
+            _BackgroundFar.Start();
+            _BackgroundObject.Start();
 
             _LevelDisplay.ShowLevel(CurrentLevel, TimeSpan.FromSeconds(2), () =>
             {
@@ -143,7 +152,9 @@ namespace Type.Scenes
         {
             base.Dispose();
             _Player.Dispose();
-            _Background.Dispose();
+            _BackgroundNear.Dispose();
+            _BackgroundFar.Dispose();
+            _BackgroundObject.Dispose();
             EnemySpawner.Dispose();
         }
     }
