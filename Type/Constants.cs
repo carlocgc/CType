@@ -11,7 +11,7 @@ namespace Type
     public static class Constants
     {
         /// <summary>
-        /// Global values 
+        /// Global values
         /// </summary>
         public static class Global
         {
@@ -26,13 +26,15 @@ namespace Type
         /// </summary>
         public static class ZOrders
         {
-            public const Int32 BACKGROUND = 0;
+            public const Int32 BACKGROUND = 50;
 
-            public const Int32 BULLETS = 1;
+            public const Int32 BACKGROUND_OBJECT = 51;
 
-            public const Int32 ENEMIES = 2;
+            public const Int32 BULLETS = 78;
 
-            public const Int32 PLAYER = 3;
+            public const Int32 ENEMIES = 79;
+
+            public const Int32 PLAYER = 80;
 
             public const Int32 UI = 100;
         }
@@ -53,7 +55,7 @@ namespace Type
                     String alphaBet = "abcdefghijklmnopqrstuvwxyz";
 
                     for (Int32 i = 0; i < 10; i++)
-                    {                        
+                    {
                         map.Add(i.ToString()[0], i.ToString());
                     }
 
