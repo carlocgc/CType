@@ -16,11 +16,11 @@ namespace Type.Base
         /// <summary> Whether the object is updated </summary>
         public Boolean UpdateEnabled { get; protected set; }
         /// <summary> Sprite for the game object </summary>
-        private Sprite _Sprite;
+        protected Sprite _Sprite;
         /// <summary> Position of the object </summary>
-        private Vector2 _Position;
+        protected Vector2 _Position;
         /// <summary> Rotation of the object </summary>
-        private Double _Rotation;
+        protected Double _Rotation;
         /// <summary> White pixels drawn over the collidible area of the object </summary>
         private Sprite _CollideArea;
 

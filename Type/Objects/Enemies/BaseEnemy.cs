@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Text;
 using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
@@ -15,6 +16,8 @@ namespace Type.Objects.Enemies
     /// </summary>
     public abstract class BaseEnemy : GameObject, IHitable
     {
+        /// <summary> Animation of an explosion, played on death </summary>
+        private readonly AnimatedSprite _Explosion;
         /// <summary> Time since the last bullet was fired </summary>
         private TimeSpan _TimeSinceLastFired;
         /// <summary> Amount of times the enemy can be hit before being destroyed </summary>
@@ -43,6 +46,16 @@ namespace Type.Objects.Enemies
         /// <summary> Point valuie for this enemy </summary>
         public Int32 PointValue { get; set; }
 
+        public override Vector2 Position
+        {
+            get => base.Position;
+            set
+            {
+                base.Position = value;
+                _Explosion.Position = value;
+            }
+        }
+
         protected BaseEnemy(String assetPath, Vector2 spawnPos, Single rotation, Vector2 direction, Single speed, TimeSpan fireRate)
         {
             OnDestroyedByPlayer = new List<Action>();
@@ -53,6 +66,23 @@ namespace Type.Objects.Enemies
                 Rotation = rotation,
                 Visible = true,
             });
+
+            _Explosion = new AnimatedSprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, new[]
+                {
+                    Texture.GetTexture("Content/Graphics/Explosion/explosion00.png"),
+                    Texture.GetTexture("Content/Graphics/Explosion/explosion01.png"),
+                    Texture.GetTexture("Content/Graphics/Explosion/explosion02.png"),
+                    Texture.GetTexture("Content/Graphics/Explosion/explosion03.png"),
+                    Texture.GetTexture("Content/Graphics/Explosion/explosion04.png"),
+                    Texture.GetTexture("Content/Graphics/Explosion/explosion05.png"),
+                    Texture.GetTexture("Content/Graphics/Explosion/explosion06.png"),
+                    Texture.GetTexture("Content/Graphics/Explosion/explosion07.png"),
+                    Texture.GetTexture("Content/Graphics/Explosion/explosion08.png"),
+                }, 9)
+            {
+                Visible = false,
+                Playing = false,
+            };
 
             _IsHostile = true;
             _IsMoving = true;
@@ -90,17 +120,24 @@ namespace Type.Objects.Enemies
             IsAlive = false;
             if (_IsDestroyed)
             {
-                foreach (Action action in OnDestroyedByPlayer)
+                _Explosion.AddFrameAction((anim) =>
                 {
-                    action?.Invoke();
-                }
+                    foreach (Action action in OnDestroyedByPlayer)
+                    {
+                        action?.Invoke();
+                    }
+                    Dispose();
+                }, 8);
+                _Sprite.Visible = false;
+                _Explosion.Visible = true;
+                _Explosion.Playing = true;
             }
             else
             {
+                _Explosion.RemoveAllFrameActions();
                 OnOutOfBounds?.Invoke();
+                Dispose();
             }
-
-            Dispose();
         }
 
         /// <summary>
@@ -147,6 +184,8 @@ namespace Type.Objects.Enemies
 
             Position += _Direction * _Speed * (Single)timeTilUpdate.TotalSeconds;
 
+            if (_IsDestroyed) return;
+
             if (CheckOnScreen()) IsAlive = true;
 
             if (CheckOutOfBounds()) Destroy();
@@ -155,6 +194,7 @@ namespace Type.Objects.Enemies
         public override void Dispose()
         {
             base.Dispose();
+            if (!_Explosion.IsDisposed) _Explosion.Dispose();
             CollisionController.Instance.DeregisterEnemy(this);
         }
     }
