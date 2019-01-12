@@ -230,6 +230,78 @@
     <AndroidAsset Include="..\Assets\Level\level-4.txt">
       <Link>Assets\Level\level-4.txt</Link>
     </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Graphics\planet-far-1.png">
+      <Link>Assets\Graphics\planet-far-1.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Graphics\planet-far-2.png">
+      <Link>Assets\Graphics\planet-far-2.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Graphics\planet-far-3.png">
+      <Link>Assets\Graphics\planet-far-3.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Graphics\planet-far-4.png">
+      <Link>Assets\Graphics\planet-far-4.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Graphics\planet-far-5.png">
+      <Link>Assets\Graphics\planet-far-5.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Graphics\planet-far-6.png">
+      <Link>Assets\Graphics\planet-far-6.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Graphics\planet-far-7.png">
+      <Link>Assets\Graphics\planet-far-7.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Graphics\planet-far-8.png">
+      <Link>Assets\Graphics\planet-far-8.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Graphics\planet-far-9.png">
+      <Link>Assets\Graphics\planet-far-9.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Graphics\planet-near-1.png">
+      <Link>Assets\Graphics\planet-near-1.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Graphics\planet-near-2.png">
+      <Link>Assets\Graphics\planet-near-2.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Graphics\planet-near-3.png">
+      <Link>Assets\Graphics\planet-near-3.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Graphics\planet-near-4.png">
+      <Link>Assets\Graphics\planet-near-4.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Graphics\planet-near-5.png">
+      <Link>Assets\Graphics\planet-near-5.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Graphics\planet-near-6.png">
+      <Link>Assets\Graphics\planet-near-6.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Graphics\planet-near-7.png">
+      <Link>Assets\Graphics\planet-near-7.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Graphics\planet-near-8.png">
+      <Link>Assets\Graphics\planet-near-8.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Graphics\planet-near-9.png">
+      <Link>Assets\Graphics\planet-near-9.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Graphics\stars-1.png">
+      <Link>Assets\Graphics\stars-1.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Graphics\stars-2.png">
+      <Link>Assets\Graphics\stars-2.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Level\level-5.txt">
+      <Link>Assets\Level\level-5.txt</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Level\level-6.txt">
+      <Link>Assets\Level\level-6.txt</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Level\level-7.txt">
+      <Link>Assets\Level\level-7.txt</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Level\level-8.txt">
+      <Link>Assets\Level\level-8.txt</Link>
+    </AndroidAsset>
     <Content Include="THIRD-PARTY-NOTICES.txt" />
   </ItemGroup>
   <ItemGroup>

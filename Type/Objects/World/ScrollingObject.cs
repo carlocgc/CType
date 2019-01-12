@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using AmosShared.Graphics;
+﻿using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
 using OpenTK;
+using System;
+using System.Collections.Generic;
 using Type.Base;
-using Type.Glide;
 
 namespace Type.Objects.World
 {
@@ -15,61 +13,60 @@ namespace Type.Objects.World
 
         private readonly Random _Rnd = new Random(Environment.TickCount);
 
-        private TimeSpan _TimeSinceLastTransit;
+        private readonly Int32 _MinDelay;
 
-        private TimeSpan _Delay;
+        private readonly Int32 _MaxDelay;
+
+        private readonly Int32 _MinSpeed;
+
+        private readonly Int32 _MaxSpeed;
 
         private Int32 _PreviousIndex;
 
         private Int32 _CurrentSpriteindex;
 
-        private Single _MaxDelay;
+        private Int32 _Speed;
 
-        private Single _MinDelay;
+        private TimeSpan _TimeSinceLastTransit;
+
+        private TimeSpan _Delay;
+
+        private Boolean _Scrolling;
 
         private Boolean _Updating;
 
-        private Single _Speed;
-
-        public ScrollingObject() : base()
+        public ScrollingObject(Int32 minSpeed, Int32 maxSpeed, String path, Int32 maxAssets, Int32 delayMin, Int32 delayMax, Int32 zOrder)
         {
             _PreviousIndex = 0;
+            _MinSpeed = minSpeed;
+            _MaxSpeed = maxSpeed;
+            _MinDelay = delayMin;
+            _MaxDelay = delayMax;
 
-            _Sprites.Add(new Sprite(Game.MainCanvas, Constants.ZOrders.BACKGROUND, Texture.GetTexture("Content/Graphics/planet-1.png"))
-            {
-                Position = new Vector2(960, GetRandomYPos()),
-                Visible = true,
-                ZOrder = Constants.ZOrders.BACKGROUND_OBJECT,
-            });
+            _Delay = TimeSpan.FromSeconds(_Rnd.Next(_MinDelay, _MaxDelay));
 
-            _Sprites.Add(new Sprite(Game.MainCanvas, Constants.ZOrders.BACKGROUND, Texture.GetTexture("Content/Graphics/planet-2.png"))
+            for (Int32 i = 1; i <= maxAssets; i++)
             {
-                Position = new Vector2(960, GetRandomYPos()),
-                Visible = true,
-                ZOrder = Constants.ZOrders.BACKGROUND_OBJECT,
-            });
-
-            _Sprites.Add(new Sprite(Game.MainCanvas, Constants.ZOrders.BACKGROUND, Texture.GetTexture("Content/Graphics/planet-3.png"))
-            {
-                Position = new Vector2(960, GetRandomYPos()),
-                Visible = true,
-                ZOrder = Constants.ZOrders.BACKGROUND_OBJECT,
-            });
-
-            _Sprites.Add(new Sprite(Game.MainCanvas, Constants.ZOrders.BACKGROUND, Texture.GetTexture("Content/Graphics/cluster.png"))
-            {
-                Position = new Vector2(960, GetRandomYPos()),
-                Visible = true,
-                ZOrder = Constants.ZOrders.BACKGROUND_OBJECT,
-            });
+                _Sprites.Add(new Sprite(Game.MainCanvas, Constants.ZOrders.BACKGROUND, Texture.GetTexture($"{path}{i}.png"))
+                {
+                    Position = new Vector2(960, GetRandomYPos()),
+                    Visible = true,
+                    ZOrder = zOrder,
+                });
+            }
         }
 
         private Int32 GetRandomYPos()
         {
-            return _Rnd.Next(-400, 300);
+            return _Rnd.Next(-540, 0);
         }
 
         public void Start()
+        {
+            _Updating = true;
+        }
+
+        private void BeginScrolling()
         {
             List<Int32> indexes = new List<Int32>();
 
@@ -82,11 +79,11 @@ namespace Type.Objects.World
             _CurrentSpriteindex = indexes[_Rnd.Next(0, indexes.Count)];
             _PreviousIndex = _CurrentSpriteindex;
 
-            _Delay = TimeSpan.FromSeconds(_Rnd.Next(5, 6));
+            _Delay = TimeSpan.FromSeconds(_Rnd.Next(_MinDelay, _MaxDelay));
 
-            _Speed = _Rnd.Next(280, 350);
+            _Speed = _Rnd.Next(_MinSpeed, _MaxSpeed);
 
-            _Updating = true;
+            _Scrolling = true;
         }
 
         private void ResetSprite()
@@ -98,7 +95,9 @@ namespace Type.Objects.World
         {
             base.Update(timeTilUpdate);
 
-            if (_Updating)
+            if (!_Updating) return;
+
+            if (_Scrolling)
             {
                 _Sprites[_CurrentSpriteindex].Position = new Vector2(_Sprites[_CurrentSpriteindex].Position.X - _Speed * (Single)timeTilUpdate.TotalSeconds,
                     _Sprites[_CurrentSpriteindex].Position.Y);
@@ -106,7 +105,7 @@ namespace Type.Objects.World
                 if (_Sprites[_CurrentSpriteindex].Position.X + _Sprites[_CurrentSpriteindex].Width < -960)
                 {
                     ResetSprite();
-                    _Updating = false;
+                    _Scrolling = false;
                 }
             }
             else
@@ -115,7 +114,7 @@ namespace Type.Objects.World
                 if (_TimeSinceLastTransit >= _Delay)
                 {
                     _TimeSinceLastTransit = TimeSpan.Zero;
-                    Start();
+                    BeginScrolling();
                 }
             }
         }

@@ -63,32 +63,108 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Assets\Graphics\cluster.png">
-      <Link>Content\Graphics\cluster.png</Link>
+    <Content Include="..\Assets\Graphics\cluster-1.png">
+      <Link>Content\Graphics\cluster-1.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\cluster-2.png">
+      <Link>Content\Graphics\cluster-2.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\cluster-3.png">
+      <Link>Content\Graphics\cluster-3.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\cluster-4.png">
+      <Link>Content\Graphics\cluster-4.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\cluster-5.png">
+      <Link>Content\Graphics\cluster-5.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\cluster-6.png">
+      <Link>Content\Graphics\cluster-6.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\cluster-7.png">
+      <Link>Content\Graphics\cluster-7.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\Assets\Graphics\KenPixel\KenPixel.json">
       <Link>Content\Graphics\KenPixel\KenPixel.json</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Assets\Graphics\nebula.png">
-      <Link>Content\Graphics\nebula.png</Link>
+    <Content Include="..\Assets\Graphics\planet-far-1.png">
+      <Link>Content\Graphics\planet-far-1.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Assets\Graphics\planet-1.png">
-      <Link>Content\Graphics\planet-1.png</Link>
+    <Content Include="..\Assets\Graphics\planet-far-2.png">
+      <Link>Content\Graphics\planet-far-2.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Assets\Graphics\planet-2.png">
-      <Link>Content\Graphics\planet-2.png</Link>
+    <Content Include="..\Assets\Graphics\planet-far-3.png">
+      <Link>Content\Graphics\planet-far-3.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Assets\Graphics\planet-3.png">
-      <Link>Content\Graphics\planet-3.png</Link>
+    <Content Include="..\Assets\Graphics\planet-far-4.png">
+      <Link>Content\Graphics\planet-far-4.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Assets\Graphics\star.png">
-      <Link>Content\Graphics\star.png</Link>
+    <Content Include="..\Assets\Graphics\planet-far-5.png">
+      <Link>Content\Graphics\planet-far-5.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\planet-far-6.png">
+      <Link>Content\Graphics\planet-far-6.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\planet-far-7.png">
+      <Link>Content\Graphics\planet-far-7.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\planet-far-8.png">
+      <Link>Content\Graphics\planet-far-8.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\planet-far-9.png">
+      <Link>Content\Graphics\planet-far-9.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\planet-near-1.png">
+      <Link>Content\Graphics\planet-near-1.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\planet-near-2.png">
+      <Link>Content\Graphics\planet-near-2.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\planet-near-3.png">
+      <Link>Content\Graphics\planet-near-3.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\planet-near-4.png">
+      <Link>Content\Graphics\planet-near-4.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\planet-near-5.png">
+      <Link>Content\Graphics\planet-near-5.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\planet-near-6.png">
+      <Link>Content\Graphics\planet-near-6.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\planet-near-7.png">
+      <Link>Content\Graphics\planet-near-7.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\planet-near-8.png">
+      <Link>Content\Graphics\planet-near-8.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\planet-near-9.png">
+      <Link>Content\Graphics\planet-near-9.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\Assets\Graphics\stars-1.png">
@@ -113,6 +189,22 @@
     </Content>
     <Content Include="..\Assets\Level\level-4.txt">
       <Link>Content\Level\level-4.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Level\level-5.txt">
+      <Link>Content\Level\level-5.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Level\level-6.txt">
+      <Link>Content\Level\level-6.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Level\level-7.txt">
+      <Link>Content\Level\level-7.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Level\level-8.txt">
+      <Link>Content\Level\level-8.txt</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="App.config" />

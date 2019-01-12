@@ -16,31 +16,37 @@ namespace Type.Scenes
     public class GameScene : Scene
     {
         /// <summary> Scrolling background </summary>
-        private ScrollingBackground _BackgroundFar;
+        private readonly ScrollingBackground _BackgroundFar;
         /// <summary> Scrolling background </summary>
-        private ScrollingBackground _BackgroundNear;
+        private readonly ScrollingBackground _BackgroundNear;
         /// <summary> Scrolling object </summary>
-        private ScrollingObject _BackgroundObject;
+        private readonly ScrollingObject _PlanetsNear;
+        /// <summary> Scrolling object </summary>
+        private readonly ScrollingObject _PlanetsFar;
+        /// <summary> Scrolling object </summary>
+        private readonly ScrollingObject _Clusters;
+        /// <summary> Max level of the game </summary>
+        private readonly Int32 _MaxLevel;
         /// <summary> The players ship </summary>
-        private Player _Player;
+        private readonly Player _Player;
+        /// <summary> Loads wave data from text files </summary>
+        private readonly LevelLoader _LevelLoader;
+
+        /// <summary> Text printer that displays the score </summary>
+        private readonly TextDisplay _ScoreDisplay;
+        /// <summary> THe word score displayed top left of screen </summary>
+        private readonly TextDisplay _ScoreText;
+        /// <summary> UI element that displays the amount oif lives remaining </summary>
+        private readonly LifeMeter _LifeMeter;
+        /// <summary> Object that shows the current level text </summary>
+        private readonly LevelDisplay _LevelDisplay;
+        /// <summary> UI element that displays the current FPS </summary>
+        private readonly FpsCounter _Fps;
+
         /// <summary> The players current score</summary>
         private Int32 _Score;
-        /// <summary> Max level of the game </summary>
-        private Int32 _MaxLevel = 4;
-        /// <summary> Text printer that displays the score </summary>
-        private TextDisplay _ScoreDisplay;
-        /// <summary> THe word score displayed top left of screen </summary>
-        private TextDisplay _ScoreText;
-        /// <summary> UI element that displays the amount oif lives remaining </summary>
-        private LifeMeter _LifeMeter;
-        /// <summary> UI element that displays the current FPS </summary>
-        private FpsCounter _FPS;
-        /// <summary> Object that shows the current level text </summary>
-        private LevelDisplay _LevelDisplay;
         /// <summary> Whether the player has ran out of lives, ends the playing state </summary>
         public Boolean IsGameOver;
-        /// <summary> Loads wave data from text files </summary>
-        private LevelLoader _LevelLoader;
         /// <summary> The enemy factory </summary>
         public EnemyFactory EnemySpawner;
 
@@ -49,9 +55,13 @@ namespace Type.Scenes
 
         public GameScene()
         {
-            _BackgroundNear = new ScrollingBackground(125, "Content/Graphics/stars-1.png");
-            _BackgroundFar = new ScrollingBackground(225, "Content/Graphics/stars-2.png");
-            _BackgroundObject = new ScrollingObject();
+            _MaxLevel = 8;
+
+            _BackgroundFar = new ScrollingBackground(100, "Content/Graphics/stars-1.png");
+            _BackgroundNear = new ScrollingBackground(200, "Content/Graphics/stars-2.png");
+            _Clusters = new ScrollingObject(100, 200, "Content/Graphics/cluster-", 7, 40, 60, Constants.ZOrders.CLUSTERS);
+            _PlanetsFar = new ScrollingObject(200, 250, "Content/Graphics/planet-far-", 9, 10, 30, Constants.ZOrders.PLANETS_FAR);
+            _PlanetsNear = new ScrollingObject(250, 350, "Content/Graphics/planet-near-", 9, 10, 50, Constants.ZOrders.PLANETS_NEAR);
 
             _ScoreText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
@@ -62,6 +72,7 @@ namespace Type.Scenes
                 Colour = new Vector4(1, 0, 0, 1)
             };
             AddDrawable(_ScoreText);
+
             _ScoreDisplay = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
                 Text = _Score.ToString(),
@@ -72,7 +83,7 @@ namespace Type.Scenes
             AddDrawable(_ScoreDisplay);
 
             _LifeMeter = new LifeMeter();
-            _FPS = new FpsCounter();
+            _Fps = new FpsCounter();
             _LevelDisplay = new LevelDisplay();
             CurrentLevel = 1;
 
@@ -108,7 +119,9 @@ namespace Type.Scenes
 
             _BackgroundNear.Start();
             _BackgroundFar.Start();
-            _BackgroundObject.Start();
+            _PlanetsFar.Start();
+            _PlanetsNear.Start();
+            _Clusters.Start();
 
             _LevelDisplay.ShowLevel(CurrentLevel, TimeSpan.FromSeconds(2), () =>
             {
@@ -151,10 +164,13 @@ namespace Type.Scenes
         public override void Dispose()
         {
             base.Dispose();
+            _Fps.Dispose();
             _Player.Dispose();
             _BackgroundNear.Dispose();
             _BackgroundFar.Dispose();
-            _BackgroundObject.Dispose();
+            _PlanetsNear.Dispose();
+            _PlanetsFar.Dispose();
+            _Clusters.Dispose();
             EnemySpawner.Dispose();
         }
     }

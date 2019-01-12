@@ -28,13 +28,17 @@ namespace Type
         {
             public const Int32 BACKGROUND = 50;
 
-            public const Int32 BACKGROUND_OBJECT = 51;
+            public const Int32 CLUSTERS = 54;
+
+            public const Int32 PLANETS_FAR = 55;
+
+            public const Int32 PLANETS_NEAR = 56;
 
             public const Int32 BULLETS = 78;
 
             public const Int32 ENEMIES = 79;
 
-            public const Int32 PLAYER = 80;
+            public const Int32 PLAYER = 90;
 
             public const Int32 UI = 100;
         }
