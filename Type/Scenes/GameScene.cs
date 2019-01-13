@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using AmosShared.Audio;
 using AmosShared.Base;
 using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
@@ -63,6 +64,8 @@ namespace Type.Scenes
         public Boolean IsGameOver;
         /// <summary> The enemy factory </summary>
         private EnemyFactory _EnemySpawner;
+
+        private AudioPlayer _BackgroundMusic;
 
         /// <summary> The current level </summary>
         public Int32 CurrentLevel { get; private set; }
@@ -179,7 +182,6 @@ namespace Type.Scenes
             _ScoreDisplay.Text = _Score.ToString();
         }
 
-
         public void LevelComplete()
         {
             CurrentLevel++;
@@ -212,6 +214,7 @@ namespace Type.Scenes
                 IsGameOver = true;
                 SetButtonsEnabled(false);
                 SetButtonsVisible(false);
+                new AudioPlayer("Content/Audio/gameOver.wav", false, AudioManager.Category.EFFECT, 100);
             }
             else
             {

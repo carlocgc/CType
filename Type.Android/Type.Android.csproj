@@ -170,7 +170,6 @@
     <AndroidResource Include="Resources\values\Strings.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Assets\Audio\" />
     <Folder Include="Resources\drawable\" />
     <Folder Include="Resources\mipmap-hdpi\" />
     <Folder Include="Resources\mipmap-mdpi\" />
@@ -354,6 +353,46 @@
     </AndroidAsset>
     <AndroidAsset Include="..\Assets\Graphics\Explosion\explosion08.png">
       <Link>Assets\Graphics\Explosion\explosion08.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Audio\begin.wav">
+      <Link>Assets\Audio\begin.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Audio\bgm-1.wav">
+      <Link>Assets\Audio\bgm-1.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Audio\death.wav">
+      <Link>Assets\Audio\death.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Audio\gameOver.wav">
+      <Link>Assets\Audio\gameOver.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Audio\hurt3.wav">
+      <Link>Assets\Audio\hurt3.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Audio\laser1.wav">
+      <Link>Assets\Audio\laser1.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Audio\laser2.wav">
+      <Link>Assets\Audio\laser2.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Audio\laser4.wav">
+      <Link>Assets\Audio\laser4.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Audio\laser5.wav">
+      <Link>Assets\Audio\laser5.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Audio\laser3.wav">
+      <Link>Assets\Audio\laser3.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </AndroidAsset>
     <Content Include="THIRD-PARTY-NOTICES.txt" />
   </ItemGroup>

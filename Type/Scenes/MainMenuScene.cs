@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using AmosShared.Audio;
 using AmosShared.Base;
 using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
@@ -23,7 +24,6 @@ namespace Type.Scenes
 
         /// <summary> The background graphic </summary>
         private Sprite _Background;
-
         /// <summary> The title text </summary>
         private TextDisplay _TitleText;
         /// <summary> Text that promts game start </summary>
@@ -57,6 +57,8 @@ namespace Type.Scenes
                 Colour = new Vector4(1, 0, 0, 1)
             };
             AddDrawable(_StartText);
+
+            new AudioPlayer("Content/Audio/bgm-1.wav", true, AudioManager.Category.MUSIC, 100);
         }
 
         public override void Update(TimeSpan timeSinceUpdate)
