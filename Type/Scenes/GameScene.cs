@@ -30,6 +30,7 @@ namespace Type.Scenes
         private readonly Int32 _MaxLevel;
         /// <summary> The players ship </summary>
         private readonly Player _Player;
+
         /// <summary> Loads wave data from text files </summary>
         private readonly LevelLoader _LevelLoader;
 
@@ -37,6 +38,8 @@ namespace Type.Scenes
         private readonly Button _DownButton;
         private readonly Button _RightButton;
         private readonly Button _LeftButton;
+
+        private readonly Button _FireButton;
 
         /// <summary> Text printer that displays the score </summary>
         private readonly TextDisplay _ScoreDisplay;
@@ -55,6 +58,7 @@ namespace Type.Scenes
         public Boolean IsGameOver;
         /// <summary> The enemy factory </summary>
         public EnemyFactory EnemySpawner;
+
 
         /// <summary> The current level </summary>
         public Int32 CurrentLevel { get; private set; }
@@ -99,31 +103,123 @@ namespace Type.Scenes
 
             Sprite upButton = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/up.png"))
             {
-                Position = new Vector2(-200, 200),
+                Position = new Vector2(-712, -220),
                 Visible = true,
+                Colour = new Vector4(1, 1, 1, (Single)0.5)
             };
-            _UpButton = new Button(Int32.MaxValue, upButton) {OnButtonPress = UpButtonPress, OnButtonRelease = UpButtonRelease};
+            _UpButton = new Button(Int32.MaxValue, upButton) { OnButtonPress = UpButtonPress, OnButtonRelease = UpButtonRelease };
 
             Sprite downButton = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/down.png"))
             {
-                Position = new Vector2(-200, 0),
+                Position = new Vector2(-712, -480),
                 Visible = true,
+                Colour = new Vector4(1, 1, 1, (Single)0.5)
             };
-            _DownButton = new Button(Int32.MaxValue, downButton) {OnButtonPress = DownButtonPress, OnButtonRelease = DownButtonRelease};
+            _DownButton = new Button(Int32.MaxValue, downButton) { OnButtonPress = DownButtonPress, OnButtonRelease = DownButtonRelease };
 
             Sprite leftButton = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/left.png"))
             {
-                Position = new Vector2(-400, 100),
+                Position = new Vector2(-845, -350),
                 Visible = true,
+                Colour = new Vector4(1, 1, 1, (Single)0.5)
             };
-            _LeftButton = new Button(Int32.MaxValue, leftButton) {OnButtonPress = LeftButtonPress, OnButtonRelease = LeftButtonRelease};
+            _LeftButton = new Button(Int32.MaxValue, leftButton) { OnButtonPress = LeftButtonPress, OnButtonRelease = LeftButtonRelease };
 
             Sprite rightButton = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/right.png"))
             {
-                Position = new Vector2(-100, 100),
+                Position = new Vector2(-585, -350),
                 Visible = true,
+                Colour = new Vector4(1, 1, 1, (Single)0.5)
             };
-            _RightButton = new Button(Int32.MaxValue, rightButton) {OnButtonPress = RightButtonPress, OnButtonRelease = RightButtonRelease};
+            _RightButton = new Button(Int32.MaxValue, rightButton) { OnButtonPress = RightButtonPress, OnButtonRelease = RightButtonRelease };
+
+            Sprite fireButton = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/fire.png"))
+            {
+                Position = new Vector2(625, -450),
+                Visible = true,
+                Colour = new Vector4(1, 1, 1, (Single)0.5)
+            };
+            _FireButton = new Button(Int32.MaxValue, fireButton) { OnButtonPress = FireButtonPress, OnButtonRelease = FireButtonRelease };
+        }
+
+        /// <summary>
+        /// Starts a new game
+        /// </summary>
+        public void StartGame()
+        {
+            _Score = 0;
+
+            _BackgroundNear.Start();
+            _BackgroundFar.Start();
+            _PlanetsFar.Start();
+            _PlanetsNear.Start();
+            _Clusters.Start();
+
+            _LevelDisplay.ShowLevel(CurrentLevel, TimeSpan.FromSeconds(2), () =>
+            {
+                EnemySpawner.SetLevelData(_LevelLoader.GetWaveData(CurrentLevel));
+                CollisionController.Instance.IsActive = true;
+            });
+
+            SetButtonsEnabled(true);
+        }
+
+        /// <summary>
+        /// Adds the value to the players current score
+        /// </summary>
+        /// <param name="amount"></param>
+        public void UpdateScore(Int32 amount)
+        {
+            _Score += amount;
+            _ScoreDisplay.Text = _Score.ToString();
+        }
+
+        public void LevelComplete()
+        {
+            CurrentLevel++;
+            if (CurrentLevel >= _MaxLevel)
+            {
+                // TODO Game Complete
+                IsGameOver = true;
+                SetButtonsEnabled(false);
+            }
+            else
+            {
+                _LevelDisplay.ShowLevel(CurrentLevel, TimeSpan.FromSeconds(2), () =>
+                {
+                    EnemySpawner.SetLevelData(_LevelLoader.GetWaveData(CurrentLevel));
+                });
+            }
+        }
+
+        /// <summary>
+        /// Called when the player dies checks if game is over
+        /// </summary>
+        private void OnPlayerDeath()
+        {
+            EnemySpawner.Reset();
+            _LifeMeter.LoseLife();
+
+            if (_LifeMeter.PlayerLives <= 0 && !IsGameOver)
+            {
+                IsGameOver = true;
+                SetButtonsEnabled(false);
+            }
+            else
+            {
+                EnemySpawner.StartWave();
+            }
+        }
+
+#region Input
+
+        private void SetButtonsEnabled(Boolean state)
+        {
+            _UpButton.TouchEnabled = state;
+            _DownButton.TouchEnabled = state;
+            _LeftButton.TouchEnabled = state;
+            _RightButton.TouchEnabled = state;
+            _FireButton.TouchEnabled = state;
         }
 
         private void RightButtonPress(Button obj)
@@ -166,78 +262,17 @@ namespace Type.Scenes
             _Player.MoveUp = true;
         }
 
-        /// <summary>
-        /// Called when the player dies checks if game is over
-        /// </summary>
-        private void OnPlayerDeath()
+        private void FireButtonRelease(Button obj)
         {
-            EnemySpawner.Reset();
-            _LifeMeter.LoseLife();
-
-            if (_LifeMeter.PlayerLives <= 0 && !IsGameOver)
-            {
-                IsGameOver = true;
-                _UpButton.TouchEnabled = false;
-                _DownButton.TouchEnabled = false;
-                _LeftButton.TouchEnabled = false;
-                _RightButton.TouchEnabled = false;
-            }
-            else
-            {
-                EnemySpawner.StartWave();
-            }
+            _Player.Shoot = false;
         }
 
-        /// <summary>
-        /// Starts a new game
-        /// </summary>
-        public void StartGame()
+        private void FireButtonPress(Button obj)
         {
-            _Score = 0;
-
-            _BackgroundNear.Start();
-            _BackgroundFar.Start();
-            _PlanetsFar.Start();
-            _PlanetsNear.Start();
-            _Clusters.Start();
-
-            _LevelDisplay.ShowLevel(CurrentLevel, TimeSpan.FromSeconds(2), () =>
-            {
-                EnemySpawner.SetLevelData(_LevelLoader.GetWaveData(CurrentLevel));
-                CollisionController.Instance.IsActive = true;
-            });
-
-            _UpButton.TouchEnabled = true;
-            _DownButton.TouchEnabled = true;
-            _LeftButton.TouchEnabled = true;
-            _RightButton.TouchEnabled = true;
+            _Player.Shoot = true;
         }
 
-        public void LevelComplete()
-        {
-            CurrentLevel++;
-            if (CurrentLevel >= _MaxLevel)
-            {
-                // TODO Game Complete
-            }
-            else
-            {
-                _LevelDisplay.ShowLevel(CurrentLevel, TimeSpan.FromSeconds(2), () =>
-                {
-                    EnemySpawner.SetLevelData(_LevelLoader.GetWaveData(CurrentLevel));
-                });
-            }
-        }
-
-        /// <summary>
-        /// Adds the value to the players current score
-        /// </summary>
-        /// <param name="amount"></param>
-        public void UpdateScore(Int32 amount)
-        {
-            _Score += amount;
-            _ScoreDisplay.Text = _Score.ToString();
-        }
+#endregion
 
         public override void Update(TimeSpan timeSinceUpdate)
         {
@@ -252,12 +287,12 @@ namespace Type.Scenes
             _UpButton.OnButtonRelease = null;
             _DownButton.OnButtonPress = null;
             _DownButton.OnButtonRelease = null;
-
             _LeftButton.OnButtonPress = null;
             _LeftButton.OnButtonRelease = null;
             _RightButton.OnButtonPress = null;
             _RightButton.OnButtonRelease = null;
-
+            _FireButton.OnButtonPress = null;
+            _FireButton.OnButtonRelease = null;
 
             _Fps.Dispose();
             _Player.Dispose();

@@ -55,8 +55,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Java.Interop" />
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\netstandard2.0\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\netstandard2.0\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="OpenTK" />
     <Reference Include="Plugin.CurrentActivity, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -158,7 +158,9 @@
     <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="Resources\AboutResources.txt" />
-    <None Include="Properties\AndroidManifest.xml" />
+    <None Include="Properties\AndroidManifest.xml">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Assets\AboutAssets.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -177,47 +179,11 @@
     <Folder Include="Resources\mipmap-xxxhdpi\" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="..\Assets\Graphics\background.png">
-      <Link>Assets\Graphics\background.png</Link>
-    </AndroidAsset>
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="..\Assets\Graphics\bullet.png">
-      <Link>Assets\Graphics\bullet.png</Link>
-    </AndroidAsset>
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="..\Assets\Graphics\enemy1.png">
-      <Link>Assets\Graphics\enemy1.png</Link>
-    </AndroidAsset>
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="..\Assets\Graphics\enemy2.png">
-      <Link>Assets\Graphics\enemy2.png</Link>
-    </AndroidAsset>
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="..\Assets\Graphics\enemy3.png">
-      <Link>Assets\Graphics\enemy3.png</Link>
-    </AndroidAsset>
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="..\Assets\Graphics\player.png">
-      <Link>Assets\Graphics\player.png</Link>
-    </AndroidAsset>
-  </ItemGroup>
-  <ItemGroup>
     <AndroidAsset Include="..\Assets\Graphics\KenPixel\KenPixel.png">
       <Link>Assets\Graphics\KenPixel\KenPixel.png</Link>
     </AndroidAsset>
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="..\Assets\Graphics\lifeicon.png">
-      <Link>Assets\Graphics\lifeicon.png</Link>
-    </AndroidAsset>
-    <AndroidAsset Include="..\Assets\Graphics\MainMenuBG.png">
-      <Link>Assets\Graphics\MainMenuBG.png</Link>
-    </AndroidAsset>
     <AndroidAsset Include="..\Assets\Level\level-1.txt">
       <Link>Assets\Level\level-1.txt</Link>
     </AndroidAsset>
@@ -229,6 +195,60 @@
     </AndroidAsset>
     <AndroidAsset Include="..\Assets\Level\level-4.txt">
       <Link>Assets\Level\level-4.txt</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Level\level-5.txt">
+      <Link>Assets\Level\level-5.txt</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Level\level-6.txt">
+      <Link>Assets\Level\level-6.txt</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Level\level-7.txt">
+      <Link>Assets\Level\level-7.txt</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Level\level-8.txt">
+      <Link>Assets\Level\level-8.txt</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Graphics\background.png">
+      <Link>Assets\Graphics\background.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Graphics\bullet.png">
+      <Link>Assets\Graphics\bullet.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Graphics\cluster-1.png">
+      <Link>Assets\Graphics\cluster-1.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Graphics\cluster-2.png">
+      <Link>Assets\Graphics\cluster-2.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Graphics\cluster-3.png">
+      <Link>Assets\Graphics\cluster-3.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Graphics\cluster-4.png">
+      <Link>Assets\Graphics\cluster-4.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Graphics\cluster-5.png">
+      <Link>Assets\Graphics\cluster-5.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Graphics\cluster-6.png">
+      <Link>Assets\Graphics\cluster-6.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Graphics\cluster-7.png">
+      <Link>Assets\Graphics\cluster-7.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Graphics\enemy1.png">
+      <Link>Assets\Graphics\enemy1.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Graphics\enemy2.png">
+      <Link>Assets\Graphics\enemy2.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Graphics\enemy3.png">
+      <Link>Assets\Graphics\enemy3.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Graphics\lifeicon.png">
+      <Link>Assets\Graphics\lifeicon.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Graphics\MainMenuBG.png">
+      <Link>Assets\Graphics\MainMenuBG.png</Link>
     </AndroidAsset>
     <AndroidAsset Include="..\Assets\Graphics\planet-far-1.png">
       <Link>Assets\Graphics\planet-far-1.png</Link>
@@ -284,23 +304,56 @@
     <AndroidAsset Include="..\Assets\Graphics\planet-near-9.png">
       <Link>Assets\Graphics\planet-near-9.png</Link>
     </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Graphics\player.png">
+      <Link>Assets\Graphics\player.png</Link>
+    </AndroidAsset>
     <AndroidAsset Include="..\Assets\Graphics\stars-1.png">
       <Link>Assets\Graphics\stars-1.png</Link>
     </AndroidAsset>
     <AndroidAsset Include="..\Assets\Graphics\stars-2.png">
       <Link>Assets\Graphics\stars-2.png</Link>
     </AndroidAsset>
-    <AndroidAsset Include="..\Assets\Level\level-5.txt">
-      <Link>Assets\Level\level-5.txt</Link>
+    <AndroidAsset Include="..\Assets\Graphics\Buttons\down.png">
+      <Link>Assets\Graphics\Buttons\down.png</Link>
     </AndroidAsset>
-    <AndroidAsset Include="..\Assets\Level\level-6.txt">
-      <Link>Assets\Level\level-6.txt</Link>
+    <AndroidAsset Include="..\Assets\Graphics\Buttons\fire.png">
+      <Link>Assets\Graphics\Buttons\fire.png</Link>
     </AndroidAsset>
-    <AndroidAsset Include="..\Assets\Level\level-7.txt">
-      <Link>Assets\Level\level-7.txt</Link>
+    <AndroidAsset Include="..\Assets\Graphics\Buttons\left.png">
+      <Link>Assets\Graphics\Buttons\left.png</Link>
     </AndroidAsset>
-    <AndroidAsset Include="..\Assets\Level\level-8.txt">
-      <Link>Assets\Level\level-8.txt</Link>
+    <AndroidAsset Include="..\Assets\Graphics\Buttons\right.png">
+      <Link>Assets\Graphics\Buttons\right.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Graphics\Buttons\up.png">
+      <Link>Assets\Graphics\Buttons\up.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Graphics\Explosion\explosion00.png">
+      <Link>Assets\Graphics\Explosion\explosion00.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Graphics\Explosion\explosion01.png">
+      <Link>Assets\Graphics\Explosion\explosion01.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Graphics\Explosion\explosion02.png">
+      <Link>Assets\Graphics\Explosion\explosion02.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Graphics\Explosion\explosion03.png">
+      <Link>Assets\Graphics\Explosion\explosion03.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Graphics\Explosion\explosion04.png">
+      <Link>Assets\Graphics\Explosion\explosion04.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Graphics\Explosion\explosion05.png">
+      <Link>Assets\Graphics\Explosion\explosion05.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Graphics\Explosion\explosion06.png">
+      <Link>Assets\Graphics\Explosion\explosion06.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Graphics\Explosion\explosion07.png">
+      <Link>Assets\Graphics\Explosion\explosion07.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Graphics\Explosion\explosion08.png">
+      <Link>Assets\Graphics\Explosion\explosion08.png</Link>
     </AndroidAsset>
     <Content Include="THIRD-PARTY-NOTICES.txt" />
   </ItemGroup>
