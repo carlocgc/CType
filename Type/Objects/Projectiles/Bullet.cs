@@ -20,11 +20,12 @@ namespace Type.Objects.Projectiles
         /// <summary> Whether this bullet was fired from the player ship </summary>
         private readonly Boolean _IsPlayerBullet;
 
-        public Bullet(String assetPath, Vector2 spawnPos, Vector2 direction, Single velocity, Double rotation, Boolean isPlayerBullet)
+        public Bullet(String assetPath, Vector2 spawnPos, Vector2 direction, Single velocity, Double rotation, Boolean isPlayerBullet, Vector4 colour)
         {
             AddSprite(new Sprite(Game.MainCanvas, Constants.ZOrders.BULLETS, Texture.GetTexture(assetPath))
             {
                 Visible = true,
+                Colour = colour,
             });
             _Direction = direction;
             _Velocity = velocity;
