@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using AmosShared.Base;
 using AmosShared.Graphics;
@@ -34,11 +35,15 @@ namespace Type.Scenes
         /// <summary> Loads wave data from text files </summary>
         private readonly LevelLoader _LevelLoader;
 
+        /// <summary> Up directional button </summary>
         private readonly Button _UpButton;
+        /// <summary> Down directional button </summary>
         private readonly Button _DownButton;
+        /// <summary> Right directional button </summary>
         private readonly Button _RightButton;
+        /// <summary> Left directional button </summary>
         private readonly Button _LeftButton;
-
+        /// <summary> Fire button </summary>
         private readonly Button _FireButton;
 
         /// <summary> Text printer that displays the score </summary>
@@ -57,8 +62,7 @@ namespace Type.Scenes
         /// <summary> Whether the player has ran out of lives, ends the playing state </summary>
         public Boolean IsGameOver;
         /// <summary> The enemy factory </summary>
-        public EnemyFactory EnemySpawner;
-
+        private EnemyFactory _EnemySpawner;
 
         /// <summary> The current level </summary>
         public Int32 CurrentLevel { get; private set; }
@@ -99,7 +103,7 @@ namespace Type.Scenes
 
             _Player = new Player(OnPlayerDeath);
             _LevelLoader = new LevelLoader();
-            EnemySpawner = new EnemyFactory(this);
+            _EnemySpawner = new EnemyFactory(this);
 
             Sprite upButton = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/up.png"))
             {
@@ -157,11 +161,12 @@ namespace Type.Scenes
 
             _LevelDisplay.ShowLevel(CurrentLevel, TimeSpan.FromSeconds(2), () =>
             {
-                EnemySpawner.SetLevelData(_LevelLoader.GetWaveData(CurrentLevel));
+                _EnemySpawner.SetLevelData(_LevelLoader.GetWaveData(CurrentLevel));
                 CollisionController.Instance.IsActive = true;
             });
 
             SetButtonsEnabled(true);
+            SetButtonsVisible(true);
         }
 
         /// <summary>
@@ -174,6 +179,7 @@ namespace Type.Scenes
             _ScoreDisplay.Text = _Score.ToString();
         }
 
+
         public void LevelComplete()
         {
             CurrentLevel++;
@@ -182,12 +188,13 @@ namespace Type.Scenes
                 // TODO Game Complete
                 IsGameOver = true;
                 SetButtonsEnabled(false);
+                SetButtonsVisible(false);
             }
             else
             {
                 _LevelDisplay.ShowLevel(CurrentLevel, TimeSpan.FromSeconds(2), () =>
                 {
-                    EnemySpawner.SetLevelData(_LevelLoader.GetWaveData(CurrentLevel));
+                    _EnemySpawner.SetLevelData(_LevelLoader.GetWaveData(CurrentLevel));
                 });
             }
         }
@@ -197,21 +204,22 @@ namespace Type.Scenes
         /// </summary>
         private void OnPlayerDeath()
         {
-            EnemySpawner.Reset();
+            _EnemySpawner.Reset();
             _LifeMeter.LoseLife();
 
             if (_LifeMeter.PlayerLives <= 0 && !IsGameOver)
             {
                 IsGameOver = true;
                 SetButtonsEnabled(false);
+                SetButtonsVisible(false);
             }
             else
             {
-                EnemySpawner.StartWave();
+                _EnemySpawner.StartWave();
             }
         }
 
-#region Input
+        #region Input
 
         private void SetButtonsEnabled(Boolean state)
         {
@@ -220,6 +228,15 @@ namespace Type.Scenes
             _LeftButton.TouchEnabled = state;
             _RightButton.TouchEnabled = state;
             _FireButton.TouchEnabled = state;
+        }
+
+        private void SetButtonsVisible(Boolean state)
+        {
+            _UpButton.Visible = state;
+            _DownButton.Visible = state;
+            _LeftButton.Visible = state;
+            _RightButton.Visible = state;
+            _FireButton.Visible = state;
         }
 
         private void RightButtonPress(Button obj)
@@ -272,7 +289,7 @@ namespace Type.Scenes
             _Player.Shoot = true;
         }
 
-#endregion
+        #endregion
 
         public override void Update(TimeSpan timeSinceUpdate)
         {
@@ -301,7 +318,7 @@ namespace Type.Scenes
             _PlanetsNear.Dispose();
             _PlanetsFar.Dispose();
             _Clusters.Dispose();
-            EnemySpawner.Dispose();
+            _EnemySpawner.Dispose();
         }
     }
 }
