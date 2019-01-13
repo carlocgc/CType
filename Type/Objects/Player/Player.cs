@@ -18,19 +18,29 @@ namespace Type.Objects.Player
     {
         /// <summary> Default rate of fire </summary>
         private readonly TimeSpan _DefaultFireRate = TimeSpan.FromMilliseconds(100);
+
         /// <summary> Position on screen where the player is spawned </summary>
         private readonly Vector2 _SpawnPosition = new Vector2(-700, 0);
+
         /// <summary> Default movement speed </summary>
         private readonly Single _DefaultMovementSpeed = 500;
 
         /// <summary> Time since the last bullet was fired </summary>
         private TimeSpan _TimeSinceLastFired;
+
         /// <summary> Whether firing is allowed </summary>
         private Boolean _IsWeaponLocked;
+
         /// <summary> The offset to the front of the ship, used for spawning bullets </summary>
         private Vector2 _BulletSpawnPos;
 
         private readonly Action OnDeath;
+
+        public Boolean MoveUp { get; set; }
+        public Boolean MoveDown { get; set; }
+        public Boolean MoveRight { get; set; }
+        public Boolean MoveLeft { get; set; }
+        public Boolean Shoot { get; set; }
 
         /// <summary> Amount of time between firing </summary>
         public TimeSpan FireRate { get; set; }
@@ -92,28 +102,28 @@ namespace Type.Objects.Player
                 }
             }
 #if DESKTOP
-            if (Keyboard.GetState().IsKeyDown(Key.Right))
+            if (Keyboard.GetState().IsKeyDown(Key.Right) || MoveRight)
             {
                 if (Position.X <= (1920 / 2) - GetSprite().Width)
                 {
                     Position += new Vector2(MovementSpeed * (Single)timeTilUpdate.TotalSeconds, 0);
                 }
             }
-            if (Keyboard.GetState().IsKeyDown(Key.Left))
+            if (Keyboard.GetState().IsKeyDown(Key.Left) || MoveLeft)
             {
                 if (Position.X >= -(1920 / 2))
                 {
                     Position -= new Vector2(MovementSpeed * (Single)timeTilUpdate.TotalSeconds, 0);
                 }
             }
-            if (Keyboard.GetState().IsKeyDown(Key.Up))
+            if (Keyboard.GetState().IsKeyDown(Key.Up) || MoveUp)
             {
                 if (Position.Y <= (1080 / 2) - GetSprite().Height)
                 {
                     Position += new Vector2(0, MovementSpeed * (Single)timeTilUpdate.TotalSeconds);
                 }
             }
-            if (Keyboard.GetState().IsKeyDown(Key.Down))
+            if (Keyboard.GetState().IsKeyDown(Key.Down) || MoveDown)
             {
                 if (Position.Y >= -(1080 / 2))
                 {
@@ -121,7 +131,44 @@ namespace Type.Objects.Player
                 }
             }
 
-            if (Keyboard.GetState().IsKeyDown(Key.Space))
+            if (Keyboard.GetState().IsKeyDown(Key.Space) || Shoot)
+            {
+                if (_IsWeaponLocked) return;
+                FireForward();
+            }
+#endif
+
+#if ANDROID
+            if (MoveRight)
+            {
+                if (Position.X <= (1920 / 2) - GetSprite().Width)
+                {
+                    Position += new Vector2(MovementSpeed * (Single)timeTilUpdate.TotalSeconds, 0);
+                }
+            }
+            if (MoveLeft)
+            {
+                if (Position.X >= -(1920 / 2))
+                {
+                    Position -= new Vector2(MovementSpeed * (Single)timeTilUpdate.TotalSeconds, 0);
+                }
+            }
+            if (MoveUp)
+            {
+                if (Position.Y <= (1080 / 2) - GetSprite().Height)
+                {
+                    Position += new Vector2(0, MovementSpeed * (Single)timeTilUpdate.TotalSeconds);
+                }
+            }
+            if (MoveDown)
+            {
+                if (Position.Y >= -(1080 / 2))
+                {
+                    Position -= new Vector2(0, MovementSpeed * (Single)timeTilUpdate.TotalSeconds);
+                }
+            }
+
+            if (Shoot)
             {
                 if (_IsWeaponLocked) return;
                 FireForward();

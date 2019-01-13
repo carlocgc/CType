@@ -3,6 +3,7 @@ using System.ComponentModel;
 using AmosShared.Base;
 using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
+using AmosShared.Touch;
 using OpenTK;
 using Type.Controllers;
 using Type.Data;
@@ -31,6 +32,11 @@ namespace Type.Scenes
         private readonly Player _Player;
         /// <summary> Loads wave data from text files </summary>
         private readonly LevelLoader _LevelLoader;
+
+        private readonly Button _UpButton;
+        private readonly Button _DownButton;
+        private readonly Button _RightButton;
+        private readonly Button _LeftButton;
 
         /// <summary> Text printer that displays the score </summary>
         private readonly TextDisplay _ScoreDisplay;
@@ -90,6 +96,74 @@ namespace Type.Scenes
             _Player = new Player(OnPlayerDeath);
             _LevelLoader = new LevelLoader();
             EnemySpawner = new EnemyFactory(this);
+
+            Sprite upButton = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/up.png"))
+            {
+                Position = new Vector2(-200, 200),
+                Visible = true,
+            };
+            _UpButton = new Button(Int32.MaxValue, upButton) {OnButtonPress = UpButtonPress, OnButtonRelease = UpButtonRelease};
+
+            Sprite downButton = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/down.png"))
+            {
+                Position = new Vector2(-200, 0),
+                Visible = true,
+            };
+            _DownButton = new Button(Int32.MaxValue, downButton) {OnButtonPress = DownButtonPress, OnButtonRelease = DownButtonRelease};
+
+            Sprite leftButton = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/left.png"))
+            {
+                Position = new Vector2(-400, 100),
+                Visible = true,
+            };
+            _LeftButton = new Button(Int32.MaxValue, leftButton) {OnButtonPress = LeftButtonPress, OnButtonRelease = LeftButtonRelease};
+
+            Sprite rightButton = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/right.png"))
+            {
+                Position = new Vector2(-100, 100),
+                Visible = true,
+            };
+            _RightButton = new Button(Int32.MaxValue, rightButton) {OnButtonPress = RightButtonPress, OnButtonRelease = RightButtonRelease};
+        }
+
+        private void RightButtonPress(Button obj)
+        {
+            _Player.MoveRight = true;
+        }
+
+        private void RightButtonRelease(Button obj)
+        {
+            _Player.MoveRight = false;
+        }
+
+        private void LeftButtonPress(Button obj)
+        {
+            _Player.MoveLeft = true;
+        }
+
+        private void LeftButtonRelease(Button obj)
+        {
+            _Player.MoveLeft = false;
+        }
+
+        private void DownButtonPress(Button obj)
+        {
+            _Player.MoveDown = true;
+        }
+
+        private void DownButtonRelease(Button obj)
+        {
+            _Player.MoveDown = false;
+        }
+
+        private void UpButtonRelease(Button button)
+        {
+            _Player.MoveUp = false;
+        }
+
+        private void UpButtonPress(Button button)
+        {
+            _Player.MoveUp = true;
         }
 
         /// <summary>
@@ -103,6 +177,10 @@ namespace Type.Scenes
             if (_LifeMeter.PlayerLives <= 0 && !IsGameOver)
             {
                 IsGameOver = true;
+                _UpButton.TouchEnabled = false;
+                _DownButton.TouchEnabled = false;
+                _LeftButton.TouchEnabled = false;
+                _RightButton.TouchEnabled = false;
             }
             else
             {
@@ -128,6 +206,11 @@ namespace Type.Scenes
                 EnemySpawner.SetLevelData(_LevelLoader.GetWaveData(CurrentLevel));
                 CollisionController.Instance.IsActive = true;
             });
+
+            _UpButton.TouchEnabled = true;
+            _DownButton.TouchEnabled = true;
+            _LeftButton.TouchEnabled = true;
+            _RightButton.TouchEnabled = true;
         }
 
         public void LevelComplete()
@@ -164,6 +247,18 @@ namespace Type.Scenes
         public override void Dispose()
         {
             base.Dispose();
+
+            _UpButton.OnButtonPress = null;
+            _UpButton.OnButtonRelease = null;
+            _DownButton.OnButtonPress = null;
+            _DownButton.OnButtonRelease = null;
+
+            _LeftButton.OnButtonPress = null;
+            _LeftButton.OnButtonRelease = null;
+            _RightButton.OnButtonPress = null;
+            _RightButton.OnButtonRelease = null;
+
+
             _Fps.Dispose();
             _Player.Dispose();
             _BackgroundNear.Dispose();
