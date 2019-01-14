@@ -26,10 +26,195 @@ namespace Type.Android
 		
 		public static void UpdateIdValues()
 		{
+			global::AmosAndroid.Resource.Attribute.buttonSize = global::Type.Android.Resource.Attribute.buttonSize;
+			global::AmosAndroid.Resource.Attribute.circleCrop = global::Type.Android.Resource.Attribute.circleCrop;
+			global::AmosAndroid.Resource.Attribute.colorScheme = global::Type.Android.Resource.Attribute.colorScheme;
+			global::AmosAndroid.Resource.Attribute.font = global::Type.Android.Resource.Attribute.font;
+			global::AmosAndroid.Resource.Attribute.fontProviderAuthority = global::Type.Android.Resource.Attribute.fontProviderAuthority;
+			global::AmosAndroid.Resource.Attribute.fontProviderCerts = global::Type.Android.Resource.Attribute.fontProviderCerts;
+			global::AmosAndroid.Resource.Attribute.fontProviderFetchStrategy = global::Type.Android.Resource.Attribute.fontProviderFetchStrategy;
+			global::AmosAndroid.Resource.Attribute.fontProviderFetchTimeout = global::Type.Android.Resource.Attribute.fontProviderFetchTimeout;
+			global::AmosAndroid.Resource.Attribute.fontProviderPackage = global::Type.Android.Resource.Attribute.fontProviderPackage;
+			global::AmosAndroid.Resource.Attribute.fontProviderQuery = global::Type.Android.Resource.Attribute.fontProviderQuery;
+			global::AmosAndroid.Resource.Attribute.fontStyle = global::Type.Android.Resource.Attribute.fontStyle;
+			global::AmosAndroid.Resource.Attribute.fontWeight = global::Type.Android.Resource.Attribute.fontWeight;
+			global::AmosAndroid.Resource.Attribute.imageAspectRatio = global::Type.Android.Resource.Attribute.imageAspectRatio;
+			global::AmosAndroid.Resource.Attribute.imageAspectRatioAdjust = global::Type.Android.Resource.Attribute.imageAspectRatioAdjust;
+			global::AmosAndroid.Resource.Attribute.scopeUris = global::Type.Android.Resource.Attribute.scopeUris;
+			global::AmosAndroid.Resource.Boolean.abc_action_bar_embed_tabs = global::Type.Android.Resource.Boolean.abc_action_bar_embed_tabs;
+			global::AmosAndroid.Resource.Color.common_google_signin_btn_text_dark = global::Type.Android.Resource.Color.common_google_signin_btn_text_dark;
+			global::AmosAndroid.Resource.Color.common_google_signin_btn_text_dark_default = global::Type.Android.Resource.Color.common_google_signin_btn_text_dark_default;
+			global::AmosAndroid.Resource.Color.common_google_signin_btn_text_dark_disabled = global::Type.Android.Resource.Color.common_google_signin_btn_text_dark_disabled;
+			global::AmosAndroid.Resource.Color.common_google_signin_btn_text_dark_focused = global::Type.Android.Resource.Color.common_google_signin_btn_text_dark_focused;
+			global::AmosAndroid.Resource.Color.common_google_signin_btn_text_dark_pressed = global::Type.Android.Resource.Color.common_google_signin_btn_text_dark_pressed;
+			global::AmosAndroid.Resource.Color.common_google_signin_btn_text_light = global::Type.Android.Resource.Color.common_google_signin_btn_text_light;
+			global::AmosAndroid.Resource.Color.common_google_signin_btn_text_light_default = global::Type.Android.Resource.Color.common_google_signin_btn_text_light_default;
+			global::AmosAndroid.Resource.Color.common_google_signin_btn_text_light_disabled = global::Type.Android.Resource.Color.common_google_signin_btn_text_light_disabled;
+			global::AmosAndroid.Resource.Color.common_google_signin_btn_text_light_focused = global::Type.Android.Resource.Color.common_google_signin_btn_text_light_focused;
+			global::AmosAndroid.Resource.Color.common_google_signin_btn_text_light_pressed = global::Type.Android.Resource.Color.common_google_signin_btn_text_light_pressed;
+			global::AmosAndroid.Resource.Color.common_google_signin_btn_tint = global::Type.Android.Resource.Color.common_google_signin_btn_tint;
+			global::AmosAndroid.Resource.Color.notification_action_color_filter = global::Type.Android.Resource.Color.notification_action_color_filter;
+			global::AmosAndroid.Resource.Color.notification_icon_bg_color = global::Type.Android.Resource.Color.notification_icon_bg_color;
+			global::AmosAndroid.Resource.Color.ripple_material_light = global::Type.Android.Resource.Color.ripple_material_light;
+			global::AmosAndroid.Resource.Color.secondary_text_default_material_light = global::Type.Android.Resource.Color.secondary_text_default_material_light;
+			global::AmosAndroid.Resource.Dimension.compat_button_inset_horizontal_material = global::Type.Android.Resource.Dimension.compat_button_inset_horizontal_material;
+			global::AmosAndroid.Resource.Dimension.compat_button_inset_vertical_material = global::Type.Android.Resource.Dimension.compat_button_inset_vertical_material;
+			global::AmosAndroid.Resource.Dimension.compat_button_padding_horizontal_material = global::Type.Android.Resource.Dimension.compat_button_padding_horizontal_material;
+			global::AmosAndroid.Resource.Dimension.compat_button_padding_vertical_material = global::Type.Android.Resource.Dimension.compat_button_padding_vertical_material;
+			global::AmosAndroid.Resource.Dimension.compat_control_corner_material = global::Type.Android.Resource.Dimension.compat_control_corner_material;
+			global::AmosAndroid.Resource.Dimension.notification_action_icon_size = global::Type.Android.Resource.Dimension.notification_action_icon_size;
+			global::AmosAndroid.Resource.Dimension.notification_action_text_size = global::Type.Android.Resource.Dimension.notification_action_text_size;
+			global::AmosAndroid.Resource.Dimension.notification_big_circle_margin = global::Type.Android.Resource.Dimension.notification_big_circle_margin;
+			global::AmosAndroid.Resource.Dimension.notification_content_margin_start = global::Type.Android.Resource.Dimension.notification_content_margin_start;
+			global::AmosAndroid.Resource.Dimension.notification_large_icon_height = global::Type.Android.Resource.Dimension.notification_large_icon_height;
+			global::AmosAndroid.Resource.Dimension.notification_large_icon_width = global::Type.Android.Resource.Dimension.notification_large_icon_width;
+			global::AmosAndroid.Resource.Dimension.notification_main_column_padding_top = global::Type.Android.Resource.Dimension.notification_main_column_padding_top;
+			global::AmosAndroid.Resource.Dimension.notification_media_narrow_margin = global::Type.Android.Resource.Dimension.notification_media_narrow_margin;
+			global::AmosAndroid.Resource.Dimension.notification_right_icon_size = global::Type.Android.Resource.Dimension.notification_right_icon_size;
+			global::AmosAndroid.Resource.Dimension.notification_right_side_padding_top = global::Type.Android.Resource.Dimension.notification_right_side_padding_top;
+			global::AmosAndroid.Resource.Dimension.notification_small_icon_background_padding = global::Type.Android.Resource.Dimension.notification_small_icon_background_padding;
+			global::AmosAndroid.Resource.Dimension.notification_small_icon_size_as_large = global::Type.Android.Resource.Dimension.notification_small_icon_size_as_large;
+			global::AmosAndroid.Resource.Dimension.notification_subtext_size = global::Type.Android.Resource.Dimension.notification_subtext_size;
+			global::AmosAndroid.Resource.Dimension.notification_top_pad = global::Type.Android.Resource.Dimension.notification_top_pad;
+			global::AmosAndroid.Resource.Dimension.notification_top_pad_large_text = global::Type.Android.Resource.Dimension.notification_top_pad_large_text;
+			global::AmosAndroid.Resource.Drawable.common_full_open_on_phone = global::Type.Android.Resource.Drawable.common_full_open_on_phone;
+			global::AmosAndroid.Resource.Drawable.common_google_signin_btn_icon_dark = global::Type.Android.Resource.Drawable.common_google_signin_btn_icon_dark;
+			global::AmosAndroid.Resource.Drawable.common_google_signin_btn_icon_dark_focused = global::Type.Android.Resource.Drawable.common_google_signin_btn_icon_dark_focused;
+			global::AmosAndroid.Resource.Drawable.common_google_signin_btn_icon_dark_normal = global::Type.Android.Resource.Drawable.common_google_signin_btn_icon_dark_normal;
+			global::AmosAndroid.Resource.Drawable.common_google_signin_btn_icon_dark_normal_background = global::Type.Android.Resource.Drawable.common_google_signin_btn_icon_dark_normal_background;
+			global::AmosAndroid.Resource.Drawable.common_google_signin_btn_icon_disabled = global::Type.Android.Resource.Drawable.common_google_signin_btn_icon_disabled;
+			global::AmosAndroid.Resource.Drawable.common_google_signin_btn_icon_light = global::Type.Android.Resource.Drawable.common_google_signin_btn_icon_light;
+			global::AmosAndroid.Resource.Drawable.common_google_signin_btn_icon_light_focused = global::Type.Android.Resource.Drawable.common_google_signin_btn_icon_light_focused;
+			global::AmosAndroid.Resource.Drawable.common_google_signin_btn_icon_light_normal = global::Type.Android.Resource.Drawable.common_google_signin_btn_icon_light_normal;
+			global::AmosAndroid.Resource.Drawable.common_google_signin_btn_icon_light_normal_background = global::Type.Android.Resource.Drawable.common_google_signin_btn_icon_light_normal_background;
+			global::AmosAndroid.Resource.Drawable.common_google_signin_btn_text_dark = global::Type.Android.Resource.Drawable.common_google_signin_btn_text_dark;
+			global::AmosAndroid.Resource.Drawable.common_google_signin_btn_text_dark_focused = global::Type.Android.Resource.Drawable.common_google_signin_btn_text_dark_focused;
+			global::AmosAndroid.Resource.Drawable.common_google_signin_btn_text_dark_normal = global::Type.Android.Resource.Drawable.common_google_signin_btn_text_dark_normal;
+			global::AmosAndroid.Resource.Drawable.common_google_signin_btn_text_dark_normal_background = global::Type.Android.Resource.Drawable.common_google_signin_btn_text_dark_normal_background;
+			global::AmosAndroid.Resource.Drawable.common_google_signin_btn_text_disabled = global::Type.Android.Resource.Drawable.common_google_signin_btn_text_disabled;
+			global::AmosAndroid.Resource.Drawable.common_google_signin_btn_text_light = global::Type.Android.Resource.Drawable.common_google_signin_btn_text_light;
+			global::AmosAndroid.Resource.Drawable.common_google_signin_btn_text_light_focused = global::Type.Android.Resource.Drawable.common_google_signin_btn_text_light_focused;
+			global::AmosAndroid.Resource.Drawable.common_google_signin_btn_text_light_normal = global::Type.Android.Resource.Drawable.common_google_signin_btn_text_light_normal;
+			global::AmosAndroid.Resource.Drawable.common_google_signin_btn_text_light_normal_background = global::Type.Android.Resource.Drawable.common_google_signin_btn_text_light_normal_background;
+			global::AmosAndroid.Resource.Drawable.googleg_disabled_color_18 = global::Type.Android.Resource.Drawable.googleg_disabled_color_18;
+			global::AmosAndroid.Resource.Drawable.googleg_standard_color_18 = global::Type.Android.Resource.Drawable.googleg_standard_color_18;
+			global::AmosAndroid.Resource.Drawable.notification_action_background = global::Type.Android.Resource.Drawable.notification_action_background;
+			global::AmosAndroid.Resource.Drawable.notification_bg = global::Type.Android.Resource.Drawable.notification_bg;
+			global::AmosAndroid.Resource.Drawable.notification_bg_low = global::Type.Android.Resource.Drawable.notification_bg_low;
+			global::AmosAndroid.Resource.Drawable.notification_bg_low_normal = global::Type.Android.Resource.Drawable.notification_bg_low_normal;
+			global::AmosAndroid.Resource.Drawable.notification_bg_low_pressed = global::Type.Android.Resource.Drawable.notification_bg_low_pressed;
+			global::AmosAndroid.Resource.Drawable.notification_bg_normal = global::Type.Android.Resource.Drawable.notification_bg_normal;
+			global::AmosAndroid.Resource.Drawable.notification_bg_normal_pressed = global::Type.Android.Resource.Drawable.notification_bg_normal_pressed;
+			global::AmosAndroid.Resource.Drawable.notification_icon_background = global::Type.Android.Resource.Drawable.notification_icon_background;
+			global::AmosAndroid.Resource.Drawable.notification_template_icon_bg = global::Type.Android.Resource.Drawable.notification_template_icon_bg;
+			global::AmosAndroid.Resource.Drawable.notification_template_icon_low_bg = global::Type.Android.Resource.Drawable.notification_template_icon_low_bg;
+			global::AmosAndroid.Resource.Drawable.notification_tile_bg = global::Type.Android.Resource.Drawable.notification_tile_bg;
+			global::AmosAndroid.Resource.Drawable.notify_panel_notification_icon_bg = global::Type.Android.Resource.Drawable.notify_panel_notification_icon_bg;
+			global::AmosAndroid.Resource.Id.action_container = global::Type.Android.Resource.Id.action_container;
+			global::AmosAndroid.Resource.Id.action_divider = global::Type.Android.Resource.Id.action_divider;
+			global::AmosAndroid.Resource.Id.action_image = global::Type.Android.Resource.Id.action_image;
+			global::AmosAndroid.Resource.Id.action_text = global::Type.Android.Resource.Id.action_text;
+			global::AmosAndroid.Resource.Id.actions = global::Type.Android.Resource.Id.actions;
+			global::AmosAndroid.Resource.Id.adjust_height = global::Type.Android.Resource.Id.adjust_height;
+			global::AmosAndroid.Resource.Id.adjust_width = global::Type.Android.Resource.Id.adjust_width;
+			global::AmosAndroid.Resource.Id.async = global::Type.Android.Resource.Id.async;
+			global::AmosAndroid.Resource.Id.auto = global::Type.Android.Resource.Id.auto;
+			global::AmosAndroid.Resource.Id.blocking = global::Type.Android.Resource.Id.blocking;
+			global::AmosAndroid.Resource.Id.chronometer = global::Type.Android.Resource.Id.chronometer;
+			global::AmosAndroid.Resource.Id.dark = global::Type.Android.Resource.Id.dark;
+			global::AmosAndroid.Resource.Id.forever = global::Type.Android.Resource.Id.forever;
+			global::AmosAndroid.Resource.Id.icon = global::Type.Android.Resource.Id.icon;
+			global::AmosAndroid.Resource.Id.icon_group = global::Type.Android.Resource.Id.icon_group;
+			global::AmosAndroid.Resource.Id.icon_only = global::Type.Android.Resource.Id.icon_only;
+			global::AmosAndroid.Resource.Id.info = global::Type.Android.Resource.Id.info;
+			global::AmosAndroid.Resource.Id.italic = global::Type.Android.Resource.Id.italic;
+			global::AmosAndroid.Resource.Id.light = global::Type.Android.Resource.Id.light;
+			global::AmosAndroid.Resource.Id.line1 = global::Type.Android.Resource.Id.line1;
+			global::AmosAndroid.Resource.Id.line3 = global::Type.Android.Resource.Id.line3;
+			global::AmosAndroid.Resource.Id.none = global::Type.Android.Resource.Id.none;
+			global::AmosAndroid.Resource.Id.normal = global::Type.Android.Resource.Id.normal;
+			global::AmosAndroid.Resource.Id.notification_background = global::Type.Android.Resource.Id.notification_background;
+			global::AmosAndroid.Resource.Id.notification_main_column = global::Type.Android.Resource.Id.notification_main_column;
+			global::AmosAndroid.Resource.Id.notification_main_column_container = global::Type.Android.Resource.Id.notification_main_column_container;
+			global::AmosAndroid.Resource.Id.right_icon = global::Type.Android.Resource.Id.right_icon;
+			global::AmosAndroid.Resource.Id.right_side = global::Type.Android.Resource.Id.right_side;
+			global::AmosAndroid.Resource.Id.standard = global::Type.Android.Resource.Id.standard;
+			global::AmosAndroid.Resource.Id.tag_transition_group = global::Type.Android.Resource.Id.tag_transition_group;
+			global::AmosAndroid.Resource.Id.text = global::Type.Android.Resource.Id.text;
+			global::AmosAndroid.Resource.Id.text2 = global::Type.Android.Resource.Id.text2;
+			global::AmosAndroid.Resource.Id.time = global::Type.Android.Resource.Id.time;
+			global::AmosAndroid.Resource.Id.title = global::Type.Android.Resource.Id.title;
+			global::AmosAndroid.Resource.Id.wide = global::Type.Android.Resource.Id.wide;
+			global::AmosAndroid.Resource.Integer.google_play_services_version = global::Type.Android.Resource.Integer.google_play_services_version;
+			global::AmosAndroid.Resource.Integer.status_bar_notification_info_maxnum = global::Type.Android.Resource.Integer.status_bar_notification_info_maxnum;
+			global::AmosAndroid.Resource.Layout.notification_action = global::Type.Android.Resource.Layout.notification_action;
+			global::AmosAndroid.Resource.Layout.notification_action_tombstone = global::Type.Android.Resource.Layout.notification_action_tombstone;
+			global::AmosAndroid.Resource.Layout.notification_template_custom_big = global::Type.Android.Resource.Layout.notification_template_custom_big;
+			global::AmosAndroid.Resource.Layout.notification_template_icon_group = global::Type.Android.Resource.Layout.notification_template_icon_group;
+			global::AmosAndroid.Resource.Layout.notification_template_part_chronometer = global::Type.Android.Resource.Layout.notification_template_part_chronometer;
+			global::AmosAndroid.Resource.Layout.notification_template_part_time = global::Type.Android.Resource.Layout.notification_template_part_time;
+			global::AmosAndroid.Resource.String.ApplicationName = global::Type.Android.Resource.String.ApplicationName;
+			global::AmosAndroid.Resource.String.Hello = global::Type.Android.Resource.String.Hello;
+			global::AmosAndroid.Resource.String.common_google_play_services_enable_button = global::Type.Android.Resource.String.common_google_play_services_enable_button;
+			global::AmosAndroid.Resource.String.common_google_play_services_enable_text = global::Type.Android.Resource.String.common_google_play_services_enable_text;
+			global::AmosAndroid.Resource.String.common_google_play_services_enable_title = global::Type.Android.Resource.String.common_google_play_services_enable_title;
+			global::AmosAndroid.Resource.String.common_google_play_services_install_button = global::Type.Android.Resource.String.common_google_play_services_install_button;
+			global::AmosAndroid.Resource.String.common_google_play_services_install_text = global::Type.Android.Resource.String.common_google_play_services_install_text;
+			global::AmosAndroid.Resource.String.common_google_play_services_install_title = global::Type.Android.Resource.String.common_google_play_services_install_title;
+			global::AmosAndroid.Resource.String.common_google_play_services_notification_ticker = global::Type.Android.Resource.String.common_google_play_services_notification_ticker;
+			global::AmosAndroid.Resource.String.common_google_play_services_unknown_issue = global::Type.Android.Resource.String.common_google_play_services_unknown_issue;
+			global::AmosAndroid.Resource.String.common_google_play_services_unsupported_text = global::Type.Android.Resource.String.common_google_play_services_unsupported_text;
+			global::AmosAndroid.Resource.String.common_google_play_services_update_button = global::Type.Android.Resource.String.common_google_play_services_update_button;
+			global::AmosAndroid.Resource.String.common_google_play_services_update_text = global::Type.Android.Resource.String.common_google_play_services_update_text;
+			global::AmosAndroid.Resource.String.common_google_play_services_update_title = global::Type.Android.Resource.String.common_google_play_services_update_title;
+			global::AmosAndroid.Resource.String.common_google_play_services_updating_text = global::Type.Android.Resource.String.common_google_play_services_updating_text;
+			global::AmosAndroid.Resource.String.common_google_play_services_wear_update_text = global::Type.Android.Resource.String.common_google_play_services_wear_update_text;
+			global::AmosAndroid.Resource.String.common_open_on_phone = global::Type.Android.Resource.String.common_open_on_phone;
+			global::AmosAndroid.Resource.String.common_signin_button_text = global::Type.Android.Resource.String.common_signin_button_text;
+			global::AmosAndroid.Resource.String.common_signin_button_text_long = global::Type.Android.Resource.String.common_signin_button_text_long;
+			global::AmosAndroid.Resource.String.status_bar_notification_info_overflow = global::Type.Android.Resource.String.status_bar_notification_info_overflow;
+			global::AmosAndroid.Resource.Style.TextAppearance_Compat_Notification = global::Type.Android.Resource.Style.TextAppearance_Compat_Notification;
+			global::AmosAndroid.Resource.Style.TextAppearance_Compat_Notification_Info = global::Type.Android.Resource.Style.TextAppearance_Compat_Notification_Info;
+			global::AmosAndroid.Resource.Style.TextAppearance_Compat_Notification_Line2 = global::Type.Android.Resource.Style.TextAppearance_Compat_Notification_Line2;
+			global::AmosAndroid.Resource.Style.TextAppearance_Compat_Notification_Time = global::Type.Android.Resource.Style.TextAppearance_Compat_Notification_Time;
+			global::AmosAndroid.Resource.Style.TextAppearance_Compat_Notification_Title = global::Type.Android.Resource.Style.TextAppearance_Compat_Notification_Title;
+			global::AmosAndroid.Resource.Style.Widget_Compat_NotificationActionContainer = global::Type.Android.Resource.Style.Widget_Compat_NotificationActionContainer;
+			global::AmosAndroid.Resource.Style.Widget_Compat_NotificationActionText = global::Type.Android.Resource.Style.Widget_Compat_NotificationActionText;
+			global::AmosAndroid.Resource.Styleable.FontFamily = global::Type.Android.Resource.Styleable.FontFamily;
+			global::AmosAndroid.Resource.Styleable.FontFamily_fontProviderAuthority = global::Type.Android.Resource.Styleable.FontFamily_fontProviderAuthority;
+			global::AmosAndroid.Resource.Styleable.FontFamily_fontProviderCerts = global::Type.Android.Resource.Styleable.FontFamily_fontProviderCerts;
+			global::AmosAndroid.Resource.Styleable.FontFamily_fontProviderFetchStrategy = global::Type.Android.Resource.Styleable.FontFamily_fontProviderFetchStrategy;
+			global::AmosAndroid.Resource.Styleable.FontFamily_fontProviderFetchTimeout = global::Type.Android.Resource.Styleable.FontFamily_fontProviderFetchTimeout;
+			global::AmosAndroid.Resource.Styleable.FontFamily_fontProviderPackage = global::Type.Android.Resource.Styleable.FontFamily_fontProviderPackage;
+			global::AmosAndroid.Resource.Styleable.FontFamily_fontProviderQuery = global::Type.Android.Resource.Styleable.FontFamily_fontProviderQuery;
+			global::AmosAndroid.Resource.Styleable.FontFamilyFont = global::Type.Android.Resource.Styleable.FontFamilyFont;
+			global::AmosAndroid.Resource.Styleable.FontFamilyFont_android_font = global::Type.Android.Resource.Styleable.FontFamilyFont_android_font;
+			global::AmosAndroid.Resource.Styleable.FontFamilyFont_android_fontStyle = global::Type.Android.Resource.Styleable.FontFamilyFont_android_fontStyle;
+			global::AmosAndroid.Resource.Styleable.FontFamilyFont_android_fontWeight = global::Type.Android.Resource.Styleable.FontFamilyFont_android_fontWeight;
+			global::AmosAndroid.Resource.Styleable.FontFamilyFont_font = global::Type.Android.Resource.Styleable.FontFamilyFont_font;
+			global::AmosAndroid.Resource.Styleable.FontFamilyFont_fontStyle = global::Type.Android.Resource.Styleable.FontFamilyFont_fontStyle;
+			global::AmosAndroid.Resource.Styleable.FontFamilyFont_fontWeight = global::Type.Android.Resource.Styleable.FontFamilyFont_fontWeight;
+			global::AmosAndroid.Resource.Styleable.LoadingImageView = global::Type.Android.Resource.Styleable.LoadingImageView;
+			global::AmosAndroid.Resource.Styleable.LoadingImageView_circleCrop = global::Type.Android.Resource.Styleable.LoadingImageView_circleCrop;
+			global::AmosAndroid.Resource.Styleable.LoadingImageView_imageAspectRatio = global::Type.Android.Resource.Styleable.LoadingImageView_imageAspectRatio;
+			global::AmosAndroid.Resource.Styleable.LoadingImageView_imageAspectRatioAdjust = global::Type.Android.Resource.Styleable.LoadingImageView_imageAspectRatioAdjust;
+			global::AmosAndroid.Resource.Styleable.SignInButton = global::Type.Android.Resource.Styleable.SignInButton;
+			global::AmosAndroid.Resource.Styleable.SignInButton_buttonSize = global::Type.Android.Resource.Styleable.SignInButton_buttonSize;
+			global::AmosAndroid.Resource.Styleable.SignInButton_colorScheme = global::Type.Android.Resource.Styleable.SignInButton_colorScheme;
+			global::AmosAndroid.Resource.Styleable.SignInButton_scopeUris = global::Type.Android.Resource.Styleable.SignInButton_scopeUris;
 		}
 		
 		public partial class Attribute
 		{
+			
+			// aapt resource value: 0x7f01000c
+			public const int buttonSize = 2130771980;
+			
+			// aapt resource value: 0x7f01000b
+			public const int circleCrop = 2130771979;
+			
+			// aapt resource value: 0x7f01000d
+			public const int colorScheme = 2130771981;
 			
 			// aapt resource value: 0x7f010007
 			public const int font = 2130771975;
@@ -57,6 +242,15 @@ namespace Type.Android
 			
 			// aapt resource value: 0x7f010008
 			public const int fontWeight = 2130771976;
+			
+			// aapt resource value: 0x7f01000a
+			public const int imageAspectRatio = 2130771978;
+			
+			// aapt resource value: 0x7f010009
+			public const int imageAspectRatioAdjust = 2130771977;
+			
+			// aapt resource value: 0x7f01000e
+			public const int scopeUris = 2130771982;
 			
 			static Attribute()
 			{
@@ -86,6 +280,39 @@ namespace Type.Android
 		
 		public partial class Color
 		{
+			
+			// aapt resource value: 0x7f07000c
+			public const int common_google_signin_btn_text_dark = 2131165196;
+			
+			// aapt resource value: 0x7f070004
+			public const int common_google_signin_btn_text_dark_default = 2131165188;
+			
+			// aapt resource value: 0x7f070005
+			public const int common_google_signin_btn_text_dark_disabled = 2131165189;
+			
+			// aapt resource value: 0x7f070006
+			public const int common_google_signin_btn_text_dark_focused = 2131165190;
+			
+			// aapt resource value: 0x7f070007
+			public const int common_google_signin_btn_text_dark_pressed = 2131165191;
+			
+			// aapt resource value: 0x7f07000d
+			public const int common_google_signin_btn_text_light = 2131165197;
+			
+			// aapt resource value: 0x7f070008
+			public const int common_google_signin_btn_text_light_default = 2131165192;
+			
+			// aapt resource value: 0x7f070009
+			public const int common_google_signin_btn_text_light_disabled = 2131165193;
+			
+			// aapt resource value: 0x7f07000a
+			public const int common_google_signin_btn_text_light_focused = 2131165194;
+			
+			// aapt resource value: 0x7f07000b
+			public const int common_google_signin_btn_text_light_pressed = 2131165195;
+			
+			// aapt resource value: 0x7f07000e
+			public const int common_google_signin_btn_tint = 2131165198;
 			
 			// aapt resource value: 0x7f070000
 			public const int notification_action_color_filter = 2131165184;
@@ -186,40 +413,103 @@ namespace Type.Android
 		{
 			
 			// aapt resource value: 0x7f020000
-			public const int notification_action_background = 2130837504;
+			public const int common_full_open_on_phone = 2130837504;
 			
 			// aapt resource value: 0x7f020001
-			public const int notification_bg = 2130837505;
+			public const int common_google_signin_btn_icon_dark = 2130837505;
 			
 			// aapt resource value: 0x7f020002
-			public const int notification_bg_low = 2130837506;
+			public const int common_google_signin_btn_icon_dark_focused = 2130837506;
 			
 			// aapt resource value: 0x7f020003
-			public const int notification_bg_low_normal = 2130837507;
+			public const int common_google_signin_btn_icon_dark_normal = 2130837507;
 			
 			// aapt resource value: 0x7f020004
-			public const int notification_bg_low_pressed = 2130837508;
+			public const int common_google_signin_btn_icon_dark_normal_background = 2130837508;
 			
 			// aapt resource value: 0x7f020005
-			public const int notification_bg_normal = 2130837509;
+			public const int common_google_signin_btn_icon_disabled = 2130837509;
 			
 			// aapt resource value: 0x7f020006
-			public const int notification_bg_normal_pressed = 2130837510;
+			public const int common_google_signin_btn_icon_light = 2130837510;
 			
 			// aapt resource value: 0x7f020007
-			public const int notification_icon_background = 2130837511;
-			
-			// aapt resource value: 0x7f02000a
-			public const int notification_template_icon_bg = 2130837514;
-			
-			// aapt resource value: 0x7f02000b
-			public const int notification_template_icon_low_bg = 2130837515;
+			public const int common_google_signin_btn_icon_light_focused = 2130837511;
 			
 			// aapt resource value: 0x7f020008
-			public const int notification_tile_bg = 2130837512;
+			public const int common_google_signin_btn_icon_light_normal = 2130837512;
 			
 			// aapt resource value: 0x7f020009
-			public const int notify_panel_notification_icon_bg = 2130837513;
+			public const int common_google_signin_btn_icon_light_normal_background = 2130837513;
+			
+			// aapt resource value: 0x7f02000a
+			public const int common_google_signin_btn_text_dark = 2130837514;
+			
+			// aapt resource value: 0x7f02000b
+			public const int common_google_signin_btn_text_dark_focused = 2130837515;
+			
+			// aapt resource value: 0x7f02000c
+			public const int common_google_signin_btn_text_dark_normal = 2130837516;
+			
+			// aapt resource value: 0x7f02000d
+			public const int common_google_signin_btn_text_dark_normal_background = 2130837517;
+			
+			// aapt resource value: 0x7f02000e
+			public const int common_google_signin_btn_text_disabled = 2130837518;
+			
+			// aapt resource value: 0x7f02000f
+			public const int common_google_signin_btn_text_light = 2130837519;
+			
+			// aapt resource value: 0x7f020010
+			public const int common_google_signin_btn_text_light_focused = 2130837520;
+			
+			// aapt resource value: 0x7f020011
+			public const int common_google_signin_btn_text_light_normal = 2130837521;
+			
+			// aapt resource value: 0x7f020012
+			public const int common_google_signin_btn_text_light_normal_background = 2130837522;
+			
+			// aapt resource value: 0x7f020013
+			public const int googleg_disabled_color_18 = 2130837523;
+			
+			// aapt resource value: 0x7f020014
+			public const int googleg_standard_color_18 = 2130837524;
+			
+			// aapt resource value: 0x7f020015
+			public const int notification_action_background = 2130837525;
+			
+			// aapt resource value: 0x7f020016
+			public const int notification_bg = 2130837526;
+			
+			// aapt resource value: 0x7f020017
+			public const int notification_bg_low = 2130837527;
+			
+			// aapt resource value: 0x7f020018
+			public const int notification_bg_low_normal = 2130837528;
+			
+			// aapt resource value: 0x7f020019
+			public const int notification_bg_low_pressed = 2130837529;
+			
+			// aapt resource value: 0x7f02001a
+			public const int notification_bg_normal = 2130837530;
+			
+			// aapt resource value: 0x7f02001b
+			public const int notification_bg_normal_pressed = 2130837531;
+			
+			// aapt resource value: 0x7f02001c
+			public const int notification_icon_background = 2130837532;
+			
+			// aapt resource value: 0x7f02001f
+			public const int notification_template_icon_bg = 2130837535;
+			
+			// aapt resource value: 0x7f020020
+			public const int notification_template_icon_low_bg = 2130837536;
+			
+			// aapt resource value: 0x7f02001d
+			public const int notification_tile_bg = 2130837533;
+			
+			// aapt resource value: 0x7f02001e
+			public const int notify_panel_notification_icon_bg = 2130837534;
 			
 			static Drawable()
 			{
@@ -234,44 +524,62 @@ namespace Type.Android
 		public partial class Id
 		{
 			
-			// aapt resource value: 0x7f09000b
-			public const int action_container = 2131296267;
+			// aapt resource value: 0x7f090014
+			public const int action_container = 2131296276;
 			
-			// aapt resource value: 0x7f090017
-			public const int action_divider = 2131296279;
+			// aapt resource value: 0x7f090020
+			public const int action_divider = 2131296288;
+			
+			// aapt resource value: 0x7f090015
+			public const int action_image = 2131296277;
+			
+			// aapt resource value: 0x7f090016
+			public const int action_text = 2131296278;
+			
+			// aapt resource value: 0x7f090021
+			public const int actions = 2131296289;
+			
+			// aapt resource value: 0x7f09000b
+			public const int adjust_height = 2131296267;
 			
 			// aapt resource value: 0x7f09000c
-			public const int action_image = 2131296268;
-			
-			// aapt resource value: 0x7f09000d
-			public const int action_text = 2131296269;
-			
-			// aapt resource value: 0x7f090018
-			public const int actions = 2131296280;
+			public const int adjust_width = 2131296268;
 			
 			// aapt resource value: 0x7f090006
 			public const int async = 2131296262;
 			
+			// aapt resource value: 0x7f090011
+			public const int auto = 2131296273;
+			
 			// aapt resource value: 0x7f090007
 			public const int blocking = 2131296263;
 			
-			// aapt resource value: 0x7f090016
-			public const int chronometer = 2131296278;
+			// aapt resource value: 0x7f09001f
+			public const int chronometer = 2131296287;
+			
+			// aapt resource value: 0x7f090012
+			public const int dark = 2131296274;
 			
 			// aapt resource value: 0x7f090008
 			public const int forever = 2131296264;
 			
-			// aapt resource value: 0x7f09000f
-			public const int icon = 2131296271;
+			// aapt resource value: 0x7f090018
+			public const int icon = 2131296280;
 			
-			// aapt resource value: 0x7f090019
-			public const int icon_group = 2131296281;
+			// aapt resource value: 0x7f090022
+			public const int icon_group = 2131296290;
 			
-			// aapt resource value: 0x7f090012
-			public const int info = 2131296274;
+			// aapt resource value: 0x7f09000e
+			public const int icon_only = 2131296270;
+			
+			// aapt resource value: 0x7f09001b
+			public const int info = 2131296283;
 			
 			// aapt resource value: 0x7f090009
 			public const int italic = 2131296265;
+			
+			// aapt resource value: 0x7f090013
+			public const int light = 2131296275;
 			
 			// aapt resource value: 0x7f090000
 			public const int line1 = 2131296256;
@@ -279,23 +587,29 @@ namespace Type.Android
 			// aapt resource value: 0x7f090001
 			public const int line3 = 2131296257;
 			
+			// aapt resource value: 0x7f09000d
+			public const int none = 2131296269;
+			
 			// aapt resource value: 0x7f09000a
 			public const int normal = 2131296266;
 			
-			// aapt resource value: 0x7f090014
-			public const int notification_background = 2131296276;
+			// aapt resource value: 0x7f09001d
+			public const int notification_background = 2131296285;
 			
-			// aapt resource value: 0x7f090010
-			public const int notification_main_column = 2131296272;
+			// aapt resource value: 0x7f090019
+			public const int notification_main_column = 2131296281;
 			
-			// aapt resource value: 0x7f09000e
-			public const int notification_main_column_container = 2131296270;
+			// aapt resource value: 0x7f090017
+			public const int notification_main_column_container = 2131296279;
 			
-			// aapt resource value: 0x7f090013
-			public const int right_icon = 2131296275;
+			// aapt resource value: 0x7f09001c
+			public const int right_icon = 2131296284;
 			
-			// aapt resource value: 0x7f090011
-			public const int right_side = 2131296273;
+			// aapt resource value: 0x7f09001a
+			public const int right_side = 2131296282;
+			
+			// aapt resource value: 0x7f09000f
+			public const int standard = 2131296271;
 			
 			// aapt resource value: 0x7f090002
 			public const int tag_transition_group = 2131296258;
@@ -306,11 +620,14 @@ namespace Type.Android
 			// aapt resource value: 0x7f090004
 			public const int text2 = 2131296260;
 			
-			// aapt resource value: 0x7f090015
-			public const int time = 2131296277;
+			// aapt resource value: 0x7f09001e
+			public const int time = 2131296286;
 			
 			// aapt resource value: 0x7f090005
 			public const int title = 2131296261;
+			
+			// aapt resource value: 0x7f090010
+			public const int wide = 2131296272;
 			
 			static Id()
 			{
@@ -324,6 +641,9 @@ namespace Type.Android
 		
 		public partial class Integer
 		{
+			
+			// aapt resource value: 0x7f0a0001
+			public const int google_play_services_version = 2131361793;
 			
 			// aapt resource value: 0x7f0a0000
 			public const int status_bar_notification_info_maxnum = 2131361792;
@@ -375,8 +695,65 @@ namespace Type.Android
 		public partial class String
 		{
 			
+			// aapt resource value: 0x7f040013
+			public const int ApplicationName = 2130968595;
+			
+			// aapt resource value: 0x7f040012
+			public const int Hello = 2130968594;
+			
+			// aapt resource value: 0x7f040014
+			public const int app_name = 2130968596;
+			
+			// aapt resource value: 0x7f040002
+			public const int common_google_play_services_enable_button = 2130968578;
+			
+			// aapt resource value: 0x7f040003
+			public const int common_google_play_services_enable_text = 2130968579;
+			
+			// aapt resource value: 0x7f040004
+			public const int common_google_play_services_enable_title = 2130968580;
+			
+			// aapt resource value: 0x7f040005
+			public const int common_google_play_services_install_button = 2130968581;
+			
+			// aapt resource value: 0x7f040006
+			public const int common_google_play_services_install_text = 2130968582;
+			
+			// aapt resource value: 0x7f040007
+			public const int common_google_play_services_install_title = 2130968583;
+			
+			// aapt resource value: 0x7f040008
+			public const int common_google_play_services_notification_ticker = 2130968584;
+			
 			// aapt resource value: 0x7f040001
-			public const int app_name = 2130968577;
+			public const int common_google_play_services_unknown_issue = 2130968577;
+			
+			// aapt resource value: 0x7f040009
+			public const int common_google_play_services_unsupported_text = 2130968585;
+			
+			// aapt resource value: 0x7f04000a
+			public const int common_google_play_services_update_button = 2130968586;
+			
+			// aapt resource value: 0x7f04000b
+			public const int common_google_play_services_update_text = 2130968587;
+			
+			// aapt resource value: 0x7f04000c
+			public const int common_google_play_services_update_title = 2130968588;
+			
+			// aapt resource value: 0x7f04000d
+			public const int common_google_play_services_updating_text = 2130968589;
+			
+			// aapt resource value: 0x7f04000e
+			public const int common_google_play_services_wear_update_text = 2130968590;
+			
+			// aapt resource value: 0x7f04000f
+			public const int common_open_on_phone = 2130968591;
+			
+			// aapt resource value: 0x7f040010
+			public const int common_signin_button_text = 2130968592;
+			
+			// aapt resource value: 0x7f040011
+			public const int common_signin_button_text_long = 2130968593;
 			
 			// aapt resource value: 0x7f040000
 			public const int status_bar_notification_info_overflow = 2130968576;
@@ -479,6 +856,34 @@ namespace Type.Android
 			
 			// aapt resource value: 5
 			public const int FontFamilyFont_fontWeight = 5;
+			
+			public static int[] LoadingImageView = new int[] {
+					2130771977,
+					2130771978,
+					2130771979};
+			
+			// aapt resource value: 2
+			public const int LoadingImageView_circleCrop = 2;
+			
+			// aapt resource value: 1
+			public const int LoadingImageView_imageAspectRatio = 1;
+			
+			// aapt resource value: 0
+			public const int LoadingImageView_imageAspectRatioAdjust = 0;
+			
+			public static int[] SignInButton = new int[] {
+					2130771980,
+					2130771981,
+					2130771982};
+			
+			// aapt resource value: 0
+			public const int SignInButton_buttonSize = 0;
+			
+			// aapt resource value: 1
+			public const int SignInButton_colorScheme = 1;
+			
+			// aapt resource value: 2
+			public const int SignInButton_scopeUris = 2;
 			
 			static Styleable()
 			{
