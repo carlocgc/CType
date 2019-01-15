@@ -3,6 +3,7 @@ using AmosShared.Graphics.Drawables;
 using OpenTK;
 using System;
 using System.Collections.Generic;
+using AmosShared.Audio;
 
 namespace Type.UI
 {
@@ -23,11 +24,11 @@ namespace Type.UI
             PlayerLives = 3;
             _LifeSprites = new List<Sprite>
             {
-                new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/lifeicon.png")) {Position = new Vector2(-900, -500), Visible = false,},
-                new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/lifeicon.png")) {Position = new Vector2(-836, -500), Visible = false,},
-                new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/lifeicon.png")) {Position = new Vector2(-772, -500), Visible = false,},
-                new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/lifeicon.png")) {Position = new Vector2(-708, -500), Visible = false,},
-                new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/lifeicon.png")) {Position = new Vector2(-644, -500), Visible = false,}
+                new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/lifeicon.png")) {Position = new Vector2(-900, 400), Visible = false,},
+                new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/lifeicon.png")) {Position = new Vector2(-836, 400), Visible = false,},
+                new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/lifeicon.png")) {Position = new Vector2(-772, 400), Visible = false,},
+                new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/lifeicon.png")) {Position = new Vector2(-708, 400), Visible = false,},
+                new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/lifeicon.png")) {Position = new Vector2(-644, 400), Visible = false,}
             };
 
             UpdateSprites();
@@ -40,6 +41,7 @@ namespace Type.UI
         {
             PlayerLives--;
             UpdateSprites();
+            new AudioPlayer("Content/Audio/death.wav", false, AudioManager.Category.EFFECT, 1);
         }
 
         /// <summary>
@@ -47,8 +49,10 @@ namespace Type.UI
         /// </summary>
         public void AddLife()
         {
+            if(PlayerLives >= 5) return;
             PlayerLives++;
             UpdateSprites();
+            new AudioPlayer("Content/Audio/lifeup.wav", false, AudioManager.Category.EFFECT, 1);
         }
 
         /// <summary>

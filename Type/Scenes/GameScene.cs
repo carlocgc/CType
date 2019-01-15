@@ -80,7 +80,7 @@ namespace Type.Scenes
             _ScoreText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
                 Text = "SCORE: ",
-                Position = new Vector2(Renderer.Instance.TargetDimensions.X / 2 - 1900, -Renderer.Instance.TargetDimensions.Y / 2 + 1000),
+                Position = new Vector2(-900, 460),
                 Visible = true,
                 Scale = new Vector2(3, 3),
                 Colour = new Vector4(1, 0, 0, 1)
@@ -90,7 +90,7 @@ namespace Type.Scenes
             _ScoreDisplay = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
                 Text = CurrentScore.ToString(),
-                Position = new Vector2(Renderer.Instance.TargetDimensions.X / 2 - 1650, -Renderer.Instance.TargetDimensions.Y / 2 + 1000),
+                Position = new Vector2(-650, 460),
                 Visible = true,
                 Scale = new Vector2(3, 3),
             };
@@ -177,6 +177,7 @@ namespace Type.Scenes
         {
             CurrentScore += amount;
             _ScoreDisplay.Text = CurrentScore.ToString();
+            if (CurrentScore % 1000 == 0) _LifeMeter.AddLife();
         }
 
         public void LevelComplete()

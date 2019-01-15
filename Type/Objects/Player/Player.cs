@@ -73,7 +73,6 @@ namespace Type.Objects.Player
         {
             Position = _SpawnPosition;
             OnDeath?.Invoke();
-            new AudioPlayer("Content/Audio/death.wav", false, AudioManager.Category.EFFECT, 1);
         }
 
         /// <summary>
