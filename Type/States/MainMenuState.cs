@@ -15,13 +15,14 @@ namespace Type.States
 
         public override Boolean IsComplete()
         {
-            if (MainMenuScene.Instance._IsGameStarted) ChangeState(new PlayingState());
-            return MainMenuScene.Instance._IsGameStarted;
+            if (MainMenuScene.Instance.IsComplete) ChangeState(new PlayingState());
+            return MainMenuScene.Instance.IsComplete;
         }
 
         protected override void OnExit()
         {
             MainMenuScene.Instance.Visible = false;
+            MainMenuScene.Instance.IsComplete = false;
             Dispose();
         }
     }

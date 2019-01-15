@@ -18,17 +18,19 @@ namespace Type.States
         protected override void OnEnter()
         {
             GameOverScene.Instance.Show(_Score);
+            GameOverScene.Instance.Visible = true;
         }
 
         public override Boolean IsComplete()
         {
-            if (GameOverScene.Instance.IsConfirmed) ChangeState(new MainMenuState());
-            return GameOverScene.Instance.IsConfirmed;
+            if (GameOverScene.Instance.IsComplete) ChangeState(new MainMenuState());
+            return GameOverScene.Instance.IsComplete;
         }
 
         protected override void OnExit()
         {
             GameOverScene.Instance.Visible = false;
+            GameOverScene.Instance.IsComplete = false;
             Dispose();
         }
     }

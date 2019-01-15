@@ -35,7 +35,7 @@ namespace Type.Scenes
         private AudioPlayer _BackgroundMusic;
 
         /// <summary> Whether the  player has pressed space and started the game </summary>
-        public Boolean _IsGameStarted { get; private set; }
+        public Boolean IsComplete { get; set; }
 
         private MainMenuScene()
         {
@@ -61,7 +61,6 @@ namespace Type.Scenes
             _Background = new Sprite(Game.MainCanvas, Constants.ZOrders.BACKGROUND, Texture.GetTexture("Content/Graphics/MainMenuBG.png"))
             {
                 Position = new Vector2(-960, -540),
-                Visible = true,
             };
             _StartButton = new Button(Constants.ZOrders.UI, _Background);
             _StartButton.OnButtonPress += OnButtonPress;
@@ -71,10 +70,9 @@ namespace Type.Scenes
 
         public void Show()
         {
-            Visible = true;
             _StartButton.TouchEnabled = true;
             _StartButton.Visible = true;
-            _IsGameStarted = false;
+            Visible = true;
         }
 
         private void OnButtonPress(Button button)
@@ -82,7 +80,7 @@ namespace Type.Scenes
             Visible = false;
             _StartButton.TouchEnabled = false;
             _StartButton.Visible = false;
-            _IsGameStarted = true;
+            IsComplete = true;
         }
 
         public override void Update(TimeSpan timeSinceUpdate)

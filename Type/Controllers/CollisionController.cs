@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using AmosShared.Base;
+﻿using AmosShared.Base;
 using AmosShared.Interfaces;
 using OpenTK;
-using Type.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Type.Objects.Enemies;
 using Type.Objects.Player;
 using Type.Objects.Projectiles;

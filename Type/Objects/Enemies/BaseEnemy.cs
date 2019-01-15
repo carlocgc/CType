@@ -123,16 +123,17 @@ namespace Type.Objects.Enemies
             {
                 _Explosion.AddFrameAction((anim) =>
                 {
-                    foreach (Action action in OnDestroyedByPlayer)
-                    {
-                        action?.Invoke();
-                    }
                     Dispose();
                 }, 8);
                 _Sprite.Visible = false;
                 _Explosion.Visible = true;
                 _Explosion.Playing = true;
                 new AudioPlayer("Content/Audio/hurt3.wav", false, AudioManager.Category.EFFECT, 1);
+
+                foreach (Action action in OnDestroyedByPlayer)
+                {
+                    action?.Invoke();
+                }
             }
             else
             {

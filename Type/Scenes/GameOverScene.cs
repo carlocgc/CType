@@ -2,6 +2,7 @@
 using AmosShared.Base;
 using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
+using AmosShared.Touch;
 using OpenTK;
 #if DESKTOP
 using OpenTK.Input;
@@ -19,7 +20,6 @@ namespace Type.Scenes
         /// <summary> The instance of the Game Over scene </summary>
         public static GameOverScene Instance => _Instance ?? (_Instance = new GameOverScene());
 
-
         /// <summary> The bacground sprite </summary>
         private Sprite _Background;
 
@@ -28,21 +28,12 @@ namespace Type.Scenes
         /// <summary> Text that prompts user to restart </summary>
         private TextDisplay _ScoreText;
 
-        /// <summary> Whether the game over state has been confirmed and can exit </summary>
-        public Boolean IsShowing;
+        private Button _ConfirmButton;
 
-        public Boolean IsConfirmed { get; set; }
-
+        public Boolean IsComplete { get; set; }
 
         private GameOverScene()
         {
-            _Background = new Sprite(Game.MainCanvas, Constants.ZOrders.BACKGROUND, Texture.GetTexture("Content/Graphics/background.png"))
-            {
-                Offset = new Vector2(960, 540),
-                Visible = true,
-                Colour = new Vector4(0.5f, 0.5f, 0.5f, 1)
-            };
-            AddDrawable(_Background);
             _GameOverText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
                 Text = "GAME OVER",
@@ -54,21 +45,37 @@ namespace Type.Scenes
             AddDrawable(_GameOverText);
             _ScoreText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
-                Position = new Vector2(0, 200),
+                Position = new Vector2(-730, -200),
                 Visible = true,
-                Scale = new Vector2(3, 3),
+                Scale = new Vector2(5, 5),
                 TextAlignment = TextDisplay.Alignment.CENTER,
                 Colour = new Vector4(1, 1, 1, 1)
             };
             AddDrawable(_ScoreText);
+
+            _Background = new Sprite(Game.MainCanvas, Constants.ZOrders.BACKGROUND, Texture.GetTexture("Content/Graphics/background.png"))
+            {
+                Position = new Vector2(-960, -540),
+                Colour = new Vector4(0.5f, 0.5f, 0.5f, 1)
+            };
+
+            _ConfirmButton = new Button(Constants.ZOrders.UI, _Background);
+            _ConfirmButton.OnButtonPress += OnButtonPress;
+        }
+
+        private void OnButtonPress(Button button)
+        {
+            _ConfirmButton.TouchEnabled = false;
+            _ConfirmButton.Visible = false;
+            IsComplete = true;
         }
 
         public void Show(Int32 score)
         {
-            _ScoreText.Text = $"Score: {score}";
-            IsShowing = true;
+            _ScoreText.Text = $"SCORE {score}";
+            _ConfirmButton.TouchEnabled = true;
+            _ConfirmButton.Visible = true;
         }
-
 
         public override void Update(TimeSpan timeSinceUpdate)
         {

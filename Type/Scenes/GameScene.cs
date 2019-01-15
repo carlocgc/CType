@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using AmosShared.Audio;
+﻿using AmosShared.Audio;
 using AmosShared.Base;
 using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
 using AmosShared.Touch;
 using OpenTK;
+using System;
 using Type.Controllers;
 using Type.Data;
 using Type.Objects.Enemies;
