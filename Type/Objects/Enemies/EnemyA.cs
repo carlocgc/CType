@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using AmosShared.Audio;
 using OpenTK;
 using Type.Objects.Projectiles;
 
@@ -19,6 +20,7 @@ namespace Type.Objects.Enemies
             if (!_IsHostile) return;
             new Bullet("Content/Graphics/bullet.png", GetCenter(), new Vector2(-1, 0), 800, Math.PI, false, new Vector4(255, 0, 0, 1));
             _IsWeaponLocked = true;
+            new AudioPlayer("Content/Audio/laser2.wav", false, AudioManager.Category.EFFECT, 1);
         }
     }
 }

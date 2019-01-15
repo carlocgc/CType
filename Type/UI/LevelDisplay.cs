@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using AmosShared.Audio;
 using AmosShared.Base;
 using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
@@ -46,6 +47,7 @@ namespace Type.UI
             _TargetDisplayTime = TimeSpan.Zero;
             _OnComplete.Invoke();
             _Active = false;
+            new AudioPlayer("Content/Audio/begin.wav", false, AudioManager.Category.EFFECT, 1);
         }
 
         public override void Update(TimeSpan timeTilUpdate)

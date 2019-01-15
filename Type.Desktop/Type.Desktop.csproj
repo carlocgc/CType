@@ -63,6 +63,46 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\Assets\Audio\begin.wav">
+      <Link>Content\Audio\begin.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Audio\bgm-1.wav">
+      <Link>Content\Audio\bgm-1.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Audio\death.wav">
+      <Link>Content\Audio\death.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Audio\gameOver.wav">
+      <Link>Content\Audio\gameOver.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Audio\hurt3.wav">
+      <Link>Content\Audio\hurt3.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Audio\laser1.wav">
+      <Link>Content\Audio\laser1.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Audio\laser2.wav">
+      <Link>Content\Audio\laser2.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Audio\laser3.wav">
+      <Link>Content\Audio\laser3.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Audio\laser4.wav">
+      <Link>Content\Audio\laser4.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Audio\laser5.wav">
+      <Link>Content\Audio\laser5.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\Assets\Graphics\Buttons\down.png">
       <Link>Content\Graphics\Buttons\down.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -267,9 +307,7 @@
     <None Include="packages.config" />
     <None Include="Type.Desktop.ruleset" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Content\Audio\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="..\Assets\Graphics\background.png">
       <Link>Content\Graphics\background.png</Link>

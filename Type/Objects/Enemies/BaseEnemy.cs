@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
+using AmosShared.Audio;
 using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
 using OpenTK;
@@ -131,6 +132,7 @@ namespace Type.Objects.Enemies
                 _Sprite.Visible = false;
                 _Explosion.Visible = true;
                 _Explosion.Playing = true;
+                new AudioPlayer("Content/Audio/hurt3.wav", false, AudioManager.Category.EFFECT, 1);
             }
             else
             {

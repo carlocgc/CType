@@ -8,10 +8,16 @@ namespace Type.States
 {
     public class GameOverState : State
     {
+        private readonly Int32 _Score;
+
+        public GameOverState(Int32 score)
+        {
+            _Score = score;
+        }
+
         protected override void OnEnter()
         {
-            GameOverScene.Instance.IsConfirmed = false;
-            GameOverScene.Instance.Visible = true;
+            GameOverScene.Instance.Show(_Score);
         }
 
         public override Boolean IsComplete()

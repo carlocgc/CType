@@ -1,4 +1,5 @@
 ﻿using System;
+using AmosShared.Audio;
 using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
 using OpenTK;
@@ -72,6 +73,7 @@ namespace Type.Objects.Player
         {
             Position = _SpawnPosition;
             OnDeath?.Invoke();
+            new AudioPlayer("Content/Audio/death.wav", false, AudioManager.Category.EFFECT, 1);
         }
 
         /// <summary>
@@ -81,6 +83,7 @@ namespace Type.Objects.Player
         {
             new Bullet("Content/Graphics/bullet.png", GetCenter(), new Vector2(1, 0), 1000, 0, true, new Vector4(1, 1, 1, 1));
             _IsWeaponLocked = true;
+            new AudioPlayer("Content/Audio/laser1.wav", false, AudioManager.Category.EFFECT, 0.5f);
         }
 
         /// <summary>

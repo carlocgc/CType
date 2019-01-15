@@ -10,7 +10,7 @@ using OpenTK.Input;
 namespace Type.Scenes
 {
     /// <summary>
-    /// The Game over scene 
+    /// The Game over scene
     /// </summary>
     public class GameOverScene : Scene
     {
@@ -19,15 +19,20 @@ namespace Type.Scenes
         /// <summary> The instance of the Game Over scene </summary>
         public static GameOverScene Instance => _Instance ?? (_Instance = new GameOverScene());
 
+
         /// <summary> The bacground sprite </summary>
         private Sprite _Background;
-        /// <summary> Text that prompts user to restart </summary>
-        private TextDisplay _RestartText;
-
-        /// <summary> Whether the game over state has been confirmed and can exit </summary>
-        public Boolean IsConfirmed;
 
         private TextDisplay _GameOverText;
+
+        /// <summary> Text that prompts user to restart </summary>
+        private TextDisplay _ScoreText;
+
+        /// <summary> Whether the game over state has been confirmed and can exit </summary>
+        public Boolean IsShowing;
+
+        public Boolean IsConfirmed { get; set; }
+
 
         private GameOverScene()
         {
@@ -47,25 +52,27 @@ namespace Type.Scenes
                 Colour = new Vector4(1, 0, 0, 1)
             };
             AddDrawable(_GameOverText);
-            _RestartText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
+            _ScoreText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
-                Text = "PRESS ENTER TO GO TO MENU",
-                Position = new Vector2(Renderer.Instance.TargetDimensions.X / 2 - 1550, -Renderer.Instance.TargetDimensions.Y / 2 + 350),
+                Position = new Vector2(0, 200),
                 Visible = true,
                 Scale = new Vector2(3, 3),
+                TextAlignment = TextDisplay.Alignment.CENTER,
                 Colour = new Vector4(1, 1, 1, 1)
             };
-            AddDrawable(_RestartText);
+            AddDrawable(_ScoreText);
         }
+
+        public void Show(Int32 score)
+        {
+            _ScoreText.Text = $"Score: {score}";
+            IsShowing = true;
+        }
+
 
         public override void Update(TimeSpan timeSinceUpdate)
         {
-#if DESKTOP
-            if (Keyboard.GetState().IsKeyDown(Key.Enter) && !IsConfirmed)
-            {
-                IsConfirmed = true;
-            }
-#endif
+
         }
     }
 }
