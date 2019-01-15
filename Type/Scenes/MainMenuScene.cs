@@ -42,7 +42,7 @@ namespace Type.Scenes
             _TitleText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
                 Text = "C:TYPE",
-                Position = new Vector2(Renderer.Instance.TargetDimensions.X / 2 - 1450, -Renderer.Instance.TargetDimensions.Y / 2 + 500),
+                Position = new Vector2(Renderer.Instance.TargetDimensions.X / 2 - 1470, -Renderer.Instance.TargetDimensions.Y / 2 + 500),
                 Visible = true,
                 Scale = new Vector2(11, 11),
                 Colour = new Vector4(0, 1, 0, 1)
@@ -51,7 +51,7 @@ namespace Type.Scenes
             _StartText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
                 Text = "TOUCH TO START",
-                Position = new Vector2(Renderer.Instance.TargetDimensions.X / 2 - 1000, -Renderer.Instance.TargetDimensions.Y / 2 + 350),
+                Position = new Vector2(Renderer.Instance.TargetDimensions.X / 2 - 1270, -Renderer.Instance.TargetDimensions.Y / 2 + 350),
                 Visible = true,
                 Scale = new Vector2(3, 3),
                 Colour = new Vector4(1, 0, 0, 1)
