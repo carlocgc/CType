@@ -8,21 +8,29 @@ namespace Type.States
 {
     public class GameOverState : State
     {
+        private readonly Int32 _Score;
+
+        public GameOverState(Int32 score)
+        {
+            _Score = score;
+        }
+
         protected override void OnEnter()
         {
-            GameOverScene.Instance.IsConfirmed = false;
+            GameOverScene.Instance.Show(_Score);
             GameOverScene.Instance.Visible = true;
         }
 
         public override Boolean IsComplete()
         {
-            if (GameOverScene.Instance.IsConfirmed) ChangeState(new MainMenuState());
-            return GameOverScene.Instance.IsConfirmed;
+            if (GameOverScene.Instance.IsComplete) ChangeState(new MainMenuState());
+            return GameOverScene.Instance.IsComplete;
         }
 
         protected override void OnExit()
         {
             GameOverScene.Instance.Visible = false;
+            GameOverScene.Instance.IsComplete = false;
             Dispose();
         }
     }

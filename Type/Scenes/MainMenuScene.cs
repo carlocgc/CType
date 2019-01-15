@@ -5,6 +5,7 @@ using AmosShared.Audio;
 using AmosShared.Base;
 using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
+using AmosShared.Touch;
 using OpenTK;
 #if DESKTOP
 using OpenTK.Input;
@@ -24,21 +25,20 @@ namespace Type.Scenes
 
         /// <summary> The background graphic </summary>
         private Sprite _Background;
+        /// <summary> Button that starts the game </summary>
+        private Button _StartButton;
         /// <summary> The title text </summary>
         private TextDisplay _TitleText;
         /// <summary> Text that promts game start </summary>
         private TextDisplay _StartText;
+
+        private AudioPlayer _BackgroundMusic;
+
         /// <summary> Whether the  player has pressed space and started the game </summary>
-        public Boolean IsGameStarted;
+        public Boolean IsComplete { get; set; }
 
         private MainMenuScene()
         {
-            _Background = new Sprite(Game.MainCanvas, Constants.ZOrders.BACKGROUND, Texture.GetTexture("Content/Graphics/MainMenuBG.png"))
-            {
-                Offset = new Vector2(960, 540),
-                Visible = true,
-            };
-            AddDrawable(_Background);
             _TitleText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
                 Text = "C:TYPE",
@@ -50,25 +50,47 @@ namespace Type.Scenes
             AddDrawable(_TitleText);
             _StartText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
-                Text = "PRESS SPACE TO START",
-                Position = new Vector2(Renderer.Instance.TargetDimensions.X / 2 - 1400, -Renderer.Instance.TargetDimensions.Y / 2 + 350),
+                Text = "TOUCH TO START",
+                Position = new Vector2(Renderer.Instance.TargetDimensions.X / 2 - 1000, -Renderer.Instance.TargetDimensions.Y / 2 + 350),
                 Visible = true,
                 Scale = new Vector2(3, 3),
                 Colour = new Vector4(1, 0, 0, 1)
             };
             AddDrawable(_StartText);
 
-            new AudioPlayer("Content/Audio/bgm-1.wav", true, AudioManager.Category.MUSIC, 100);
+            _Background = new Sprite(Game.MainCanvas, Constants.ZOrders.BACKGROUND, Texture.GetTexture("Content/Graphics/MainMenuBG.png"))
+            {
+                Position = new Vector2(-960, -540),
+            };
+            _StartButton = new Button(Constants.ZOrders.UI, _Background);
+            _StartButton.OnButtonPress += OnButtonPress;
+
+            _BackgroundMusic = new AudioPlayer("Content/Audio/bgm-1.wav", true, AudioManager.Category.MUSIC, 1);
+        }
+
+        public void Show()
+        {
+            _StartButton.TouchEnabled = true;
+            _StartButton.Visible = true;
+            Visible = true;
+        }
+
+        private void OnButtonPress(Button button)
+        {
+            Visible = false;
+            _StartButton.TouchEnabled = false;
+            _StartButton.Visible = false;
+            IsComplete = true;
         }
 
         public override void Update(TimeSpan timeSinceUpdate)
         {
-#if DESKTOP
-            if (Keyboard.GetState().IsKeyDown(Key.Space) && !IsGameStarted)
-            {
-                IsGameStarted = true;
-            }
-#endif
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+            _StartButton.Dispose();
         }
     }
 }

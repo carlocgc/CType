@@ -10,19 +10,19 @@ namespace Type.States
     {
         protected override void OnEnter()
         {
-            MainMenuScene.Instance.IsGameStarted = false;
-            MainMenuScene.Instance.Visible = true;
+            MainMenuScene.Instance.Show();
         }
 
         public override Boolean IsComplete()
         {
-            if (MainMenuScene.Instance.IsGameStarted) ChangeState(new PlayingState());
-            return MainMenuScene.Instance.IsGameStarted;
+            if (MainMenuScene.Instance.IsComplete) ChangeState(new PlayingState());
+            return MainMenuScene.Instance.IsComplete;
         }
 
         protected override void OnExit()
         {
             MainMenuScene.Instance.Visible = false;
+            MainMenuScene.Instance.IsComplete = false;
             Dispose();
         }
     }

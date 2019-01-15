@@ -104,44 +104,7 @@ namespace Type.Objects.Player
                     _TimeSinceLastFired = TimeSpan.Zero;
                 }
             }
-#if DESKTOP
-            if (Keyboard.GetState().IsKeyDown(Key.Right) || MoveRight)
-            {
-                if (Position.X <= (1920 / 2) - GetSprite().Width)
-                {
-                    Position += new Vector2(MovementSpeed * (Single)timeTilUpdate.TotalSeconds, 0);
-                }
-            }
-            if (Keyboard.GetState().IsKeyDown(Key.Left) || MoveLeft)
-            {
-                if (Position.X >= -(1920 / 2))
-                {
-                    Position -= new Vector2(MovementSpeed * (Single)timeTilUpdate.TotalSeconds, 0);
-                }
-            }
-            if (Keyboard.GetState().IsKeyDown(Key.Up) || MoveUp)
-            {
-                if (Position.Y <= (1080 / 2) - GetSprite().Height)
-                {
-                    Position += new Vector2(0, MovementSpeed * (Single)timeTilUpdate.TotalSeconds);
-                }
-            }
-            if (Keyboard.GetState().IsKeyDown(Key.Down) || MoveDown)
-            {
-                if (Position.Y >= -(1080 / 2))
-                {
-                    Position -= new Vector2(0, MovementSpeed * (Single)timeTilUpdate.TotalSeconds);
-                }
-            }
 
-            if (Keyboard.GetState().IsKeyDown(Key.Space) || Shoot)
-            {
-                if (_IsWeaponLocked) return;
-                FireForward();
-            }
-#endif
-
-#if ANDROID
             if (MoveRight)
             {
                 if (Position.X <= (1920 / 2) - GetSprite().Width)
@@ -176,7 +139,43 @@ namespace Type.Objects.Player
                 if (_IsWeaponLocked) return;
                 FireForward();
             }
-#endif
+
+//#if ANDROID
+//            if (MoveRight)
+//            {
+//                if (Position.X <= (1920 / 2) - GetSprite().Width)
+//                {
+//                    Position += new Vector2(MovementSpeed * (Single)timeTilUpdate.TotalSeconds, 0);
+//                }
+//            }
+//            if (MoveLeft)
+//            {
+//                if (Position.X >= -(1920 / 2))
+//                {
+//                    Position -= new Vector2(MovementSpeed * (Single)timeTilUpdate.TotalSeconds, 0);
+//                }
+//            }
+//            if (MoveUp)
+//            {
+//                if (Position.Y <= (1080 / 2) - GetSprite().Height)
+//                {
+//                    Position += new Vector2(0, MovementSpeed * (Single)timeTilUpdate.TotalSeconds);
+//                }
+//            }
+//            if (MoveDown)
+//            {
+//                if (Position.Y >= -(1080 / 2))
+//                {
+//                    Position -= new Vector2(0, MovementSpeed * (Single)timeTilUpdate.TotalSeconds);
+//                }
+//            }
+
+//            if (Shoot)
+//            {
+//                if (_IsWeaponLocked) return;
+//                FireForward();
+//            }
+//#endif
         }
     }
 }

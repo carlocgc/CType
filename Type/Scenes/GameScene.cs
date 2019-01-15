@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using AmosShared.Audio;
+﻿using AmosShared.Audio;
 using AmosShared.Base;
 using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
 using AmosShared.Touch;
 using OpenTK;
+using System;
 using Type.Controllers;
 using Type.Data;
 using Type.Objects.Enemies;
@@ -59,13 +57,12 @@ namespace Type.Scenes
         private readonly FpsCounter _Fps;
 
         /// <summary> The players current score</summary>
-        private Int32 _Score;
+        public Int32 CurrentScore { get; private set; }
+
         /// <summary> Whether the player has ran out of lives, ends the playing state </summary>
         public Boolean IsGameOver;
         /// <summary> The enemy factory </summary>
         private EnemyFactory _EnemySpawner;
-
-        private AudioPlayer _BackgroundMusic;
 
         /// <summary> The current level </summary>
         public Int32 CurrentLevel { get; private set; }
@@ -92,7 +89,7 @@ namespace Type.Scenes
 
             _ScoreDisplay = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
-                Text = _Score.ToString(),
+                Text = CurrentScore.ToString(),
                 Position = new Vector2(Renderer.Instance.TargetDimensions.X / 2 - 1650, -Renderer.Instance.TargetDimensions.Y / 2 + 1000),
                 Visible = true,
                 Scale = new Vector2(3, 3),
@@ -154,7 +151,7 @@ namespace Type.Scenes
         /// </summary>
         public void StartGame()
         {
-            _Score = 0;
+            CurrentScore = 0;
 
             _BackgroundNear.Start();
             _BackgroundFar.Start();
@@ -162,7 +159,7 @@ namespace Type.Scenes
             _PlanetsNear.Start();
             _Clusters.Start();
 
-            _LevelDisplay.ShowLevel(CurrentLevel, TimeSpan.FromSeconds(2), () =>
+            _LevelDisplay.ShowLevel(CurrentLevel, TimeSpan.FromSeconds(0.5), () =>
             {
                 _EnemySpawner.SetLevelData(_LevelLoader.GetWaveData(CurrentLevel));
                 CollisionController.Instance.IsActive = true;
@@ -178,8 +175,8 @@ namespace Type.Scenes
         /// <param name="amount"></param>
         public void UpdateScore(Int32 amount)
         {
-            _Score += amount;
-            _ScoreDisplay.Text = _Score.ToString();
+            CurrentScore += amount;
+            _ScoreDisplay.Text = CurrentScore.ToString();
         }
 
         public void LevelComplete()

@@ -19,7 +19,7 @@ namespace Type.States
 
         public override Boolean IsComplete()
         {
-            if (_Scene.IsGameOver) ChangeState(new GameOverState());
+            if (_Scene.IsGameOver) ChangeState(new GameOverState(_Scene.CurrentScore));
             return _Scene.IsGameOver;
         }
 
