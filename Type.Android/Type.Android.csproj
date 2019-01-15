@@ -357,28 +357,44 @@
     <AndroidAsset Include="Assets\Content\Graphics\Buttons\up.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\Content\Level\level-1.txt" />
+    <AndroidAsset Include="Assets\Content\Level\level-1.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AndroidAsset>
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\Content\Level\level-2.txt" />
+    <AndroidAsset Include="Assets\Content\Level\level-2.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AndroidAsset>
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\Content\Level\level-3.txt" />
+    <AndroidAsset Include="Assets\Content\Level\level-3.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AndroidAsset>
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\Content\Level\level-4.txt" />
+    <AndroidAsset Include="Assets\Content\Level\level-4.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AndroidAsset>
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\Content\Level\level-5.txt" />
+    <AndroidAsset Include="Assets\Content\Level\level-5.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AndroidAsset>
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\Content\Level\level-6.txt" />
+    <AndroidAsset Include="Assets\Content\Level\level-6.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AndroidAsset>
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\Content\Level\level-7.txt" />
+    <AndroidAsset Include="Assets\Content\Level\level-7.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AndroidAsset>
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\Content\Level\level-8.txt" />
+    <AndroidAsset Include="Assets\Content\Level\level-8.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AndroidAsset>
   </ItemGroup>
   <Import Project="..\Type\Type.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

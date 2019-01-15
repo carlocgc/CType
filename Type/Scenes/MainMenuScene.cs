@@ -38,7 +38,7 @@ namespace Type.Scenes
         {
             _Background = new Sprite(Game.MainCanvas, Constants.ZOrders.BACKGROUND, Texture.GetTexture("Content/Graphics/MainMenuBG.png"))
             {
-                Offset = new Vector2(960, 540),
+                Position = new Vector2(-960, -540),
                 Visible = true,
             };
             _TitleText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")

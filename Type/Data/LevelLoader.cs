@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Net;
 using System.Text;
+using AmosShared.Base;
 using OpenTK;
 
 namespace Type.Data
@@ -18,15 +21,15 @@ namespace Type.Data
         /// <returns></returns>
         public List<WaveData> GetWaveData(Int32 level)
         {
-            String filepath = $"/Content/Level/level-{level}.txt";
-            StreamReader sr = new StreamReader(filepath);
+            String filepath = $"Content/Level/level-{level}.txt";
+
+            String data = DataLoader.ReadTextFile(filepath, false);
+
+            //StreamReader sr = new StreamReader(filepath);
             List<String> lines = new List<String>();
             List<WaveData> _Waves = new List<WaveData>();
 
-            while (!sr.EndOfStream)
-            {
-                lines.Add(sr.ReadLine());
-            }
+            lines = data.Split(':').ToList();
 
             foreach (String line in lines)
             {
@@ -43,7 +46,7 @@ namespace Type.Data
 
                 _Waves.Add(new WaveData(TimeSpan.FromSeconds(interval), shiptype, positions.ToArray()));
             }
-            sr.Close();
+            //sr.Close();
             return _Waves;
         }
     }
