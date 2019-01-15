@@ -10,14 +10,13 @@ namespace Type.States
     {
         protected override void OnEnter()
         {
-            MainMenuScene.Instance.IsGameStarted = false;
-            MainMenuScene.Instance.Visible = true;
+            MainMenuScene.Instance.Show();
         }
 
         public override Boolean IsComplete()
         {
-            if (MainMenuScene.Instance.IsGameStarted) ChangeState(new PlayingState());
-            return MainMenuScene.Instance.IsGameStarted;
+            if (MainMenuScene.Instance._IsGameStarted) ChangeState(new PlayingState());
+            return MainMenuScene.Instance._IsGameStarted;
         }
 
         protected override void OnExit()

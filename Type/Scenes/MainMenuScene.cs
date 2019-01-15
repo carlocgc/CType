@@ -4,6 +4,7 @@ using System.Text;
 using AmosShared.Base;
 using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
+using AmosShared.Touch;
 using OpenTK;
 #if DESKTOP
 using OpenTK.Input;
@@ -23,13 +24,15 @@ namespace Type.Scenes
 
         /// <summary> The background graphic </summary>
         private Sprite _Background;
-
+        /// <summary> Button that starts the game </summary>
+        private Button _StartButton;
         /// <summary> The title text </summary>
         private TextDisplay _TitleText;
         /// <summary> Text that promts game start </summary>
         private TextDisplay _StartText;
+
         /// <summary> Whether the  player has pressed space and started the game </summary>
-        public Boolean IsGameStarted;
+        public Boolean _IsGameStarted { get; private set; }
 
         private MainMenuScene()
         {
@@ -38,7 +41,6 @@ namespace Type.Scenes
                 Offset = new Vector2(960, 540),
                 Visible = true,
             };
-            AddDrawable(_Background);
             _TitleText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
                 Text = "C:TYPE",
@@ -50,23 +52,42 @@ namespace Type.Scenes
             AddDrawable(_TitleText);
             _StartText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
-                Text = "PRESS SPACE TO START",
+                Text = "TOUCH TO START",
                 Position = new Vector2(Renderer.Instance.TargetDimensions.X / 2 - 1400, -Renderer.Instance.TargetDimensions.Y / 2 + 350),
                 Visible = true,
                 Scale = new Vector2(3, 3),
                 Colour = new Vector4(1, 0, 0, 1)
             };
             AddDrawable(_StartText);
+
+            _StartButton = new Button(Constants.ZOrders.UI, _Background);
+            _StartButton.OnButtonPress += OnButtonPress;
+        }
+
+        public void Show()
+        {
+            Visible = true;
+            _StartButton.TouchEnabled = true;
+            _StartButton.Visible = true;
+            _IsGameStarted = false;
+        }
+
+        private void OnButtonPress(Button button)
+        {
+            Visible = false;
+            _StartButton.TouchEnabled = false;
+            _StartButton.Visible = false;
+            _IsGameStarted = true;
         }
 
         public override void Update(TimeSpan timeSinceUpdate)
         {
-#if DESKTOP
-            if (Keyboard.GetState().IsKeyDown(Key.Space) && !IsGameStarted)
-            {
-                IsGameStarted = true;
-            }
-#endif
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+            _StartButton.Dispose();
         }
     }
 }

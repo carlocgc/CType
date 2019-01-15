@@ -18,7 +18,7 @@ namespace Type.Data
         /// <returns></returns>
         public List<WaveData> GetWaveData(Int32 level)
         {
-            String filepath = $"Content/Level/level-{level}.txt";
+            String filepath = $"/Content/Level/level-{level}.txt";
             StreamReader sr = new StreamReader(filepath);
             List<String> lines = new List<String>();
             List<WaveData> _Waves = new List<WaveData>();
