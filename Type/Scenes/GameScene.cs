@@ -76,7 +76,7 @@ namespace Type.Scenes
             _LevelLoader = new LevelLoader();
             _EnemySpawner = new EnemyFactory(this);
 
-            _Stick = new AnalogStick(new Vector2(-625, -245));
+            _Stick = new AnalogStick(new Vector2(-700, -290));
             _Stick.RegisterListener(_Player);
 
             _ScoreText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")

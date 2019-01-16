@@ -50,6 +50,8 @@ namespace Type.Objects.Player
         /// <summary> How fast the player can move in any direction </summary>
         public Single MovementSpeed { get; set; }
 
+        private Vector2 _DirectionModifier;
+
         /// <summary> Position of the player </summary>
         public Player(Action onDeath)
         {
@@ -182,8 +184,8 @@ namespace Type.Objects.Player
         {
             MoveUp = position.Y < -10;
             MoveDown = position.Y > 10;
-            MoveRight = position.X < -10;
-            MoveLeft = position.X > 10;
+            MoveRight = position.X < -40;
+            MoveLeft = position.X > 40;
         }
     }
 }
