@@ -5,6 +5,7 @@ using OpenTK;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
+using AmosShared.Base;
 using AmosShared.Touch;
 using OpenTK.Audio;
 using Type.Base;
@@ -79,9 +80,9 @@ namespace Type.UI
 
         private Boolean Contains(Vector4 rect, Vector2 position)
         {
-            Boolean within = position.X > rect.X 
-                && position.X < rect.X + rect.W 
-                && position.Y > rect.Y 
+            Boolean within = position.X > rect.X
+                && position.X < rect.X + rect.W
+                && position.Y > rect.Y
                 && position.Y < rect.Y + rect.Z;
             return within;
         }
@@ -97,8 +98,8 @@ namespace Type.UI
         public Boolean OnMove(Int32 id, Vector2 position)
         {
             if (_PressId != id) return false;
-            
-            Vector2 newPosition = new Vector2(position.X - 960, position.Y -1080);
+
+            Vector2 newPosition = new Vector2(position.X - Renderer.Instance.TargetDimensions.X / 2, (position.Y - (Renderer.Instance.TargetDimensions.Y / 2)) * -1);
 
             _Top.Position = newPosition;
             return false;
