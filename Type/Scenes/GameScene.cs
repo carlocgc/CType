@@ -45,6 +45,8 @@ namespace Type.Scenes
         /// <summary> Fire button </summary>
         private readonly Button _FireButton;
 
+        private readonly AnalogStick _Stick;
+
         /// <summary> Text printer that displays the score </summary>
         private readonly TextDisplay _ScoreDisplay;
         /// <summary> THe word score displayed top left of screen </summary>
@@ -105,37 +107,37 @@ namespace Type.Scenes
             _LevelLoader = new LevelLoader();
             _EnemySpawner = new EnemyFactory(this);
 
-            Sprite upButton = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/up.png"))
-            {
-                Position = new Vector2(-712, -220),
-                Visible = true,
-                Colour = new Vector4(1, 1, 1, (Single)0.5)
-            };
-            _UpButton = new Button(Int32.MaxValue, upButton) { OnButtonPress = UpButtonPress, OnButtonRelease = UpButtonRelease };
+            //Sprite upButton = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/up.png"))
+            //{
+            //    Position = new Vector2(-712, -220),
+            //    Visible = true,
+            //    Colour = new Vector4(1, 1, 1, (Single)0.5)
+            //};
+            //_UpButton = new Button(Int32.MaxValue, upButton) { OnButtonPress = UpButtonPress, OnButtonRelease = UpButtonRelease };
 
-            Sprite downButton = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/down.png"))
-            {
-                Position = new Vector2(-712, -480),
-                Visible = true,
-                Colour = new Vector4(1, 1, 1, (Single)0.5)
-            };
-            _DownButton = new Button(Int32.MaxValue, downButton) { OnButtonPress = DownButtonPress, OnButtonRelease = DownButtonRelease };
+            //Sprite downButton = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/down.png"))
+            //{
+            //    Position = new Vector2(-712, -480),
+            //    Visible = true,
+            //    Colour = new Vector4(1, 1, 1, (Single)0.5)
+            //};
+            //_DownButton = new Button(Int32.MaxValue, downButton) { OnButtonPress = DownButtonPress, OnButtonRelease = DownButtonRelease };
 
-            Sprite leftButton = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/left.png"))
-            {
-                Position = new Vector2(-845, -350),
-                Visible = true,
-                Colour = new Vector4(1, 1, 1, (Single)0.5)
-            };
-            _LeftButton = new Button(Int32.MaxValue, leftButton) { OnButtonPress = LeftButtonPress, OnButtonRelease = LeftButtonRelease };
+            //Sprite leftButton = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/left.png"))
+            //{
+            //    Position = new Vector2(-845, -350),
+            //    Visible = true,
+            //    Colour = new Vector4(1, 1, 1, (Single)0.5)
+            //};
+            //_LeftButton = new Button(Int32.MaxValue, leftButton) { OnButtonPress = LeftButtonPress, OnButtonRelease = LeftButtonRelease };
 
-            Sprite rightButton = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/right.png"))
-            {
-                Position = new Vector2(-585, -350),
-                Visible = true,
-                Colour = new Vector4(1, 1, 1, (Single)0.5)
-            };
-            _RightButton = new Button(Int32.MaxValue, rightButton) { OnButtonPress = RightButtonPress, OnButtonRelease = RightButtonRelease };
+            //Sprite rightButton = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/right.png"))
+            //{
+            //    Position = new Vector2(-585, -350),
+            //    Visible = true,
+            //    Colour = new Vector4(1, 1, 1, (Single)0.5)
+            //};
+            //_RightButton = new Button(Int32.MaxValue, rightButton) { OnButtonPress = RightButtonPress, OnButtonRelease = RightButtonRelease };
 
             Sprite fireButton = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/fire.png"))
             {
@@ -144,6 +146,8 @@ namespace Type.Scenes
                 Colour = new Vector4(1, 1, 1, (Single)0.5)
             };
             _FireButton = new Button(Int32.MaxValue, fireButton) { OnButtonPress = FireButtonPress, OnButtonRelease = FireButtonRelease };
+
+            _Stick = new AnalogStick(new Vector2(-625, -245));
         }
 
         /// <summary>
@@ -224,61 +228,64 @@ namespace Type.Scenes
 
         private void SetButtonsEnabled(Boolean state)
         {
-            _UpButton.TouchEnabled = state;
-            _DownButton.TouchEnabled = state;
-            _LeftButton.TouchEnabled = state;
-            _RightButton.TouchEnabled = state;
+            //_UpButton.TouchEnabled = state;
+            //_DownButton.TouchEnabled = state;
+            //_LeftButton.TouchEnabled = state;
+            //_RightButton.TouchEnabled = state;
             _FireButton.TouchEnabled = state;
+            _Stick.TouchEnabled = state;
         }
 
         private void SetButtonsVisible(Boolean state)
         {
-            _UpButton.Visible = state;
-            _DownButton.Visible = state;
-            _LeftButton.Visible = state;
-            _RightButton.Visible = state;
+            //_UpButton.Visible = state;
+            //_DownButton.Visible = state;
+            //_LeftButton.Visible = state;
+            //_RightButton.Visible = state;
             _FireButton.Visible = state;
+            _Stick.Visible = state;
+            _Stick.ListeningForMove = state;
         }
 
-        private void RightButtonPress(Button obj)
-        {
-            _Player.MoveRight = true;
-        }
+        //private void RightButtonPress(Button obj)
+        //{
+        //    _Player.MoveRight = true;
+        //}
 
-        private void RightButtonRelease(Button obj)
-        {
-            _Player.MoveRight = false;
-        }
+        //private void RightButtonRelease(Button obj)
+        //{
+        //    _Player.MoveRight = false;
+        //}
 
-        private void LeftButtonPress(Button obj)
-        {
-            _Player.MoveLeft = true;
-        }
+        //private void LeftButtonPress(Button obj)
+        //{
+        //    _Player.MoveLeft = true;
+        //}
 
-        private void LeftButtonRelease(Button obj)
-        {
-            _Player.MoveLeft = false;
-        }
+        //private void LeftButtonRelease(Button obj)
+        //{
+        //    _Player.MoveLeft = false;
+        //}
 
-        private void DownButtonPress(Button obj)
-        {
-            _Player.MoveDown = true;
-        }
+        //private void DownButtonPress(Button obj)
+        //{
+        //    _Player.MoveDown = true;
+        //}
 
-        private void DownButtonRelease(Button obj)
-        {
-            _Player.MoveDown = false;
-        }
+        //private void DownButtonRelease(Button obj)
+        //{
+        //    _Player.MoveDown = false;
+        //}
 
-        private void UpButtonRelease(Button button)
-        {
-            _Player.MoveUp = false;
-        }
+        //private void UpButtonRelease(Button button)
+        //{
+        //    _Player.MoveUp = false;
+        //}
 
-        private void UpButtonPress(Button button)
-        {
-            _Player.MoveUp = true;
-        }
+        //private void UpButtonPress(Button button)
+        //{
+        //    _Player.MoveUp = true;
+        //}
 
         private void FireButtonRelease(Button obj)
         {
@@ -301,16 +308,11 @@ namespace Type.Scenes
         {
             base.Dispose();
 
-            _UpButton.OnButtonPress = null;
-            _UpButton.OnButtonRelease = null;
-            _DownButton.OnButtonPress = null;
-            _DownButton.OnButtonRelease = null;
-            _LeftButton.OnButtonPress = null;
-            _LeftButton.OnButtonRelease = null;
-            _RightButton.OnButtonPress = null;
-            _RightButton.OnButtonRelease = null;
-            _FireButton.OnButtonPress = null;
-            _FireButton.OnButtonRelease = null;
+            //_UpButton.Dispose();
+            //_DownButton.Dispose();
+            //_LeftButton.Dispose();
+            //_RightButton.Dispose();
+            _Stick.Dispose();
 
             _Fps.Dispose();
             _Player.Dispose();

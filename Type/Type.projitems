@@ -20,6 +20,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Glide\MemberLerper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Glide\Tween.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Glide\Tweener.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IAnalogListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IDestroyable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IHitable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\BaseEnemy.cs" />
@@ -37,6 +38,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)States\GameOverState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)States\MainMenuState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)States\PlayingState.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\AnalogStick.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\FpsCounter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\LevelDisplay.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\LifeMeter.cs" />
