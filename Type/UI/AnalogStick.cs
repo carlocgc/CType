@@ -67,12 +67,12 @@ namespace Type.UI
 
             _Top = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/analog_top.png"))
             {
-                Offset = new Vector2(105, 105),
+                Offset = new Vector2(150, 150),
                 Position = startPosition,
             };
             _Base = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/analog_base.png"))
             {
-                Offset = new Vector2(105, 105),
+                Offset = new Vector2(150, 150),
                 Colour = new Vector4(1, 1, 1, 0.5f),
             };
             _StartPosition = startPosition;
@@ -82,7 +82,7 @@ namespace Type.UI
             TouchOrder = Constants.ZOrders.UI;
             _PressId = -1;
 
-            TouchManager.Instance.AddTouchListener(this);           
+            TouchManager.Instance.AddTouchListener(this);
         }
 
         private Boolean Contains(Vector4 rect, Vector2 position)

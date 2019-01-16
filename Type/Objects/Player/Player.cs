@@ -180,10 +180,10 @@ namespace Type.Objects.Player
 
         public void UpdatePosition(Vector2 position)
         {
-            MoveUp = position.Y < 0;
-            MoveDown = position.Y > 0;
-            MoveRight = position.X < 0;
-            MoveLeft = position.X > 0;
+            MoveUp = position.Y < -10;
+            MoveDown = position.Y > 10;
+            MoveRight = position.X < -10;
+            MoveLeft = position.X > 10;
         }
     }
 }
