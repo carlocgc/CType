@@ -5,6 +5,7 @@ using AmosShared.Graphics.Drawables;
 using OpenTK;
 using Type.Base;
 using Type.Controllers;
+using Type.Interfaces.Control;
 using Type.Objects.Projectiles;
 #if DESKTOP
 using OpenTK.Input;
@@ -15,7 +16,7 @@ namespace Type.Objects.Player
     /// <summary>
     /// The player ship, can move and fire
     /// </summary>
-    public class Player : GameObject
+    public class Player : GameObject, IAnalogListener
     {
         /// <summary> Default rate of fire </summary>
         private readonly TimeSpan _DefaultFireRate = TimeSpan.FromMilliseconds(100);
@@ -139,42 +140,50 @@ namespace Type.Objects.Player
                 FireForward();
             }
 
-//#if ANDROID
-//            if (MoveRight)
-//            {
-//                if (Position.X <= (1920 / 2) - GetSprite().Width)
-//                {
-//                    Position += new Vector2(MovementSpeed * (Single)timeTilUpdate.TotalSeconds, 0);
-//                }
-//            }
-//            if (MoveLeft)
-//            {
-//                if (Position.X >= -(1920 / 2))
-//                {
-//                    Position -= new Vector2(MovementSpeed * (Single)timeTilUpdate.TotalSeconds, 0);
-//                }
-//            }
-//            if (MoveUp)
-//            {
-//                if (Position.Y <= (1080 / 2) - GetSprite().Height)
-//                {
-//                    Position += new Vector2(0, MovementSpeed * (Single)timeTilUpdate.TotalSeconds);
-//                }
-//            }
-//            if (MoveDown)
-//            {
-//                if (Position.Y >= -(1080 / 2))
-//                {
-//                    Position -= new Vector2(0, MovementSpeed * (Single)timeTilUpdate.TotalSeconds);
-//                }
-//            }
+            //#if ANDROID
+            //            if (MoveRight)
+            //            {
+            //                if (Position.X <= (1920 / 2) - GetSprite().Width)
+            //                {
+            //                    Position += new Vector2(MovementSpeed * (Single)timeTilUpdate.TotalSeconds, 0);
+            //                }
+            //            }
+            //            if (MoveLeft)
+            //            {
+            //                if (Position.X >= -(1920 / 2))
+            //                {
+            //                    Position -= new Vector2(MovementSpeed * (Single)timeTilUpdate.TotalSeconds, 0);
+            //                }
+            //            }
+            //            if (MoveUp)
+            //            {
+            //                if (Position.Y <= (1080 / 2) - GetSprite().Height)
+            //                {
+            //                    Position += new Vector2(0, MovementSpeed * (Single)timeTilUpdate.TotalSeconds);
+            //                }
+            //            }
+            //            if (MoveDown)
+            //            {
+            //                if (Position.Y >= -(1080 / 2))
+            //                {
+            //                    Position -= new Vector2(0, MovementSpeed * (Single)timeTilUpdate.TotalSeconds);
+            //                }
+            //            }
 
-//            if (Shoot)
-//            {
-//                if (_IsWeaponLocked) return;
-//                FireForward();
-//            }
-//#endif
+            //            if (Shoot)
+            //            {
+            //                if (_IsWeaponLocked) return;
+            //                FireForward();
+            //            }
+            //#endif
+        }
+
+        public void UpdatePosition(Vector2 position)
+        {
+            MoveUp = position.Y < 0;
+            MoveDown = position.Y > 0;
+            MoveRight = position.X < 0;
+            MoveLeft = position.X > 0;
         }
     }
 }

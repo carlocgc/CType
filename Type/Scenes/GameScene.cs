@@ -98,6 +98,14 @@ namespace Type.Scenes
             };
             AddDrawable(_ScoreDisplay);
 
+            Sprite fireButton = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/fire.png"))
+            {
+                Position = new Vector2(625, -450),
+                Visible = true,
+                Colour = new Vector4(1, 1, 1, (Single)0.5)
+            };
+            _FireButton = new Button(Int32.MaxValue, fireButton) { OnButtonPress = FireButtonPress, OnButtonRelease = FireButtonRelease };
+
             _LifeMeter = new LifeMeter();
             _Fps = new FpsCounter();
             _LevelDisplay = new LevelDisplay();
@@ -106,6 +114,8 @@ namespace Type.Scenes
             _Player = new Player(OnPlayerDeath);
             _LevelLoader = new LevelLoader();
             _EnemySpawner = new EnemyFactory(this);
+            _Stick = new AnalogStick(new Vector2(-625, -245));
+            _Stick.RegisterListener(_Player);
 
             //Sprite upButton = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/up.png"))
             //{
@@ -139,15 +149,7 @@ namespace Type.Scenes
             //};
             //_RightButton = new Button(Int32.MaxValue, rightButton) { OnButtonPress = RightButtonPress, OnButtonRelease = RightButtonRelease };
 
-            Sprite fireButton = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/fire.png"))
-            {
-                Position = new Vector2(625, -450),
-                Visible = true,
-                Colour = new Vector4(1, 1, 1, (Single)0.5)
-            };
-            _FireButton = new Button(Int32.MaxValue, fireButton) { OnButtonPress = FireButtonPress, OnButtonRelease = FireButtonRelease };
 
-            _Stick = new AnalogStick(new Vector2(-625, -245));
         }
 
         /// <summary>

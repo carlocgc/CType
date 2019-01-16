@@ -23,6 +23,10 @@ namespace Type.UI
 
         private Vector2 _Direction;
 
+        private Vector2 _StartPosition;
+
+        private Vector2 _MoveLimit = new Vector2(100, 100);
+
         private List<IAnalogListener> _Listeners;
 
         private Vector4 _HitBox;
@@ -59,6 +63,8 @@ namespace Type.UI
 
         public AnalogStick(Vector2 startPosition)
         {
+            _Listeners = new List<IAnalogListener>();
+
             _Top = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/analog_top.png"))
             {
                 Offset = new Vector2(105, 105),
@@ -69,13 +75,14 @@ namespace Type.UI
                 Offset = new Vector2(105, 105),
                 Colour = new Vector4(1, 1, 1, 0.5f),
             };
-            Position = startPosition;
+            _StartPosition = startPosition;
+            Position = _StartPosition;
 
             _HitBox = new Vector4(_Base.Position.X - _Base.Offset.X, _Base.Position.Y - _Base.Offset.Y, _Base.Size.X, _Base.Size.Y);
             TouchOrder = Constants.ZOrders.UI;
             _PressId = -1;
 
-            TouchManager.Instance.AddTouchListener(this);
+            TouchManager.Instance.AddTouchListener(this);           
         }
 
         private Boolean Contains(Vector4 rect, Vector2 position)
@@ -99,9 +106,15 @@ namespace Type.UI
         {
             if (_PressId != id) return false;
 
-            Vector2 newPosition = new Vector2(position.X - Renderer.Instance.TargetDimensions.X / 2, (position.Y - (Renderer.Instance.TargetDimensions.Y / 2)) * -1);
+            Vector2 newPosition = new Vector2(position.X - Renderer.Instance.TargetDimensions.X / 2, (position.Y - Renderer.Instance.TargetDimensions.Y / 2) * -1);
+
+            if (newPosition.X > _StartPosition.X + _MoveLimit.X) newPosition.X = _StartPosition.X + _MoveLimit.X;
+            if (newPosition.Y > _StartPosition.Y + _MoveLimit.Y) newPosition.Y = _StartPosition.Y + _MoveLimit.Y;
+            if (newPosition.X < _StartPosition.X - _MoveLimit.X) newPosition.X = _StartPosition.X - _MoveLimit.X;
+            if (newPosition.Y < _StartPosition.Y - _MoveLimit.Y) newPosition.Y = _StartPosition.Y - _MoveLimit.Y;
 
             _Top.Position = newPosition;
+
             return false;
         }
 
@@ -120,7 +133,6 @@ namespace Type.UI
 
         public Boolean IsTouched(Vector2 position)
         {
-
             Vector4 topLeftAlignedHitBox = new Vector4(_HitBox.X + 960, _HitBox.Y + 1080, _HitBox.W, _HitBox.Z);
 
             return Contains(topLeftAlignedHitBox, position);
@@ -139,6 +151,16 @@ namespace Type.UI
         public override void Update(TimeSpan timeTilUpdate)
         {
             base.Update(timeTilUpdate);
+
+            Vector2 startPoint = _Base.Position;
+            Vector2 currentPoint = _Top.Position;
+
+            _Direction = startPoint - currentPoint;
+
+            foreach (IAnalogListener listener in _Listeners)
+            {
+                listener.UpdatePosition(_Direction);
+            }
         }
 
         public override void Dispose()
