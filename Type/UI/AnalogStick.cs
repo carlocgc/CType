@@ -106,16 +106,11 @@ namespace Type.UI
         {
             if (_PressId != id) return false;
 
-            //if (direction.X < 0 && newPosition.X > _Base.Position.X - pointOnCircle.X) newPosition = _StartPosition + pointOnCircle;
-            //if (direction.Y < 0 && newPosition.Y > _Base.Position.Y - pointOnCircle.Y) newPosition = _StartPosition + pointOnCircle;
-            //if (direction.X > 0 && newPosition.X < _Base.Position.X + pointOnCircle.X) newPosition = _StartPosition + pointOnCircle;
-            //if (direction.Y > 0 && newPosition.Y < _Base.Position.Y + pointOnCircle.Y) newPosition = _StartPosition + pointOnCircle;
-
             Vector2 newPosition = new Vector2(position.X - Renderer.Instance.TargetDimensions.X / 2, (position.Y - Renderer.Instance.TargetDimensions.Y / 2) * -1);
 
             Vector2 direction = newPosition - _StartPosition;
 
-            Single length = Math.Min(200, _Top.Position.Length);
+            Single length = Math.Min(110, direction.Length);
 
             Single angle = (Single) (Math.Atan2(1, 0) - Math.Atan2(direction.Y, direction.X));
 
