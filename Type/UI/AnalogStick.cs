@@ -108,12 +108,15 @@ namespace Type.UI
 
             Vector2 newPosition = new Vector2(position.X - Renderer.Instance.TargetDimensions.X / 2, (position.Y - Renderer.Instance.TargetDimensions.Y / 2) * -1);
 
-            if (newPosition.X > _StartPosition.X + _MoveLimit.X) newPosition.X = _StartPosition.X + _MoveLimit.X;
-            if (newPosition.Y > _StartPosition.Y + _MoveLimit.Y) newPosition.Y = _StartPosition.Y + _MoveLimit.Y;
-            if (newPosition.X < _StartPosition.X - _MoveLimit.X) newPosition.X = _StartPosition.X - _MoveLimit.X;
-            if (newPosition.Y < _StartPosition.Y - _MoveLimit.Y) newPosition.Y = _StartPosition.Y - _MoveLimit.Y;
+            Vector2 diff = _Base.Position - newPosition;
+            Single length = diff.Length;
 
-            _Top.Position = newPosition;
+            //if (newPosition.X > _StartPosition.X + _MoveLimit.X) newPosition.X = _StartPosition.X + _MoveLimit.X;
+            //if (newPosition.Y > _StartPosition.Y + _MoveLimit.Y) newPosition.Y = _StartPosition.Y + _MoveLimit.Y;
+            //if (newPosition.X < _StartPosition.X - _MoveLimit.X) newPosition.X = _StartPosition.X - _MoveLimit.X;
+            //if (newPosition.Y < _StartPosition.Y - _MoveLimit.Y) newPosition.Y = _StartPosition.Y - _MoveLimit.Y;
+
+            if (length < 140) _Top.Position = newPosition;            
 
             return false;
         }
