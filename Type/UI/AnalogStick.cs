@@ -108,15 +108,15 @@ namespace Type.UI
 
             Vector2 newPosition = new Vector2(position.X - Renderer.Instance.TargetDimensions.X / 2, (position.Y - Renderer.Instance.TargetDimensions.Y / 2) * -1);
 
-            Vector2 diff = _Base.Position - newPosition;
-            Single length = diff.Length;
+            Vector2 direction = newPosition - _StartPosition;
 
-            //if (newPosition.X > _StartPosition.X + _MoveLimit.X) newPosition.X = _StartPosition.X + _MoveLimit.X;
-            //if (newPosition.Y > _StartPosition.Y + _MoveLimit.Y) newPosition.Y = _StartPosition.Y + _MoveLimit.Y;
-            //if (newPosition.X < _StartPosition.X - _MoveLimit.X) newPosition.X = _StartPosition.X - _MoveLimit.X;
-            //if (newPosition.Y < _StartPosition.Y - _MoveLimit.Y) newPosition.Y = _StartPosition.Y - _MoveLimit.Y;
+            Single length = Math.Min(200, _Top.Position.Length);
 
-            if (length < 140) _Top.Position = newPosition;            
+            Single angle = (Single) (Math.Atan2(1, 0) - Math.Atan2(direction.Y, direction.X));
+
+            Vector2 pointOnCircle = new Vector2((Single)(length * Math.Sin(angle)), (Single)(length * Math.Cos(angle)));
+
+            _Top.Position = _StartPosition + pointOnCircle;
 
             return false;
         }
