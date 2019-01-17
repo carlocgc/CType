@@ -106,6 +106,8 @@ namespace Type.UI
         {
             if (_PressId != id) return false;
 
+            // Amos was ere
+
             Vector2 newPosition = new Vector2(position.X - Renderer.Instance.TargetDimensions.X / 2, (position.Y - Renderer.Instance.TargetDimensions.Y / 2) * -1);
 
             Vector2 direction = newPosition - _StartPosition;
