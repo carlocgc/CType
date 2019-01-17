@@ -37,7 +37,7 @@ namespace Type.Base
             set
             {
                 _Position = value;
-                _Sprite.Position = value;
+                if (_Sprite != null) _Sprite.Position = value;
                 if (_CollideArea != null)
                     _CollideArea.Position = value;
             }

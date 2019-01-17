@@ -30,21 +30,12 @@ namespace Type.Scenes
         private readonly Int32 _MaxLevel;
         /// <summary> The players ship </summary>
         private readonly Player _Player;
-
         /// <summary> Loads wave data from text files </summary>
         private readonly LevelLoader _LevelLoader;
-
-        /// <summary> Up directional button </summary>
-        private readonly Button _UpButton;
-        /// <summary> Down directional button </summary>
-        private readonly Button _DownButton;
-        /// <summary> Right directional button </summary>
-        private readonly Button _RightButton;
-        /// <summary> Left directional button </summary>
-        private readonly Button _LeftButton;
         /// <summary> Fire button </summary>
         private readonly Button _FireButton;
-
+        /// <summary> Floating analog stick </summary>
+        private readonly AnalogStick _Stick;
         /// <summary> Text printer that displays the score </summary>
         private readonly TextDisplay _ScoreDisplay;
         /// <summary> THe word score displayed top left of screen </summary>
@@ -55,20 +46,20 @@ namespace Type.Scenes
         private readonly LevelDisplay _LevelDisplay;
         /// <summary> UI element that displays the current FPS </summary>
         private readonly FpsCounter _Fps;
+        /// <summary> The enemy factory </summary>
+        private readonly EnemyFactory _EnemySpawner;
+
+        /// <summary> The current level </summary>
+        private Int32 CurrentLevel { get; set; }
 
         /// <summary> The players current score</summary>
         public Int32 CurrentScore { get; private set; }
-
         /// <summary> Whether the player has ran out of lives, ends the playing state </summary>
-        public Boolean IsGameOver;
-        /// <summary> The enemy factory </summary>
-        private EnemyFactory _EnemySpawner;
-
-        /// <summary> The current level </summary>
-        public Int32 CurrentLevel { get; private set; }
+        public Boolean IsGameOver { get; private set; }
 
         public GameScene()
         {
+            CurrentLevel = 1;
             _MaxLevel = 8;
 
             _BackgroundFar = new ScrollingBackground(100, "Content/Graphics/stars-1.png");
@@ -76,6 +67,17 @@ namespace Type.Scenes
             _Clusters = new ScrollingObject(100, 200, "Content/Graphics/cluster-", 7, 20, 40, Constants.ZOrders.CLUSTERS);
             _PlanetsFar = new ScrollingObject(200, 250, "Content/Graphics/planet-far-", 9, 10, 20, Constants.ZOrders.PLANETS_FAR);
             _PlanetsNear = new ScrollingObject(250, 350, "Content/Graphics/planet-near-", 9, 10, 30, Constants.ZOrders.PLANETS_NEAR);
+
+            _LifeMeter = new LifeMeter();
+            _Fps = new FpsCounter();
+            _LevelDisplay = new LevelDisplay();
+
+            _Player = new Player(OnPlayerDeath);
+            _LevelLoader = new LevelLoader();
+            _EnemySpawner = new EnemyFactory(this);
+
+            _Stick = new AnalogStick(new Vector2(-700, -290));
+            _Stick.RegisterListener(_Player);
 
             _ScoreText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
@@ -95,47 +97,6 @@ namespace Type.Scenes
                 Scale = new Vector2(3, 3),
             };
             AddDrawable(_ScoreDisplay);
-
-            _LifeMeter = new LifeMeter();
-            _Fps = new FpsCounter();
-            _LevelDisplay = new LevelDisplay();
-            CurrentLevel = 1;
-
-            _Player = new Player(OnPlayerDeath);
-            _LevelLoader = new LevelLoader();
-            _EnemySpawner = new EnemyFactory(this);
-
-            Sprite upButton = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/up.png"))
-            {
-                Position = new Vector2(-712, -220),
-                Visible = true,
-                Colour = new Vector4(1, 1, 1, (Single)0.5)
-            };
-            _UpButton = new Button(Int32.MaxValue, upButton) { OnButtonPress = UpButtonPress, OnButtonRelease = UpButtonRelease };
-
-            Sprite downButton = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/down.png"))
-            {
-                Position = new Vector2(-712, -480),
-                Visible = true,
-                Colour = new Vector4(1, 1, 1, (Single)0.5)
-            };
-            _DownButton = new Button(Int32.MaxValue, downButton) { OnButtonPress = DownButtonPress, OnButtonRelease = DownButtonRelease };
-
-            Sprite leftButton = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/left.png"))
-            {
-                Position = new Vector2(-845, -350),
-                Visible = true,
-                Colour = new Vector4(1, 1, 1, (Single)0.5)
-            };
-            _LeftButton = new Button(Int32.MaxValue, leftButton) { OnButtonPress = LeftButtonPress, OnButtonRelease = LeftButtonRelease };
-
-            Sprite rightButton = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/right.png"))
-            {
-                Position = new Vector2(-585, -350),
-                Visible = true,
-                Colour = new Vector4(1, 1, 1, (Single)0.5)
-            };
-            _RightButton = new Button(Int32.MaxValue, rightButton) { OnButtonPress = RightButtonPress, OnButtonRelease = RightButtonRelease };
 
             Sprite fireButton = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/fire.png"))
             {
@@ -224,60 +185,15 @@ namespace Type.Scenes
 
         private void SetButtonsEnabled(Boolean state)
         {
-            _UpButton.TouchEnabled = state;
-            _DownButton.TouchEnabled = state;
-            _LeftButton.TouchEnabled = state;
-            _RightButton.TouchEnabled = state;
             _FireButton.TouchEnabled = state;
+            _Stick.TouchEnabled = state;
         }
 
         private void SetButtonsVisible(Boolean state)
         {
-            _UpButton.Visible = state;
-            _DownButton.Visible = state;
-            _LeftButton.Visible = state;
-            _RightButton.Visible = state;
             _FireButton.Visible = state;
-        }
-
-        private void RightButtonPress(Button obj)
-        {
-            _Player.MoveRight = true;
-        }
-
-        private void RightButtonRelease(Button obj)
-        {
-            _Player.MoveRight = false;
-        }
-
-        private void LeftButtonPress(Button obj)
-        {
-            _Player.MoveLeft = true;
-        }
-
-        private void LeftButtonRelease(Button obj)
-        {
-            _Player.MoveLeft = false;
-        }
-
-        private void DownButtonPress(Button obj)
-        {
-            _Player.MoveDown = true;
-        }
-
-        private void DownButtonRelease(Button obj)
-        {
-            _Player.MoveDown = false;
-        }
-
-        private void UpButtonRelease(Button button)
-        {
-            _Player.MoveUp = false;
-        }
-
-        private void UpButtonPress(Button button)
-        {
-            _Player.MoveUp = true;
+            _Stick.Visible = state;
+            _Stick.ListeningForMove = state;
         }
 
         private void FireButtonRelease(Button obj)
@@ -300,18 +216,7 @@ namespace Type.Scenes
         public override void Dispose()
         {
             base.Dispose();
-
-            _UpButton.OnButtonPress = null;
-            _UpButton.OnButtonRelease = null;
-            _DownButton.OnButtonPress = null;
-            _DownButton.OnButtonRelease = null;
-            _LeftButton.OnButtonPress = null;
-            _LeftButton.OnButtonRelease = null;
-            _RightButton.OnButtonPress = null;
-            _RightButton.OnButtonRelease = null;
-            _FireButton.OnButtonPress = null;
-            _FireButton.OnButtonRelease = null;
-
+            _Stick.Dispose();
             _Fps.Dispose();
             _Player.Dispose();
             _BackgroundNear.Dispose();

@@ -5,6 +5,7 @@ using AmosShared.Graphics.Drawables;
 using OpenTK;
 using Type.Base;
 using Type.Controllers;
+using Type.Interfaces.Control;
 using Type.Objects.Projectiles;
 #if DESKTOP
 using OpenTK.Input;
@@ -15,37 +16,35 @@ namespace Type.Objects.Player
     /// <summary>
     /// The player ship, can move and fire
     /// </summary>
-    public class Player : GameObject
+    public class Player : GameObject, IAnalogListener
     {
         /// <summary> Default rate of fire </summary>
         private readonly TimeSpan _DefaultFireRate = TimeSpan.FromMilliseconds(100);
-
         /// <summary> Position on screen where the player is spawned </summary>
         private readonly Vector2 _SpawnPosition = new Vector2(-700, 0);
-
         /// <summary> Default movement speed </summary>
         private readonly Single _DefaultMovementSpeed = 500;
+        /// <summary> Action to be invoked when the player dies </summary>
+        private readonly Action OnDeath;
 
         /// <summary> Time since the last bullet was fired </summary>
         private TimeSpan _TimeSinceLastFired;
-
         /// <summary> Whether firing is allowed </summary>
         private Boolean _IsWeaponLocked;
+        /// <summary> Whether the player should move up </summary>
+        private Boolean _MoveUp;
+        /// <summary> Whether the player should move down </summary>
+        private Boolean _MoveDown;
+        /// <summary> Whether the player should move right </summary>
+        private Boolean _MoveRight;
+        /// <summary> Whether the player should move left </summary>
+        private Boolean _MoveLeft;
 
-        /// <summary> The offset to the front of the ship, used for spawning bullets </summary>
-        private Vector2 _BulletSpawnPos;
-
-        private readonly Action OnDeath;
-
-        public Boolean MoveUp { get; set; }
-        public Boolean MoveDown { get; set; }
-        public Boolean MoveRight { get; set; }
-        public Boolean MoveLeft { get; set; }
+        /// <summary> Whether the player should shoot </summary>
         public Boolean Shoot { get; set; }
 
         /// <summary> Amount of time between firing </summary>
         public TimeSpan FireRate { get; set; }
-
         /// <summary> How fast the player can move in any direction </summary>
         public Single MovementSpeed { get; set; }
 
@@ -56,7 +55,6 @@ namespace Type.Objects.Player
             {
                 Visible = true,
             });
-            _BulletSpawnPos = new Vector2(0, -GetSprite().Height / 4);
             Position = _SpawnPosition;
             MovementSpeed = _DefaultMovementSpeed;
             FireRate = _DefaultFireRate;
@@ -103,78 +101,47 @@ namespace Type.Objects.Player
                     _TimeSinceLastFired = TimeSpan.Zero;
                 }
             }
-
-            if (MoveRight)
+            if (Shoot)
+            {
+                if (_IsWeaponLocked) return;
+                FireForward();
+            }
+            if (_MoveRight)
             {
                 if (Position.X <= (1920 / 2) - GetSprite().Width)
                 {
                     Position += new Vector2(MovementSpeed * (Single)timeTilUpdate.TotalSeconds, 0);
                 }
             }
-            if (MoveLeft)
+            if (_MoveLeft)
             {
                 if (Position.X >= -(1920 / 2))
                 {
                     Position -= new Vector2(MovementSpeed * (Single)timeTilUpdate.TotalSeconds, 0);
                 }
             }
-            if (MoveUp)
+            if (_MoveUp)
             {
                 if (Position.Y <= (1080 / 2) - GetSprite().Height)
                 {
                     Position += new Vector2(0, MovementSpeed * (Single)timeTilUpdate.TotalSeconds);
                 }
             }
-            if (MoveDown)
+            if (_MoveDown)
             {
                 if (Position.Y >= -(1080 / 2))
                 {
                     Position -= new Vector2(0, MovementSpeed * (Single)timeTilUpdate.TotalSeconds);
                 }
             }
+        }
 
-            if (Shoot)
-            {
-                if (_IsWeaponLocked) return;
-                FireForward();
-            }
-
-//#if ANDROID
-//            if (MoveRight)
-//            {
-//                if (Position.X <= (1920 / 2) - GetSprite().Width)
-//                {
-//                    Position += new Vector2(MovementSpeed * (Single)timeTilUpdate.TotalSeconds, 0);
-//                }
-//            }
-//            if (MoveLeft)
-//            {
-//                if (Position.X >= -(1920 / 2))
-//                {
-//                    Position -= new Vector2(MovementSpeed * (Single)timeTilUpdate.TotalSeconds, 0);
-//                }
-//            }
-//            if (MoveUp)
-//            {
-//                if (Position.Y <= (1080 / 2) - GetSprite().Height)
-//                {
-//                    Position += new Vector2(0, MovementSpeed * (Single)timeTilUpdate.TotalSeconds);
-//                }
-//            }
-//            if (MoveDown)
-//            {
-//                if (Position.Y >= -(1080 / 2))
-//                {
-//                    Position -= new Vector2(0, MovementSpeed * (Single)timeTilUpdate.TotalSeconds);
-//                }
-//            }
-
-//            if (Shoot)
-//            {
-//                if (_IsWeaponLocked) return;
-//                FireForward();
-//            }
-//#endif
+        public void UpdatePosition(Vector2 position)
+        {
+            _MoveUp = position.Y < -20;
+            _MoveDown = position.Y > 20;
+            _MoveRight = position.X < -20;
+            _MoveLeft = position.X > 20;
         }
     }
 }

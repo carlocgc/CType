@@ -47,7 +47,7 @@ namespace Type.UI
             _TargetDisplayTime = TimeSpan.Zero;
             _OnComplete.Invoke();
             _Active = false;
-            new AudioPlayer("Content/Audio/begin.wav", false, AudioManager.Category.EFFECT, 1);
+            //new AudioPlayer("Content/Audio/begin.wav", false, AudioManager.Category.EFFECT, 1);
         }
 
         public override void Update(TimeSpan timeTilUpdate)
