@@ -101,11 +101,9 @@ namespace Type.Objects.Player
                     _TimeSinceLastFired = TimeSpan.Zero;
                 }
             }
-            if (Shoot)
-            {
-                if (_IsWeaponLocked) return;
-                FireForward();
-            }
+
+            if (Shoot && !_IsWeaponLocked) FireForward();
+
             if (_MoveRight)
             {
                 if (Position.X <= (1920 / 2) - GetSprite().Width)
@@ -134,6 +132,7 @@ namespace Type.Objects.Player
                     Position -= new Vector2(0, MovementSpeed * (Single)timeTilUpdate.TotalSeconds);
                 }
             }
+
         }
 
         public void UpdatePosition(Vector2 position)
