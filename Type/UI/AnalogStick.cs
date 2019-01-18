@@ -23,17 +23,19 @@ namespace Type.UI
 
         private readonly Single _Radius;
 
+        private readonly Vector4 _HitBox;
+
+        private Boolean _Visible;
+
         private Int32 _PressId;
 
         private Vector2 _DirectionNorm;
 
         private Single _PushDistance;
 
-        private Vector2 _StartPosition;
+        private Vector2 _TouchBase;
 
-        private Vector4 _HitBox;
-
-        private Boolean _Visible;
+        private Vector2 _TouchCurrent;
 
         public Boolean TouchEnabled { get; set; }
 
@@ -78,17 +80,17 @@ namespace Type.UI
                 Colour = new Vector4(1, 1, 1, 0.5f),
                 Position = startPosition,
             };
-            _StartPosition = startPosition;
-            Position = _StartPosition;
+            Position = startPosition;
 
-            _HitBox = new Vector4(_Base.Position.X - _Base.Offset.X * 2, _Base.Position.Y - _Base.Offset.Y * 2, _Base.Size.X * 2, _Base.Size.Y * 2);
+            _HitBox = new Vector4(_Base.Position.X - _Base.Offset.X * 4, _Base.Position.Y - _Base.Offset.Y * 4, _Base.Size.X * 4, _Base.Size.Y * 4);
 
-            new Sprite(Game.MainCanvas, Int32.MaxValue, Texture.GetPixel())
-            {
-                Scale = new Vector2(_HitBox.W, _HitBox.Z),
-                Visible = true,
-                Position = new Vector2(_HitBox.X, _HitBox.Y)
-            };
+            //new Sprite(Game.MainCanvas, Int32.MaxValue, Texture.GetPixel())
+            //{
+            //    Scale = new Vector2(_HitBox.W, _HitBox.Z),
+            //    Visible = true,
+            //    Position = new Vector2(_HitBox.X, _HitBox.Y),
+            //    Colour = new Vector4(1, 1, 1, 0.5f)
+            //};
 
             _Radius = 150;
             TouchOrder = Constants.ZOrders.UI;
@@ -100,11 +102,9 @@ namespace Type.UI
 
         public Boolean IsTouched(Vector2 position)
         {
-            Vector2 centerAlignedmouse = new Vector2(position.X - Renderer.Instance.TargetDimensions.X / 2, (position.Y - Renderer.Instance.TargetDimensions.Y / 2) * -1);
+            if (_PressId > -1) return false;
 
-            //Vector4 topLeftAlignedHitBox = new Vector4(_HitBox.X + 960, _HitBox.Y + 1080, _HitBox.W, _HitBox.Z);
-
-            return Contains(_HitBox, centerAlignedmouse);
+            return Contains(_HitBox, ConvertToCenterAligned(position));
         }
 
         private Boolean Contains(Vector4 rect, Vector2 position)
@@ -118,9 +118,14 @@ namespace Type.UI
 
         public Boolean OnPress(Int32 id, Vector2 position)
         {
+            if (_PressId > -1) return false;
+
             _PressId = id;
             _Top.Visible = true;
-            _Top.Position = Position;
+            _Top.Position = _Base.Position;
+
+            _TouchBase = ConvertToCenterAligned(position);
+
             return true;
         }
 
@@ -130,9 +135,9 @@ namespace Type.UI
 
             // Amos was ere
 
-            Vector2 newPosition = new Vector2(position.X - Renderer.Instance.TargetDimensions.X / 2, (position.Y - Renderer.Instance.TargetDimensions.Y / 2) * -1);
+            _TouchCurrent = ConvertToCenterAligned(position);
 
-            Vector2 direction = newPosition - _StartPosition;
+            Vector2 direction = _TouchCurrent - _TouchBase;
 
             Single length = Math.Min(_Radius, direction.Length);
 
@@ -140,7 +145,7 @@ namespace Type.UI
 
             Vector2 pointOnCircle = new Vector2((Single)(length * Math.Sin(angle)), (Single)(length * Math.Cos(angle)));
 
-            _Top.Position = _StartPosition + pointOnCircle;
+            _Top.Position = _Base.Position + pointOnCircle;
 
             PrepareListenerData(length);
 
@@ -149,14 +154,19 @@ namespace Type.UI
 
         private void PrepareListenerData(Single length)
         {
-            _DirectionNorm = _Top.Position - _StartPosition;
-            _DirectionNorm.Normalize();
+            _DirectionNorm = _Top.Position - _Base.Position;
+
+            // Prevent _DirectionNorm evaluating to NaN 
+            if (_DirectionNorm != Vector2.Zero) _DirectionNorm.Normalize();
             _PushDistance = length / _Radius;
         }
 
         public void OnRelease(Int32 id, Vector2 position)
         {
             if (_PressId != id) return;
+
+            _TouchBase = Vector2.Zero;
+            _TouchCurrent = Vector2.Zero;
 
             _Top.Position = Position;
             _Top.Visible = false;
@@ -177,6 +187,10 @@ namespace Type.UI
 
         }
 
+        private Vector2 ConvertToCenterAligned(Vector2 position)
+        {
+            return new Vector2(position.X - Renderer.Instance.TargetDimensions.X / 2, (position.Y - Renderer.Instance.TargetDimensions.Y / 2) * -1);
+        }
 
         public void RegisterListener(IAnalogListener listener)
         {
@@ -191,6 +205,12 @@ namespace Type.UI
         public override void Update(TimeSpan timeTilUpdate)
         {
             base.Update(timeTilUpdate);
+
+            if (Single.IsNaN(_DirectionNorm.X) || Single.IsNaN(_DirectionNorm.Y))
+            {
+                int i = 0;
+                i++;
+            }
 
             foreach (IAnalogListener listener in _Listeners)
             {
