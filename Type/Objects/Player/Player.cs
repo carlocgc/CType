@@ -29,7 +29,7 @@ namespace Type.Objects.Player
         /// <summary> Position on screen where the player is spawned </summary>
         private readonly Vector2 _SpawnPosition = new Vector2(-700, 0);
         /// <summary> Default movement speed </summary>
-        private readonly Single _DefaultMovementSpeed = 500;
+        private readonly Single _DefaultMovementSpeed = 700;
         /// <summary> Action to be invoked when the player dies </summary>
         private readonly Action OnDeath;
 
