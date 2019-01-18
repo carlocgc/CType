@@ -23,12 +23,15 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IAnalogListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IDestroyable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IHitable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Probe\IProbe.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Probe\IProbeController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\BaseEnemy.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\EnemyA.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\EnemyB.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\EnemyC.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\EnemyFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Player\Player.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Probes\LaserProbe.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Projectiles\Bullet.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\World\ScrollingBackground.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\World\ScrollingObject.cs" />

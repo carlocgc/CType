@@ -7,9 +7,7 @@ namespace Type.Interfaces.Probe
 {
     public interface IProbe
     {
-        Int32 ID { get; }
-
-        void Fire();
+        Boolean Shoot { get; set; }
 
         void UpdatePosition(Vector2 position);
     }
