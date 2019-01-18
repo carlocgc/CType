@@ -103,7 +103,7 @@ namespace Type.Scenes
             };
             _FireButton = new Button(Int32.MaxValue, fireButton) { OnButtonPress = FireButtonPress, OnButtonRelease = FireButtonRelease };
 
-            _Stick = new AnalogStick(new Vector2(-620, -220));
+            _Stick = new AnalogStick(new Vector2(-620, -220), 110);
             _Stick.RegisterListener(_Player);
         }
 
