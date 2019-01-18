@@ -35,10 +35,7 @@ namespace Type.Objects.Probes
         /// <param name="angle"> The initial angle of the probe on the orbit around the player </param>
         public LaserProbe(Vector2 orbitPosition, Single angle)
         {
-            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.PLAYER, Texture.GetTexture("Content/Graphics/Probes/laser-probe.png"))
-            {
-                Visible = true,
-            };
+            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.PLAYER, Texture.GetTexture("Content/Graphics/Probes/laser-probe.png"));
             _Sprite.Offset = _Sprite.Size / 2;
             AddSprite(_Sprite);
 
@@ -69,6 +66,8 @@ namespace Type.Objects.Probes
             Position = new Vector2(x, y);
 
             _Angle += _Speed;
+
+            if (!_Sprite.Visible) _Sprite.Visible = true;
         }
 
         public override void Update(TimeSpan timeTilUpdate)

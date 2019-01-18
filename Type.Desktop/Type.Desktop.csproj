@@ -127,6 +127,10 @@
       <Link>Content\Graphics\Buttons\left.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\Assets\Graphics\Buttons\probe-button.png">
+      <Link>Content\Graphics\Buttons\probe-button.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\Assets\Graphics\Buttons\right.png">
       <Link>Content\Graphics\Buttons\right.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

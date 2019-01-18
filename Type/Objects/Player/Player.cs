@@ -25,7 +25,7 @@ namespace Type.Objects.Player
         private readonly Single ScreenLeft = -Renderer.Instance.TargetDimensions.X / 2;
         private readonly Single ScreenBottom = -Renderer.Instance.TargetDimensions.Y / 2;
 
-        private IProbeController _ProbeController;
+        private readonly IProbeController _ProbeController;
 
         /// <summary> Default rate of fire </summary>
         private readonly TimeSpan _DefaultFireRate = TimeSpan.FromMilliseconds(100);
@@ -40,18 +40,11 @@ namespace Type.Objects.Player
         private TimeSpan _TimeSinceLastFired;
         /// <summary> Whether firing is allowed </summary>
         private Boolean _IsWeaponLocked;
-        /// <summary> Whether the player should move up </summary>
-        private Boolean _MoveUp;
-        /// <summary> Whether the player should move down </summary>
-        private Boolean _MoveDown;
-        /// <summary> Whether the player should move right </summary>
-        private Boolean _MoveRight;
-        /// <summary> Whether the player should move left </summary>
-        private Boolean _MoveLeft;
 
         private Vector2 _Direction;
 
         private Single _MoveStrength;
+
         private Boolean _Shoot;
 
         /// <summary> Whether the player should shoot </summary>
@@ -88,11 +81,22 @@ namespace Type.Objects.Player
 
             _ProbeController = new ProbeController();
             _ProbeController.UpdatePosition(Position);
-            for (int i = 0; i < 3; i++)
+
+            //CreateProbes(5); // TODO : Remove this method TEST
+
+            CollisionController.Instance.RegisterPlayer(this);
+        }
+
+        /// <summary>
+        /// TODO REMOVE THIS: Creates the given amount of probes around the player.
+        /// </summary>
+        /// <param name="amount"></param>
+        public void CreateProbes(Int32 amount)
+        {
+            for (int i = 0; i < amount; i++)
             {
                 _ProbeController.AddProbe(0);
             }
-            CollisionController.Instance.RegisterPlayer(this);
         }
 
         /// <summary>
@@ -100,6 +104,7 @@ namespace Type.Objects.Player
         /// </summary>
         public void LoseLife()
         {
+            _ProbeController.RemoveAll();
             Position = _SpawnPosition;
             OnDeath?.Invoke();
         }

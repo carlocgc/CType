@@ -18,6 +18,10 @@ namespace Type.Controllers
 
         private Int32 _ProbeCount;
 
+        private Single _Radius;
+
+        private Single _RadiusIncrement;
+
         public ProbeController()
         {
             _Probes = new List<IProbe>();
@@ -46,7 +50,6 @@ namespace Type.Controllers
                         {
                             _Probes.Add(new LaserProbe(_OrbitPosition, i * spaceBetweenProbes));
                         }
-
                         break;
                     }
                 default:
