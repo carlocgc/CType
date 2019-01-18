@@ -17,16 +17,28 @@ namespace Type.Objects.Probes
         /// <summary> Whether firing is allowed </summary>
         private Boolean _IsWeaponLocked;
 
+        private Vector2 _OrbitAnchor;
+
+        private Single _Angle;
+
+        private Single _Radius;
+
         /// <summary> Whether the probe should be shooting </summary>
         public Boolean Shoot { get; set; }
 
-        public LaserProbe()
+        public LaserProbe(Vector2 orbitPosition)
         {
-            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.PLAYER, Texture.GetTexture("Graphics/Probes/laser_probe.png")) { Visible = true, };
+            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.PLAYER, Texture.GetTexture("Content/Graphics/Probes/laser-probe.png"))
+            {
+                Visible = true,
+            };
             _Sprite.Offset = _Sprite.Size / 2;
             AddSprite(_Sprite);
 
+            _Radius = 100;
             _FireRate = TimeSpan.FromMilliseconds(100);
+
+            Position = new Vector2(orbitPosition.X, orbitPosition.Y + _Radius);
         }
 
         /// <summary>
@@ -40,7 +52,7 @@ namespace Type.Objects.Probes
 
         public void UpdatePosition(Vector2 position)
         {
-            Position = position;
+            Position = new Vector2(position.X, position.Y + _Radius);
         }
 
         public override void Update(TimeSpan timeTilUpdate)

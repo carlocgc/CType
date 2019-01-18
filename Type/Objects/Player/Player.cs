@@ -7,6 +7,7 @@ using OpenTK;
 using Type.Base;
 using Type.Controllers;
 using Type.Interfaces.Control;
+using Type.Interfaces.Probe;
 using Type.Objects.Projectiles;
 #if DESKTOP
 using OpenTK.Input;
@@ -23,6 +24,8 @@ namespace Type.Objects.Player
         private readonly Single ScreenRight = Renderer.Instance.TargetDimensions.X / 2;
         private readonly Single ScreenLeft = -Renderer.Instance.TargetDimensions.X / 2;
         private readonly Single ScreenBottom = -Renderer.Instance.TargetDimensions.Y / 2;
+
+        private IProbeController _ProbeController;
 
         /// <summary> Default rate of fire </summary>
         private readonly TimeSpan _DefaultFireRate = TimeSpan.FromMilliseconds(100);
@@ -49,9 +52,19 @@ namespace Type.Objects.Player
         private Vector2 _Direction;
 
         private Single _MoveStrength;
+        private Boolean _Shoot;
 
         /// <summary> Whether the player should shoot </summary>
-        public Boolean Shoot { get; set; }
+        public Boolean Shoot
+        {
+            get => _Shoot;
+            set
+            {
+                _Shoot = value;
+                _ProbeController.Shoot = value;
+            }
+        }
+
         /// <summary> Amount of time between firing </summary>
         public TimeSpan FireRate { get; set; }
         /// <summary> How fast the player can move in any direction </summary>
@@ -73,6 +86,9 @@ namespace Type.Objects.Player
 
             OnDeath = onDeath;
 
+            _ProbeController = new ProbeController();
+            _ProbeController.UpdatePosition(Position);
+            _ProbeController.AddProbe(0);
             CollisionController.Instance.RegisterPlayer(this);
         }
 
@@ -114,9 +130,13 @@ namespace Type.Objects.Player
                 }
             }
 
-            if (Shoot && !_IsWeaponLocked) FireForward();
+            if (Shoot && !_IsWeaponLocked)
+            {
+                FireForward();
+            }
 
             Position += GetPositionModifier(timeTilUpdate);
+            _ProbeController.UpdatePosition(Position);
         }
 
         ///// <summary>

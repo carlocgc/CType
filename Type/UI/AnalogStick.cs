@@ -84,14 +84,6 @@ namespace Type.UI
 
             _HitBox = new Vector4(_Base.Position.X - _Base.Offset.X * 4, _Base.Position.Y - _Base.Offset.Y * 4, _Base.Size.X * 4, _Base.Size.Y * 4);
 
-            //new Sprite(Game.MainCanvas, Int32.MaxValue, Texture.GetPixel())
-            //{
-            //    Scale = new Vector2(_HitBox.W, _HitBox.Z),
-            //    Visible = true,
-            //    Position = new Vector2(_HitBox.X, _HitBox.Y),
-            //    Colour = new Vector4(1, 1, 1, 0.5f)
-            //};
-
             _Radius = radius;
             TouchOrder = Constants.ZOrders.UI;
             _PressId = -1;

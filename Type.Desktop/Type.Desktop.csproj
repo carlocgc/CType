@@ -275,8 +275,8 @@
       <Link>Content\Graphics\planet-near-9.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Assets\Graphics\Probes\laser_probe.png">
-      <Link>Content\Graphics\Probes\laser_probe.png</Link>
+    <Content Include="..\Assets\Graphics\Probes\laser-probe.png">
+      <Link>Content\Graphics\Probes\laser-probe.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\Assets\Graphics\stars-1.png">

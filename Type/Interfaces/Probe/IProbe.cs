@@ -5,7 +5,7 @@ using OpenTK;
 
 namespace Type.Interfaces.Probe
 {
-    public interface IProbe
+    public interface IProbe : IDisposable
     {
         Boolean Shoot { get; set; }
 

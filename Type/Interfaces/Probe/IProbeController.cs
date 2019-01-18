@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using AmosShared.Interfaces;
 using OpenTK;
 
 
 namespace Type.Interfaces.Probe
 {
-    public interface IProbeController
+    public interface IProbeController : IUpdatable
     {
-        void AddProbe();
+        Boolean Shoot { get; set; }
 
-        void Fire();
+        void AddProbe(Int32 id);
 
         void RemoveAll();
 

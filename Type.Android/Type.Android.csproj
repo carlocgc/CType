@@ -441,7 +441,7 @@
     <AndroidAsset Include="Assets\Content\Graphics\Buttons\analog_top.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\Content\Graphics\Probes\laser_probe.png" />
+    <AndroidAsset Include="Assets\Content\Graphics\Probes\laser-probe.png" />
   </ItemGroup>
   <Import Project="..\Type\Type.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
