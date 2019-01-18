@@ -60,10 +60,12 @@ namespace Type.Objects.Player
         /// <summary> Position of the player </summary>
         public Player(Action onDeath)
         {
-            AddSprite(new Sprite(Game.MainCanvas, Constants.ZOrders.PLAYER, Texture.GetTexture("Content/Graphics/player.png"))
+            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.PLAYER, Texture.GetTexture("Content/Graphics/player.png"))
             {
                 Visible = true,
-            });
+            };
+            AddSprite(_Sprite);
+            _Sprite.Offset = _Sprite.Size / 2;
             Position = _SpawnPosition;
             MovementSpeed = _DefaultMovementSpeed;
             FireRate = _DefaultFireRate;
@@ -87,7 +89,7 @@ namespace Type.Objects.Player
         /// </summary>
         private void FireForward()
         {
-            new Bullet("Content/Graphics/bullet.png", GetCenter(), new Vector2(1, 0), 1000, 0, true, new Vector4(1, 1, 1, 1));
+            new Bullet("Content/Graphics/bullet.png", Position, new Vector2(1, 0), 1000, 0, true, new Vector4(1, 1, 1, 1));
             _IsWeaponLocked = true;
             new AudioPlayer("Content/Audio/laser1.wav", false, AudioManager.Category.EFFECT, 0.5f);
         }
@@ -137,10 +139,10 @@ namespace Type.Objects.Player
         {
             Single x, y;
 
-            if (_Direction.X > 0 && Position.X >= ScreenRight - GetSprite().Width || _Direction.X < 0 && Position.X <= ScreenLeft) x = 0;
+            if (_Direction.X > 0 && Position.X >= ScreenRight - GetSprite().Width /2 || _Direction.X < 0 && Position.X <= ScreenLeft + GetSprite().Width /2) x = 0;
             else x = _Direction.X * _MoveStrength * MovementSpeed * (Single)timeTilUpdate.TotalSeconds;
 
-            if (_Direction.Y > 0 && Position.Y >= ScreenTop - GetSprite().Height || _Direction.Y < 0 && Position.Y <= ScreenBottom) y = 0;
+            if (_Direction.Y > 0 && Position.Y >= ScreenTop - GetSprite().Height /2 || _Direction.Y < 0 && Position.Y <= ScreenBottom + GetSprite().Height /2) y = 0;
             else y = _Direction.Y * _MoveStrength * MovementSpeed * (Single)timeTilUpdate.TotalSeconds;
 
             return new Vector2(x, y);

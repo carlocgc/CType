@@ -22,16 +22,20 @@ namespace Type.Objects.Projectiles
 
         public Bullet(String assetPath, Vector2 spawnPos, Vector2 direction, Single velocity, Double rotation, Boolean isPlayerBullet, Vector4 colour)
         {
-            AddSprite(new Sprite(Game.MainCanvas, Constants.ZOrders.BULLETS, Texture.GetTexture(assetPath))
+            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.BULLETS, Texture.GetTexture(assetPath))
             {
                 Visible = true,
                 Colour = colour,
-            });
+            };
+            AddSprite(_Sprite);
+            _Sprite.Offset = _Sprite.Size / 2;
+
             _Direction = direction;
             _Velocity = velocity;
             _IsPlayerBullet = isPlayerBullet;
             Position = spawnPos;
             Rotation = rotation;
+
             RegisterCollidable();
         }
 
