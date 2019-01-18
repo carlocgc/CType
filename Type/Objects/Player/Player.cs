@@ -88,7 +88,10 @@ namespace Type.Objects.Player
 
             _ProbeController = new ProbeController();
             _ProbeController.UpdatePosition(Position);
-            _ProbeController.AddProbe(0);
+            for (int i = 0; i < 3; i++)
+            {
+                _ProbeController.AddProbe(0);
+            }
             CollisionController.Instance.RegisterPlayer(this);
         }
 

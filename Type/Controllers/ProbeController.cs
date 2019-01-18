@@ -16,6 +16,8 @@ namespace Type.Controllers
 
         private Vector2 _OrbitPosition;
 
+        private Int32 _ProbeCount;
+
         public ProbeController()
         {
             _Probes = new List<IProbe>();
@@ -26,11 +28,25 @@ namespace Type.Controllers
 
         public void AddProbe(Int32 id)
         {
+            _ProbeCount++;
+            Single spaceBetweenProbes = (Single)Math.PI * 2 / _ProbeCount;
+
+            // First clear all the probes
+            foreach (IProbe probe in _Probes)
+            {
+                probe.Dispose();
+            }
+            _Probes.Clear();
+
             switch (id)
             {
                 case 0:
                     {
-                        _Probes.Add(new LaserProbe(_OrbitPosition));
+                        for (Int32 i = 0; i < _ProbeCount; i++)
+                        {
+                            _Probes.Add(new LaserProbe(_OrbitPosition, i * spaceBetweenProbes));
+                        }
+
                         break;
                     }
                 default:
@@ -45,6 +61,7 @@ namespace Type.Controllers
                 probe.Dispose();
             }
             _Probes.Clear();
+            _ProbeCount = 0;
         }
 
         public void UpdatePosition(Vector2 position)

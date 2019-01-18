@@ -198,12 +198,6 @@ namespace Type.UI
         {
             base.Update(timeTilUpdate);
 
-            if (Single.IsNaN(_DirectionNorm.X) || Single.IsNaN(_DirectionNorm.Y))
-            {
-                int i = 0;
-                i++;
-            }
-
             foreach (IAnalogListener listener in _Listeners)
             {
                 listener.UpdatePosition(_DirectionNorm, _PushDistance);
