@@ -1,5 +1,6 @@
 ﻿using System;
 using AmosShared.Audio;
+using AmosShared.Base;
 using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
 using OpenTK;
@@ -18,6 +19,11 @@ namespace Type.Objects.Player
     /// </summary>
     public class Player : GameObject, IAnalogListener
     {
+        private readonly Single ScreenTop = Renderer.Instance.TargetDimensions.Y / 2;
+        private readonly Single ScreenRight = Renderer.Instance.TargetDimensions.X / 2;
+        private readonly Single ScreenLeft = -Renderer.Instance.TargetDimensions.X / 2;
+        private readonly Single ScreenBottom = -Renderer.Instance.TargetDimensions.Y / 2;
+
         /// <summary> Default rate of fire </summary>
         private readonly TimeSpan _DefaultFireRate = TimeSpan.FromMilliseconds(100);
         /// <summary> Position on screen where the player is spawned </summary>
@@ -40,9 +46,12 @@ namespace Type.Objects.Player
         /// <summary> Whether the player should move left </summary>
         private Boolean _MoveLeft;
 
+        private Vector2 _Direction;
+
+        private Single _MoveStrength;
+
         /// <summary> Whether the player should shoot </summary>
         public Boolean Shoot { get; set; }
-
         /// <summary> Amount of time between firing </summary>
         public TimeSpan FireRate { get; set; }
         /// <summary> How fast the player can move in any direction </summary>
@@ -104,43 +113,48 @@ namespace Type.Objects.Player
 
             if (Shoot && !_IsWeaponLocked) FireForward();
 
-            if (_MoveRight)
-            {
-                if (Position.X <= (1920 / 2) - GetSprite().Width)
-                {
-                    Position += new Vector2(MovementSpeed * (Single)timeTilUpdate.TotalSeconds, 0);
-                }
-            }
-            if (_MoveLeft)
-            {
-                if (Position.X >= -(1920 / 2))
-                {
-                    Position -= new Vector2(MovementSpeed * (Single)timeTilUpdate.TotalSeconds, 0);
-                }
-            }
-            if (_MoveUp)
-            {
-                if (Position.Y <= (1080 / 2) - GetSprite().Height)
-                {
-                    Position += new Vector2(0, MovementSpeed * (Single)timeTilUpdate.TotalSeconds);
-                }
-            }
-            if (_MoveDown)
-            {
-                if (Position.Y >= -(1080 / 2))
-                {
-                    Position -= new Vector2(0, MovementSpeed * (Single)timeTilUpdate.TotalSeconds);
-                }
-            }
-
+            Position += GetPositionModifier(timeTilUpdate);
         }
 
-        public void UpdatePosition(Vector2 position)
+        ///// <summary>
+        ///// Returns whether the player can move in the current direction any further
+        ///// </summary>
+        ///// <returns></returns>
+        //private Boolean CanMove()
+        //{
+        //    return _Direction.X > 0 && Position.X <= ScreenRight - GetSprite().Width ||
+        //        _Direction.X < 0 && Position.X >= ScreenLeft ||
+        //        _Direction.Y > 0 && Position.Y <= ScreenTop - GetSprite().Height ||
+        //        _Direction.Y < 0 && Position.Y >= ScreenBottom;
+        //}
+
+        /// <summary>
+        /// Returns how much the player should move by
+        /// </summary>
+        /// <param name="timeTilUpdate"></param>
+        /// <returns></returns>
+        private Vector2 GetPositionModifier(TimeSpan timeTilUpdate)
         {
-            _MoveUp = position.Y < -20;
-            _MoveDown = position.Y > 20;
-            _MoveRight = position.X < -20;
-            _MoveLeft = position.X > 20;
+            Single x, y;
+
+            if (_Direction.X > 0 && Position.X >= ScreenRight - GetSprite().Width || _Direction.X < 0 && Position.X <= ScreenLeft) x = 0;
+            else x = _Direction.X * _MoveStrength * MovementSpeed * (Single)timeTilUpdate.TotalSeconds;
+
+            if (_Direction.Y > 0 && Position.Y >= ScreenTop - GetSprite().Height || _Direction.Y < 0 && Position.Y <= ScreenBottom) y = 0;
+            else y = _Direction.Y * _MoveStrength * MovementSpeed * (Single)timeTilUpdate.TotalSeconds;
+
+            return new Vector2(x, y);
+        }
+
+        /// <summary>
+        /// Updates the direction and move strength of the player ship, provided by the analog stick
+        /// </summary>
+        /// <param name="direction"> The direction the stick is pushed </param>
+        /// <param name="strength"> How far the stick is pushed </param>
+        public void UpdatePosition(Vector2 direction, Single strength)
+        {
+            _Direction = direction;
+            _MoveStrength = strength;
         }
     }
 }

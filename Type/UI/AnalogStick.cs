@@ -15,19 +15,21 @@ namespace Type.UI
 {
     public class AnalogStick : GameObject, ITouchListener
     {
+        private readonly List<IAnalogListener> _Listeners;
+
         private readonly Sprite _Base;
 
         private readonly Sprite _Top;
 
+        private readonly Single _Radius;
+
         private Int32 _PressId;
 
-        private Vector2 _Direction;
+        private Vector2 _DirectionNorm;
+
+        private Single _PushDistance;
 
         private Vector2 _StartPosition;
-
-        private Vector2 _MoveLimit = new Vector2(100, 100);
-
-        private List<IAnalogListener> _Listeners;
 
         private Vector4 _HitBox;
 
@@ -74,15 +76,35 @@ namespace Type.UI
             {
                 Offset = new Vector2(105, 105),
                 Colour = new Vector4(1, 1, 1, 0.5f),
+                Position = startPosition,
             };
             _StartPosition = startPosition;
             Position = _StartPosition;
 
-            _HitBox = new Vector4(_Base.Position.X - _Base.Offset.X, _Base.Position.Y - _Base.Offset.Y, _Base.Size.X, _Base.Size.Y);
+            _HitBox = new Vector4(_Base.Position.X - _Base.Offset.X * 2, _Base.Position.Y - _Base.Offset.Y * 2, _Base.Size.X * 2, _Base.Size.Y * 2);
+
+            new Sprite(Game.MainCanvas, Int32.MaxValue, Texture.GetPixel())
+            {
+                Scale = new Vector2(_HitBox.W, _HitBox.Z),
+                Visible = true,
+                Position = new Vector2(_HitBox.X, _HitBox.Y)
+            };
+
+            _Radius = 150;
             TouchOrder = Constants.ZOrders.UI;
             _PressId = -1;
 
             TouchManager.Instance.AddTouchListener(this);
+        }
+
+
+        public Boolean IsTouched(Vector2 position)
+        {
+            Vector2 centerAlignedmouse = new Vector2(position.X - Renderer.Instance.TargetDimensions.X / 2, (position.Y - Renderer.Instance.TargetDimensions.Y / 2) * -1);
+
+            //Vector4 topLeftAlignedHitBox = new Vector4(_HitBox.X + 960, _HitBox.Y + 1080, _HitBox.W, _HitBox.Z);
+
+            return Contains(_HitBox, centerAlignedmouse);
         }
 
         private Boolean Contains(Vector4 rect, Vector2 position)
@@ -112,7 +134,7 @@ namespace Type.UI
 
             Vector2 direction = newPosition - _StartPosition;
 
-            Single length = Math.Min(110, direction.Length);
+            Single length = Math.Min(_Radius, direction.Length);
 
             Single angle = (Single) (Math.Atan2(1, 0) - Math.Atan2(direction.Y, direction.X));
 
@@ -120,15 +142,34 @@ namespace Type.UI
 
             _Top.Position = _StartPosition + pointOnCircle;
 
+            PrepareListenerData(length);
+
             return false;
+        }
+
+        private void PrepareListenerData(Single length)
+        {
+            _DirectionNorm = _Top.Position - _StartPosition;
+            _DirectionNorm.Normalize();
+            _PushDistance = length / _Radius;
         }
 
         public void OnRelease(Int32 id, Vector2 position)
         {
             if (_PressId != id) return;
+
             _Top.Position = Position;
             _Top.Visible = false;
+
+            ResetListenerData();
+
             _PressId = -1;
+        }
+
+        private void ResetListenerData()
+        {
+            _DirectionNorm = Vector2.Zero;
+            _PushDistance = 0;
         }
 
         public void OnCancel()
@@ -136,12 +177,6 @@ namespace Type.UI
 
         }
 
-        public Boolean IsTouched(Vector2 position)
-        {
-            Vector4 topLeftAlignedHitBox = new Vector4(_HitBox.X + 960, _HitBox.Y + 1080, _HitBox.W, _HitBox.Z);
-
-            return Contains(topLeftAlignedHitBox, position);
-        }
 
         public void RegisterListener(IAnalogListener listener)
         {
@@ -157,14 +192,9 @@ namespace Type.UI
         {
             base.Update(timeTilUpdate);
 
-            Vector2 startPoint = _Base.Position;
-            Vector2 currentPoint = _Top.Position;
-
-            _Direction = startPoint - currentPoint;
-
             foreach (IAnalogListener listener in _Listeners)
             {
-                listener.UpdatePosition(_Direction);
+                listener.UpdatePosition(_DirectionNorm, _PushDistance);
             }
         }
 

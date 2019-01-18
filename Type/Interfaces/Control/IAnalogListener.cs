@@ -7,6 +7,6 @@ namespace Type.Interfaces.Control
 {
     public interface IAnalogListener
     {
-        void UpdatePosition(Vector2 position);
+        void UpdatePosition(Vector2 direction, Single strength);
     }
 }
