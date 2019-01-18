@@ -65,7 +65,7 @@ namespace Type.UI
             }
         }
 
-        public AnalogStick(Vector2 startPosition)
+        public AnalogStick(Vector2 startPosition, Single radius)
         {
             _Listeners = new List<IAnalogListener>();
 
@@ -92,7 +92,7 @@ namespace Type.UI
             //    Colour = new Vector4(1, 1, 1, 0.5f)
             //};
 
-            _Radius = 150;
+            _Radius = radius;
             TouchOrder = Constants.ZOrders.UI;
             _PressId = -1;
 
@@ -156,7 +156,7 @@ namespace Type.UI
         {
             _DirectionNorm = _Top.Position - _Base.Position;
 
-            // Prevent _DirectionNorm evaluating to NaN 
+            // Prevent _DirectionNorm evaluating to NaN
             if (_DirectionNorm != Vector2.Zero) _DirectionNorm.Normalize();
             _PushDistance = length / _Radius;
         }
