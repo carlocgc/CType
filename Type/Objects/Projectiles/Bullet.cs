@@ -28,11 +28,13 @@ namespace Type.Objects.Projectiles
                 Colour = colour,
             };
             _Sprite.Offset = _Sprite.Size / 2;
-            _Sprite.RotationOrigin = _Sprite.Size / 2 ;
+            _Sprite.RotationOrigin = _Sprite.Size / 2;
             AddSprite(_Sprite);
+
             _Direction = direction;
             _Velocity = velocity;
             _IsPlayerBullet = isPlayerBullet;
+
             Position = spawnPos;
             Rotation = rotation;
 

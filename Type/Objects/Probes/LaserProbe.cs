@@ -34,7 +34,7 @@ namespace Type.Objects.Probes
         /// </summary>
         private void FireForward()
         {
-            new Bullet("Content/Graphics/bullet.png", GetCenter(), new Vector2(1, 0), 1000, 0, true, new Vector4(1, 1, 1, 1));
+            new Bullet("Content/Graphics/bullet.png", Position, new Vector2(1, 0), 1000, 0, true, new Vector4(1, 1, 1, 1));
             _IsWeaponLocked = true;
         }
 

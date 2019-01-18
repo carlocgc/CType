@@ -71,15 +71,6 @@ namespace Type.Base
         }
 
         /// <summary>
-        /// Gets the center position of the game object
-        /// </summary>
-        /// <returns></returns>
-        public Vector2 GetCenter()
-        {
-            return new Vector2(_Sprite.Position.X + (_Sprite.Width / 2), _Sprite.Position.Y + (_Sprite.Height / 2));
-        }
-
-        /// <summary>
         /// Whether the object will be updated
         /// </summary>
         public Boolean CanUpdate()
@@ -101,8 +92,9 @@ namespace Type.Base
                 {
                     Position = _Sprite.Position,
                     Offset = _Sprite.Offset,
-                    Scale = new Vector2(_Sprite.Width, _Sprite.Height),
                     RotationOrigin = _Sprite.RotationOrigin,
+                    Rotation = _Sprite.Rotation,
+                    Scale = new Vector2(_Sprite.Width, _Sprite.Height),
                     Visible = true,
                 };
             }

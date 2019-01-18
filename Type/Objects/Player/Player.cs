@@ -27,7 +27,7 @@ namespace Type.Objects.Player
         /// <summary> Default rate of fire </summary>
         private readonly TimeSpan _DefaultFireRate = TimeSpan.FromMilliseconds(100);
         /// <summary> Position on screen where the player is spawned </summary>
-        private readonly Vector2 _SpawnPosition = new Vector2(-700, 0);
+        private readonly Vector2 _SpawnPosition = new Vector2(-540, 0);
         /// <summary> Default movement speed </summary>
         private readonly Single _DefaultMovementSpeed = 700;
         /// <summary> Action to be invoked when the player dies </summary>
@@ -90,7 +90,7 @@ namespace Type.Objects.Player
         /// </summary>
         private void FireForward()
         {
-            new Bullet("Content/Graphics/bullet.png", Position, new Vector2(1, 0), 1000, 0, true, new Vector4(1, 1, 1, 1));
+            new Bullet("Content/Graphics/bullet.png", Position + new Vector2(_Sprite.Width / 2, 0), new Vector2(1, 0), 1000, 0, true, new Vector4(1, 1, 1, 1));
             _IsWeaponLocked = true;
             new AudioPlayer("Content/Audio/laser1.wav", false, AudioManager.Category.EFFECT, 0.5f);
         }
