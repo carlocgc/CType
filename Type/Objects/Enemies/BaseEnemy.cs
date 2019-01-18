@@ -61,12 +61,14 @@ namespace Type.Objects.Enemies
         {
             OnDestroyedByPlayer = new List<Action>();
 
-            AddSprite(new Sprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, Texture.GetTexture(assetPath))
+            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, Texture.GetTexture(assetPath))
             {
                 Position = spawnPos,
                 Rotation = rotation,
                 Visible = true,
-            });
+            };
+            _Sprite.Offset = _Sprite.Size / 2;
+            AddSprite(_Sprite);
 
             _Explosion = new AnimatedSprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, new[]
                 {
@@ -83,7 +85,9 @@ namespace Type.Objects.Enemies
             {
                 Visible = false,
                 Playing = false,
+                Position = _Sprite.Position
             };
+            _Explosion.Offset = _Explosion.Size / 2;
 
             _IsHostile = true;
             _IsMoving = true;
@@ -92,6 +96,8 @@ namespace Type.Objects.Enemies
 
             FireRate = fireRate;
             Position = spawnPos;
+
+            _IsWeaponLocked = true;
         }
 
         /// <summary>

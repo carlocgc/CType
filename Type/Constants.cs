@@ -16,9 +16,9 @@ namespace Type
         public static class Global
         {
             /// <summary> Show FPS on screen </summary>
-            public const Boolean SHOW_FPS = true;
+            public const Boolean SHOW_FPS = false;
             /// <summary> Draws white pixels over the game objects </summary>
-            public const Boolean SHOW_SPRITE_AREAS = false;
+            public const Boolean SHOW_SPRITE_AREAS = true;
         }
 
         /// <summary>

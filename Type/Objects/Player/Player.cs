@@ -64,8 +64,9 @@ namespace Type.Objects.Player
             {
                 Visible = true,
             };
-            AddSprite(_Sprite);
             _Sprite.Offset = _Sprite.Size / 2;
+            AddSprite(_Sprite);
+
             Position = _SpawnPosition;
             MovementSpeed = _DefaultMovementSpeed;
             FireRate = _DefaultFireRate;
