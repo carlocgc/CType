@@ -199,6 +199,10 @@
       <Link>Content\Graphics\enemy4.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\Assets\Graphics\enemybullet.png">
+      <Link>Content\Graphics\enemybullet.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\Assets\Graphics\Explosion2\pixelExplosion00.png">
       <Link>Content\Graphics\Explosion2\pixelExplosion00.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -4,17 +4,20 @@ using AmosShared.Graphics.Drawables;
 using OpenTK;
 using System;
 using System.Collections.Generic;
+using AmosShared.Interfaces;
 using Type.Base;
 using Type.Controllers;
 using Type.Data;
+using Type.Glide;
 using Type.Interfaces;
+using Type.Interfaces.Control;
 
 namespace Type.Objects.Enemies
 {
     /// <summary>
     /// Base for enemy objects
     /// </summary>
-    public abstract class BaseEnemy : GameObject, IHitable
+    public abstract class BaseEnemy : GameObject, IHitable, IPositionRecipient
     {
         /// <summary> Animation of an explosion, played on death </summary>
         private readonly AnimatedSprite _Explosion;
@@ -33,7 +36,7 @@ namespace Type.Objects.Enemies
         /// <summary> movement speed of the enemy </summary>
         protected Single _Speed;
         /// <summary> Direction the enemy is moving </summary>
-        protected Vector2 _Direction;
+        protected Vector2 _MoveDirection;
         /// <summary> Whether the enemy is moving </summary>
         protected Boolean _IsMoving;
         /// <summary> Whether firing is allowed </summary>
@@ -42,6 +45,11 @@ namespace Type.Objects.Enemies
         protected Boolean _IsHostile;
         /// <summary> Whether the enemy has been detsroyed by the player </summary>
         protected Boolean _IsDestroyed;
+
+        /// <summary> The players current position </summary>
+        protected Vector2 _PlayerPosition;
+        /// <summary> Relative direction to the player from this enemy </summary>
+        protected Vector2 _DirectionTowardsPlayer;
 
         /// <summary> Firerate of the enemy </summary>
         protected TimeSpan FireRate { get; set; }
@@ -75,6 +83,7 @@ namespace Type.Objects.Enemies
                 Visible = true,
             };
             _Sprite.Offset = _Sprite.Size / 2;
+            _Sprite.RotationOrigin = _Sprite.Size / 2;
             AddSprite(_Sprite);
 
             _Explosion = new AnimatedSprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, new[]
@@ -100,7 +109,7 @@ namespace Type.Objects.Enemies
 
             _IsHostile = true;
             _IsMoving = true;
-            _Direction = direction;
+            _MoveDirection = direction;
             _Speed = speed;
             _HitPoints = hitPoints;
 
@@ -108,6 +117,23 @@ namespace Type.Objects.Enemies
             Position = spawnPos;
 
             _IsWeaponLocked = true;
+        }
+
+        /// <inheritdoc />
+        public void Receive(Vector2 position)
+        {
+            _PlayerPosition = position;
+            UpdateRotation();
+        }
+
+        /// <summary>
+        /// Updates the ship rotation so it is facing the players poistion
+        /// </summary>
+        private void UpdateRotation()
+        {
+            _DirectionTowardsPlayer = _PlayerPosition - Position;
+            //Rotation = (Single)(Math.Atan2(1, 0) - Math.Atan2(_DirectionTowardsPlayer.Y, _DirectionTowardsPlayer.X));
+            Rotation = (Single) Math.Atan2(_DirectionTowardsPlayer.Y, _DirectionTowardsPlayer.X);
         }
 
         /// <summary>
@@ -173,6 +199,8 @@ namespace Type.Objects.Enemies
                 OnOutOfBounds?.Invoke();
                 Dispose();
             }
+
+            PositionRelayer.Instance.RemoveRecipient(this);
         }
 
         /// <summary>
@@ -227,7 +255,7 @@ namespace Type.Objects.Enemies
 
             if (!_IsMoving) return;
 
-            Position += _Direction * _Speed * (Single)timeTilUpdate.TotalSeconds;
+            Position += _MoveDirection * _Speed * (Single)timeTilUpdate.TotalSeconds;
 
             if (_IsDestroyed) return;
 

@@ -152,6 +152,7 @@ namespace Type.Objects.Player
 
             _ProbeController.UpdatePosition(Position);
             _Shield.UpdatePosition(Position);
+            PositionRelayer.Instance.ProvidePosition(Position);
         }
 
         /// <summary>
