@@ -55,5 +55,16 @@ namespace Type.Data
         {
             _EndTime = DateTime.Now;
         }
+
+        public void Clear()
+        {
+            BulletsFired = 0;
+            ProbesCreated = 0;
+            ShieldsCreated = 0;
+            EnemiesKilled = 0;
+            Deaths = 0;
+            GameStart();
+            GameEnd();
+        }
     }
 }

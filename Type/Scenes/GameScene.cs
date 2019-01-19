@@ -124,7 +124,8 @@ namespace Type.Scenes
         /// </summary>
         public void StartGame()
         {
-            CurrentScore = 0;
+            GameStats.Instance.Score = CurrentScore = 0;
+            GameStats.Instance.GameStart();
 
             _BackgroundNear.Start();
             _BackgroundFar.Start();
@@ -178,6 +179,8 @@ namespace Type.Scenes
         /// </summary>
         private void GameCompleted()
         {
+            GameStats.Instance.GameEnd();
+
             _EnemySpawner.Reset();
             IsGameComplete = true;
             SetButtonsEnabled(false);
@@ -194,13 +197,13 @@ namespace Type.Scenes
 
             if (_LifeMeter.PlayerLives <= 0 && !IsGameOver)
             {
-                IsGameOver = true;
+                GameStats.Instance.GameEnd();
                 SetButtonsEnabled(false);
                 SetButtonsVisible(false);
+                IsGameOver = true;
             }
             else
             {
-
                 _EnemySpawner.StartWave();
             }
         }
