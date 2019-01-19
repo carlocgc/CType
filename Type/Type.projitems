@@ -12,6 +12,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Base\GameObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\CollisionController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controllers\PositionRelayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\ProbeController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\GameStats.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\LevelLoader.cs" />
@@ -23,6 +24,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Glide\Tween.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Glide\Tweener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IAnalogListener.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IPositionRecipient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IDestroyable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IHitable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IShield.cs" />
