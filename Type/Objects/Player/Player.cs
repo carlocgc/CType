@@ -95,6 +95,7 @@ namespace Type.Objects.Player
             {
                 _ProbeController.AddProbe(0);
             }
+            new AudioPlayer("Content/Audio/upgrade1.wav", false, AudioManager.Category.EFFECT, 1);
         }
 
         /// <summary>
