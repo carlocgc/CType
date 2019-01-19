@@ -21,7 +21,7 @@ namespace Type.Objects.Enemies
 
             Vector2 bulletDirection = _DirectionTowardsPlayer;
             if (bulletDirection != Vector2.Zero) bulletDirection.Normalize();
-            new Bullet("Content/Graphics/bullet.png", Position, bulletDirection, 600, Rotation, false, new Vector4(255, 0, 0, 1));
+            new Bullet("Content/Graphics/enemybullet.png", Position, bulletDirection, 1000, Rotation, false, new Vector4(255, 0, 0, 1));
 
             _IsWeaponLocked = true;
             new AudioPlayer("Content/Audio/laser2.wav", false, AudioManager.Category.EFFECT, 1);
