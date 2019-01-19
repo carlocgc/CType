@@ -20,20 +20,19 @@ namespace Type.Objects.Player
     /// </summary>
     public class Player : GameObject, IAnalogListener
     {
+        /// <summary> The top of the screen </summary>
         private readonly Single ScreenTop = Renderer.Instance.TargetDimensions.Y / 2;
+        /// <summary> The right of the screen </summary>
         private readonly Single ScreenRight = Renderer.Instance.TargetDimensions.X / 2;
+        /// <summary> The left of the screen </summary>
         private readonly Single ScreenLeft = -Renderer.Instance.TargetDimensions.X / 2;
+        /// <summary> The bottom of the screen </summary>
         private readonly Single ScreenBottom = -Renderer.Instance.TargetDimensions.Y / 2;
 
         /// <summary> Single point of contact for probes attached to  the player </summary>
         private readonly IProbeController _ProbeController;
-
-        /// <summary> Default rate of fire </summary>
-        private readonly TimeSpan _DefaultFireRate = TimeSpan.FromMilliseconds(100);
         /// <summary> Position on screen where the player is spawned </summary>
         private readonly Vector2 _SpawnPosition = new Vector2(-540, 0);
-        /// <summary> Default movement speed </summary>
-        private readonly Single _DefaultMovementSpeed = 700;
         /// <summary> Action to be invoked when the player dies </summary>
         private readonly Action OnDeath;
 
@@ -48,6 +47,13 @@ namespace Type.Objects.Player
 
         private Boolean _Shoot;
 
+
+        /// <summary> Amount of time between firing </summary>
+        public TimeSpan FireRate { get; set; }
+
+        /// <summary> How fast the player can move in any direction </summary>
+        public Single MovementSpeed { get; set; }
+
         /// <summary> Whether the player should shoot </summary>
         public Boolean Shoot
         {
@@ -59,10 +65,6 @@ namespace Type.Objects.Player
             }
         }
 
-        /// <summary> Amount of time between firing </summary>
-        public TimeSpan FireRate { get; set; }
-        /// <summary> How fast the player can move in any direction </summary>
-        public Single MovementSpeed { get; set; }
 
         /// <summary> Position of the player </summary>
         public Player(Action onDeath)
@@ -75,15 +77,13 @@ namespace Type.Objects.Player
             AddSprite(_Sprite);
 
             Position = _SpawnPosition;
-            MovementSpeed = _DefaultMovementSpeed;
-            FireRate = _DefaultFireRate;
+            MovementSpeed = 700;
+            FireRate = TimeSpan.FromMilliseconds(100);
 
             OnDeath = onDeath;
 
             _ProbeController = new ProbeController();
             _ProbeController.UpdatePosition(Position);
-
-            //CreateProbes(5); // TODO : Remove this method TEST
 
             CollisionController.Instance.RegisterPlayer(this);
         }
@@ -99,16 +99,6 @@ namespace Type.Objects.Player
             {
                 _ProbeController.AddProbe(0);
             }
-        }
-
-        /// <summary>
-        /// Resets the position of the player ship
-        /// </summary>
-        public void LoseLife()
-        {
-            _ProbeController.RemoveAll();
-            Position = _SpawnPosition;
-            OnDeath?.Invoke();
         }
 
         /// <summary>
@@ -149,18 +139,6 @@ namespace Type.Objects.Player
             _ProbeController.UpdatePosition(Position);
         }
 
-        ///// <summary>
-        ///// Returns whether the player can move in the current direction any further
-        ///// </summary>
-        ///// <returns></returns>
-        //private Boolean CanMove()
-        //{
-        //    return _Direction.X > 0 && Position.X <= ScreenRight - GetSprite().Width ||
-        //        _Direction.X < 0 && Position.X >= ScreenLeft ||
-        //        _Direction.Y > 0 && Position.Y <= ScreenTop - GetSprite().Height ||
-        //        _Direction.Y < 0 && Position.Y >= ScreenBottom;
-        //}
-
         /// <summary>
         /// Returns how much the player should move by
         /// </summary>
@@ -188,6 +166,16 @@ namespace Type.Objects.Player
         {
             _Direction = direction;
             _MoveStrength = strength;
+        }
+
+        /// <summary>
+        /// Resets the position of the player ship
+        /// </summary>
+        public void LoseLife()
+        {
+            _ProbeController.RemoveAll();
+            Position = _SpawnPosition;
+            OnDeath?.Invoke();
         }
     }
 }
