@@ -6,6 +6,7 @@ using AmosShared.Graphics.Drawables;
 using OpenTK;
 using Type.Base;
 using Type.Controllers;
+using Type.Interfaces;
 using Type.Interfaces.Control;
 using Type.Interfaces.Probe;
 using Type.Objects.Projectiles;
@@ -28,6 +29,8 @@ namespace Type.Objects.Player
 
         /// <summary> Single point of contact for probes attached to  the player </summary>
         private readonly IProbeController _ProbeController;
+        /// <summary> The players shield </summary>
+        private readonly IShield _Shield;
         /// <summary> Position on screen where the player is spawned </summary>
         private readonly Vector2 _SpawnPosition = new Vector2(-540, 0);
         /// <summary> Amount of time between firing </summary>
@@ -81,6 +84,11 @@ namespace Type.Objects.Player
             _ProbeController = new ProbeController();
             _ProbeController.UpdatePosition(Position);
 
+            _Shield = new Shield();
+            _Shield.Increase();
+            _Shield.Increase();
+            _Shield.Increase();
+
             CollisionController.Instance.RegisterPlayer(this);
         }
 
@@ -133,7 +141,9 @@ namespace Type.Objects.Player
             }
 
             Position += GetPositionModifier(timeTilUpdate);
+
             _ProbeController.UpdatePosition(Position);
+            _Shield.UpdatePosition(Position);
         }
 
         /// <summary>
@@ -165,13 +175,25 @@ namespace Type.Objects.Player
             _MoveStrength = strength;
         }
 
+        public void Hit(Action onDeath)
+        {
+            if (_Shield.IsActive)
+            {
+                _Shield.Decrease();
+                return;
+            }
+            LoseLife(onDeath);
+        }
+
         /// <summary>
         /// Resets the position of the player ship
         /// </summary>
-        public void LoseLife()
+        private void LoseLife(Action onDeath)
         {
             _ProbeController.RemoveAll();
             Position = _SpawnPosition;
+
+            onDeath.Invoke();
             OnDeath?.Invoke();
         }
     }

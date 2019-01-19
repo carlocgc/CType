@@ -339,6 +339,18 @@
       <Link>Content\Graphics\Probes\laser-probe.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\Assets\Graphics\Shield\shield1.png">
+      <Link>Content\Graphics\Shield\shield1.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Shield\shield2.png">
+      <Link>Content\Graphics\Shield\shield2.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Shield\shield3.png">
+      <Link>Content\Graphics\Shield\shield3.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\Assets\Graphics\stars-1.png">
       <Link>Content\Graphics\stars-1.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

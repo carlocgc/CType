@@ -124,8 +124,9 @@ namespace Type.Objects.Enemies
         /// <summary>
         /// Destroys the Enemy
         /// </summary>
-        protected virtual void Destroy()
+        public virtual void Destroy()
         {
+            _HitPoints = 0;
             IsAlive = false;
             if (_IsDestroyed)
             {

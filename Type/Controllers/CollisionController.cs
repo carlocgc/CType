@@ -141,7 +141,7 @@ namespace Type.Controllers
             {
                 if (Intersects(_Player.GetRect(), baseEnemy.GetRect()))
                 {
-                    HandlePlayerHit();
+                    HandleEnemyPlayerCollision(baseEnemy);
                 }
                 if (_Enemies.Count == 0) break;
             }
@@ -168,8 +168,7 @@ namespace Type.Controllers
                 _EnemyBullets.Remove(bullet);
                 bullet.Destroy();
             }
-            _Player.LoseLife();
-            ClearProjectiles();
+            _Player.Hit(ClearProjectiles);
         }
 
         /// <summary>
@@ -178,8 +177,14 @@ namespace Type.Controllers
         private void HandleEnemyHit(Bullet bullet, BaseEnemy enemy)
         {
             _PlayerBullets.Remove(bullet);
-            bullet.Destroy();
+            bullet?.Destroy();
             enemy.Hit();
+        }
+
+        private void HandleEnemyPlayerCollision(BaseEnemy enemy)
+        {
+            enemy.Destroy();
+            HandlePlayerHit();
         }
 
         /// <summary>
