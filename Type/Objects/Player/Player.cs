@@ -25,6 +25,7 @@ namespace Type.Objects.Player
         private readonly Single ScreenLeft = -Renderer.Instance.TargetDimensions.X / 2;
         private readonly Single ScreenBottom = -Renderer.Instance.TargetDimensions.Y / 2;
 
+        /// <summary> Single point of contact for probes attached to  the player </summary>
         private readonly IProbeController _ProbeController;
 
         /// <summary> Default rate of fire </summary>
@@ -88,12 +89,13 @@ namespace Type.Objects.Player
         }
 
         /// <summary>
-        /// TODO REMOVE THIS: Creates the given amount of probes around the player.
+        /// Creates the given number of probes around the player ship
         /// </summary>
-        /// <param name="amount"></param>
-        public void CreateProbes(Int32 amount)
+        /// <param name="amount"> Amount of probes to create </param>
+        /// <param name="id"> The type of probe to create </param>
+        public void CreateProbes(Int32 amount, Int32 id)
         {
-            for (int i = 0; i < amount; i++)
+            for (Int32 i = 0; i < amount; i++)
             {
                 _ProbeController.AddProbe(0);
             }

@@ -118,7 +118,7 @@ namespace Type.Scenes
         }
 
         /// <summary>
-        /// Starts a new game
+        /// Starts a new game, starts the background moving and activates the buttons
         /// </summary>
         public void StartGame()
         {
@@ -151,6 +151,9 @@ namespace Type.Scenes
             if (CurrentScore % 1000 == 0) _LifeMeter.AddLife();
         }
 
+        /// <summary>
+        /// Sets the next level data and displays the current level, ends the game if complete
+        /// </summary>
         public void LevelComplete()
         {
             CurrentLevel++;
@@ -220,9 +223,8 @@ namespace Type.Scenes
 
         private void ProbeButtonOnPress(Button obj)
         {
-            _Player.CreateProbes(1);
+            _Player.CreateProbes(1, 0);
         }
-
 
         #endregion
 
