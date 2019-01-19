@@ -60,11 +60,13 @@ namespace Type.Scenes
         public Int32 CurrentScore { get; private set; }
         /// <summary> Whether the player has ran out of lives, ends the playing state </summary>
         public Boolean IsGameOver { get; private set; }
+        /// <summary> Whether the game has been completed </summary>
+        public Boolean IsGameComplete { get; set; }
 
         public GameScene()
         {
             CurrentLevel = 1;
-            _MaxLevel = 8;
+            _MaxLevel = 1;
 
             _BackgroundFar = new ScrollingBackground(100, "Content/Graphics/stars-1.png");
             _BackgroundNear = new ScrollingBackground(200, "Content/Graphics/stars-2.png");
@@ -140,7 +142,7 @@ namespace Type.Scenes
             _PlanetsNear.Start();
             _Clusters.Start();
 
-            _LevelDisplay.ShowLevel(CurrentLevel, TimeSpan.FromSeconds(0.5), () =>
+            _LevelDisplay.ShowLevel(CurrentLevel, TimeSpan.FromSeconds(2), () =>
             {
                 _EnemySpawner.SetLevelData(_LevelLoader.GetWaveData(CurrentLevel));
                 CollisionController.Instance.IsActive = true;
@@ -166,21 +168,26 @@ namespace Type.Scenes
         /// </summary>
         public void LevelComplete()
         {
-            CurrentLevel++;
             if (CurrentLevel >= _MaxLevel)
             {
-                // TODO Game Complete
-                IsGameOver = true;
-                SetButtonsEnabled(false);
-                SetButtonsVisible(false);
+                GameCompleted();
             }
             else
             {
+                CurrentLevel++;
                 _LevelDisplay.ShowLevel(CurrentLevel, TimeSpan.FromSeconds(2), () =>
                 {
                     _EnemySpawner.SetLevelData(_LevelLoader.GetWaveData(CurrentLevel));
                 });
             }
+        }
+
+        private void GameCompleted()
+        {
+            _EnemySpawner.Reset();
+            IsGameComplete = true;
+            SetButtonsEnabled(false);
+            SetButtonsVisible(false);
         }
 
         /// <summary>
@@ -253,8 +260,7 @@ namespace Type.Scenes
         public override void Dispose()
         {
             base.Dispose();
-            _Stick.Dispose();
-            _Fps.Dispose();
+
             _Player.Dispose();
             _BackgroundNear.Dispose();
             _BackgroundFar.Dispose();
@@ -262,6 +268,18 @@ namespace Type.Scenes
             _PlanetsFar.Dispose();
             _Clusters.Dispose();
             _EnemySpawner.Dispose();
+
+            _Stick.Dispose();
+            _FireButton.Dispose();
+            _ProbeButton.Dispose();
+            _ShieldButton.Dispose();
+
+            _Fps.Dispose();
+            _LifeMeter.Dispose();
+            _ScoreText.Dispose();
+            _ScoreDisplay.Dispose();
+
+            AudioManager.Instance.Dispose();
         }
     }
 }

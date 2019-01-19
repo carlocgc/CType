@@ -123,5 +123,15 @@ namespace Type.Objects.Player
                 sprite.Position = position;
             }
         }
+
+        /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
+        public override void Dispose()
+        {
+            base.Dispose();
+            foreach (Sprite sprite in _Sprites)
+            {
+                sprite.Dispose();
+            }
+        }
     }
 }

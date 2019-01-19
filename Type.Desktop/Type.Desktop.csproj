@@ -255,6 +255,10 @@
       <Link>Content\Graphics\Explosion\explosion08.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\Assets\Graphics\GameCompleteBG.png">
+      <Link>Content\Graphics\GameCompleteBG.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\Assets\Graphics\GameOverBG.png">
       <Link>Content\Graphics\GameOverBG.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

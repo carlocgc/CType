@@ -1,25 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using AmosShared.State;
+﻿using AmosShared.State;
+using System;
 using Type.Scenes;
 
 namespace Type.States
 {
-    public class GameOverState : State
+    public class GameCompleteState : State
     {
         private readonly Int32 _Score;
 
-        private GameOverScene _Scene;
+        private GameCompleteScene _Scene;
 
-        public GameOverState(Int32 score)
+        public GameCompleteState(Int32 score)
         {
             _Score = score;
         }
 
         protected override void OnEnter()
         {
-            _Scene = new GameOverScene { Visible = true };
+            _Scene = new GameCompleteScene { Visible = true };
             _Scene.Show(_Score);
         }
 
@@ -34,7 +32,6 @@ namespace Type.States
             _Scene.Visible = false;
             _Scene.IsComplete = false;
             _Scene.Dispose();
-            Dispose();
         }
     }
 }
