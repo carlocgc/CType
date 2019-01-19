@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using AmosShared.Graphics.Drawables;
+﻿using AmosShared.Graphics.Drawables;
+using System;
 using Type.Base;
 using Type.Interfaces;
 
@@ -15,7 +13,7 @@ namespace Type.Objects.Player
 
         public Shield()
         {
-            _Sprite = new Sprite();
+            //_Sprite = new Sprite(0);
         }
 
         public void Activate()
@@ -25,7 +23,7 @@ namespace Type.Objects.Player
 
         public void Deactivate()
         {
-            
+
         }
     }
 }

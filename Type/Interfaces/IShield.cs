@@ -7,14 +7,11 @@ using OpenTK;
 namespace Type.Interfaces
 {
     public interface IShield : IPositionable
-
     {
-    Boolean IsActive { get; }
+        Boolean IsActive { get; }
 
-    Vector2 Position { get; set; }
+        void Activate();
 
-    void Activate();
-
-    void Deactivate();
+        void Deactivate();
     }
 }
