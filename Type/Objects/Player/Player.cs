@@ -85,9 +85,7 @@ namespace Type.Objects.Player
             _ProbeController.UpdatePosition(Position);
 
             _Shield = new Shield();
-            _Shield.Increase();
-            _Shield.Increase();
-            _Shield.Increase();
+            _Shield.UpdatePosition(Position);
 
             CollisionController.Instance.RegisterPlayer(this);
         }
@@ -104,6 +102,14 @@ namespace Type.Objects.Player
                 _ProbeController.AddProbe(0);
             }
             new AudioPlayer("Content/Audio/upgrade1.wav", false, AudioManager.Category.EFFECT, 1);
+        }
+
+        /// <summary>
+        /// Increases the shield level
+        /// </summary>
+        public void AddShield()
+        {
+            _Shield.Increase();
         }
 
         /// <summary>
@@ -196,5 +202,6 @@ namespace Type.Objects.Player
             onDeath.Invoke();
             OnDeath?.Invoke();
         }
+
     }
 }

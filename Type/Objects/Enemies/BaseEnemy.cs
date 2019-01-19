@@ -121,12 +121,19 @@ namespace Type.Objects.Enemies
             }
         }
 
+        public void Collide()
+        {
+            _HitPoints = 0;
+            _IsDestroyed = true;
+            new AudioPlayer("Content/Audio/hurt3.wav", false, AudioManager.Category.EFFECT, 1);
+            Destroy();
+        }
+
         /// <summary>
         /// Destroys the Enemy
         /// </summary>
         public virtual void Destroy()
         {
-            _HitPoints = 0;
             IsAlive = false;
             if (_IsDestroyed)
             {

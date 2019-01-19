@@ -147,6 +147,10 @@
       <Link>Content\Graphics\Buttons\right.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\Assets\Graphics\Buttons\shield_button.png">
+      <Link>Content\Graphics\Buttons\shield_button.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\Assets\Graphics\Buttons\up.png">
       <Link>Content\Graphics\Buttons\up.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -397,10 +401,6 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Content Include="..\Assets\Graphics\background.png">
-      <Link>Content\Graphics\background.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="..\Assets\Graphics\bullet.png">
       <Link>Content\Graphics\bullet.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -423,10 +423,6 @@
     </Content>
     <Content Include="..\Assets\Graphics\lifeicon.png">
       <Link>Content\Graphics\lifeicon.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Assets\Graphics\MainMenuBG.png">
-      <Link>Content\Graphics\MainMenuBG.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\Assets\Graphics\player.png">

@@ -36,6 +36,8 @@ namespace Type.Scenes
         private readonly Button _FireButton;
         /// <summary> TODO Test button that adds probes </summary>
         private readonly Button _ProbeButton;
+        /// <summary> TODO Test button that adds shield </summary>
+        private readonly Button _ShieldButton;
         /// <summary> Floating analog stick </summary>
         private readonly AnalogStick _Stick;
         /// <summary> Text printer that displays the score </summary>
@@ -112,6 +114,14 @@ namespace Type.Scenes
                 Colour = new Vector4(1, 1, 1, (Single)0.5)
             };
             _ProbeButton = new Button(Int32.MaxValue, probeButton) { OnButtonPress = ProbeButtonOnPress };
+
+            Sprite shieldButton = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/shield_button.png"))
+            {
+                Position = new Vector2(320, -450),
+                Visible = true,
+                Colour = new Vector4(1, 1, 1, (Single)0.5)
+            };
+            _ShieldButton = new Button(Int32.MaxValue, shieldButton) { OnButtonPress = ShieldButtonPress };
 
             _Stick = new AnalogStick(new Vector2(-620, -220), 110);
             _Stick.RegisterListener(_Player);
@@ -200,6 +210,7 @@ namespace Type.Scenes
         {
             _FireButton.TouchEnabled = state;
             _ProbeButton.TouchEnabled = state;
+            _ShieldButton.TouchEnabled = state;
             _Stick.TouchEnabled = state;
         }
 
@@ -207,6 +218,7 @@ namespace Type.Scenes
         {
             _FireButton.Visible = state;
             _ProbeButton.Visible = state;
+            _ShieldButton.Visible = state;
             _Stick.Visible = state;
             _Stick.ListeningForMove = state;
         }
@@ -224,6 +236,11 @@ namespace Type.Scenes
         private void ProbeButtonOnPress(Button obj)
         {
             _Player.CreateProbes(1, 0);
+        }
+
+        private void ShieldButtonPress(Button obj)
+        {
+            _Player.AddShield();
         }
 
         #endregion

@@ -181,9 +181,13 @@ namespace Type.Controllers
             enemy.Hit();
         }
 
+        /// <summary>
+        /// Handles enemy collisions with the player
+        /// </summary>
+        /// <param name="enemy"></param>
         private void HandleEnemyPlayerCollision(BaseEnemy enemy)
         {
-            enemy.Destroy();
+            enemy.Collide();
             HandlePlayerHit();
         }
 
