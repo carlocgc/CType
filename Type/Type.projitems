@@ -9,5 +9,44 @@
     <Import_RootNamespace>Type</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Base\GameObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controllers\CollisionController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controllers\ProbeController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\LevelLoader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\WaveData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Glide\Ease.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Glide\MemberAccessor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Glide\MemberLerper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Glide\Tween.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Glide\Tweener.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IAnalogListener.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IDestroyable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IHitable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IShield.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Probe\IProbe.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Probe\IProbeController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\BaseEnemy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\EnemyA.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\EnemyB.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\EnemyC.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\EnemyFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Player\Player.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Player\Shield.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Probes\LaserProbe.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Projectiles\Bullet.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\World\ScrollingBackground.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\World\ScrollingObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\GameOverScene.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\GameScene.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\MainMenuScene.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)States\GameOverState.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)States\MainMenuState.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)States\PlayingState.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\AnalogStick.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\FpsCounter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\LevelDisplay.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\LifeMeter.cs" />
   </ItemGroup>
 </Project>

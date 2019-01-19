@@ -18,9 +18,10 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;DESKTOP</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>Type.Desktop.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -30,8 +31,24 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>Type.Desktop.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FarseerPhysics">
+      <HintPath>..\SupportingFiles\Libraries\Desktop\FarseerPhysics.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenTK">
+      <HintPath>..\SupportingFiles\Libraries\Desktop\OpenTK.dll</HintPath>
+    </Reference>
+    <Reference Include="Plugin.InAppBilling, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Plugin.InAppBilling.2.0.0\lib\netstandard1.0\Plugin.InAppBilling.dll</HintPath>
+    </Reference>
+    <Reference Include="Plugin.InAppBilling.Abstractions, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Plugin.InAppBilling.2.0.0\lib\netstandard1.0\Plugin.InAppBilling.Abstractions.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -46,7 +63,379 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\Assets\Audio\begin.wav">
+      <Link>Content\Audio\begin.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Audio\bgm-1.wav">
+      <Link>Content\Audio\bgm-1.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Audio\death.wav">
+      <Link>Content\Audio\death.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Audio\gameOver.wav">
+      <Link>Content\Audio\gameOver.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Audio\hurt3.wav">
+      <Link>Content\Audio\hurt3.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Audio\laser1.wav">
+      <Link>Content\Audio\laser1.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Audio\laser2.wav">
+      <Link>Content\Audio\laser2.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Audio\laser3.wav">
+      <Link>Content\Audio\laser3.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Audio\laser4.wav">
+      <Link>Content\Audio\laser4.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Audio\laser5.wav">
+      <Link>Content\Audio\laser5.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Audio\lifeup.wav">
+      <Link>Content\Audio\lifeup.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Audio\shield_off.wav">
+      <Link>Content\Audio\shield_off.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Audio\shield_on.wav">
+      <Link>Content\Audio\shield_on.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Audio\upgrade1.wav">
+      <Link>Content\Audio\upgrade1.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Buttons\analog_base.png">
+      <Link>Content\Graphics\Buttons\analog_base.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Buttons\analog_top.png">
+      <Link>Content\Graphics\Buttons\analog_top.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Buttons\down.png">
+      <Link>Content\Graphics\Buttons\down.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Buttons\fire.png">
+      <Link>Content\Graphics\Buttons\fire.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Buttons\left.png">
+      <Link>Content\Graphics\Buttons\left.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Buttons\probe-button.png">
+      <Link>Content\Graphics\Buttons\probe-button.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Buttons\right.png">
+      <Link>Content\Graphics\Buttons\right.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Buttons\shield_button.png">
+      <Link>Content\Graphics\Buttons\shield_button.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Buttons\up.png">
+      <Link>Content\Graphics\Buttons\up.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\cluster-1.png">
+      <Link>Content\Graphics\cluster-1.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\cluster-2.png">
+      <Link>Content\Graphics\cluster-2.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\cluster-3.png">
+      <Link>Content\Graphics\cluster-3.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\cluster-4.png">
+      <Link>Content\Graphics\cluster-4.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\cluster-5.png">
+      <Link>Content\Graphics\cluster-5.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\cluster-6.png">
+      <Link>Content\Graphics\cluster-6.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\cluster-7.png">
+      <Link>Content\Graphics\cluster-7.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Explosion2\pixelExplosion00.png">
+      <Link>Content\Graphics\Explosion2\pixelExplosion00.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Explosion2\pixelExplosion01.png">
+      <Link>Content\Graphics\Explosion2\pixelExplosion01.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Explosion2\pixelExplosion02.png">
+      <Link>Content\Graphics\Explosion2\pixelExplosion02.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Explosion2\pixelExplosion03.png">
+      <Link>Content\Graphics\Explosion2\pixelExplosion03.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Explosion2\pixelExplosion04.png">
+      <Link>Content\Graphics\Explosion2\pixelExplosion04.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Explosion2\pixelExplosion05.png">
+      <Link>Content\Graphics\Explosion2\pixelExplosion05.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Explosion2\pixelExplosion06.png">
+      <Link>Content\Graphics\Explosion2\pixelExplosion06.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Explosion2\pixelExplosion07.png">
+      <Link>Content\Graphics\Explosion2\pixelExplosion07.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Explosion2\pixelExplosion08.png">
+      <Link>Content\Graphics\Explosion2\pixelExplosion08.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Explosion\explosion00.png">
+      <Link>Content\Graphics\Explosion\explosion00.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Explosion\explosion01.png">
+      <Link>Content\Graphics\Explosion\explosion01.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Explosion\explosion02.png">
+      <Link>Content\Graphics\Explosion\explosion02.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Explosion\explosion03.png">
+      <Link>Content\Graphics\Explosion\explosion03.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Explosion\explosion04.png">
+      <Link>Content\Graphics\Explosion\explosion04.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Explosion\explosion05.png">
+      <Link>Content\Graphics\Explosion\explosion05.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Explosion\explosion06.png">
+      <Link>Content\Graphics\Explosion\explosion06.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Explosion\explosion07.png">
+      <Link>Content\Graphics\Explosion\explosion07.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Explosion\explosion08.png">
+      <Link>Content\Graphics\Explosion\explosion08.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\GameOverBG.png">
+      <Link>Content\Graphics\GameOverBG.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\KenPixel\KenPixel.json">
+      <Link>Content\Graphics\KenPixel\KenPixel.json</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\MainMenuBG-2.png">
+      <Link>Content\Graphics\MainMenuBG-2.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\planet-far-1.png">
+      <Link>Content\Graphics\planet-far-1.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\planet-far-2.png">
+      <Link>Content\Graphics\planet-far-2.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\planet-far-3.png">
+      <Link>Content\Graphics\planet-far-3.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\planet-far-4.png">
+      <Link>Content\Graphics\planet-far-4.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\planet-far-5.png">
+      <Link>Content\Graphics\planet-far-5.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\planet-far-6.png">
+      <Link>Content\Graphics\planet-far-6.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\planet-far-7.png">
+      <Link>Content\Graphics\planet-far-7.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\planet-far-8.png">
+      <Link>Content\Graphics\planet-far-8.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\planet-far-9.png">
+      <Link>Content\Graphics\planet-far-9.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\planet-near-1.png">
+      <Link>Content\Graphics\planet-near-1.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\planet-near-2.png">
+      <Link>Content\Graphics\planet-near-2.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\planet-near-3.png">
+      <Link>Content\Graphics\planet-near-3.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\planet-near-4.png">
+      <Link>Content\Graphics\planet-near-4.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\planet-near-5.png">
+      <Link>Content\Graphics\planet-near-5.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\planet-near-6.png">
+      <Link>Content\Graphics\planet-near-6.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\planet-near-7.png">
+      <Link>Content\Graphics\planet-near-7.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\planet-near-8.png">
+      <Link>Content\Graphics\planet-near-8.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\planet-near-9.png">
+      <Link>Content\Graphics\planet-near-9.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Probes\laser-probe.png">
+      <Link>Content\Graphics\Probes\laser-probe.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Shield\shield1.png">
+      <Link>Content\Graphics\Shield\shield1.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Shield\shield2.png">
+      <Link>Content\Graphics\Shield\shield2.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Shield\shield3.png">
+      <Link>Content\Graphics\Shield\shield3.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\stars-1.png">
+      <Link>Content\Graphics\stars-1.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\stars-2.png">
+      <Link>Content\Graphics\stars-2.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Level\level-1.txt">
+      <Link>Content\Level\level-1.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Level\level-2.txt">
+      <Link>Content\Level\level-2.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Level\level-3.txt">
+      <Link>Content\Level\level-3.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Level\level-4.txt">
+      <Link>Content\Level\level-4.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Level\level-5.txt">
+      <Link>Content\Level\level-5.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Level\level-6.txt">
+      <Link>Content\Level\level-6.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Level\level-7.txt">
+      <Link>Content\Level\level-7.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Level\level-8.txt">
+      <Link>Content\Level\level-8.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="App.config" />
+    <None Include="packages.config" />
+    <None Include="Type.Desktop.ruleset" />
   </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="..\Assets\Graphics\bullet.png">
+      <Link>Content\Graphics\bullet.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\enemy1.png">
+      <Link>Content\Graphics\enemy1.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\enemy2.png">
+      <Link>Content\Graphics\enemy2.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\enemy3.png">
+      <Link>Content\Graphics\enemy3.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\KenPixel\KenPixel.png">
+      <Link>Content\Graphics\KenPixel\KenPixel.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\lifeicon.png">
+      <Link>Content\Graphics\lifeicon.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\player.png">
+      <Link>Content\Graphics\player.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SupportingFiles\AmosDesktop\AmosDesktop.csproj">
+      <Project>{b4b23ae1-df74-49d9-b85d-62033515baa5}</Project>
+      <Name>AmosDesktop</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="..\Type\Type.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,18 +1,17 @@
-﻿using Android.App;
+﻿using AmosAndroid;
+using AmosShared.Base;
+using Android.App;
+using Android.Content.PM;
 using Android.Widget;
 using Android.OS;
 
 namespace Type.Android
 {
     [Activity(Label = "Type.Android", MainLauncher = true)]
-    public class MainActivity : Activity
+    public class MainActivity : GameActivity
     {
-        protected override void OnCreate(Bundle savedInstanceState)
+        public MainActivity() : base(new Game())
         {
-            base.OnCreate(savedInstanceState);
-
-            // Set our view from the "main" layout resource
-            SetContentView(Resource.Layout.Main);
         }
     }
 }
