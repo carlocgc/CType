@@ -33,26 +33,23 @@ namespace Type.Objects.Player
         private readonly IProbeController _ProbeController;
         /// <summary> Position on screen where the player is spawned </summary>
         private readonly Vector2 _SpawnPosition = new Vector2(-540, 0);
+        /// <summary> Amount of time between firing </summary>
+        private readonly TimeSpan _FireRate;
+        /// <summary> How fast the player can move in any direction </summary>
+        private readonly Single _MovementSpeed;
         /// <summary> Action to be invoked when the player dies </summary>
         private readonly Action OnDeath;
 
         /// <summary> Time since the last bullet was fired </summary>
         private TimeSpan _TimeSinceLastFired;
+        /// <summary> The direction to be applied to the position of the player </summary>
+        private Vector2 _Direction;
+        /// <summary> Movement speed modifier </summary>
+        private Single _MoveStrength;
         /// <summary> Whether firing is allowed </summary>
         private Boolean _IsWeaponLocked;
-
-        private Vector2 _Direction;
-
-        private Single _MoveStrength;
-
+        /// <summary> Whether the player should shoot </summary>
         private Boolean _Shoot;
-
-
-        /// <summary> Amount of time between firing </summary>
-        public TimeSpan FireRate { get; set; }
-
-        /// <summary> How fast the player can move in any direction </summary>
-        public Single MovementSpeed { get; set; }
 
         /// <summary> Whether the player should shoot </summary>
         public Boolean Shoot
@@ -65,8 +62,10 @@ namespace Type.Objects.Player
             }
         }
 
-
-        /// <summary> Position of the player </summary>
+        /// <summary>
+        /// The player ship
+        /// </summary>
+        /// <param name="onDeath"> Action to be invoked when the player is killed </param>
         public Player(Action onDeath)
         {
             _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.PLAYER, Texture.GetTexture("Content/Graphics/player.png"))
@@ -77,8 +76,8 @@ namespace Type.Objects.Player
             AddSprite(_Sprite);
 
             Position = _SpawnPosition;
-            MovementSpeed = 700;
-            FireRate = TimeSpan.FromMilliseconds(100);
+            _MovementSpeed = 700;
+            _FireRate = TimeSpan.FromMilliseconds(100);
 
             OnDeath = onDeath;
 
@@ -123,7 +122,7 @@ namespace Type.Objects.Player
             if (_IsWeaponLocked)
             {
                 _TimeSinceLastFired += timeTilUpdate;
-                if (_TimeSinceLastFired >= FireRate)
+                if (_TimeSinceLastFired >= _FireRate)
                 {
                     _IsWeaponLocked = false;
                     _TimeSinceLastFired = TimeSpan.Zero;
@@ -148,11 +147,11 @@ namespace Type.Objects.Player
         {
             Single x, y;
 
-            if (_Direction.X > 0 && Position.X >= ScreenRight - GetSprite().Width /2 || _Direction.X < 0 && Position.X <= ScreenLeft + GetSprite().Width /2) x = 0;
-            else x = _Direction.X * _MoveStrength * MovementSpeed * (Single)timeTilUpdate.TotalSeconds;
+            if (_Direction.X > 0 && Position.X >= ScreenRight - GetSprite().Width / 2 || _Direction.X < 0 && Position.X <= ScreenLeft + GetSprite().Width / 2) x = 0;
+            else x = _Direction.X * _MoveStrength * _MovementSpeed * (Single)timeTilUpdate.TotalSeconds;
 
-            if (_Direction.Y > 0 && Position.Y >= ScreenTop - GetSprite().Height /2 || _Direction.Y < 0 && Position.Y <= ScreenBottom + GetSprite().Height /2) y = 0;
-            else y = _Direction.Y * _MoveStrength * MovementSpeed * (Single)timeTilUpdate.TotalSeconds;
+            if (_Direction.Y > 0 && Position.Y >= ScreenTop - GetSprite().Height / 2 || _Direction.Y < 0 && Position.Y <= ScreenBottom + GetSprite().Height / 2) y = 0;
+            else y = _Direction.Y * _MoveStrength * _MovementSpeed * (Single)timeTilUpdate.TotalSeconds;
 
             return new Vector2(x, y);
         }
