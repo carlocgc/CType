@@ -29,6 +29,7 @@ namespace Type.Objects.Projectiles
             };
             _Sprite.Offset = _Sprite.Size / 2;
             _Sprite.RotationOrigin = _Sprite.Size / 2;
+            _Sprite.Rotation = rotation;
             AddSprite(_Sprite);
 
             _Direction = direction;

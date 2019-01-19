@@ -32,6 +32,7 @@ namespace Type.Controllers
         public void AddRecipient(IPositionRecipient recipient)
         {
             _Recipients.Add(recipient);
+            RelayPosition(_PositionToRelay);
         }
 
         /// <summary>
@@ -41,6 +42,7 @@ namespace Type.Controllers
         public void ProvidePosition(Vector2 position)
         {
             _PositionToRelay = position;
+            RelayPosition(_PositionToRelay);
         }
 
         /// <summary>

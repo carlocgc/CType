@@ -43,7 +43,7 @@ namespace Type.Base
             }
         }
 
-        public Double Rotation
+        public virtual Double Rotation
         {
             get => _Rotation;
             set

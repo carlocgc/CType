@@ -103,7 +103,10 @@ namespace Type.Objects.Enemies
             enemy.OnOutOfBounds = OnShipDeath;
             enemy.OnDestroyedByPlayer.Add(OnShipDeath);
             enemy.OnDestroyedByPlayer.Add(() => _Scene.UpdateScore(enemy.PointValue));
+            enemy.OnDestroyedByPlayer.Add(() => PositionRelayer.Instance.RemoveRecipient(enemy));
+
             CollisionController.Instance.RegisterEnemy(enemy);
+            PositionRelayer.Instance.AddRecipient(enemy);
 
             _TimeSinceLastSpawn = TimeSpan.Zero;
             _DataIndex++;
