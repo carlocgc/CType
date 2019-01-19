@@ -81,17 +81,17 @@ namespace Type.Objects.Enemies
             {
                 case 0:
                     {
-                        enemy = new EnemyA("Content/Graphics/enemy1.png", _CurrentWave.SpawnPositions[_DataIndex], 0, new Vector2(-1, 0), 600, TimeSpan.FromSeconds(1.2f), 5);
+                        enemy = new EnemyA("Content/Graphics/enemy1.png", _CurrentWave.SpawnPositions[_DataIndex], 0, new Vector2(-1, 0), 600, TimeSpan.FromSeconds(1.2f), 3);
                         break;
                     }
                 case 1:
                     {
-                        enemy = new EnemyB("Content/Graphics/enemy2.png", _CurrentWave.SpawnPositions[_DataIndex], 0, new Vector2(-1, 0), 625, TimeSpan.FromSeconds(1.2f), 8);
+                        enemy = new EnemyB("Content/Graphics/enemy2.png", _CurrentWave.SpawnPositions[_DataIndex], 0, new Vector2(-1, 0), 625, TimeSpan.FromSeconds(1.2f), 7);
                         break;
                     }
                 case 2:
                     {
-                        enemy = new EnemyC("Content/Graphics/enemy3.png", _CurrentWave.SpawnPositions[_DataIndex], 0, new Vector2(-1, 0), 725, TimeSpan.FromSeconds(1.1), 10);
+                        enemy = new EnemyC("Content/Graphics/enemy3.png", _CurrentWave.SpawnPositions[_DataIndex], 0, new Vector2(-1, 0), 725, TimeSpan.FromSeconds(1.1), 20);
                         break;
                     }
                 default:
