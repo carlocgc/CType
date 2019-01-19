@@ -26,14 +26,16 @@ namespace Type.UI
         {
             _Display = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
-                Scale = new Vector2(3, 3),
+                Position = new Vector2(0, 0),
+                Scale = new Vector2(2, 2),
             };
-            _Display.Position = new Vector2(-_Display.Width/ 2, 0);
+            _Display.Offset = new Vector2(_Display.Size.X * _Display.Scale.X, _Display.Size.Y * _Display.Scale.Y) / 2;
         }
 
         public void ShowLevel(Int32 level, TimeSpan duration, Action onComplete)
         {
             _Display.Text = $"LEVEL {level} START";
+            _Display.Offset = new Vector2(_Display.Size.X * _Display.Scale.X, _Display.Size.Y * _Display.Scale.Y) / 2;
             _Display.Visible = true;
             _TargetDisplayTime = duration;
             _OnComplete = onComplete;

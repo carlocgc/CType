@@ -17,7 +17,6 @@ namespace Type.UI
 
         public FpsCounter()
         {
-
             _Display = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
                 Position = new Vector2(Renderer.Instance.TargetDimensions.X / 2 - 100,
@@ -57,6 +56,13 @@ namespace Type.UI
                     _ToggleTimer = TimeSpan.Zero;
                 }
             }
+        }
+
+        /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
+        public override void Dispose()
+        {
+            base.Dispose();
+            _Display.Dispose();
         }
     }
 }

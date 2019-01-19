@@ -38,9 +38,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Projectiles\Bullet.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\World\ScrollingBackground.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\World\ScrollingObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\GameCompleteScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\GameOverScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\GameScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\MainMenuScene.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)States\GameCompleteState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)States\GameOverState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)States\MainMenuState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)States\PlayingState.cs" />

@@ -10,6 +10,7 @@ using Type.Data;
 using Type.Objects.Enemies;
 using Type.Objects.Player;
 using Type.Objects.World;
+using Type.States;
 using Type.UI;
 
 namespace Type.Scenes
@@ -60,6 +61,8 @@ namespace Type.Scenes
         public Int32 CurrentScore { get; private set; }
         /// <summary> Whether the player has ran out of lives, ends the playing state </summary>
         public Boolean IsGameOver { get; private set; }
+        /// <summary> Whether the game has been completed </summary>
+        public Boolean IsGameComplete { get; private set; }
 
         public GameScene()
         {
@@ -125,6 +128,8 @@ namespace Type.Scenes
 
             _Stick = new AnalogStick(new Vector2(-620, -220), 110);
             _Stick.RegisterListener(_Player);
+
+            new AudioPlayer("Content/Audio/bgm-1.wav", true, AudioManager.Category.MUSIC, 1);
         }
 
         /// <summary>
@@ -140,7 +145,7 @@ namespace Type.Scenes
             _PlanetsNear.Start();
             _Clusters.Start();
 
-            _LevelDisplay.ShowLevel(CurrentLevel, TimeSpan.FromSeconds(0.5), () =>
+            _LevelDisplay.ShowLevel(CurrentLevel, TimeSpan.FromSeconds(2), () =>
             {
                 _EnemySpawner.SetLevelData(_LevelLoader.GetWaveData(CurrentLevel));
                 CollisionController.Instance.IsActive = true;
@@ -166,21 +171,29 @@ namespace Type.Scenes
         /// </summary>
         public void LevelComplete()
         {
-            CurrentLevel++;
             if (CurrentLevel >= _MaxLevel)
             {
-                // TODO Game Complete
-                IsGameOver = true;
-                SetButtonsEnabled(false);
-                SetButtonsVisible(false);
+                GameCompleted();
             }
             else
             {
+                CurrentLevel++;
                 _LevelDisplay.ShowLevel(CurrentLevel, TimeSpan.FromSeconds(2), () =>
                 {
                     _EnemySpawner.SetLevelData(_LevelLoader.GetWaveData(CurrentLevel));
                 });
             }
+        }
+
+        /// <summary>
+        /// Ends the playing state and set the next state to be <see cref="GameCompleteState"/>
+        /// </summary>
+        private void GameCompleted()
+        {
+            _EnemySpawner.Reset();
+            IsGameComplete = true;
+            SetButtonsEnabled(false);
+            SetButtonsVisible(false);
         }
 
         /// <summary>
@@ -196,10 +209,10 @@ namespace Type.Scenes
                 IsGameOver = true;
                 SetButtonsEnabled(false);
                 SetButtonsVisible(false);
-                new AudioPlayer("Content/Audio/gameOver.wav", false, AudioManager.Category.EFFECT, 100);
             }
             else
             {
+
                 _EnemySpawner.StartWave();
             }
         }
@@ -253,8 +266,7 @@ namespace Type.Scenes
         public override void Dispose()
         {
             base.Dispose();
-            _Stick.Dispose();
-            _Fps.Dispose();
+
             _Player.Dispose();
             _BackgroundNear.Dispose();
             _BackgroundFar.Dispose();
@@ -262,6 +274,18 @@ namespace Type.Scenes
             _PlanetsFar.Dispose();
             _Clusters.Dispose();
             _EnemySpawner.Dispose();
+
+            _Stick.Dispose();
+            _FireButton.Dispose();
+            _ProbeButton.Dispose();
+            _ShieldButton.Dispose();
+
+            _Fps.Dispose();
+            _LifeMeter.Dispose();
+            _ScoreText.Dispose();
+            _ScoreDisplay.Dispose();
+
+            AudioManager.Instance.Dispose();
         }
     }
 }
