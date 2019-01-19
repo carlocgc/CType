@@ -13,6 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\CollisionController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\ProbeController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\GameStats.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\LevelLoader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\WaveData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game.cs" />
@@ -50,5 +51,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)UI\FpsCounter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\LevelDisplay.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\LifeMeter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\StatsDisplay.cs" />
   </ItemGroup>
 </Project>

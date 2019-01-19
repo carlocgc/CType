@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using Type.Base;
 using Type.Controllers;
+using Type.Data;
 using Type.Interfaces;
 
 namespace Type.Objects.Enemies
@@ -135,6 +136,8 @@ namespace Type.Objects.Enemies
         public virtual void Destroy()
         {
             IsAlive = false;
+            GameStats.Instance.EnemiesKilled++;
+
             if (_IsDestroyed)
             {
                 _Explosion.AddFrameAction((anim) =>
