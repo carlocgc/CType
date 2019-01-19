@@ -14,8 +14,8 @@ namespace Type.Scenes
     /// </summary>
     public class GameOverScene : Scene
     {
-        private TextDisplay _GameOverText;
-
+        /// <summary> Game over title text </summary>
+        private readonly TextDisplay _GameOverText;
         /// <summary> Text that prompts user to restart </summary>
         private readonly TextDisplay _ScoreText;
         /// <summary> Confirm button that ends the game over state </summary>
