@@ -5,6 +5,7 @@ using System;
 using AmosShared.Audio;
 using AmosShared.Base;
 using OpenTK;
+using Type.UI;
 
 namespace Type.Scenes
 {
@@ -16,6 +17,8 @@ namespace Type.Scenes
         private readonly TextDisplay _CongratsText;
         /// <summary> Text that prompts user to restart </summary>
         private readonly TextDisplay _ScoreText;
+        /// <summary> Displays the current game data via text displays </summary>
+        private readonly StatsDisplay _StatsDisplay;
 
         /// <summary> Whether the complete can end </summary>
         public Boolean IsComplete { get; set; }
@@ -25,7 +28,7 @@ namespace Type.Scenes
             _CongratsText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
                 Text = "CONGRATULATIONS",
-                Position = new Vector2(0, 0),
+                Position = new Vector2(0, 200),
                 Visible = true,
                 Scale = new Vector2(6, 6),
                 Colour = new Vector4(0, 0, 1, 1)
@@ -34,13 +37,15 @@ namespace Type.Scenes
             AddDrawable(_CongratsText);
             _ScoreText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
-                Position =  new Vector2(0, -200),
+                Position =  new Vector2(0, 0),
                 Visible = true,
-                Scale = new Vector2(5, 5),
+                Scale = new Vector2(4, 4),
                 Colour = new Vector4(1, 1, 1, 1)
             };
             _ScoreText.Offset = new Vector2(_ScoreText.Size.X * _ScoreText.Scale.X, _ScoreText.Size.Y * _ScoreText.Scale.Y) / 2;
             AddDrawable(_ScoreText);
+
+            _StatsDisplay = new StatsDisplay();
 
             Sprite confirmSprite = new Sprite(Game.MainCanvas, Constants.ZOrders.BACKGROUND, Texture.GetTexture("Content/Graphics/GameOverBG.png"))
             {
@@ -79,6 +84,7 @@ namespace Type.Scenes
         {
             base.Dispose();
             _ConfirmButton.Dispose();
+            _StatsDisplay.Dispose();
             AudioManager.Instance.Dispose();
         }
     }

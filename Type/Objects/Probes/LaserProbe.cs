@@ -3,6 +3,7 @@ using AmosShared.Graphics.Drawables;
 using OpenTK;
 using System;
 using Type.Base;
+using Type.Data;
 using Type.Interfaces.Probe;
 using Type.Objects.Projectiles;
 
@@ -12,18 +13,19 @@ namespace Type.Objects.Probes
     {
         /// <summary> How often the probe fires </summary>
         private readonly TimeSpan _FireRate;
+        /// <summary> The speed the probe is moving </summary>
+        private readonly Single _Speed;
+        /// <summary> how far away from the <see cref="_OrbitAnchor"/> the probe is </summary>
+        private readonly Single _Radius;
+
         /// <summary> Time since the last bullet was fired </summary>
         private TimeSpan _TimeSinceLastFired;
         /// <summary> Whether firing is allowed </summary>
         private Boolean _IsWeaponLocked;
-
+        /// <summary> Point the probe orbits </summary>
         private Vector2 _OrbitAnchor;
-
+        /// <summary>  Angle the probe is at from north </summary>
         private Single _Angle;
-
-        private Single _Speed;
-
-        private Single _Radius;
 
         /// <summary> Whether the probe should be shooting </summary>
         public Boolean Shoot { get; set; }
@@ -55,6 +57,7 @@ namespace Type.Objects.Probes
         {
             new Bullet("Content/Graphics/bullet.png", Position + new Vector2(_Sprite.Width / 2, 0), new Vector2(1, 0), 1000, 0, true, new Vector4(1, 1, 1, 1));
             _IsWeaponLocked = true;
+            GameStats.Instance.BulletsFired++;
         }
 
         public void UpdatePosition(Vector2 position)

@@ -1,5 +1,6 @@
 ﻿using AmosShared.State;
 using System;
+using Type.Data;
 using Type.Scenes;
 
 namespace Type.States
@@ -10,8 +11,9 @@ namespace Type.States
 
         protected override void OnEnter()
         {
+            GameStats.Instance.Clear();
             _Scene = new MainMenuScene {Visible = true};
-            _Scene.Show();
+            _Scene.Show();            
         }
 
         public override Boolean IsComplete()

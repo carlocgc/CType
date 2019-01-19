@@ -1,5 +1,4 @@
 ﻿using AmosShared.Audio;
-using AmosShared.Base;
 using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
 using AmosShared.Touch;
@@ -43,8 +42,6 @@ namespace Type.Scenes
         private readonly AnalogStick _Stick;
         /// <summary> Text printer that displays the score </summary>
         private readonly TextDisplay _ScoreDisplay;
-        /// <summary> THe word score displayed top left of screen </summary>
-        private readonly TextDisplay _ScoreText;
         /// <summary> UI element that displays the amount oif lives remaining </summary>
         private readonly LifeMeter _LifeMeter;
         /// <summary> Object that shows the current level text </summary>
@@ -83,22 +80,12 @@ namespace Type.Scenes
             _LevelLoader = new LevelLoader();
             _EnemySpawner = new EnemyFactory(this);
 
-            _ScoreText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
-            {
-                Text = "SCORE: ",
-                Position = new Vector2(-900, 460),
-                Visible = true,
-                Scale = new Vector2(3, 3),
-                Colour = new Vector4(1, 0, 0, 1)
-            };
-            AddDrawable(_ScoreText);
-
             _ScoreDisplay = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
                 Text = CurrentScore.ToString(),
-                Position = new Vector2(-650, 460),
+                Position = new Vector2(-900, 460),
                 Visible = true,
-                Scale = new Vector2(3, 3),
+                Scale = new Vector2(2, 2),
             };
             AddDrawable(_ScoreDisplay);
 
@@ -137,7 +124,8 @@ namespace Type.Scenes
         /// </summary>
         public void StartGame()
         {
-            CurrentScore = 0;
+            GameStats.Instance.Score = CurrentScore = 0;
+            GameStats.Instance.GameStart();
 
             _BackgroundNear.Start();
             _BackgroundFar.Start();
@@ -163,7 +151,8 @@ namespace Type.Scenes
         {
             CurrentScore += amount;
             _ScoreDisplay.Text = CurrentScore.ToString();
-            if (CurrentScore % 1000 == 0) _LifeMeter.AddLife();
+            GameStats.Instance.Score = CurrentScore;
+            //if (CurrentScore % 1000 == 0) _LifeMeter.AddLife();
         }
 
         /// <summary>
@@ -190,6 +179,8 @@ namespace Type.Scenes
         /// </summary>
         private void GameCompleted()
         {
+            GameStats.Instance.GameEnd();
+
             _EnemySpawner.Reset();
             IsGameComplete = true;
             SetButtonsEnabled(false);
@@ -206,13 +197,13 @@ namespace Type.Scenes
 
             if (_LifeMeter.PlayerLives <= 0 && !IsGameOver)
             {
-                IsGameOver = true;
+                GameStats.Instance.GameEnd();
                 SetButtonsEnabled(false);
                 SetButtonsVisible(false);
+                IsGameOver = true;
             }
             else
             {
-
                 _EnemySpawner.StartWave();
             }
         }
@@ -282,7 +273,6 @@ namespace Type.Scenes
 
             _Fps.Dispose();
             _LifeMeter.Dispose();
-            _ScoreText.Dispose();
             _ScoreDisplay.Dispose();
 
             AudioManager.Instance.Dispose();
