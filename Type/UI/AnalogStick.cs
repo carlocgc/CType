@@ -1,13 +1,11 @@
-﻿using AmosShared.Graphics;
+﻿using AmosShared.Base;
+using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
 using AmosShared.Interfaces;
+using AmosShared.Touch;
 using OpenTK;
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices.WindowsRuntime;
-using AmosShared.Base;
-using AmosShared.Touch;
-using OpenTK.Audio;
 using Type.Base;
 using Type.Interfaces.Control;
 

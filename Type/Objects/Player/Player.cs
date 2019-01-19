@@ -9,9 +9,6 @@ using Type.Controllers;
 using Type.Interfaces.Control;
 using Type.Interfaces.Probe;
 using Type.Objects.Projectiles;
-#if DESKTOP
-using OpenTK.Input;
-#endif
 
 namespace Type.Objects.Player
 {

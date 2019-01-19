@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Text;
-using AmosShared.Audio;
+﻿using AmosShared.Audio;
 using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
 using OpenTK;
+using System;
+using System.Collections.Generic;
 using Type.Base;
 using Type.Controllers;
 using Type.Interfaces;
@@ -57,7 +55,7 @@ namespace Type.Objects.Enemies
             }
         }
 
-        protected BaseEnemy(String assetPath, Vector2 spawnPos, Single rotation, Vector2 direction, Single speed, TimeSpan fireRate)
+        protected BaseEnemy(String assetPath, Vector2 spawnPos, Single rotation, Vector2 direction, Single speed, TimeSpan fireRate, Int32 hitPoints)
         {
             OnDestroyedByPlayer = new List<Action>();
 
@@ -85,7 +83,9 @@ namespace Type.Objects.Enemies
             {
                 Visible = false,
                 Playing = false,
-                Position = _Sprite.Position
+                Position = _Sprite.Position,
+                AnimEndBehaviour = AnimatedSprite.EndBehaviour.STOP,
+                CurrentFrame = 0,
             };
             _Explosion.Offset = _Explosion.Size / 2;
 
@@ -93,6 +93,7 @@ namespace Type.Objects.Enemies
             _IsMoving = true;
             _Direction = direction;
             _Speed = speed;
+            _HitPoints = hitPoints;
 
             FireRate = fireRate;
             Position = spawnPos;
@@ -112,6 +113,7 @@ namespace Type.Objects.Enemies
         {
             if (!IsAlive) return;
             _HitPoints--;
+            new AudioPlayer("Content/Audio/hurt3.wav", false, AudioManager.Category.EFFECT, 1);
             if (_HitPoints <= 0)
             {
                 _IsDestroyed = true;
@@ -134,7 +136,6 @@ namespace Type.Objects.Enemies
                 _Sprite.Visible = false;
                 _Explosion.Visible = true;
                 _Explosion.Playing = true;
-                new AudioPlayer("Content/Audio/hurt3.wav", false, AudioManager.Category.EFFECT, 1);
 
                 foreach (Action action in OnDestroyedByPlayer)
                 {

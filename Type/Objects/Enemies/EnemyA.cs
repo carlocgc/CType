@@ -9,8 +9,8 @@ namespace Type.Objects.Enemies
 {
     public class EnemyA : BaseEnemy
     {
-        public EnemyA(String assetPath, Vector2 spawnPos, Single rotation, Vector2 direction, Single speed, TimeSpan fireRate)
-            : base(assetPath, spawnPos, rotation, direction, speed, fireRate)
+        public EnemyA(String assetPath, Vector2 spawnPos, Single rotation, Vector2 direction, Single speed, TimeSpan fireRate, Int32 hitPoints)
+            : base(assetPath, spawnPos, rotation, direction, speed, fireRate, hitPoints)
         {
             PointValue = 10;
         }
