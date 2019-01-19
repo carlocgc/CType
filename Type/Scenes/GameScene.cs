@@ -10,6 +10,7 @@ using Type.Data;
 using Type.Objects.Enemies;
 using Type.Objects.Player;
 using Type.Objects.World;
+using Type.States;
 using Type.UI;
 
 namespace Type.Scenes
@@ -61,12 +62,12 @@ namespace Type.Scenes
         /// <summary> Whether the player has ran out of lives, ends the playing state </summary>
         public Boolean IsGameOver { get; private set; }
         /// <summary> Whether the game has been completed </summary>
-        public Boolean IsGameComplete { get; set; }
+        public Boolean IsGameComplete { get; private set; }
 
         public GameScene()
         {
             CurrentLevel = 1;
-            _MaxLevel = 1;
+            _MaxLevel = 8;
 
             _BackgroundFar = new ScrollingBackground(100, "Content/Graphics/stars-1.png");
             _BackgroundNear = new ScrollingBackground(200, "Content/Graphics/stars-2.png");
@@ -184,6 +185,9 @@ namespace Type.Scenes
             }
         }
 
+        /// <summary>
+        /// Ends the playing state and set the next state to be <see cref="GameCompleteState"/>
+        /// </summary>
         private void GameCompleted()
         {
             _EnemySpawner.Reset();
