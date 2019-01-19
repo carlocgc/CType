@@ -22,6 +22,14 @@ namespace Type.Objects.Enemies
         private TimeSpan _TimeSinceLastFired;
         /// <summary> Amount of times the enemy can be hit before being destroyed </summary>
         private Int32 _HitPoints;
+
+        /// <summary> How long to wait before playing the hit sound</summary>
+        private readonly TimeSpan _HitSoundInterval = TimeSpan.FromSeconds(0.2f); // TODO FIXME Work around to stop so many sounds playing
+        /// <summary> How long since the last hit occured </summary>
+        private TimeSpan _TimeSinceLastSound; // TODO FIXME Work around to stop so many sounds playing
+        /// <summary> Whether a sound is playing </summary>
+        private Boolean _IsSoundPlaying; // TODO FIXME Work around to stop so many sounds playing
+
         /// <summary> movement speed of the enemy </summary>
         protected Single _Speed;
         /// <summary> Direction the enemy is moving </summary>
@@ -34,13 +42,13 @@ namespace Type.Objects.Enemies
         protected Boolean _IsHostile;
         /// <summary> Whether the enemy has been detsroyed by the player </summary>
         protected Boolean _IsDestroyed;
-        /// <summary> Called when the ship goes out of screen bounds </summary>
-        public Action OnOutOfBounds;
-        /// <summary> List of actions called when the ship is destroyed by the player </summary>
-        public List<Action> OnDestroyedByPlayer;
 
         /// <summary> Firerate of the enemy </summary>
         protected TimeSpan FireRate { get; set; }
+        /// <summary> List of actions called when the ship is destroyed by the player </summary>
+        public List<Action> OnDestroyedByPlayer { get; set; }
+        /// <summary> Called when the ship goes out of screen bounds </summary>
+        public Action OnOutOfBounds { get; set; }
         /// <summary> Whether the enemy is on screen and can be hit </summary>
         public Boolean IsAlive { get; set; }
         /// <summary> Point valuie for this enemy </summary>
@@ -114,12 +122,18 @@ namespace Type.Objects.Enemies
         {
             if (!IsAlive) return;
             _HitPoints--;
-            new AudioPlayer("Content/Audio/hurt3.wav", false, AudioManager.Category.EFFECT, 1);
-            if (_HitPoints <= 0)
+
+            if (!_IsSoundPlaying)
             {
-                _IsDestroyed = true;
-                Destroy();
+                new AudioPlayer("Content/Audio/hurt3.wav", false, AudioManager.Category.EFFECT, 1);
+                _IsSoundPlaying = true;
+                _TimeSinceLastSound = TimeSpan.Zero;
             }
+
+            if (_HitPoints > 0) return;
+
+            _IsDestroyed = true;
+            Destroy();
         }
 
         public void Collide()
@@ -186,6 +200,16 @@ namespace Type.Objects.Enemies
 
             if (IsAlive)
             {
+                if (_IsSoundPlaying) // TODO FIXME Work around to limit sounds created
+                {
+                    _TimeSinceLastSound += timeTilUpdate;
+                    if (_TimeSinceLastSound >= _HitSoundInterval)
+                    {
+                        _IsSoundPlaying = false;
+                        _TimeSinceLastSound = TimeSpan.Zero;
+                    }
+                }
+
                 if (!_IsWeaponLocked)
                 {
                     Fire();
