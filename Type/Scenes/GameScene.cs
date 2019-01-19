@@ -203,10 +203,10 @@ namespace Type.Scenes
                 IsGameOver = true;
                 SetButtonsEnabled(false);
                 SetButtonsVisible(false);
-                new AudioPlayer("Content/Audio/gameOver.wav", false, AudioManager.Category.EFFECT, 100);
             }
             else
             {
+
                 _EnemySpawner.StartWave();
             }
         }

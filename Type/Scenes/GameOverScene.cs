@@ -1,4 +1,5 @@
 ﻿using System;
+using AmosShared.Audio;
 using AmosShared.Base;
 using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
@@ -63,6 +64,7 @@ namespace Type.Scenes
             _ScoreText.Text = $"SCORE {score}";
             _ConfirmButton.TouchEnabled = true;
             _ConfirmButton.Visible = true;
+            new AudioPlayer("Content/Audio/gameOver.wav", false, AudioManager.Category.EFFECT, 1);
         }
 
         public override void Update(TimeSpan timeSinceUpdate)
