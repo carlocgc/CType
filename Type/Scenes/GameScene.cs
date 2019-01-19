@@ -127,6 +127,8 @@ namespace Type.Scenes
 
             _Stick = new AnalogStick(new Vector2(-620, -220), 110);
             _Stick.RegisterListener(_Player);
+
+            new AudioPlayer("Content/Audio/bgm-1.wav", true, AudioManager.Category.MUSIC, 1);
         }
 
         /// <summary>

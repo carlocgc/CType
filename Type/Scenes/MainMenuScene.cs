@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using AmosShared.Audio;
-using AmosShared.Base;
 using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
 using AmosShared.Touch;
 using OpenTK;
-#if DESKTOP
-using OpenTK.Input;
-#endif
 
 namespace Type.Scenes
 {
@@ -19,13 +13,11 @@ namespace Type.Scenes
     public class MainMenuScene : Scene
     {
         /// <summary> Button that starts the game </summary>
-        private Button _StartButton;
+        private readonly Button _StartButton;
         /// <summary> The title text </summary>
-        private TextDisplay _TitleText;
+        private readonly TextDisplay _TitleText;
         /// <summary> Text that promts game start </summary>
-        private TextDisplay _StartText;
-        /// <summary> background music </summary>
-        private AudioPlayer _BackgroundMusic;
+        private readonly TextDisplay _StartText;
 
         /// <summary> Whether the  player has pressed space and started the game </summary>
         public Boolean IsComplete { get; set; }
@@ -35,7 +27,7 @@ namespace Type.Scenes
             _TitleText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
                 Text = "C:TYPE",
-                Position = new Vector2(0, 100),
+                Position = new Vector2(0, 0),
                 Visible = true,
                 Scale = new Vector2(10, 10),
                 Colour = new Vector4(1, 1, 1, 1)
@@ -45,10 +37,10 @@ namespace Type.Scenes
             _StartText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
                 Text = "TOUCH TO START",
-                Position = new Vector2(0, 0),
+                Position = new Vector2(0, -325),
                 Visible = true,
-                Scale = new Vector2(1, 1),
-                Colour = new Vector4(1, 1, 1, 1)
+                Scale = new Vector2(1.5f, 1.5f),
+                Colour = new Vector4(0, 0, 0, 1)
             };
             _StartText.Offset = new Vector2(_StartText.Size.X * _StartText.Scale.X, _StartText.Size.Y * _StartText.Scale.Y) / 2;
             AddDrawable(_StartText);
@@ -60,7 +52,7 @@ namespace Type.Scenes
             _StartButton = new Button(Constants.ZOrders.UI, startButton);
             _StartButton.OnButtonPress += OnButtonPress;
 
-            _BackgroundMusic = new AudioPlayer("Content/Audio/bgm-1.wav", true, AudioManager.Category.MUSIC, 1);
+            new AudioPlayer("Content/Audio/mainMenuBgm.wav", true, AudioManager.Category.MUSIC, 1);
         }
 
         public void Show()

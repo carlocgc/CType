@@ -18,7 +18,7 @@ namespace Type.States
         protected override void OnEnter()
         {
             _Scene = new GameCompleteScene { Visible = true };
-            _Scene.Show(_Score);
+            _Scene.Start(_Score);
         }
 
         public override Boolean IsComplete()
