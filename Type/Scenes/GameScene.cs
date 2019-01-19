@@ -34,6 +34,10 @@ namespace Type.Scenes
         private readonly LevelLoader _LevelLoader;
         /// <summary> Fire button </summary>
         private readonly Button _FireButton;
+        /// <summary> TODO Test button that adds probes </summary>
+        private readonly Button _ProbeButton;
+        /// <summary> TODO Test button that adds shield </summary>
+        private readonly Button _ShieldButton;
         /// <summary> Floating analog stick </summary>
         private readonly AnalogStick _Stick;
         /// <summary> Text printer that displays the score </summary>
@@ -103,12 +107,28 @@ namespace Type.Scenes
             };
             _FireButton = new Button(Int32.MaxValue, fireButton) { OnButtonPress = FireButtonPress, OnButtonRelease = FireButtonRelease };
 
+            Sprite probeButton = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/probe-button.png"))
+            {
+                Position = new Vector2(450, -450),
+                Visible = true,
+                Colour = new Vector4(1, 1, 1, (Single)0.5)
+            };
+            _ProbeButton = new Button(Int32.MaxValue, probeButton) { OnButtonPress = ProbeButtonOnPress };
+
+            Sprite shieldButton = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/shield_button.png"))
+            {
+                Position = new Vector2(320, -450),
+                Visible = true,
+                Colour = new Vector4(1, 1, 1, (Single)0.5)
+            };
+            _ShieldButton = new Button(Int32.MaxValue, shieldButton) { OnButtonPress = ShieldButtonPress };
+
             _Stick = new AnalogStick(new Vector2(-620, -220), 110);
             _Stick.RegisterListener(_Player);
         }
 
         /// <summary>
-        /// Starts a new game
+        /// Starts a new game, starts the background moving and activates the buttons
         /// </summary>
         public void StartGame()
         {
@@ -141,6 +161,9 @@ namespace Type.Scenes
             if (CurrentScore % 1000 == 0) _LifeMeter.AddLife();
         }
 
+        /// <summary>
+        /// Sets the next level data and displays the current level, ends the game if complete
+        /// </summary>
         public void LevelComplete()
         {
             CurrentLevel++;
@@ -186,12 +209,16 @@ namespace Type.Scenes
         private void SetButtonsEnabled(Boolean state)
         {
             _FireButton.TouchEnabled = state;
+            _ProbeButton.TouchEnabled = state;
+            _ShieldButton.TouchEnabled = state;
             _Stick.TouchEnabled = state;
         }
 
         private void SetButtonsVisible(Boolean state)
         {
             _FireButton.Visible = state;
+            _ProbeButton.Visible = state;
+            _ShieldButton.Visible = state;
             _Stick.Visible = state;
             _Stick.ListeningForMove = state;
         }
@@ -204,6 +231,16 @@ namespace Type.Scenes
         private void FireButtonPress(Button obj)
         {
             _Player.Shoot = true;
+        }
+
+        private void ProbeButtonOnPress(Button obj)
+        {
+            _Player.CreateProbes(1, 0);
+        }
+
+        private void ShieldButtonPress(Button obj)
+        {
+            _Player.AddShield();
         }
 
         #endregion

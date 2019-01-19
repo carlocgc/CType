@@ -53,7 +53,7 @@ namespace Type.Scenes
             };
             AddDrawable(_ScoreText);
 
-            _Background = new Sprite(Game.MainCanvas, Constants.ZOrders.BACKGROUND, Texture.GetTexture("Content/Graphics/background.png"))
+            _Background = new Sprite(Game.MainCanvas, Constants.ZOrders.BACKGROUND, Texture.GetTexture("Content/Graphics/GameOverBG.png"))
             {
                 Position = new Vector2(-960, -540),
                 Colour = new Vector4(0.5f, 0.5f, 0.5f, 1)

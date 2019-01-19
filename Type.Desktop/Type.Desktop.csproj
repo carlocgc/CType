@@ -107,6 +107,18 @@
       <Link>Content\Audio\lifeup.wav</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\Assets\Audio\shield_off.wav">
+      <Link>Content\Audio\shield_off.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Audio\shield_on.wav">
+      <Link>Content\Audio\shield_on.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Audio\upgrade1.wav">
+      <Link>Content\Audio\upgrade1.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\Assets\Graphics\Buttons\analog_base.png">
       <Link>Content\Graphics\Buttons\analog_base.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -127,8 +139,16 @@
       <Link>Content\Graphics\Buttons\left.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\Assets\Graphics\Buttons\probe-button.png">
+      <Link>Content\Graphics\Buttons\probe-button.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\Assets\Graphics\Buttons\right.png">
       <Link>Content\Graphics\Buttons\right.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Buttons\shield_button.png">
+      <Link>Content\Graphics\Buttons\shield_button.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\Assets\Graphics\Buttons\up.png">
@@ -161,6 +181,42 @@
     </Content>
     <Content Include="..\Assets\Graphics\cluster-7.png">
       <Link>Content\Graphics\cluster-7.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Explosion2\pixelExplosion00.png">
+      <Link>Content\Graphics\Explosion2\pixelExplosion00.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Explosion2\pixelExplosion01.png">
+      <Link>Content\Graphics\Explosion2\pixelExplosion01.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Explosion2\pixelExplosion02.png">
+      <Link>Content\Graphics\Explosion2\pixelExplosion02.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Explosion2\pixelExplosion03.png">
+      <Link>Content\Graphics\Explosion2\pixelExplosion03.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Explosion2\pixelExplosion04.png">
+      <Link>Content\Graphics\Explosion2\pixelExplosion04.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Explosion2\pixelExplosion05.png">
+      <Link>Content\Graphics\Explosion2\pixelExplosion05.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Explosion2\pixelExplosion06.png">
+      <Link>Content\Graphics\Explosion2\pixelExplosion06.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Explosion2\pixelExplosion07.png">
+      <Link>Content\Graphics\Explosion2\pixelExplosion07.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Explosion2\pixelExplosion08.png">
+      <Link>Content\Graphics\Explosion2\pixelExplosion08.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\Assets\Graphics\Explosion\explosion00.png">
@@ -199,8 +255,16 @@
       <Link>Content\Graphics\Explosion\explosion08.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\Assets\Graphics\GameOverBG.png">
+      <Link>Content\Graphics\GameOverBG.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\Assets\Graphics\KenPixel\KenPixel.json">
       <Link>Content\Graphics\KenPixel\KenPixel.json</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\MainMenuBG-2.png">
+      <Link>Content\Graphics\MainMenuBG-2.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\Assets\Graphics\planet-far-1.png">
@@ -275,6 +339,22 @@
       <Link>Content\Graphics\planet-near-9.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\Assets\Graphics\Probes\laser-probe.png">
+      <Link>Content\Graphics\Probes\laser-probe.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Shield\shield1.png">
+      <Link>Content\Graphics\Shield\shield1.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Shield\shield2.png">
+      <Link>Content\Graphics\Shield\shield2.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Shield\shield3.png">
+      <Link>Content\Graphics\Shield\shield3.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\Assets\Graphics\stars-1.png">
       <Link>Content\Graphics\stars-1.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -321,10 +401,6 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Content Include="..\Assets\Graphics\background.png">
-      <Link>Content\Graphics\background.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="..\Assets\Graphics\bullet.png">
       <Link>Content\Graphics\bullet.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -347,10 +423,6 @@
     </Content>
     <Content Include="..\Assets\Graphics\lifeicon.png">
       <Link>Content\Graphics\lifeicon.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Assets\Graphics\MainMenuBG.png">
-      <Link>Content\Graphics\MainMenuBG.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\Assets\Graphics\player.png">

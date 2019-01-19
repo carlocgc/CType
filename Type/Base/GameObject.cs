@@ -11,10 +11,6 @@ namespace Type.Base
 {
     public abstract class GameObject : IUpdatable, IPositionable, IRotatable
     {
-        /// <summary> Whether the object is </summary>
-        public Boolean IsDisposed { get; set; }
-        /// <summary> Whether the object is updated </summary>
-        public Boolean UpdateEnabled { get; protected set; }
         /// <summary> Sprite for the game object </summary>
         protected Sprite _Sprite;
         /// <summary> Position of the object </summary>
@@ -23,6 +19,11 @@ namespace Type.Base
         protected Double _Rotation;
         /// <summary> White pixels drawn over the collidible area of the object </summary>
         private Sprite _CollideArea;
+
+        /// <summary> Whether the object is </summary>
+        public Boolean IsDisposed { get; set; }
+        /// <summary> Whether the object is updated </summary>
+        public Boolean UpdateEnabled { get; protected set; }
 
         protected GameObject(Boolean updateEnabled = true)
         {
@@ -38,21 +39,18 @@ namespace Type.Base
             {
                 _Position = value;
                 if (_Sprite != null) _Sprite.Position = value;
-                if (_CollideArea != null)
-                    _CollideArea.Position = value;
+                if (_CollideArea != null) _CollideArea.Position = value;
             }
         }
 
         public Double Rotation
         {
             get => _Rotation;
-
             set
             {
                 _Rotation = value;
-                _Sprite.Rotation = value;
-                if (_CollideArea != null)
-                    _CollideArea.Rotation = value;
+                if (_Sprite != null) _Sprite.Rotation = value;
+                if (_CollideArea != null) _CollideArea.Rotation = value;
             }
         }
 
@@ -69,16 +67,7 @@ namespace Type.Base
         /// </summary>
         public Vector4 GetRect()
         {
-            return new Vector4(_Sprite.Position.X, _Sprite.Position.Y, _Sprite.Width, _Sprite.Height);
-        }
-
-        /// <summary>
-        /// Gets the center position of the game object
-        /// </summary>
-        /// <returns></returns>
-        public Vector2 GetCenter()
-        {
-            return new Vector2(_Sprite.Position.X + (_Sprite.Width / 2), _Sprite.Position.Y + (_Sprite.Height / 2));
+            return new Vector4(_Sprite.Position.X - _Sprite.Offset.X, _Sprite.Position.Y - _Sprite.Offset.Y, _Sprite.Width, _Sprite.Height);
         }
 
         /// <summary>
@@ -96,11 +85,19 @@ namespace Type.Base
         {
             _Sprite = sprite;
             _Sprite.Position = Position;
-            _CollideArea = new Sprite(Game.MainCanvas, Int32.MaxValue, Texture.GetPixel())
+
+            if (Constants.Global.SHOW_SPRITE_AREAS)
             {
-                Scale = new Vector2(_Sprite.Width, _Sprite.Height),
-                Visible = Constants.Global.SHOW_SPRITE_AREAS,
-            };
+                _CollideArea = new Sprite(Game.MainCanvas, Int32.MaxValue, Texture.GetPixel())
+                {
+                    Position = _Sprite.Position,
+                    Offset = _Sprite.Offset,
+                    RotationOrigin = _Sprite.RotationOrigin,
+                    Rotation = _Sprite.Rotation,
+                    Scale = new Vector2(_Sprite.Width, _Sprite.Height),
+                    Visible = true,
+                };
+            }
         }
 
         public virtual void Update(TimeSpan timeTilUpdate)

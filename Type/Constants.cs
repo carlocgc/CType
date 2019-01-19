@@ -40,6 +40,8 @@ namespace Type
 
             public const Int32 PLAYER = 90;
 
+            public const Int32 SHIELD = 95;
+
             public const Int32 UI = 1000;
         }
 

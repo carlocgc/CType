@@ -6,11 +6,10 @@ using AmosShared.Graphics.Drawables;
 using OpenTK;
 using Type.Base;
 using Type.Controllers;
+using Type.Interfaces;
 using Type.Interfaces.Control;
+using Type.Interfaces.Probe;
 using Type.Objects.Projectiles;
-#if DESKTOP
-using OpenTK.Input;
-#endif
 
 namespace Type.Objects.Player
 {
@@ -19,67 +18,98 @@ namespace Type.Objects.Player
     /// </summary>
     public class Player : GameObject, IAnalogListener
     {
+        /// <summary> The top of the screen </summary>
         private readonly Single ScreenTop = Renderer.Instance.TargetDimensions.Y / 2;
+        /// <summary> The right of the screen </summary>
         private readonly Single ScreenRight = Renderer.Instance.TargetDimensions.X / 2;
+        /// <summary> The left of the screen </summary>
         private readonly Single ScreenLeft = -Renderer.Instance.TargetDimensions.X / 2;
+        /// <summary> The bottom of the screen </summary>
         private readonly Single ScreenBottom = -Renderer.Instance.TargetDimensions.Y / 2;
 
-        /// <summary> Default rate of fire </summary>
-        private readonly TimeSpan _DefaultFireRate = TimeSpan.FromMilliseconds(100);
+        /// <summary> Single point of contact for probes attached to  the player </summary>
+        private readonly IProbeController _ProbeController;
+        /// <summary> The players shield </summary>
+        private readonly IShield _Shield;
         /// <summary> Position on screen where the player is spawned </summary>
-        private readonly Vector2 _SpawnPosition = new Vector2(-700, 0);
-        /// <summary> Default movement speed </summary>
-        private readonly Single _DefaultMovementSpeed = 700;
+        private readonly Vector2 _SpawnPosition = new Vector2(-540, 0);
+        /// <summary> Amount of time between firing </summary>
+        private readonly TimeSpan _FireRate;
+        /// <summary> How fast the player can move in any direction </summary>
+        private readonly Single _MovementSpeed;
         /// <summary> Action to be invoked when the player dies </summary>
         private readonly Action OnDeath;
 
         /// <summary> Time since the last bullet was fired </summary>
         private TimeSpan _TimeSinceLastFired;
+        /// <summary> The direction to be applied to the position of the player </summary>
+        private Vector2 _Direction;
+        /// <summary> Movement speed modifier </summary>
+        private Single _MoveStrength;
         /// <summary> Whether firing is allowed </summary>
         private Boolean _IsWeaponLocked;
-        /// <summary> Whether the player should move up </summary>
-        private Boolean _MoveUp;
-        /// <summary> Whether the player should move down </summary>
-        private Boolean _MoveDown;
-        /// <summary> Whether the player should move right </summary>
-        private Boolean _MoveRight;
-        /// <summary> Whether the player should move left </summary>
-        private Boolean _MoveLeft;
-
-        private Vector2 _Direction;
-
-        private Single _MoveStrength;
+        /// <summary> Whether the player should shoot </summary>
+        private Boolean _Shoot;
 
         /// <summary> Whether the player should shoot </summary>
-        public Boolean Shoot { get; set; }
-        /// <summary> Amount of time between firing </summary>
-        public TimeSpan FireRate { get; set; }
-        /// <summary> How fast the player can move in any direction </summary>
-        public Single MovementSpeed { get; set; }
+        public Boolean Shoot
+        {
+            get => _Shoot;
+            set
+            {
+                _Shoot = value;
+                _ProbeController.Shoot = value;
+            }
+        }
 
-        /// <summary> Position of the player </summary>
+        /// <summary>
+        /// The player ship
+        /// </summary>
+        /// <param name="onDeath"> Action to be invoked when the player is killed </param>
         public Player(Action onDeath)
         {
-            AddSprite(new Sprite(Game.MainCanvas, Constants.ZOrders.PLAYER, Texture.GetTexture("Content/Graphics/player.png"))
+            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.PLAYER, Texture.GetTexture("Content/Graphics/player.png"))
             {
                 Visible = true,
-            });
+            };
+            _Sprite.Offset = _Sprite.Size / 2;
+            AddSprite(_Sprite);
+
             Position = _SpawnPosition;
-            MovementSpeed = _DefaultMovementSpeed;
-            FireRate = _DefaultFireRate;
+            _MovementSpeed = 700;
+            _FireRate = TimeSpan.FromMilliseconds(100);
 
             OnDeath = onDeath;
+
+            _ProbeController = new ProbeController();
+            _ProbeController.UpdatePosition(Position);
+
+            _Shield = new Shield();
+            _Shield.UpdatePosition(Position);
 
             CollisionController.Instance.RegisterPlayer(this);
         }
 
         /// <summary>
-        /// Resets the position of the player ship
+        /// Creates the given number of probes around the player ship
         /// </summary>
-        public void LoseLife()
+        /// <param name="amount"> Amount of probes to create </param>
+        /// <param name="id"> The type of probe to create </param>
+        public void CreateProbes(Int32 amount, Int32 id)
         {
-            Position = _SpawnPosition;
-            OnDeath?.Invoke();
+            for (Int32 i = 0; i < amount; i++)
+            {
+                _ProbeController.AddProbe(0);
+            }
+            new AudioPlayer("Content/Audio/upgrade1.wav", false, AudioManager.Category.EFFECT, 1);
+        }
+
+        /// <summary>
+        /// Increases the shield level
+        /// </summary>
+        public void AddShield()
+        {
+            _Shield.Increase();
         }
 
         /// <summary>
@@ -87,7 +117,7 @@ namespace Type.Objects.Player
         /// </summary>
         private void FireForward()
         {
-            new Bullet("Content/Graphics/bullet.png", GetCenter(), new Vector2(1, 0), 1000, 0, true, new Vector4(1, 1, 1, 1));
+            new Bullet("Content/Graphics/bullet.png", Position + new Vector2(_Sprite.Width / 2, 0), new Vector2(1, 0), 1000, 0, true, new Vector4(1, 1, 1, 1));
             _IsWeaponLocked = true;
             new AudioPlayer("Content/Audio/laser1.wav", false, AudioManager.Category.EFFECT, 0.5f);
         }
@@ -104,29 +134,23 @@ namespace Type.Objects.Player
             if (_IsWeaponLocked)
             {
                 _TimeSinceLastFired += timeTilUpdate;
-                if (_TimeSinceLastFired >= FireRate)
+                if (_TimeSinceLastFired >= _FireRate)
                 {
                     _IsWeaponLocked = false;
                     _TimeSinceLastFired = TimeSpan.Zero;
                 }
             }
 
-            if (Shoot && !_IsWeaponLocked) FireForward();
+            if (Shoot && !_IsWeaponLocked)
+            {
+                FireForward();
+            }
 
             Position += GetPositionModifier(timeTilUpdate);
-        }
 
-        ///// <summary>
-        ///// Returns whether the player can move in the current direction any further
-        ///// </summary>
-        ///// <returns></returns>
-        //private Boolean CanMove()
-        //{
-        //    return _Direction.X > 0 && Position.X <= ScreenRight - GetSprite().Width ||
-        //        _Direction.X < 0 && Position.X >= ScreenLeft ||
-        //        _Direction.Y > 0 && Position.Y <= ScreenTop - GetSprite().Height ||
-        //        _Direction.Y < 0 && Position.Y >= ScreenBottom;
-        //}
+            _ProbeController.UpdatePosition(Position);
+            _Shield.UpdatePosition(Position);
+        }
 
         /// <summary>
         /// Returns how much the player should move by
@@ -137,11 +161,11 @@ namespace Type.Objects.Player
         {
             Single x, y;
 
-            if (_Direction.X > 0 && Position.X >= ScreenRight - GetSprite().Width || _Direction.X < 0 && Position.X <= ScreenLeft) x = 0;
-            else x = _Direction.X * _MoveStrength * MovementSpeed * (Single)timeTilUpdate.TotalSeconds;
+            if (_Direction.X > 0 && Position.X >= ScreenRight - GetSprite().Width / 2 || _Direction.X < 0 && Position.X <= ScreenLeft + GetSprite().Width / 2) x = 0;
+            else x = _Direction.X * _MoveStrength * _MovementSpeed * (Single)timeTilUpdate.TotalSeconds;
 
-            if (_Direction.Y > 0 && Position.Y >= ScreenTop - GetSprite().Height || _Direction.Y < 0 && Position.Y <= ScreenBottom) y = 0;
-            else y = _Direction.Y * _MoveStrength * MovementSpeed * (Single)timeTilUpdate.TotalSeconds;
+            if (_Direction.Y > 0 && Position.Y >= ScreenTop - GetSprite().Height / 2 || _Direction.Y < 0 && Position.Y <= ScreenBottom + GetSprite().Height / 2) y = 0;
+            else y = _Direction.Y * _MoveStrength * _MovementSpeed * (Single)timeTilUpdate.TotalSeconds;
 
             return new Vector2(x, y);
         }
@@ -156,5 +180,28 @@ namespace Type.Objects.Player
             _Direction = direction;
             _MoveStrength = strength;
         }
+
+        public void Hit(Action onDeath)
+        {
+            if (_Shield.IsActive)
+            {
+                _Shield.Decrease();
+                return;
+            }
+            LoseLife(onDeath);
+        }
+
+        /// <summary>
+        /// Resets the position of the player ship
+        /// </summary>
+        private void LoseLife(Action onDeath)
+        {
+            _ProbeController.RemoveAll();
+            Position = _SpawnPosition;
+
+            onDeath.Invoke();
+            OnDeath?.Invoke();
+        }
+
     }
 }

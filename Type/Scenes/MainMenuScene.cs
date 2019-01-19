@@ -58,7 +58,7 @@ namespace Type.Scenes
             };
             AddDrawable(_StartText);
 
-            _Background = new Sprite(Game.MainCanvas, Constants.ZOrders.BACKGROUND, Texture.GetTexture("Content/Graphics/MainMenuBG.png"))
+            _Background = new Sprite(Game.MainCanvas, Constants.ZOrders.BACKGROUND, Texture.GetTexture("Content/Graphics/MainMenuBG-2.png"))
             {
                 Position = new Vector2(-960, -540),
             };

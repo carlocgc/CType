@@ -1,13 +1,11 @@
-﻿using AmosShared.Graphics;
+﻿using AmosShared.Base;
+using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
 using AmosShared.Interfaces;
+using AmosShared.Touch;
 using OpenTK;
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices.WindowsRuntime;
-using AmosShared.Base;
-using AmosShared.Touch;
-using OpenTK.Audio;
 using Type.Base;
 using Type.Interfaces.Control;
 
@@ -83,14 +81,6 @@ namespace Type.UI
             Position = startPosition;
 
             _HitBox = new Vector4(_Base.Position.X - _Base.Offset.X * 4, _Base.Position.Y - _Base.Offset.Y * 4, _Base.Size.X * 4, _Base.Size.Y * 4);
-
-            //new Sprite(Game.MainCanvas, Int32.MaxValue, Texture.GetPixel())
-            //{
-            //    Scale = new Vector2(_HitBox.W, _HitBox.Z),
-            //    Visible = true,
-            //    Position = new Vector2(_HitBox.X, _HitBox.Y),
-            //    Colour = new Vector4(1, 1, 1, 0.5f)
-            //};
 
             _Radius = radius;
             TouchOrder = Constants.ZOrders.UI;
@@ -205,12 +195,6 @@ namespace Type.UI
         public override void Update(TimeSpan timeTilUpdate)
         {
             base.Update(timeTilUpdate);
-
-            if (Single.IsNaN(_DirectionNorm.X) || Single.IsNaN(_DirectionNorm.Y))
-            {
-                int i = 0;
-                i++;
-            }
 
             foreach (IAnalogListener listener in _Listeners)
             {
