@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using OpenTK;
+﻿using OpenTK;
+using System;
 
 namespace Type.Data
 {
@@ -13,18 +11,24 @@ namespace Type.Data
         /// <summary> Amount of ships in the wave </summary>
         public Int32 ShipCount;
         /// <summary> How long between each spawn </summary>
-        public TimeSpan SpawnInterval;
-        /// <summary> List of positions to spawn the ships </summary>
+        public TimeSpan[] SpawnInterval;
+        /// <summary> Array of positions to spawn the ships </summary>
         public Vector2[] SpawnPositions;
-        /// <summary> What type of ships comprise the wave   </summary>
-        public Int32 EnemyType;
+        /// <summary> Array of ship types </summary>
+        public Int32[] EnemyTypes;
 
-        public WaveData(TimeSpan interval, Int32 enemyType, Vector2[] spawnPosList)
+        /// <summary>
+        /// Data for a wave of enemies
+        /// </summary>
+        /// <param name="interval"> Interval to spawn each ship </param>
+        /// <param name="enemyTypes"> Array of ship types </param>
+        /// <param name="spawnPositions"> Array of positions to spawn the ships </param>
+        public WaveData(TimeSpan[] interval, Int32[] enemyTypes, Vector2[] spawnPositions)
         {
-            ShipCount = spawnPosList.Length;
+            ShipCount = spawnPositions.Length;
             SpawnInterval = interval;
-            EnemyType = enemyType;
-            SpawnPositions = spawnPosList;
+            EnemyTypes = enemyTypes;
+            SpawnPositions = spawnPositions;
         }
     }
 
