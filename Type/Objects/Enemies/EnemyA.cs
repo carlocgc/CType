@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using AmosShared.Audio;
+﻿using AmosShared.Audio;
 using OpenTK;
+using System;
 using Type.Objects.Projectiles;
 
 namespace Type.Objects.Enemies
