@@ -6,7 +6,7 @@ C# Side scrolling shooter using Amos engine
 
 Initially an R-Type clone hence the name. You control a space ship that is flying through space shooting enemies, collecting powerups and fighting bosses.
 
-## Video Demo
+## Video
 
 [Demo](https://www.youtube.com/watch?v=nBfW-oQohM4)
 
