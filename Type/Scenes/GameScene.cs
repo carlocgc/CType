@@ -64,7 +64,7 @@ namespace Type.Scenes
         public GameScene()
         {
             CurrentLevel = 1;
-            _MaxLevel = 1;
+            _MaxLevel = 8;
 
             _BackgroundFar = new ScrollingBackground(100, "Content/Graphics/stars-1.png");
             _BackgroundNear = new ScrollingBackground(200, "Content/Graphics/stars-2.png");
@@ -259,12 +259,12 @@ namespace Type.Scenes
             base.Dispose();
 
             _Player.Dispose();
+            _EnemySpawner.Dispose();
             _BackgroundNear.Dispose();
             _BackgroundFar.Dispose();
             _PlanetsNear.Dispose();
             _PlanetsFar.Dispose();
             _Clusters.Dispose();
-            _EnemySpawner.Dispose();
 
             _Stick.Dispose();
             _FireButton.Dispose();
