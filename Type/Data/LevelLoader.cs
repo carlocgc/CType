@@ -41,7 +41,7 @@ namespace Type.Data
                 foreach (String es in enemyStrings)
                 {
                     // Split enemy data section into : type, Y position, spawn delay
-                    String[] shipdata = es.Split('-');
+                    String[] shipdata = es.Split('_');
                     Int32.TryParse(shipdata[0], out Int32 shiptype);
                     Single.TryParse(shipdata[1], out Single yPos);
                     Single.TryParse(shipdata[2], out Single delay);
