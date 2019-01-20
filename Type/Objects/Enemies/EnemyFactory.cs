@@ -77,7 +77,7 @@ namespace Type.Objects.Enemies
         {
             BaseEnemy enemy;
 
-            switch (_CurrentWave.EnemyType)
+            switch (_CurrentWave.EnemyTypes[_DataIndex])
             {
                 case 0:
                     {
@@ -138,7 +138,7 @@ namespace Type.Objects.Enemies
             {
                 _TimeSinceLastSpawn += timeTilUpdate;
 
-                if (_TimeSinceLastSpawn >= _CurrentWave.SpawnInterval)
+                if (_TimeSinceLastSpawn >= _CurrentWave.SpawnInterval[_DataIndex])
                 {
                     Spawn();
                 }
