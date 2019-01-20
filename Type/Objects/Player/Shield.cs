@@ -53,6 +53,9 @@ namespace Type.Objects.Player
             new AudioPlayer("Content/Audio/shield_on.wav", false, AudioManager.Category.EFFECT, 1);
         }
 
+        /// <summary>
+        /// Sets the correct sprite for the current level
+        /// </summary>
         private void UpdateSprites()
         {
             switch (_CurrentLevel)

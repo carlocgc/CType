@@ -259,12 +259,12 @@ namespace Type.Scenes
             base.Dispose();
 
             _Player.Dispose();
+            _EnemySpawner.Dispose();
             _BackgroundNear.Dispose();
             _BackgroundFar.Dispose();
             _PlanetsNear.Dispose();
             _PlanetsFar.Dispose();
             _Clusters.Dispose();
-            _EnemySpawner.Dispose();
 
             _Stick.Dispose();
             _FireButton.Dispose();
