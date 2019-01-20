@@ -122,6 +122,8 @@ namespace Type.Controllers
             {
                 foreach (BaseEnemy enemy in _Enemies.Where(e => e.IsAlive).ToList())
                 {
+                    // TODO Check if enemy has circular hitbox and use another method to check intersects
+
                     if (Intersects(bullet.GetRect(), enemy.GetRect()))
                     {
                         HandleEnemyHit(bullet, enemy);

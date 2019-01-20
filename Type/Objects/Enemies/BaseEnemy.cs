@@ -4,11 +4,9 @@ using AmosShared.Graphics.Drawables;
 using OpenTK;
 using System;
 using System.Collections.Generic;
-using AmosShared.Interfaces;
 using Type.Base;
 using Type.Controllers;
 using Type.Data;
-using Type.Glide;
 using Type.Interfaces;
 using Type.Interfaces.Control;
 
@@ -20,23 +18,18 @@ namespace Type.Objects.Enemies
     public abstract class BaseEnemy : GameObject, IHitable, IPositionRecipient
     {
         /// <summary> Animation of an explosion, played on death </summary>
-        private readonly AnimatedSprite _Explosion;
-        /// <summary> Time since the last bullet was fired </summary>
-        private TimeSpan _TimeSinceLastFired;
-        /// <summary> Amount of times the enemy can be hit before being destroyed </summary>
-        private Int32 _HitPoints;
-
+        protected readonly AnimatedSprite _Explosion;
         /// <summary> How long to wait before playing the hit sound</summary>
-        private readonly TimeSpan _HitSoundInterval = TimeSpan.FromSeconds(0.2f); // TODO FIXME Work around to stop so many sounds playing
-        /// <summary> How long since the last hit occured </summary>
-        private TimeSpan _TimeSinceLastSound; // TODO FIXME Work around to stop so many sounds playing
-        /// <summary> Whether a sound is playing </summary>
-        private Boolean _IsSoundPlaying; // TODO FIXME Work around to stop so many sounds playing
+        protected readonly TimeSpan _HitSoundInterval = TimeSpan.FromSeconds(0.2f); // TODO FIXME Work around to stop so many sounds playing
 
-        /// <summary> movement speed of the enemy </summary>
-        protected Single _Speed;
-        /// <summary> Direction the enemy is moving </summary>
-        protected Vector2 _MoveDirection;
+        /// <summary> Time since the last bullet was fired </summary>
+        protected TimeSpan _TimeSinceLastFired;
+        /// <summary> Firerate of the enemy </summary>
+        protected TimeSpan FireRate { get; set; }
+        /// <summary> How long since the last hit occured </summary>
+        protected TimeSpan _TimeSinceLastSound; // TODO FIXME Work around to stop so many sounds playing
+        /// <summary> Whether a sound is playing </summary>
+        protected Boolean _IsSoundPlaying; // TODO FIXME Work around to stop so many sounds playing
         /// <summary> Whether the enemy is moving </summary>
         protected Boolean _IsMoving;
         /// <summary> Whether firing is allowed </summary>
@@ -45,14 +38,21 @@ namespace Type.Objects.Enemies
         protected Boolean _IsHostile;
         /// <summary> Whether the enemy has been detsroyed by the player </summary>
         protected Boolean _IsDestroyed;
-
+        /// <summary> Whether this enemy is a boss </summary>
+        protected Boolean _IsBoss;
+        /// <summary> Direction the enemy is moving </summary>
+        protected Vector2 _MoveDirection;
         /// <summary> The players current position </summary>
         protected Vector2 _PlayerPosition;
         /// <summary> Relative direction to the player from this enemy </summary>
         protected Vector2 _DirectionTowardsPlayer;
+        /// <summary> Amount of times the enemy can be hit before being destroyed </summary>
+        protected Int32 _HitPoints;
+        /// <summary> movement speed of the enemy </summary>
+        protected Single _Speed;
 
-        /// <summary> Firerate of the enemy </summary>
-        protected TimeSpan FireRate { get; set; }
+        /// <summary> Whether the hitbox is a circular </summary>
+        public Boolean IsCircleHitBox { get; private set; }
         /// <summary> List of actions called when the ship is destroyed by the player </summary>
         public List<Action> OnDestroyedByPlayer { get; set; }
         /// <summary> Called when the ship goes out of screen bounds </summary>
@@ -132,8 +132,8 @@ namespace Type.Objects.Enemies
         private void UpdateRotation()
         {
             _DirectionTowardsPlayer = _PlayerPosition - Position;
-            //Rotation = (Single)(Math.Atan2(1, 0) - Math.Atan2(_DirectionTowardsPlayer.Y, _DirectionTowardsPlayer.X));
-            Rotation = (Single) Math.Atan2(_DirectionTowardsPlayer.Y, _DirectionTowardsPlayer.X);
+
+            Rotation = (Single)Math.Atan2(_DirectionTowardsPlayer.Y, _DirectionTowardsPlayer.X);
         }
 
         /// <summary>
@@ -226,6 +226,8 @@ namespace Type.Objects.Enemies
         {
             base.Update(timeTilUpdate);
 
+            if (_IsBoss) return;
+
             if (IsAlive)
             {
                 if (_IsSoundPlaying) // TODO FIXME Work around to limit sounds created
@@ -252,6 +254,7 @@ namespace Type.Objects.Enemies
                     }
                 }
             }
+
 
             if (!_IsMoving) return;
 
