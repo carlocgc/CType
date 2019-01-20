@@ -2,6 +2,7 @@
 using OpenTK;
 using System;
 using System.Collections.Generic;
+using Type.Data;
 using Type.Interfaces.Probe;
 using Type.Objects.Probes;
 
@@ -35,6 +36,7 @@ namespace Type.Controllers
             }
         }
 
+        /// <inheritdoc />
         public Boolean IsDisposed { get; set; }
 
         public ProbeController()
@@ -51,6 +53,7 @@ namespace Type.Controllers
         {
             _ProbeCount++;
             Single spaceBetweenProbes = (Single)Math.PI * 2 / _ProbeCount;
+            GameStats.Instance.ProbesCreated++;
 
             // First clear all the probes
             foreach (IProbe probe in _Probes)

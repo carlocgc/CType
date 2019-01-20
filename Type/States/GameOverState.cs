@@ -10,6 +10,8 @@ namespace Type.States
     {
         private readonly Int32 _Score;
 
+        private GameOverScene _Scene;
+
         public GameOverState(Int32 score)
         {
             _Score = score;
@@ -17,20 +19,21 @@ namespace Type.States
 
         protected override void OnEnter()
         {
-            GameOverScene.Instance.Show(_Score);
-            GameOverScene.Instance.Visible = true;
+            _Scene = new GameOverScene { Visible = true };
+            _Scene.Start(_Score);
         }
 
         public override Boolean IsComplete()
         {
-            if (GameOverScene.Instance.IsComplete) ChangeState(new MainMenuState());
-            return GameOverScene.Instance.IsComplete;
+            if (_Scene.IsComplete) ChangeState(new MainMenuState());
+            return _Scene.IsComplete;
         }
 
         protected override void OnExit()
         {
-            GameOverScene.Instance.Visible = false;
-            GameOverScene.Instance.IsComplete = false;
+            _Scene.Visible = false;
+            _Scene.IsComplete = false;
+            _Scene.Dispose();
             Dispose();
         }
     }

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using AmosShared.Audio;
 using AmosShared.Graphics;
 using Type.Base;
+using Type.Data;
 using Type.Interfaces;
 
 namespace Type.Objects.Player
@@ -47,6 +48,7 @@ namespace Type.Objects.Player
             if (_CurrentLevel >= _MaxLevel) return;
             _CurrentLevel++;
             IsActive = _CurrentLevel > 0;
+            GameStats.Instance.ShieldsCreated++;
             UpdateSprites();
             new AudioPlayer("Content/Audio/shield_on.wav", false, AudioManager.Category.EFFECT, 1);
         }
@@ -121,6 +123,16 @@ namespace Type.Objects.Player
             foreach (Sprite sprite in _Sprites)
             {
                 sprite.Position = position;
+            }
+        }
+
+        /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
+        public override void Dispose()
+        {
+            base.Dispose();
+            foreach (Sprite sprite in _Sprites)
+            {
+                sprite.Dispose();
             }
         }
     }

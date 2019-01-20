@@ -1,5 +1,4 @@
 ﻿using AmosShared.Audio;
-using AmosShared.Base;
 using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
 using AmosShared.Touch;
@@ -10,6 +9,7 @@ using Type.Data;
 using Type.Objects.Enemies;
 using Type.Objects.Player;
 using Type.Objects.World;
+using Type.States;
 using Type.UI;
 
 namespace Type.Scenes
@@ -42,8 +42,6 @@ namespace Type.Scenes
         private readonly AnalogStick _Stick;
         /// <summary> Text printer that displays the score </summary>
         private readonly TextDisplay _ScoreDisplay;
-        /// <summary> THe word score displayed top left of screen </summary>
-        private readonly TextDisplay _ScoreText;
         /// <summary> UI element that displays the amount oif lives remaining </summary>
         private readonly LifeMeter _LifeMeter;
         /// <summary> Object that shows the current level text </summary>
@@ -60,6 +58,8 @@ namespace Type.Scenes
         public Int32 CurrentScore { get; private set; }
         /// <summary> Whether the player has ran out of lives, ends the playing state </summary>
         public Boolean IsGameOver { get; private set; }
+        /// <summary> Whether the game has been completed </summary>
+        public Boolean IsGameComplete { get; private set; }
 
         public GameScene()
         {
@@ -80,22 +80,12 @@ namespace Type.Scenes
             _LevelLoader = new LevelLoader();
             _EnemySpawner = new EnemyFactory(this);
 
-            _ScoreText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
-            {
-                Text = "SCORE: ",
-                Position = new Vector2(-900, 460),
-                Visible = true,
-                Scale = new Vector2(3, 3),
-                Colour = new Vector4(1, 0, 0, 1)
-            };
-            AddDrawable(_ScoreText);
-
             _ScoreDisplay = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
                 Text = CurrentScore.ToString(),
-                Position = new Vector2(-650, 460),
+                Position = new Vector2(-900, 460),
                 Visible = true,
-                Scale = new Vector2(3, 3),
+                Scale = new Vector2(2, 2),
             };
             AddDrawable(_ScoreDisplay);
 
@@ -125,6 +115,8 @@ namespace Type.Scenes
 
             _Stick = new AnalogStick(new Vector2(-620, -220), 110);
             _Stick.RegisterListener(_Player);
+
+            new AudioPlayer("Content/Audio/bgm-1.wav", true, AudioManager.Category.MUSIC, 1);
         }
 
         /// <summary>
@@ -132,7 +124,8 @@ namespace Type.Scenes
         /// </summary>
         public void StartGame()
         {
-            CurrentScore = 0;
+            GameStats.Instance.Score = CurrentScore = 0;
+            GameStats.Instance.GameStart();
 
             _BackgroundNear.Start();
             _BackgroundFar.Start();
@@ -140,7 +133,7 @@ namespace Type.Scenes
             _PlanetsNear.Start();
             _Clusters.Start();
 
-            _LevelDisplay.ShowLevel(CurrentLevel, TimeSpan.FromSeconds(0.5), () =>
+            _LevelDisplay.ShowLevel(CurrentLevel, TimeSpan.FromSeconds(2), () =>
             {
                 _EnemySpawner.SetLevelData(_LevelLoader.GetWaveData(CurrentLevel));
                 CollisionController.Instance.IsActive = true;
@@ -158,7 +151,8 @@ namespace Type.Scenes
         {
             CurrentScore += amount;
             _ScoreDisplay.Text = CurrentScore.ToString();
-            if (CurrentScore % 1000 == 0) _LifeMeter.AddLife();
+            GameStats.Instance.Score = CurrentScore;
+            //if (CurrentScore % 1000 == 0) _LifeMeter.AddLife();
         }
 
         /// <summary>
@@ -166,21 +160,31 @@ namespace Type.Scenes
         /// </summary>
         public void LevelComplete()
         {
-            CurrentLevel++;
             if (CurrentLevel >= _MaxLevel)
             {
-                // TODO Game Complete
-                IsGameOver = true;
-                SetButtonsEnabled(false);
-                SetButtonsVisible(false);
+                GameCompleted();
             }
             else
             {
+                CurrentLevel++;
                 _LevelDisplay.ShowLevel(CurrentLevel, TimeSpan.FromSeconds(2), () =>
                 {
                     _EnemySpawner.SetLevelData(_LevelLoader.GetWaveData(CurrentLevel));
                 });
             }
+        }
+
+        /// <summary>
+        /// Ends the playing state and set the next state to be <see cref="GameCompleteState"/>
+        /// </summary>
+        private void GameCompleted()
+        {
+            GameStats.Instance.GameEnd();
+
+            _EnemySpawner.Reset();
+            IsGameComplete = true;
+            SetButtonsEnabled(false);
+            SetButtonsVisible(false);
         }
 
         /// <summary>
@@ -193,10 +197,10 @@ namespace Type.Scenes
 
             if (_LifeMeter.PlayerLives <= 0 && !IsGameOver)
             {
-                IsGameOver = true;
+                GameStats.Instance.GameEnd();
                 SetButtonsEnabled(false);
                 SetButtonsVisible(false);
-                new AudioPlayer("Content/Audio/gameOver.wav", false, AudioManager.Category.EFFECT, 100);
+                IsGameOver = true;
             }
             else
             {
@@ -253,8 +257,7 @@ namespace Type.Scenes
         public override void Dispose()
         {
             base.Dispose();
-            _Stick.Dispose();
-            _Fps.Dispose();
+
             _Player.Dispose();
             _BackgroundNear.Dispose();
             _BackgroundFar.Dispose();
@@ -262,6 +265,17 @@ namespace Type.Scenes
             _PlanetsFar.Dispose();
             _Clusters.Dispose();
             _EnemySpawner.Dispose();
+
+            _Stick.Dispose();
+            _FireButton.Dispose();
+            _ProbeButton.Dispose();
+            _ShieldButton.Dispose();
+
+            _Fps.Dispose();
+            _LifeMeter.Dispose();
+            _ScoreDisplay.Dispose();
+
+            AudioManager.Instance.Dispose();
         }
     }
 }

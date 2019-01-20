@@ -20,7 +20,10 @@ namespace Type.States
         public override Boolean IsComplete()
         {
             if (_Scene.IsGameOver) ChangeState(new GameOverState(_Scene.CurrentScore));
-            return _Scene.IsGameOver;
+            else if (_Scene.IsGameComplete) ChangeState(new GameCompleteState(_Scene.CurrentScore));
+
+            Boolean gameEnded = _Scene.IsGameOver || _Scene.IsGameComplete;
+            return gameEnded;
         }
 
         protected override void OnExit()

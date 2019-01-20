@@ -4,7 +4,7 @@ using OpenTK;
 
 namespace Type.Interfaces
 {
-    public interface IShield : IPositionable
+    public interface IShield : IPositionable, IDisposable
     {
         /// <summary>
         /// Whether the shield is on

@@ -75,8 +75,16 @@
       <Link>Content\Audio\death.wav</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\Assets\Audio\gameCompleteBgm.wav">
+      <Link>Content\Audio\gameCompleteBgm.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\Assets\Audio\gameOver.wav">
       <Link>Content\Audio\gameOver.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Audio\gameOverBgm.wav">
+      <Link>Content\Audio\gameOverBgm.wav</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\Assets\Audio\hurt3.wav">
@@ -105,6 +113,10 @@
     </Content>
     <Content Include="..\Assets\Audio\lifeup.wav">
       <Link>Content\Audio\lifeup.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Audio\mainMenuBgm.wav">
+      <Link>Content\Audio\mainMenuBgm.wav</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\Assets\Audio\shield_off.wav">
@@ -183,6 +195,14 @@
       <Link>Content\Graphics\cluster-7.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\Assets\Graphics\enemy4.png">
+      <Link>Content\Graphics\enemy4.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\enemybullet.png">
+      <Link>Content\Graphics\enemybullet.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\Assets\Graphics\Explosion2\pixelExplosion00.png">
       <Link>Content\Graphics\Explosion2\pixelExplosion00.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -253,6 +273,10 @@
     </Content>
     <Content Include="..\Assets\Graphics\Explosion\explosion08.png">
       <Link>Content\Graphics\Explosion\explosion08.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\GameCompleteBG.png">
+      <Link>Content\Graphics\GameCompleteBG.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\Assets\Graphics\GameOverBG.png">

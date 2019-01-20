@@ -18,7 +18,11 @@ namespace Type.Objects.Enemies
         protected override void Fire()
         {
             if (!_IsHostile) return;
-            new Bullet("Content/Graphics/bullet.png", Position, new Vector2(-1, 0), 800, Math.PI, false, new Vector4(255, 0, 0, 1));
+
+            Vector2 bulletDirection = _DirectionTowardsPlayer;
+            if (bulletDirection != Vector2.Zero) bulletDirection.Normalize();
+            new Bullet("Content/Graphics/enemybullet.png", Position, bulletDirection, 1000, Rotation, false, new Vector4(255, 0, 0, 1));
+
             _IsWeaponLocked = true;
             new AudioPlayer("Content/Audio/laser2.wav", false, AudioManager.Category.EFFECT, 1);
         }

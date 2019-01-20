@@ -6,6 +6,7 @@ using AmosShared.Graphics.Drawables;
 using OpenTK;
 using Type.Base;
 using Type.Controllers;
+using Type.Data;
 using Type.Interfaces;
 using Type.Interfaces.Control;
 using Type.Interfaces.Probe;
@@ -119,6 +120,7 @@ namespace Type.Objects.Player
         {
             new Bullet("Content/Graphics/bullet.png", Position + new Vector2(_Sprite.Width / 2, 0), new Vector2(1, 0), 1000, 0, true, new Vector4(1, 1, 1, 1));
             _IsWeaponLocked = true;
+            GameStats.Instance.BulletsFired++;
             new AudioPlayer("Content/Audio/laser1.wav", false, AudioManager.Category.EFFECT, 0.5f);
         }
 
@@ -150,6 +152,7 @@ namespace Type.Objects.Player
 
             _ProbeController.UpdatePosition(Position);
             _Shield.UpdatePosition(Position);
+            PositionRelayer.Instance.ProvidePosition(Position);
         }
 
         /// <summary>
@@ -198,10 +201,18 @@ namespace Type.Objects.Player
         {
             _ProbeController.RemoveAll();
             Position = _SpawnPosition;
+            GameStats.Instance.Deaths++;
 
             onDeath.Invoke();
             OnDeath?.Invoke();
         }
 
+        /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
+        public override void Dispose()
+        {
+            base.Dispose();
+            _Shield.Dispose();
+            _ProbeController.Dispose();
+        }
     }
 }
