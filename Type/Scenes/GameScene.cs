@@ -64,7 +64,7 @@ namespace Type.Scenes
         public GameScene()
         {
             CurrentLevel = 1;
-            _MaxLevel = 8;
+            _MaxLevel = 1;
 
             _BackgroundFar = new ScrollingBackground(100, "Content/Graphics/stars-1.png");
             _BackgroundNear = new ScrollingBackground(200, "Content/Graphics/stars-2.png");

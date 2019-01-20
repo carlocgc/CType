@@ -139,12 +139,20 @@
       <Link>Content\Graphics\Buttons\analog_top.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\Assets\Graphics\Buttons\completecontinue.png">
+      <Link>Content\Graphics\Buttons\completecontinue.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\Assets\Graphics\Buttons\down.png">
       <Link>Content\Graphics\Buttons\down.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\Assets\Graphics\Buttons\fire.png">
       <Link>Content\Graphics\Buttons\fire.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Buttons\gameovercontinue.png">
+      <Link>Content\Graphics\Buttons\gameovercontinue.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\Assets\Graphics\Buttons\left.png">
