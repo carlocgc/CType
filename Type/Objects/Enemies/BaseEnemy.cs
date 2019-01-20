@@ -182,16 +182,15 @@ namespace Type.Objects.Enemies
             {
                 _Explosion.AddFrameAction((anim) =>
                 {
+                    foreach (Action action in OnDestroyedByPlayer)
+                    {
+                        action?.Invoke();
+                    }
                     Dispose();
                 }, 8);
                 _Sprite.Visible = false;
                 _Explosion.Visible = true;
                 _Explosion.Playing = true;
-
-                foreach (Action action in OnDestroyedByPlayer)
-                {
-                    action?.Invoke();
-                }
             }
             else
             {
