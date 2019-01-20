@@ -5,6 +5,7 @@ using AmosShared.Interfaces;
 using OpenTK;
 using Type.Controllers;
 using Type.Data;
+using Type.Objects.Bosses;
 using Type.Scenes;
 
 namespace Type.Objects.Enemies
@@ -92,6 +93,11 @@ namespace Type.Objects.Enemies
                 case 2:
                     {
                         enemy = new EnemyC("Content/Graphics/enemy4.png", _CurrentWave.SpawnPositions[_DataIndex], 0, new Vector2(-1, 0), 600, TimeSpan.FromSeconds(0.8), 12);
+                        break;
+                    }
+                case 20:
+                    {
+                        enemy = new BossA("Content/Graphics/Bosses/boss1.png", _CurrentWave.SpawnPositions[_DataIndex], 0, new Vector2(-1, 0), 300, TimeSpan.FromSeconds(0.8), 1000);
                         break;
                     }
                 default:

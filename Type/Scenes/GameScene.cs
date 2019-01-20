@@ -63,8 +63,8 @@ namespace Type.Scenes
 
         public GameScene()
         {
-            CurrentLevel = 1;
-            _MaxLevel = 8;
+            CurrentLevel = 9;
+            _MaxLevel = 9;
 
             _BackgroundFar = new ScrollingBackground(100, "Content/Graphics/stars-1.png");
             _BackgroundNear = new ScrollingBackground(200, "Content/Graphics/stars-2.png");
@@ -192,7 +192,7 @@ namespace Type.Scenes
         /// </summary>
         private void OnPlayerDeath()
         {
-            _EnemySpawner.Reset();
+             _EnemySpawner.Reset();
             _LifeMeter.LoseLife();
 
             if (_LifeMeter.PlayerLives <= 0 && !IsGameOver)
