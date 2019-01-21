@@ -7,7 +7,7 @@ namespace Type.Interfaces
     public interface IShield : IPositionable, IDisposable
     {
         /// <summary>
-        /// Whether the shield is on
+        /// Whether the shield is active
         /// </summary>
         Boolean IsActive { get; }
 
@@ -29,7 +29,7 @@ namespace Type.Interfaces
         /// <summary>
         /// Updates the shield position
         /// </summary>
-        /// <param name="position"></param>
+        /// <param name="position"> The position to provide the shield </param>
         void UpdatePosition(Vector2 position);
     }
 }

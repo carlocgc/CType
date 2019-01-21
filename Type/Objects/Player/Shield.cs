@@ -43,7 +43,7 @@ namespace Type.Objects.Player
         /// <summary>
         /// Increases the shields level
         /// </summary>
-        public void Increase()
+        public void IncreaseShield()
         {
             if (_CurrentLevel >= _MaxLevel) return;
             _CurrentLevel++;
@@ -99,7 +99,7 @@ namespace Type.Objects.Player
         /// <summary>
         /// Decreases the shields level
         /// </summary>
-        public void Decrease()
+        public void DecreaseShield()
         {
             if (_CurrentLevel < 0) return;
             _CurrentLevel--;
@@ -111,7 +111,7 @@ namespace Type.Objects.Player
         /// <summary>
         /// Completely deactivates the shield
         /// </summary>
-        public void Disable()
+        public void DisableShield()
         {
             _CurrentLevel = 0;
             UpdateSprites();
