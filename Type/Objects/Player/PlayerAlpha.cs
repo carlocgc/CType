@@ -65,6 +65,8 @@ namespace Type.Objects.Player
 
         public PlayerAlpha()
         {
+            _Listeners = new List<IPlayerListener>();
+
             _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.PLAYER, Texture.GetTexture("Content/Graphics/player.png"))
             {
                 Visible = true,
