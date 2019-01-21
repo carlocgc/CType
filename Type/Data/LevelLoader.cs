@@ -9,14 +9,14 @@ namespace Type.Data
     /// <summary>
     /// Object that will create wave data objects from txt file data
     /// </summary>
-    public class LevelLoader
+    public static class LevelLoader
     {
         /// <summary>
         /// Returns a list of wave data objects
         /// </summary>
         /// <param name="level"> The level to get the wave data for </param>
         /// <returns></returns>
-        public List<WaveData> GetWaveData(Int32 level)
+        public static List<WaveData> GetWaveData(Int32 level)
         {
             // Get level data as a string
             String filepath = $"Content/Level/level-{level}.txt";

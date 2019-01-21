@@ -17,6 +17,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\GameStats.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\LevelLoader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\WaveData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Factories\EnemyFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Glide\Ease.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Glide\MemberAccessor.cs" />
@@ -40,12 +41,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Weapons\IProjectile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Weapons\IProjectileShooter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Bosses\BossA.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\BaseEnemy.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\EnemyA.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\EnemyAlpha.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\EnemyB.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\EnemyBeta.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\EnemyC.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\EnemyFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\EnemyGamma.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Player\PlayerAlpha.cs" />
