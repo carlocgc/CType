@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using AmosShared.Interfaces;
+﻿using AmosShared.Interfaces;
 using Type.Interfaces.Collisions;
 
 namespace Type.Interfaces.Weapons

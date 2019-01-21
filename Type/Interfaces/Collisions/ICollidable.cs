@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using AmosShared.Interfaces;
+﻿using AmosShared.Interfaces;
 using OpenTK;
 
 namespace Type.Interfaces.Collisions

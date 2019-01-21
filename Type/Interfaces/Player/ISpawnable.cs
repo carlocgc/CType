@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Type.Interfaces.Player
+﻿namespace Type.Interfaces.Player
 {
     /// <summary>
     /// Object that can spawn on screen

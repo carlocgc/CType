@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Type.Interfaces.Enemies
+﻿namespace Type.Interfaces.Enemies
 {
     /// <summary>
     /// Object that implements this interface will be notified of enemy events

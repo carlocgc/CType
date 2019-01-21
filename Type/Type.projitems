@@ -43,7 +43,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Bosses\BossA.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\EnemyAlpha.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\EnemyBeta.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\EnemyFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\EnemyGamma.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Player\PlayerAlpha.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Player\Shield.cs" />

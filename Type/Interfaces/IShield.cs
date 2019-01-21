@@ -4,6 +4,9 @@ using OpenTK;
 
 namespace Type.Interfaces
 {
+    /// <summary>
+    /// Shield that can absorb impacts and has multiple stages
+    /// </summary>
     public interface IShield : IPositionable, IDisposable
     {
         /// <summary>

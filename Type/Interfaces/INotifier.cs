@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Type.Interfaces
+﻿namespace Type.Interfaces
 {
     /// <summary>
     /// Object that implements this interface can notify listeners of events
