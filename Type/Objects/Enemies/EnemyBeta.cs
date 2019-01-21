@@ -14,9 +14,9 @@ using static Type.Constants.Global;
 namespace Type.Objects.Enemies
 {
     /// <summary>
-    /// Enemy of type alpha
+    /// Enemy of type beta
     /// </summary>
-    public class EnemyAlpha : GameObject, IEnemy
+    public class EnemyBeta : GameObject, IEnemy
     {
         /// <summary> How long to wait before playing the hit sound</summary>
         private readonly TimeSpan _HitSoundInterval = TimeSpan.FromSeconds(0.2f); // TODO FIXME Work around to stop so many sounds playing
@@ -65,7 +65,7 @@ namespace Type.Objects.Enemies
         /// <inheritdoc />
         public Int32 HitPoints { get; private set; }
 
-        public EnemyAlpha(Vector2 spawnPos, Single rotation, Vector2 direction)
+        public EnemyBeta(Vector2 spawnPos, Single rotation, Vector2 direction)
         {
             _Listeners = new List<IEnemyListener>();
 
@@ -101,10 +101,10 @@ namespace Type.Objects.Enemies
             _IsWeaponLocked = true;
             _MoveDirection = direction;
             _Speed = 600;
-            _FireRate = TimeSpan.FromSeconds(1.1f);
+            _FireRate = TimeSpan.FromSeconds(0.8f);
 
             HitPoints = 9;
-            PointValue = 10;
+            PointValue = 25;
             Position = spawnPos;
         }
 
@@ -113,10 +113,10 @@ namespace Type.Objects.Enemies
         {
             Vector2 bulletDirection = _DirectionTowardsPlayer;
             if (bulletDirection != Vector2.Zero) bulletDirection.Normalize();
-            new Bullet("Content/Graphics/enemybullet.png", Position, bulletDirection, 1000, Rotation, false, new Vector4(255, 0, 0, 1));
-
+            new Bullet("Content/Graphics/enemybullet.png", Position, bulletDirection, 1000, Rotation, false, new Vector4(255, 255, 0, 1));
             _IsWeaponLocked = true;
-            new AudioPlayer("Content/Audio/laser2.wav", false, AudioManager.Category.EFFECT, 1);
+
+            new AudioPlayer("Content/Audio/laser3.wav", false, AudioManager.Category.EFFECT, 1);
         }
 
         /// <inheritdoc />

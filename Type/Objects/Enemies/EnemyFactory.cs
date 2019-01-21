@@ -82,7 +82,7 @@ namespace Type.Objects.Enemies
             {
                 case 0:
                     {
-                        enemy = new EnemyA("Content/Graphics/enemy1.png", _CurrentWave.SpawnPositions[_DataIndex], 0, new Vector2(-1, 0), 600, TimeSpan.FromSeconds(1.1f), 5);
+                        enemy = new EnemyAlpha(_CurrentWave.SpawnPositions[_DataIndex], 0, new Vector2(-1, 0));
                         break;
                     }
                 case 1:

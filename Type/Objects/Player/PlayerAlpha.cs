@@ -1,16 +1,15 @@
-﻿using OpenTK;
+﻿using AmosShared.Audio;
+using AmosShared.Graphics;
+using AmosShared.Graphics.Drawables;
+using OpenTK;
 using System;
-using AmosShared.Base;
+using System.Collections.Generic;
 using Type.Base;
+using Type.Controllers;
+using Type.Data;
 using Type.Interfaces;
 using Type.Interfaces.Player;
 using Type.Interfaces.Probe;
-using System.Collections.Generic;
-using AmosShared.Audio;
-using AmosShared.Graphics;
-using AmosShared.Graphics.Drawables;
-using Type.Controllers;
-using Type.Data;
 using Type.Objects.Projectiles;
 using static Type.Constants.Global;
 
