@@ -7,7 +7,7 @@ namespace Type.Interfaces.Enemies
     /// <summary>
     /// Interface for enemies
     /// </summary>
-    public interface IEnemy : IHitable, IDestroyable, ICollidable, IPositionRecipient, IProjectileShooter, INotifier<IEnemyListener>
+    public interface IEnemy : ICollidable, IPositionRecipient, IProjectileShooter, INotifier<IEnemyListener>
     {
     }
 }

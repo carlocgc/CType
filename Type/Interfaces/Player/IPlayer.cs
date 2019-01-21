@@ -7,7 +7,7 @@ namespace Type.Interfaces.Player
     /// <summary>
     /// Interface for the player ship
     /// </summary>
-    public interface IPlayer : ISpawnable, IHitable, IDestroyable, ICollidable, IProjectileShooter, IAnalogListener, INotifier<IPlayerListener>
+    public interface IPlayer : ISpawnable, ICollidable, IProjectileShooter, IAnalogListener, INotifier<IPlayerListener>
     {
     }
 }
