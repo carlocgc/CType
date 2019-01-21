@@ -9,8 +9,8 @@ You control a space ship that is flying through space shooting enemies, collecti
 
 
 ## Demo
-[Pre Alpha Gameplay](https://www.youtube.com/watch?v=nBfW-oQohM4)
-[Pre Alpha Boss Fight](https://www.youtube.com/watch?v=wuvCsj3dDso)
+* [Pre Alpha Gameplay](https://www.youtube.com/watch?v=nBfW-oQohM4)
+* [Pre Alpha Boss Fight](https://www.youtube.com/watch?v=wuvCsj3dDso)
 
 ## Completed elements
 
