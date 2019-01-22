@@ -1,4 +1,5 @@
 ﻿using System;
+using Type.Interfaces.Weapons;
 
 namespace Type.Interfaces
 {
@@ -13,6 +14,6 @@ namespace Type.Interfaces
         /// <summary>
         /// Hit the <see cref="IHitable"/>
         /// </summary>
-        void Hit();
+        void Hit(IProjectile projectile);
     }
 }

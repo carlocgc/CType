@@ -199,7 +199,7 @@ namespace Type.UI
 
             foreach (IAnalogListener listener in _Listeners)
             {
-                listener.UpdatePosition(_DirectionNorm, _PushDistance);
+                listener.UpdateAnalogData(_DirectionNorm, _PushDistance);
             }
         }
 

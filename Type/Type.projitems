@@ -33,6 +33,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Collisions\IDestroyable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Collisions\IHitable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Communication\INotifier.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\GameData\IPoints.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Player\IShield.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Player\IPlayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Player\IPlayerListener.cs" />
@@ -41,14 +42,15 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Probe\IProbeController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Weapons\IProjectile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Weapons\IProjectileShooter.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Objects\Bosses\BossA.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Bosses\BossAlpha.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\EnemyAlpha.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\EnemyBeta.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\EnemyGamma.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Player\PlayerAlpha.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Player\Shield.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Probes\LaserProbe.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Objects\Projectiles\Bullet.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Projectiles\Laser.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Projectiles\PlasmaBall.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\World\ScrollingBackground.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\World\ScrollingObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\GameCompleteScene.cs" />

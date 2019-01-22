@@ -21,12 +21,12 @@ namespace Type.Controllers
         /// <summary> The instance of the Collision Controller </summary>
         public static CollisionController Instance => _Instance ?? (_Instance = new CollisionController());
 
-        /// <summary> List of all active player bullets </summary>
-        private List<IProjectile> _PlayerBullets;
-        /// <summary> List of all active enemy bullets </summary>
-        private List<IProjectile> _EnemyBullets;
+        /// <summary> List of all active player projectiles </summary>
+        private readonly List<IProjectile> _PlayerProjectiles;
+        /// <summary> List of all active enemy projectiles </summary>
+        private readonly List<IProjectile> _EnemyProjectiles;
         /// <summary> List of all active enemies </summary>
-        private List<IEnemy> _Enemies;
+        private readonly List<IEnemy> _Enemies;
         /// <summary> The players ship </summary>
         private IPlayer _Player;
 
@@ -37,8 +37,8 @@ namespace Type.Controllers
 
         private CollisionController()
         {
-            _PlayerBullets = new List<IProjectile>();
-            _EnemyBullets = new List<IProjectile>();
+            _PlayerProjectiles = new List<IProjectile>();
+            _EnemyProjectiles = new List<IProjectile>();
             _Enemies = new List<IEnemy>();
             UpdateManager.Instance.AddUpdatable(this);
         }
@@ -57,19 +57,19 @@ namespace Type.Controllers
         /// <summary>
         /// Adds enemy projectile to the enemy projectile list
         /// </summary>
-        /// <param name="bullet"></param>
-        public void RegisterEnemyBullet(IProjectile bullet)
+        /// <param name="projectile"></param>
+        public void RegisterEnemyProjectile(IProjectile projectile)
         {
-            _EnemyBullets.Add(bullet);
+            _EnemyProjectiles.Add(projectile);
         }
 
         /// <summary>
         /// Adds player projectile to the player projectile list
         /// </summary>
-        /// <param name="bullet"></param>
-        public void RegisterPlayerBullet(IProjectile bullet)
+        /// <param name="projectile"></param>
+        public void RegisterPlayerProjectile(IProjectile projectile)
         {
-            _PlayerBullets.Add(bullet);
+            _PlayerProjectiles.Add(projectile);
         }
 
         /// <summary>
@@ -90,37 +90,37 @@ namespace Type.Controllers
         /// </summary>
         private void CheckCollisions()
         {
-            CheckBulletsToPlayer();
-            CheckBulletsToEnemies();
+            CheckprojectilesToPlayer();
+            CheckprojectilesToEnemies();
             CheckPlayerToEnemies();
         }
 
         /// <summary>
-        /// Checks for enemy bullets hitting the player
+        /// Checks for enemy projectiles hitting the player
         /// </summary>
-        private void CheckBulletsToPlayer()
+        private void CheckprojectilesToPlayer()
         {
-            foreach (IProjectile bullet in _EnemyBullets.ToList())
+            foreach (IProjectile projectile in _EnemyProjectiles.ToList())
             {
-                if (Intersects(bullet.HitBox, _Player.HitBox))
+                if (Intersects(projectile.HitBox, _Player.HitBox))
                 {
-                    HandlePlayerHit(bullet);
+                    HandlePlayerHit(projectile);
                 }
             }
         }
 
         /// <summary>
-        /// Checks for player bullets hitting enemies
+        /// Checks for player projectiles hitting enemies
         /// </summary>
-        private void CheckBulletsToEnemies()
+        private void CheckprojectilesToEnemies()
         {
-            foreach (IProjectile bullet in _PlayerBullets.ToList())
+            foreach (IProjectile projectile in _PlayerProjectiles.ToList())
             {
                 foreach (IEnemy enemy in _Enemies.ToList())
                 {
-                    if (Intersects(bullet.HitBox, enemy.HitBox))
+                    if (Intersects(projectile.HitBox, enemy.HitBox))
                     {
-                        HandleEnemyHit(bullet, enemy);
+                        HandleEnemyHit(projectile, enemy);
                     }
                 }
             }
@@ -131,11 +131,11 @@ namespace Type.Controllers
         /// </summary>
         private void CheckPlayerToEnemies()
         {
-            foreach (IEnemy baseEnemy in _Enemies.ToList())
+            foreach (IEnemy enemy in _Enemies.ToList())
             {
-                if (Intersects(_Player.HitBox, baseEnemy.HitBox))
+                if (Intersects(_Player.HitBox, enemy.HitBox))
                 {
-                    HandleEnemyPlayerCollision(baseEnemy);
+                    HandleEnemyPlayerCollision(enemy);
                 }
             }
         }
@@ -158,24 +158,24 @@ namespace Type.Controllers
         /// <summary>
         /// Handles collisions with the player ship
         /// </summary>
-        private void HandlePlayerHit(IProjectile bullet = null)
+        private void HandlePlayerHit(IProjectile projectile = null)
         {
-            if (bullet != null)
+            if (projectile != null)
             {
-                _EnemyBullets.Remove(bullet);
-                bullet.Destroy();
+                _EnemyProjectiles.Remove(projectile);
+                projectile.Destroy();
             }
-            _Player.Hit();
+            _Player.Hit(projectile);
         }
 
         /// <summary>
         /// Handles collisions between player projectiles and enemies
         /// </summary>
-        private void HandleEnemyHit(IProjectile bullet, IEnemy enemy)
+        private void HandleEnemyHit(IProjectile projectile, IEnemy enemy)
         {
-            _PlayerBullets.Remove(bullet);
-            bullet?.Destroy();
-            enemy.Hit();
+            _PlayerProjectiles.Remove(projectile);
+            projectile?.Destroy();
+            enemy.Hit(projectile);
         }
 
         /// <summary>
@@ -198,9 +198,9 @@ namespace Type.Controllers
         public void ClearObjects()
         {
             IsActive = false;
-            foreach (IEnemy baseEnemy in _Enemies.ToList())
+            foreach (IEnemy enemy in _Enemies.ToList())
             {
-                baseEnemy.Dispose();
+                enemy.Dispose();
             }
             _Enemies.Clear();
             ClearProjectiles();
@@ -212,16 +212,16 @@ namespace Type.Controllers
         /// </summary>
         private void ClearProjectiles()
         {
-            foreach (IProjectile enemyBullet in _EnemyBullets)
+            foreach (IProjectile projectile in _EnemyProjectiles)
             {
-                enemyBullet.Dispose();
+                projectile.Dispose();
             }
-            _EnemyBullets.Clear();
-            foreach (Bullet playerBullet in _PlayerBullets)
+            _EnemyProjectiles.Clear();
+            foreach (IProjectile projectile in _PlayerProjectiles)
             {
-                playerBullet.Dispose();
+                projectile.Dispose();
             }
-            _PlayerBullets.Clear();
+            _PlayerProjectiles.Clear();
         }
 
         /// <summary>
@@ -234,18 +234,18 @@ namespace Type.Controllers
         }
 
         /// <summary>
-        /// Removes the given bullet from the collision controller
+        /// Removes the given projectile from the collision controller
         /// </summary>
-        /// <param name="bullet"></param>
-        public void DeregiterBullet(IProjectile bullet)
+        /// <param name="projectile"></param>
+        public void DeregisterProjectile(IProjectile projectile)
         {
-            if (_EnemyBullets.Contains(bullet))
+            if (_EnemyProjectiles.Contains(projectile))
             {
-                _EnemyBullets.Remove(bullet);
+                _EnemyProjectiles.Remove(projectile);
             }
-            else if (_PlayerBullets.Contains(bullet))
+            else if (_PlayerProjectiles.Contains(projectile))
             {
-                _PlayerBullets.Remove(bullet);
+                _PlayerProjectiles.Remove(projectile);
             }
         }
 
@@ -270,13 +270,12 @@ namespace Type.Controllers
 
         public void Dispose()
         {
-            foreach (IEnemy baseEnemy in _Enemies)
+            foreach (IEnemy enemy in _Enemies)
             {
-                baseEnemy.Dispose();
+                enemy.Dispose();
             }
             _Enemies.Clear();
             ClearProjectiles();
-
             _Player.Dispose();
             IsDisposed = true;
         }

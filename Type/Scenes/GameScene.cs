@@ -28,12 +28,9 @@ namespace Type.Scenes
         /// <summary> Scrolling object </summary>
         private readonly ScrollingObject _Clusters;
 
-
         /// <summary> Max level of the game </summary>
         private readonly Int32 _MaxLevel;
 
-        /// <summary> The enemy factory </summary>
-        private readonly EnemyFactory _EnemySpawner;
         /// <summary> The players ship </summary>
         private readonly IPlayer _Player;
 
@@ -80,7 +77,6 @@ namespace Type.Scenes
             _LevelDisplay = new LevelDisplay();
 
             _Player = new PlayerAlpha();
-            _EnemySpawner = new EnemyFactory();
 
             #region  User Interface
 
@@ -141,7 +137,7 @@ namespace Type.Scenes
 
             _LevelDisplay.ShowLevel(_CurrentLevel, TimeSpan.FromSeconds(2), () =>
             {
-                _EnemySpawner.SetLevelData(LevelLoader.GetWaveData(_CurrentLevel));
+                EnemyFactory.Instance.SetLevelData(LevelLoader.GetWaveData(_CurrentLevel));
                 CollisionController.Instance.IsActive = true;
             });
 
@@ -174,7 +170,7 @@ namespace Type.Scenes
                 _CurrentLevel++;
                 _LevelDisplay.ShowLevel(_CurrentLevel, TimeSpan.FromSeconds(2), () =>
                 {
-                    _EnemySpawner.SetLevelData(LevelLoader.GetWaveData(_CurrentLevel));
+                    EnemyFactory.Instance.SetLevelData(LevelLoader.GetWaveData(_CurrentLevel));
                 });
             }
         }
@@ -184,7 +180,9 @@ namespace Type.Scenes
         /// </summary>
         public void OnPlayerDeath()
         {
-            _EnemySpawner.Reset();
+            CollisionController.Instance.ClearObjects();
+            EnemyFactory.Instance.Reset();
+
             _LifeMeter.LoseLife();
 
             if (_LifeMeter.PlayerLives > 0 || IsGameOver) return;
@@ -201,8 +199,7 @@ namespace Type.Scenes
         private void GameCompleted()
         {
             GameStats.Instance.GameEnd();
-
-            _EnemySpawner.Reset();
+            EnemyFactory.Instance.Reset();
             IsGameComplete = true;
             SetButtonsEnabled(false);
             SetButtonsVisible(false);
@@ -259,7 +256,7 @@ namespace Type.Scenes
             base.Dispose();
 
             _Player.Dispose();
-            _EnemySpawner.Dispose();
+
             _BackgroundNear.Dispose();
             _BackgroundFar.Dispose();
             _PlanetsNear.Dispose();

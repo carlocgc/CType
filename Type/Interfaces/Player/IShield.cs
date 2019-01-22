@@ -22,7 +22,7 @@ namespace Type.Interfaces
         /// <summary>
         /// Decreases the shields level
         /// </summary>
-        void Decrease();
+        void Decrease(Int32 damage);
 
         /// <summary>
         /// Completely deactivates the shield

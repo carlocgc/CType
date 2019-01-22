@@ -8,6 +8,7 @@ using Type.Base;
 using Type.Controllers;
 using Type.Data;
 using Type.Interfaces.Enemies;
+using Type.Interfaces.Weapons;
 using Type.Objects.Projectiles;
 using static Type.Constants.Global;
 
@@ -48,11 +49,11 @@ namespace Type.Objects.Enemies
         private Single _Speed;
 
         /// <summary> Whether the enemy is on screen </summary>
-        private Boolean OnScreen => Position.X <= ScreenLeft && Position.Y <= ScreenBottom && Position.Y >= ScreenTop;
+        private Boolean OnScreen => Position.X >= ScreenLeft && Position.Y >= ScreenBottom && Position.Y <= ScreenTop;
         /// <summary> Whether the enemy is on screen and can be hit </summary>
         public Boolean IsAlive { get; private set; }
         /// <summary> Point valuie for this enemy </summary>
-        public Int32 PointValue { get; private set; }
+        public Int32 Points { get; private set; }
         /// <inheritdoc />
         public Boolean AutoFire { get; set; }
         /// <inheritdoc />
@@ -97,8 +98,9 @@ namespace Type.Objects.Enemies
             _Speed = 600;
             _FireRate = TimeSpan.FromSeconds(0.8f);
 
+            HitBox = GetRect();
             HitPoints = 9;
-            PointValue = 25;
+            Points = 25;
             Position = spawnPos;
         }
 
@@ -107,16 +109,16 @@ namespace Type.Objects.Enemies
         {
             Vector2 bulletDirection = _DirectionTowardsPlayer;
             if (bulletDirection != Vector2.Zero) bulletDirection.Normalize();
-            new Bullet("Content/Graphics/enemybullet.png", Position, bulletDirection, 1000, Rotation, false, new Vector4(255, 255, 0, 1));
+            new PlasmaBall(Position, bulletDirection, 1000, new Vector4(255, 255, 0, 1));
             _IsWeaponLocked = true;
 
             new AudioPlayer("Content/Audio/laser3.wav", false, AudioManager.Category.EFFECT, 1);
         }
 
         /// <inheritdoc />
-        public void Hit()
+        public void Hit(IProjectile projectile)
         {
-            HitPoints--;
+            HitPoints -= projectile.Damage;
 
             if (!_IsSoundPlaying)
             {

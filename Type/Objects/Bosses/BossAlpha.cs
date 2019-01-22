@@ -1,4 +1,5 @@
 ﻿using AmosShared.Audio;
+using AmosShared.Base;
 using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
 using OpenTK;
@@ -6,18 +7,17 @@ using System;
 using System.Collections.Generic;
 using Type.Base;
 using Type.Controllers;
-using Type.Data;
 using Type.Interfaces.Enemies;
 using Type.Interfaces.Weapons;
 using Type.Objects.Projectiles;
-using static Type.Constants.Global;
 
-namespace Type.Objects.Enemies
+namespace Type.Objects.Bosses
 {
     /// <summary>
-    /// Enemy of type alpha
+    /// Boss of type alpha
+    /// Behaviour: Moves onto screen and stops, shoots at the player until destroyed
     /// </summary>
-    public class EnemyAlpha : GameObject, IEnemy
+    public class BossAlpha : GameObject, IEnemy
     {
         /// <summary> How long to wait before playing the hit sound</summary>
         private readonly TimeSpan _HitSoundInterval = TimeSpan.FromSeconds(0.2f); // TODO FIXME Work around to stop so many sounds playing
@@ -47,9 +47,9 @@ namespace Type.Objects.Enemies
         private Boolean _IsMoving;
         /// <summary> movement speed of the enemy </summary>
         private Single _Speed;
+        /// <summary> Point on screen where the boss stops </summary>
+        private Vector2 _StopPosition;
 
-        /// <summary> Whether the enemy is on screen </summary>
-        private Boolean OnScreen => Position.X >= ScreenLeft && Position.Y >= ScreenBottom && Position.Y <= ScreenTop;
         /// <summary> Whether the enemy is on screen and can be hit </summary>
         public Boolean IsAlive { get; private set; }
         /// <summary> Point valuie for this enemy </summary>
@@ -61,7 +61,7 @@ namespace Type.Objects.Enemies
         /// <inheritdoc />
         public Int32 HitPoints { get; private set; }
 
-        public EnemyAlpha(Vector2 spawnPos)
+        public BossAlpha(Vector2 spawnPos)
         {
             _Listeners = new List<IEnemyListener>();
 
@@ -89,7 +89,8 @@ namespace Type.Objects.Enemies
                 Visible = false,
                 Playing = false,
             };
-            _Explosion.Offset = _Explosion.Size / 2;
+            _Explosion.Scale = new Vector2(9, 9);
+            _Explosion.Offset = new Vector2(_Explosion.Size.X / 2 * _Explosion.Scale.X, _Explosion.Size.Y / 2 * _Explosion.Scale.Y);
             AddSprite(_Explosion);
 
             _IsMoving = true;
@@ -98,21 +99,27 @@ namespace Type.Objects.Enemies
             _Speed = 600;
             _FireRate = TimeSpan.FromSeconds(1.1f);
 
-            HitBox = GetRect();
             HitPoints = 9;
-            Points = 10;
+            Points = 5000;
             Position = spawnPos;
+            Position += new Vector2(_Sprite.Width / 3, 0);
+            _StopPosition = new Vector2(Renderer.Instance.TargetDimensions.X / 4, 0);
         }
 
         /// <inheritdoc />
-        public void Shoot()
+        public void UpdatePositionData(Vector2 position)
         {
-            Vector2 bulletDirection = _DirectionTowardsPlayer;
-            if (bulletDirection != Vector2.Zero) bulletDirection.Normalize();
-            new PlasmaBall(Position, bulletDirection, 1000, new Vector4(255, 0, 0, 1));
+            _PlayerPosition = position;
+            UpdateRotation();
+        }
 
-            _IsWeaponLocked = true;
-            new AudioPlayer("Content/Audio/laser2.wav", false, AudioManager.Category.EFFECT, 1);
+        /// <summary>
+        /// Updates the ship rotation so it is facing the players poistion
+        /// </summary>
+        private void UpdateRotation()
+        {
+            _DirectionTowardsPlayer = _PlayerPosition - Position;
+            Rotation = (Single)Math.Atan2(_DirectionTowardsPlayer.Y, _DirectionTowardsPlayer.X);
         }
 
         /// <inheritdoc />
@@ -136,7 +143,7 @@ namespace Type.Objects.Enemies
         public void Destroy()
         {
             IsAlive = false;
-            GameStats.Instance.EnemiesKilled++;
+            CollisionController.Instance.DeregisterEnemy(this);
 
             _Explosion.AddFrameAction((anim) =>
             {
@@ -146,31 +153,55 @@ namespace Type.Objects.Enemies
             _Explosion.Visible = true;
             _Explosion.Playing = true;
 
-            PositionRelayer.Instance.RemoveRecipient(this);
-            CollisionController.Instance.DeregisterEnemy(this);
+            foreach (IEnemyListener listener in _Listeners)
+            {
+                listener.OnEnemyDestroyed(this);
+            }
         }
 
         /// <inheritdoc />
-        public void UpdatePositionData(Vector2 position)
+        public void Shoot()
         {
-            _PlayerPosition = position;
-            UpdateRotation();
+            Vector2 bulletDirection = _DirectionTowardsPlayer;
+            if (bulletDirection != Vector2.Zero) bulletDirection.Normalize();
+
+            new PlasmaBall(Position, bulletDirection, 1050, new Vector4(255, 0, 255, 1));
+            new PlasmaBall(Position, bulletDirection, 1050, new Vector4(255, 0, 255, 1));
+            new PlasmaBall(Position, bulletDirection, 1050, new Vector4(255, 0, 255, 1));
+
+            _IsWeaponLocked = true;
+            new AudioPlayer("Content/Audio/laser4.wav", false, AudioManager.Category.EFFECT, 1);
         }
 
-        /// <summary>
-        /// Updates the ship rotation so it is facing the players poistion
-        /// </summary>
-        private void UpdateRotation()
+        /// <inheritdoc />
+        public void RegisterListener(IEnemyListener listener)
         {
-            _DirectionTowardsPlayer = _PlayerPosition - Position;
+            _Listeners.Add(listener);
+        }
 
-            Rotation = (Single)Math.Atan2(_DirectionTowardsPlayer.Y, _DirectionTowardsPlayer.X);
+        /// <inheritdoc />
+        public void DeregisterListener(IEnemyListener listener)
+        {
+            _Listeners.Remove(listener);
         }
 
         /// <inheritdoc />
         public override void Update(TimeSpan timeTilUpdate)
         {
             base.Update(timeTilUpdate);
+            if (_IsMoving)
+            {
+                _TimeSinceLastFired = TimeSpan.Zero;
+
+                Position += _MoveDirection * _Speed * (Single)timeTilUpdate.TotalSeconds;
+
+                if (Position.X <= _StopPosition.X)
+                {
+                    IsAlive = true;
+                    _IsMoving = false;
+                }
+            }
+
             if (IsAlive)
             {
                 if (_IsSoundPlaying) // TODO FIXME Work around to limit sounds created
@@ -197,40 +228,14 @@ namespace Type.Objects.Enemies
                     }
                 }
             }
-            if (!_IsMoving) return;
-
-            Position += _MoveDirection * _Speed * (Single)timeTilUpdate.TotalSeconds;
-
-            if (!OnScreen)
-            {
-                IsAlive = false;
-                foreach (IEnemyListener listener in _Listeners)
-                {
-                    listener.OnEnemyOffscreen(this);
-                }
-            }
-        }
-
-        /// <inheritdoc />
-        public void RegisterListener(IEnemyListener listener)
-        {
-            _Listeners.Add(listener);
-        }
-
-        /// <inheritdoc />
-        public void DeregisterListener(IEnemyListener listener)
-        {
-            _Listeners.Remove(listener);
         }
 
         /// <inheritdoc />
         public override void Dispose()
         {
             base.Dispose();
-            _Explosion.Dispose();
-            _Listeners.Clear();
-            CollisionController.Instance.DeregisterEnemy(this);
             PositionRelayer.Instance.RemoveRecipient(this);
+            _Listeners.Clear();
         }
     }
 }

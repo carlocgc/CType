@@ -10,6 +10,7 @@ using Type.Data;
 using Type.Interfaces;
 using Type.Interfaces.Player;
 using Type.Interfaces.Probe;
+using Type.Interfaces.Weapons;
 using Type.Objects.Projectiles;
 using static Type.Constants.Global;
 
@@ -98,51 +99,6 @@ namespace Type.Objects.Player
         }
 
         /// <inheritdoc />
-        public void Shoot()
-        {
-            new Bullet("Content/Graphics/bullet.png", Position + new Vector2(_Sprite.Width / 2, 0), new Vector2(1, 0), 1000, 0, true, new Vector4(1, 1, 1, 1));
-            _IsWeaponLocked = true;
-            GameStats.Instance.BulletsFired++;
-            new AudioPlayer("Content/Audio/laser1.wav", false, AudioManager.Category.EFFECT, 0.5f);
-        }
-
-        /// <inheritdoc />
-        public void Hit()
-        {
-            if (_Shield.IsActive)
-            {
-                _Shield.Decrease();
-                return;
-            }
-
-            HitPoints--;
-
-            foreach (IPlayerListener listener in _Listeners)
-            {
-                listener.OnPlayerHit(this);
-            }
-
-            if (HitPoints <= 0)
-            {
-                Destroy();
-            }
-        }
-
-        /// <inheritdoc />
-        public void Destroy()
-        {
-            HitPoints = 0;
-            _ProbeController.RemoveAll();
-
-            GameStats.Instance.Deaths++;
-
-            foreach (IPlayerListener listener in _Listeners)
-            {
-                listener.OnPlayerDeath(this);
-            }
-        }
-
-        /// <inheritdoc />
         public void UpdateAnalogData(Vector2 direction, Single strength)
         {
             _Direction = direction;
@@ -192,6 +148,63 @@ namespace Type.Objects.Player
             _ProbeController.UpdatePosition(Position);
             _Shield.UpdatePosition(Position);
             PositionRelayer.Instance.ProvidePosition(Position);
+        }
+
+        /// <inheritdoc />
+        public void Shoot()
+        {
+            new Laser(Position + new Vector2(_Sprite.Width / 2, 0), new Vector2(1, 0), 1000, 0);
+            _IsWeaponLocked = true;
+            GameStats.Instance.BulletsFired++;
+            new AudioPlayer("Content/Audio/laser1.wav", false, AudioManager.Category.EFFECT, 0.5f);
+        }
+
+        /// <inheritdoc />
+        public void AddShield()
+        {
+            _Shield.Increase();
+        }
+
+        /// <inheritdoc />
+        public void AddProbe(Int32 id)
+        {
+            _ProbeController.AddProbe(id);
+        }
+
+        /// <inheritdoc />
+        public void Hit(IProjectile projectile)
+        {
+            if (_Shield.IsActive)
+            {
+                _Shield.Decrease(projectile.Damage);
+                return;
+            }
+
+            HitPoints -= projectile.Damage;
+
+            foreach (IPlayerListener listener in _Listeners)
+            {
+                listener.OnPlayerHit(this);
+            }
+
+            if (HitPoints <= 0)
+            {
+                Destroy();
+            }
+        }
+
+        /// <inheritdoc />
+        public void Destroy()
+        {
+            HitPoints = 0;
+            _ProbeController.RemoveAll();
+
+            GameStats.Instance.Deaths++;
+
+            foreach (IPlayerListener listener in _Listeners)
+            {
+                listener.OnPlayerDeath(this);
+            }
         }
 
         /// <inheritdoc />

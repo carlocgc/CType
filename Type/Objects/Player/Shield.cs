@@ -43,7 +43,7 @@ namespace Type.Objects.Player
         /// <summary>
         /// Increases the shields level
         /// </summary>
-        public void IncreaseShield()
+        public void Increase()
         {
             if (_CurrentLevel >= _MaxLevel) return;
             _CurrentLevel++;
@@ -99,10 +99,14 @@ namespace Type.Objects.Player
         /// <summary>
         /// Decreases the shields level
         /// </summary>
-        public void DecreaseShield()
+        public void Decrease(Int32 damage)
         {
             if (_CurrentLevel < 0) return;
-            _CurrentLevel--;
+
+            _CurrentLevel -= damage;
+
+            if (_CurrentLevel < 0) _CurrentLevel = 0;
+
             IsActive = _CurrentLevel > 0;
             UpdateSprites();
             new AudioPlayer("Content/Audio/shield_off.wav", false, AudioManager.Category.EFFECT, 1);
@@ -111,7 +115,7 @@ namespace Type.Objects.Player
         /// <summary>
         /// Completely deactivates the shield
         /// </summary>
-        public void DisableShield()
+        public void Disable()
         {
             _CurrentLevel = 0;
             UpdateSprites();
