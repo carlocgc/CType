@@ -6,7 +6,8 @@ using OpenTK;
 using System;
 using Type.Controllers;
 using Type.Data;
-using Type.Objects.Enemies;
+using Type.Factories;
+using Type.Interfaces.Player;
 using Type.Objects.Player;
 using Type.Objects.World;
 using Type.States;
@@ -26,12 +27,16 @@ namespace Type.Scenes
         private readonly ScrollingObject _PlanetsFar;
         /// <summary> Scrolling object </summary>
         private readonly ScrollingObject _Clusters;
+
+
         /// <summary> Max level of the game </summary>
         private readonly Int32 _MaxLevel;
+
+        /// <summary> The enemy factory </summary>
+        private readonly EnemyFactory _EnemySpawner;
         /// <summary> The players ship </summary>
-        private readonly Player _Player;
-        /// <summary> Loads wave data from text files </summary>
-        private readonly LevelLoader _LevelLoader;
+        private readonly IPlayer _Player;
+
         /// <summary> Fire button </summary>
         private readonly Button _FireButton;
         /// <summary> TODO Test button that adds probes </summary>
@@ -48,11 +53,9 @@ namespace Type.Scenes
         private readonly LevelDisplay _LevelDisplay;
         /// <summary> UI element that displays the current FPS </summary>
         private readonly FpsCounter _Fps;
-        /// <summary> The enemy factory </summary>
-        private readonly EnemyFactory _EnemySpawner;
 
         /// <summary> The current level </summary>
-        private Int32 CurrentLevel { get; set; }
+        private Int32 _CurrentLevel;
 
         /// <summary> The players current score</summary>
         public Int32 CurrentScore { get; private set; }
@@ -63,7 +66,7 @@ namespace Type.Scenes
 
         public GameScene()
         {
-            CurrentLevel = 1;
+            _CurrentLevel = 1;
             _MaxLevel = 9;
 
             _BackgroundFar = new ScrollingBackground(100, "Content/Graphics/stars-1.png");
@@ -76,9 +79,10 @@ namespace Type.Scenes
             _Fps = new FpsCounter();
             _LevelDisplay = new LevelDisplay();
 
-            _Player = new Player(OnPlayerDeath);
-            _LevelLoader = new LevelLoader();
-            _EnemySpawner = new EnemyFactory(this);
+            _Player = new PlayerAlpha();
+            _EnemySpawner = new EnemyFactory();
+
+            #region  User Interface
 
             _ScoreDisplay = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
@@ -116,6 +120,8 @@ namespace Type.Scenes
             _Stick = new AnalogStick(new Vector2(-620, -220), 110);
             _Stick.RegisterListener(_Player);
 
+            #endregion
+
             new AudioPlayer("Content/Audio/bgm-1.wav", true, AudioManager.Category.MUSIC, 1);
         }
 
@@ -133,9 +139,9 @@ namespace Type.Scenes
             _PlanetsNear.Start();
             _Clusters.Start();
 
-            _LevelDisplay.ShowLevel(CurrentLevel, TimeSpan.FromSeconds(2), () =>
+            _LevelDisplay.ShowLevel(_CurrentLevel, TimeSpan.FromSeconds(2), () =>
             {
-                _EnemySpawner.SetLevelData(_LevelLoader.GetWaveData(CurrentLevel));
+                _EnemySpawner.SetLevelData(LevelLoader.GetWaveData(_CurrentLevel));
                 CollisionController.Instance.IsActive = true;
             });
 
@@ -152,7 +158,6 @@ namespace Type.Scenes
             CurrentScore += amount;
             _ScoreDisplay.Text = CurrentScore.ToString();
             GameStats.Instance.Score = CurrentScore;
-            //if (CurrentScore % 1000 == 0) _LifeMeter.AddLife();
         }
 
         /// <summary>
@@ -160,18 +165,34 @@ namespace Type.Scenes
         /// </summary>
         public void LevelComplete()
         {
-            if (CurrentLevel >= _MaxLevel)
+            if (_CurrentLevel >= _MaxLevel)
             {
                 GameCompleted();
             }
             else
             {
-                CurrentLevel++;
-                _LevelDisplay.ShowLevel(CurrentLevel, TimeSpan.FromSeconds(2), () =>
+                _CurrentLevel++;
+                _LevelDisplay.ShowLevel(_CurrentLevel, TimeSpan.FromSeconds(2), () =>
                 {
-                    _EnemySpawner.SetLevelData(_LevelLoader.GetWaveData(CurrentLevel));
+                    _EnemySpawner.SetLevelData(LevelLoader.GetWaveData(_CurrentLevel));
                 });
             }
+        }
+
+        /// <summary>
+        /// Called when the player dies checks if game is over
+        /// </summary>
+        public void OnPlayerDeath()
+        {
+            _EnemySpawner.Reset();
+            _LifeMeter.LoseLife();
+
+            if (_LifeMeter.PlayerLives > 0 || IsGameOver) return;
+
+            GameStats.Instance.GameEnd();
+            SetButtonsEnabled(false);
+            SetButtonsVisible(false);
+            IsGameOver = true;
         }
 
         /// <summary>
@@ -187,28 +208,7 @@ namespace Type.Scenes
             SetButtonsVisible(false);
         }
 
-        /// <summary>
-        /// Called when the player dies checks if game is over
-        /// </summary>
-        private void OnPlayerDeath()
-        {
-             _EnemySpawner.Reset();
-            _LifeMeter.LoseLife();
-
-            if (_LifeMeter.PlayerLives <= 0 && !IsGameOver)
-            {
-                GameStats.Instance.GameEnd();
-                SetButtonsEnabled(false);
-                SetButtonsVisible(false);
-                IsGameOver = true;
-            }
-            else
-            {
-                _EnemySpawner.StartWave();
-            }
-        }
-
-        #region Input
+        #region Inputs
 
         private void SetButtonsEnabled(Boolean state)
         {
@@ -229,17 +229,17 @@ namespace Type.Scenes
 
         private void FireButtonRelease(Button obj)
         {
-            _Player.Shoot = false;
+            _Player.AutoFire = false;
         }
 
         private void FireButtonPress(Button obj)
         {
-            _Player.Shoot = true;
+            _Player.AutoFire = true;
         }
 
         private void ProbeButtonOnPress(Button obj)
         {
-            _Player.CreateProbes(1, 0);
+            _Player.AddProbe(0);
         }
 
         private void ShieldButtonPress(Button obj)

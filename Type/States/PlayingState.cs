@@ -11,11 +11,11 @@ namespace Type.States
     {
         private GameScene _Scene;
 
+
+
         protected override void OnEnter()
         {
             _Scene = new GameScene();
-
-
             _Scene.Visible = true;
             _Scene.StartGame();
         }
@@ -29,30 +29,24 @@ namespace Type.States
             return gameEnded;
         }
 
-        protected override void OnExit()
-        {
-            _Scene.Dispose();
-            Dispose();
-        }
-
         #region Factory Events
 
         /// <inheritdoc />
         public void OnFactoryStarted()
         {
-            
+
         }
 
         /// <inheritdoc />
         public void OnWaveCreated()
         {
-            
+
         }
 
         /// <inheritdoc />
         public void OnAllWavesCreated()
         {
-            
+
         }
 
         #endregion
@@ -62,13 +56,13 @@ namespace Type.States
         /// <inheritdoc />
         public void OnPlayerHit(IPlayer player)
         {
-            
+
         }
 
         /// <inheritdoc />
         public void OnPlayerDeath(IPlayer player)
         {
-           
+
         }
 
         #endregion
@@ -78,16 +72,22 @@ namespace Type.States
         /// <inheritdoc />
         public void OnEnemyDestroyed(IEnemy enemy)
         {
-            
+
         }
 
         /// <inheritdoc />
         public void OnEnemyOffscreen(IEnemy enemy)
         {
-            
+
         }
 
         #endregion
+
+        protected override void OnExit()
+        {
+            _Scene.Dispose();
+            Dispose();
+        }
 
     }
 }
