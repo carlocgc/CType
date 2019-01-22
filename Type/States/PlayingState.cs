@@ -18,13 +18,21 @@ namespace Type.States
         private GameScene _Scene;
 
         /// <summary> Total enemies killed or offscreen this wave</summary>
-        private Int32 _EnemiesKilledThisWave;
+        private Int32 _EnemiesKilled;
 
         /// <summary> Whether all the enemies in the wave have been destroyed or left the screen </summary>
-        private Boolean LevelComplete => _EnemiesKilledThisWave == EnemyFactory.Instance.WaveCount;
+        private Boolean WaveComplete => _EnemiesKilled == EnemyFactory.Instance.WaveCount;
+
+        /// <summary> Whether all the enemies have been killed this level </summary>
+        private Boolean LevelComplete => _EnemiesKilled == EnemyFactory.Instance.TotalEnemiesThisLevel();
 
         protected override void OnEnter()
         {
+            CollisionController.Instance.ClearObjects();
+
+            EnemyFactory.Instance.Reset();
+            EnemyFactory.Instance.ParentState = this;
+
             _Scene = new GameScene();
             _Scene.Visible = true;
             _Scene.StartGame();
@@ -39,7 +47,7 @@ namespace Type.States
             return gameEnded;
         }
 
-        #region Factory Events
+        #region Factory
 
         /// <inheritdoc />
         public void OnFactoryStarted()
@@ -50,18 +58,16 @@ namespace Type.States
         /// <inheritdoc />
         public void OnWaveCreated()
         {
-            EnemyFactory.Instance.Stop();
         }
 
         /// <inheritdoc />
         public void OnAllWavesCreated()
         {
-
         }
 
         #endregion
 
-        #region Player Events
+        #region Player
 
         /// <inheritdoc />
         public void OnPlayerHit(IPlayer player)
@@ -76,20 +82,24 @@ namespace Type.States
 
         #endregion
 
-        #region Enemy Events
+        #region Enemy
 
         /// <inheritdoc />
         public void OnEnemyDestroyed(IEnemy enemy)
         {
-            _EnemiesKilledThisWave++;
+            _EnemiesKilled++;
             _Scene.UpdateScore(enemy.Points);
+            if (WaveComplete && !LevelComplete) EnemyFactory.Instance.Start();
+            else if (LevelComplete) _Scene.LevelComplete();
         }
 
         /// <inheritdoc />
         public void OnEnemyOffscreen(IEnemy enemy)
         {
-            _EnemiesKilledThisWave++;
+            _EnemiesKilled++;
             enemy.Dispose();
+            if (WaveComplete && !LevelComplete) EnemyFactory.Instance.Start();
+            else if (LevelComplete) _Scene.LevelComplete();
         }
 
         #endregion

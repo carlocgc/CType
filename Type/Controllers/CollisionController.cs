@@ -160,12 +160,11 @@ namespace Type.Controllers
         /// </summary>
         private void HandlePlayerHit(IProjectile projectile = null)
         {
-            if (projectile != null)
-            {
-                _EnemyProjectiles.Remove(projectile);
-                projectile.Destroy();
-            }
             _Player.Hit(projectile);
+
+            if (projectile == null) return;
+            _EnemyProjectiles.Remove(projectile);
+            projectile.Destroy();
         }
 
         /// <summary>
@@ -174,8 +173,8 @@ namespace Type.Controllers
         private void HandleEnemyHit(IProjectile projectile, IEnemy enemy)
         {
             _PlayerProjectiles.Remove(projectile);
-            projectile?.Destroy();
             enemy.Hit(projectile);
+            projectile?.Destroy();
         }
 
         /// <summary>

@@ -64,6 +64,7 @@ namespace Type.Objects.Projectiles
             base.Update(timeTilUpdate);
 
             Position += _Speed * _Direction * (Single)timeTilUpdate.TotalSeconds;
+            HitBox = GetRect();
 
             if (!OnScreen) Destroy();
         }

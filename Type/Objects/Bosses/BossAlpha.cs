@@ -61,9 +61,18 @@ namespace Type.Objects.Bosses
         /// <inheritdoc />
         public Int32 HitPoints { get; private set; }
 
-        public BossAlpha(Vector2 spawnPos)
+        public BossAlpha(Single yPos)
         {
             _Listeners = new List<IEnemyListener>();
+
+            _IsMoving = true;
+            _IsWeaponLocked = true;
+            _MoveDirection = new Vector2(-1, 0);
+            _Speed = 600;
+            _FireRate = TimeSpan.FromSeconds(1.1f);
+
+            HitPoints = 9;
+            Points = 5000;
 
             _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, Texture.GetTexture("Content/Graphics/enemy1.png"))
             {
@@ -91,19 +100,9 @@ namespace Type.Objects.Bosses
             };
             _Explosion.Scale = new Vector2(9, 9);
             _Explosion.Offset = new Vector2(_Explosion.Size.X / 2 * _Explosion.Scale.X, _Explosion.Size.Y / 2 * _Explosion.Scale.Y);
-            AddSprite(_Explosion);
 
-            _IsMoving = true;
-            _IsWeaponLocked = true;
-            _MoveDirection = new Vector2(-1, 0);
-            _Speed = 600;
-            _FireRate = TimeSpan.FromSeconds(1.1f);
-
-            HitPoints = 9;
-            Points = 5000;
-            Position = spawnPos;
-            Position += new Vector2(_Sprite.Width / 3, 0);
-            _StopPosition = new Vector2(Renderer.Instance.TargetDimensions.X / 4, 0);
+            Position = new Vector2(Renderer.Instance.TargetDimensions.X /2 + _Sprite.Offset.X, yPos);
+            _StopPosition = new Vector2(Renderer.Instance.TargetDimensions.X / 4, 0);            
         }
 
         /// <inheritdoc />
@@ -194,6 +193,7 @@ namespace Type.Objects.Bosses
                 _TimeSinceLastFired = TimeSpan.Zero;
 
                 Position += _MoveDirection * _Speed * (Single)timeTilUpdate.TotalSeconds;
+                HitBox = GetRect();
 
                 if (Position.X <= _StopPosition.X)
                 {

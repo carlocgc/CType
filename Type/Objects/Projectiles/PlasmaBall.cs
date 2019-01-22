@@ -36,7 +36,7 @@ namespace Type.Objects.Projectiles
             _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.BULLETS, Texture.GetTexture("Content/Graphics/enemybullet.png"))
             {
                 Visible = true,
-                Colour = colour,
+                //Colour = colour,
             };
             _Sprite.Offset = _Sprite.Size / 2;
             _Sprite.RotationOrigin = _Sprite.Size / 2;
@@ -49,7 +49,7 @@ namespace Type.Objects.Projectiles
             Position = spawnPos;
             Damage = 1;
 
-            CollisionController.Instance.RegisterPlayerProjectile(this);
+            CollisionController.Instance.RegisterEnemyProjectile(this);
         }
 
         /// <summary>
@@ -61,6 +61,7 @@ namespace Type.Objects.Projectiles
             base.Update(timeTilUpdate);
 
             Position += _Speed * _Direction * (Single)timeTilUpdate.TotalSeconds;
+            HitBox = GetRect();
 
             if (!OnScreen) Destroy();
         }

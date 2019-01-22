@@ -4,6 +4,7 @@ using AmosShared.Graphics.Drawables;
 using OpenTK;
 using System;
 using System.Collections.Generic;
+using AmosShared.Base;
 using Type.Base;
 using Type.Controllers;
 using Type.Data;
@@ -61,9 +62,18 @@ namespace Type.Objects.Enemies
         /// <inheritdoc />
         public Int32 HitPoints { get; private set; }
 
-        public EnemyAlpha(Vector2 spawnPos)
+        public EnemyAlpha(Single yPos)
         {
             _Listeners = new List<IEnemyListener>();
+
+            _IsMoving = true;
+            _IsWeaponLocked = true;
+            _MoveDirection = new Vector2(-1, 0);
+            _Speed = 600;
+            _FireRate = TimeSpan.FromSeconds(1.1f);
+
+            HitPoints = 9;
+            Points = 10;
 
             _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, Texture.GetTexture("Content/Graphics/enemy1.png"))
             {
@@ -72,6 +82,8 @@ namespace Type.Objects.Enemies
             _Sprite.Offset = _Sprite.Size / 2;
             _Sprite.RotationOrigin = _Sprite.Size / 2;
             AddSprite(_Sprite);
+
+            HitBox = GetRect();
 
             _Explosion = new AnimatedSprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, new[]
             {
@@ -90,18 +102,9 @@ namespace Type.Objects.Enemies
                 Playing = false,
             };
             _Explosion.Offset = _Explosion.Size / 2;
-            AddSprite(_Explosion);
 
-            _IsMoving = true;
-            _IsWeaponLocked = true;
-            _MoveDirection = new Vector2(-1, 0);
-            _Speed = 600;
-            _FireRate = TimeSpan.FromSeconds(1.1f);
-
-            HitBox = GetRect();
-            HitPoints = 9;
-            Points = 10;
-            Position = spawnPos;
+            Position = new Vector2(Renderer.Instance.TargetDimensions.X /2 + _Sprite.Offset.X, yPos);
+            IsAlive = true;
         }
 
         /// <inheritdoc />
@@ -109,7 +112,7 @@ namespace Type.Objects.Enemies
         {
             Vector2 bulletDirection = _DirectionTowardsPlayer;
             if (bulletDirection != Vector2.Zero) bulletDirection.Normalize();
-            new PlasmaBall(Position, bulletDirection, 1000, new Vector4(255, 0, 0, 1));
+            new PlasmaBall(Position, bulletDirection, 1000, new Vector4(255, 0, 0, 255));
 
             _IsWeaponLocked = true;
             new AudioPlayer("Content/Audio/laser2.wav", false, AudioManager.Category.EFFECT, 1);
@@ -118,7 +121,7 @@ namespace Type.Objects.Enemies
         /// <inheritdoc />
         public void Hit(IProjectile projectile)
         {
-            HitPoints -= projectile.Damage;
+            HitPoints -= projectile?.Damage ?? HitPoints;
 
             if (!_IsSoundPlaying)
             {
@@ -197,17 +200,19 @@ namespace Type.Objects.Enemies
                     }
                 }
             }
+
             if (!_IsMoving) return;
 
             Position += _MoveDirection * _Speed * (Single)timeTilUpdate.TotalSeconds;
+            HitBox = GetRect();
 
-            if (!OnScreen)
+            if (OnScreen) return;
+
+            IsAlive = false;
+            for (Int32 i = _Listeners.Count - 1; i >= 0; i--)
             {
-                IsAlive = false;
-                foreach (IEnemyListener listener in _Listeners)
-                {
-                    listener.OnEnemyOffscreen(this);
-                }
+                IEnemyListener listener = _Listeners[i];
+                listener.OnEnemyOffscreen(this);
             }
         }
 
@@ -227,7 +232,6 @@ namespace Type.Objects.Enemies
         public override void Dispose()
         {
             base.Dispose();
-            _Explosion.Dispose();
             _Listeners.Clear();
             CollisionController.Instance.DeregisterEnemy(this);
             PositionRelayer.Instance.RemoveRecipient(this);

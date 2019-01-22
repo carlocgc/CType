@@ -138,6 +138,7 @@ namespace Type.Scenes
             _LevelDisplay.ShowLevel(_CurrentLevel, TimeSpan.FromSeconds(2), () =>
             {
                 EnemyFactory.Instance.SetLevelData(LevelLoader.GetWaveData(_CurrentLevel));
+                EnemyFactory.Instance.Start();
                 CollisionController.Instance.IsActive = true;
             });
 

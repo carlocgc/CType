@@ -2,8 +2,6 @@
 using AmosShared.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Security.Permissions;
-using AmosShared.State;
 using Type.Controllers;
 using Type.Data;
 using Type.Interfaces;
@@ -11,7 +9,6 @@ using Type.Interfaces.Communication;
 using Type.Interfaces.Enemies;
 using Type.Objects.Bosses;
 using Type.Objects.Enemies;
-using Type.Scenes;
 using Type.States;
 
 namespace Type.Factories
@@ -28,9 +25,8 @@ namespace Type.Factories
         public static EnemyFactory Instance => _Instance ?? (_Instance = new EnemyFactory());
 
         /// <summary> List of objects listening to this factory </summary>
-        private List<IEnemyFactoryListener> _Listeners;
-        /// <summary> WHether the enemy factory is updating </summary>
-        private Boolean IsActive;
+        private readonly List<IEnemyFactoryListener> _Listeners;
+
         /// <summary> Tracker of the current wave data object </summary>
         private Int32 _WaveIndex;
         /// <summary> Tracker for current place in the wave data </summary>
@@ -40,7 +36,7 @@ namespace Type.Factories
         /// <summary> List of the levels wave data objects </summary>
         private List<WaveData> _LevelData;
         /// <summary> The data for the current wave </summary>
-        private WaveData _CurrentWave;
+        private WaveData _CurrentWave;                
 
         /// <summary> Game state to add as a listener to created enemies </summary>
         public PlayingState ParentState { get; set; }
@@ -48,10 +44,11 @@ namespace Type.Factories
         public Boolean IsDisposed { get; set; }
         /// <summary> Whether enemies are being created </summary>
         public Boolean Creating { get; private set; }
+
         /// <summary> Amount of enemies this wave </summary>
         public Int32 WaveCount => _CurrentWave.ShipCount;
 
-        public EnemyFactory()
+        private EnemyFactory()
         {
             _Listeners = new List<IEnemyFactoryListener>();
             UpdateManager.Instance.AddUpdatable(this);
@@ -75,7 +72,6 @@ namespace Type.Factories
             _DataIndex = 0;
             _CurrentWave = _LevelData[_WaveIndex];
             Creating = true;
-            IsActive = true;
         }
 
         /// <inheritdoc />
@@ -103,23 +99,22 @@ namespace Type.Factories
             {
                 case 0:
                     {
-                        enemy = new EnemyAlpha(_CurrentWave.SpawnPositions[_DataIndex]);
+                        enemy = new EnemyAlpha(_CurrentWave.Ypositions[_DataIndex]);
                         break;
                     }
                 case 1:
                     {
-                        enemy = new EnemyBeta(_CurrentWave.SpawnPositions[_DataIndex]);
+                        enemy = new EnemyBeta(_CurrentWave.Ypositions[_DataIndex]);
                         break;
                     }
                 case 2:
                     {
-                        enemy = new EnemyGamma(_CurrentWave.SpawnPositions[_DataIndex]);
+                        enemy = new EnemyGamma(_CurrentWave.Ypositions[_DataIndex]);
                         break;
                     }
                 case 20:
                     {
-                        //enemy = new BossA("Content/Graphics/Bosses/boss1.png", _CurrentWave.SpawnPositions[_DataIndex], 0, new Vector2(-1, 0), 300, TimeSpan.FromSeconds(0.7), 2500);
-                        throw new ArgumentOutOfRangeException("No boss creation defined");
+                        enemy = new BossAlpha(_CurrentWave.Ypositions[_DataIndex]);
                         break;
                     }
                 default:
@@ -137,6 +132,7 @@ namespace Type.Factories
 
             if (_DataIndex != _CurrentWave.ShipCount) return;
 
+            Stop();
             foreach (IEnemyFactoryListener listener in _Listeners)
             {
                 listener.OnWaveCreated();
@@ -144,6 +140,7 @@ namespace Type.Factories
 
             if (_WaveIndex != _LevelData.Count) return;
 
+            Reset();
             foreach (IEnemyFactoryListener listener in _Listeners)
             {
                 listener.OnAllWavesCreated();
@@ -166,11 +163,25 @@ namespace Type.Factories
         /// </summary>
         public void Reset()
         {
-            IsActive = false;
             Creating = false;
             _DataIndex = 0;
             _WaveIndex = 0;
             _TimeSinceLastSpawn = TimeSpan.Zero;
+        }
+
+        /// <summary>
+        /// How many enemies are going to be spawned this level
+        /// </summary>
+        /// <returns></returns>
+        public Int32 TotalEnemiesThisLevel()
+        {
+            Int32 total = 0;
+            foreach (WaveData data in _LevelData)
+            {
+                total += data.ShipCount;
+            }
+
+            return total;
         }
 
         /// <inheritdoc />

@@ -86,6 +86,8 @@ namespace Type.Objects.Player
             _Shield = new Shield();
             _Shield.UpdatePosition(Position);
 
+            HitBox = GetRect();
+
             Spawn();
         }
 
@@ -144,6 +146,7 @@ namespace Type.Objects.Player
             }
 
             Position += GetPositionModifier(timeTilUpdate);
+            HitBox = GetRect();
 
             _ProbeController.UpdatePosition(Position);
             _Shield.UpdatePosition(Position);
@@ -180,7 +183,7 @@ namespace Type.Objects.Player
                 return;
             }
 
-            HitPoints -= projectile.Damage;
+            HitPoints -= projectile?.Damage ?? HitPoints;
 
             foreach (IPlayerListener listener in _Listeners)
             {

@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using AmosShared.Base;
+﻿using AmosShared.Base;
 using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
 using AmosShared.Interfaces;
 using OpenTK;
+using System;
 
 namespace Type.Base
 {
@@ -38,8 +36,8 @@ namespace Type.Base
             set
             {
                 _Position = value;
-                if (_Sprite != null) _Sprite.Position = value;
-                if (_CollideArea != null) _CollideArea.Position = value;
+                if (_Sprite != null) _Sprite.Position = _Position;
+                if (_CollideArea != null) _CollideArea.Position = _Position;
             }
         }
 
@@ -49,8 +47,8 @@ namespace Type.Base
             set
             {
                 _Rotation = value;
-                if (_Sprite != null) _Sprite.Rotation = value;
-                if (_CollideArea != null) _CollideArea.Rotation = value;
+                if (_Sprite != null) _Sprite.Rotation = _Rotation;
+                if (_CollideArea != null) _CollideArea.Rotation = _Rotation;
             }
         }
 

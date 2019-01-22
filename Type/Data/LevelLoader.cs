@@ -33,7 +33,7 @@ namespace Type.Data
             {
                 // Split wave string into each enemy data section
                 String[] enemyStrings = line.Split(',');
-                List<Vector2> positions = new List<Vector2>();
+                List<Single> positions = new List<Single>();
                 List<Int32> types = new List<Int32>();
                 List<Single> delays = new List<Single>();
 
@@ -48,7 +48,7 @@ namespace Type.Data
 
                     // Add each parsed string to its respective list
                     types.Add(shiptype);
-                    positions.Add(new Vector2(1100, yPos));
+                    positions.Add(yPos);
                     delays.Add(delay);
                 }
 
