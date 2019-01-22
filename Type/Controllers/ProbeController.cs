@@ -20,18 +20,18 @@ namespace Type.Controllers
         /// <summary> Total probes </summary>
         private Int32 _ProbeCount;
         /// <summary> Whether the probes are shooting </summary>
-        private Boolean _Shoot;
+        private Boolean _AutoFire;
 
         /// <summary> Whether the probes are shooting </summary>
         public Boolean Shoot
         {
-            get => _Shoot;
+            get => _AutoFire;
             set
             {
-                _Shoot = value;
+                _AutoFire = value;
                 foreach (IProbe probe in _Probes)
                 {
-                    probe.Shoot = _Shoot;
+                    probe.AutoFire = _AutoFire;
                 }
             }
         }

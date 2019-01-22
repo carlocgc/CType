@@ -49,29 +49,23 @@ namespace Type.Objects.Enemies
 
         /// <summary> Whether the enemy is on screen </summary>
         private Boolean OnScreen => Position.X <= ScreenLeft && Position.Y <= ScreenBottom && Position.Y >= ScreenTop;
-
         /// <summary> Whether the enemy is on screen and can be hit </summary>
         public Boolean IsAlive { get; private set; }
-
         /// <summary> Point valuie for this enemy </summary>
         public Int32 PointValue { get; private set; }
-
         /// <inheritdoc />
         public Boolean AutoFire { get; set; }
-
         /// <inheritdoc />
         public Vector4 HitBox { get; set; }
-
         /// <inheritdoc />
         public Int32 HitPoints { get; private set; }
 
-        public EnemyGamma(Vector2 spawnPos, Single rotation, Vector2 direction)
+        public EnemyGamma(Vector2 spawnPos)
         {
             _Listeners = new List<IEnemyListener>();
 
             _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, Texture.GetTexture("Content/Graphics/enemy1.png"))
             {
-                Rotation = rotation,
                 Visible = true,
             };
             _Sprite.Offset = _Sprite.Size / 2;
@@ -99,7 +93,7 @@ namespace Type.Objects.Enemies
 
             _IsMoving = true;
             _IsWeaponLocked = true;
-            _MoveDirection = direction;
+            _MoveDirection = new Vector2(-1, 0);
             _Speed = 600;
             _FireRate = TimeSpan.FromSeconds(0.7f);
 
@@ -216,7 +210,14 @@ namespace Type.Objects.Enemies
 
             Position += _MoveDirection * _Speed * (Single)timeTilUpdate.TotalSeconds;
 
-            if (!OnScreen) IsAlive = false;
+            if (!OnScreen)
+            {
+                IsAlive = false;
+                foreach (IEnemyListener listener in _Listeners)
+                {
+                    listener.OnEnemyOffscreen(this);
+                }
+            }
         }
 
         /// <inheritdoc />
@@ -224,6 +225,7 @@ namespace Type.Objects.Enemies
         {
             base.Dispose();
             _Explosion.Dispose();
+            _Listeners.Clear();
         }
     }
 }

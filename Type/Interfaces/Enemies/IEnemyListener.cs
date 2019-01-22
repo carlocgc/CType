@@ -8,6 +8,13 @@
         /// <summary>
         /// Invoked when an enemy is Destroyed
         /// </summary>
+        /// <param name="enemy"> The enemy that has been destroyed </param>
         void OnEnemyDestroyed(IEnemy enemy);
+
+        /// <summary>
+        /// Invoked when an enemy leaves the screen
+        /// </summary>
+        /// <param name="enemy"> The enemy that has left the screen </param>
+        void OnEnemyOffscreen(IEnemy enemy);
     }
 }
