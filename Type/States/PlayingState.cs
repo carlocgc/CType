@@ -1,18 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using AmosShared.State;
+﻿using AmosShared.State;
+using System;
+using Type.Interfaces.Communication;
+using Type.Interfaces.Enemies;
+using Type.Interfaces.Player;
 using Type.Scenes;
 
 namespace Type.States
 {
-    public class PlayingState : State
+    public class PlayingState : State, IEnemyFactoryListener, IPlayerListener, IEnemyListener
     {
         private GameScene _Scene;
 
         protected override void OnEnter()
         {
             _Scene = new GameScene();
+
+
             _Scene.Visible = true;
             _Scene.StartGame();
         }
@@ -31,5 +34,60 @@ namespace Type.States
             _Scene.Dispose();
             Dispose();
         }
+
+        #region Factory Events
+
+        /// <inheritdoc />
+        public void OnFactoryStarted()
+        {
+            
+        }
+
+        /// <inheritdoc />
+        public void OnWaveCreated()
+        {
+            
+        }
+
+        /// <inheritdoc />
+        public void OnAllWavesCreated()
+        {
+            
+        }
+
+        #endregion
+
+        #region Player Events
+
+        /// <inheritdoc />
+        public void OnPlayerHit(IPlayer player)
+        {
+            
+        }
+
+        /// <inheritdoc />
+        public void OnPlayerDeath(IPlayer player)
+        {
+           
+        }
+
+        #endregion
+
+        #region Enemy Events
+
+        /// <inheritdoc />
+        public void OnEnemyDestroyed(IEnemy enemy)
+        {
+            
+        }
+
+        /// <inheritdoc />
+        public void OnEnemyOffscreen(IEnemy enemy)
+        {
+            
+        }
+
+        #endregion
+
     }
 }

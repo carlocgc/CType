@@ -2,12 +2,17 @@
 using AmosShared.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Security.Permissions;
+using AmosShared.State;
 using Type.Controllers;
 using Type.Data;
+using Type.Interfaces;
+using Type.Interfaces.Communication;
 using Type.Interfaces.Enemies;
 using Type.Objects.Bosses;
 using Type.Objects.Enemies;
 using Type.Scenes;
+using Type.States;
 
 namespace Type.Factories
 {
@@ -15,15 +20,15 @@ namespace Type.Factories
     /// Spawns enemy ships from a given <see cref="WaveData"/> object
     /// </summary>
 
-    public class EnemyFactory : IUpdatable
+    public class EnemyFactory : IUpdatable, INotifier<IEnemyFactoryListener>
     {
         /// <summary> The instance of the Enemy Factory </summary>
         private static EnemyFactory _Instance;
         /// <summary> The instance of the Enemy Factory </summary>
         public static EnemyFactory Instance => _Instance ?? (_Instance = new EnemyFactory());
 
-        /// <summary> Whether ships are being spawned </summary>
-        private Boolean IsSpawning;
+        /// <summary> List of objects listening to this factory </summary>
+        private List<IEnemyFactoryListener> _Listeners;
         /// <summary> WHether the enemy factory is updating </summary>
         private Boolean IsActive;
         /// <summary> Tracker of the current wave data object </summary>
@@ -32,21 +37,23 @@ namespace Type.Factories
         private Int32 _DataIndex;
         /// <summary> Time that has passed since the last spawn </summary>
         private TimeSpan _TimeSinceLastSpawn;
-        /// <summary> Reference to the main game scene </summary>
-        private GameScene _Scene;
         /// <summary> List of the levels wave data objects </summary>
         private List<WaveData> _LevelData;
         /// <summary> The data for the current wave </summary>
         private WaveData _CurrentWave;
 
+        /// <summary> Game state to add as a listener to created enemies </summary>
+        public PlayingState ParentState { get; set; }
         /// <inheritdoc />
         public Boolean IsDisposed { get; set; }
-
+        /// <summary> Whether enemies are being created </summary>
+        public Boolean Creating { get; private set; }
         /// <summary> Amount of enemies this wave </summary>
         public Int32 WaveCount => _CurrentWave.ShipCount;
 
         public EnemyFactory()
         {
+            _Listeners = new List<IEnemyFactoryListener>();
             UpdateManager.Instance.AddUpdatable(this);
         }
 
@@ -58,26 +65,37 @@ namespace Type.Factories
         {
             _LevelData = waves;
             _WaveIndex = 0;
-            StartWave();
         }
 
         /// <summary>
         /// Sets the next wave data and begins spawning enemies
         /// </summary>
-        /// <param name="data"></param>
-        public void StartWave()
+        public void Start()
         {
             _DataIndex = 0;
             _CurrentWave = _LevelData[_WaveIndex];
-            IsSpawning = true;
+            Creating = true;
             IsActive = true;
-            CollisionController.Instance.IsActive = true;
         }
 
-                /// <summary>
+        /// <inheritdoc />
+        public void Update(TimeSpan timeTilUpdate)
+        {
+            if (Creating)
+            {
+                _TimeSinceLastSpawn += timeTilUpdate;
+
+                if (_TimeSinceLastSpawn >= _CurrentWave.SpawnInterval[_DataIndex])
+                {
+                    Create();
+                }
+            }
+        }
+
+        /// <summary>
         /// Creates a new enemies from the current <see cref="WaveData"/>
         /// </summary>
-        private void Spawn()
+        private void Create()
         {
             IEnemy enemy;
 
@@ -100,7 +118,8 @@ namespace Type.Factories
                     }
                 case 20:
                     {
-                        enemy = new BossA("Content/Graphics/Bosses/boss1.png", _CurrentWave.SpawnPositions[_DataIndex], 0, new Vector2(-1, 0), 300, TimeSpan.FromSeconds(0.7), 2500);
+                        //enemy = new BossA("Content/Graphics/Bosses/boss1.png", _CurrentWave.SpawnPositions[_DataIndex], 0, new Vector2(-1, 0), 300, TimeSpan.FromSeconds(0.7), 2500);
+                        throw new ArgumentOutOfRangeException("No boss creation defined");
                         break;
                     }
                 default:
@@ -109,9 +128,7 @@ namespace Type.Factories
                     }
             }
 
-            enemy.OnDestroyedByPlayer.Add(() => _Scene.UpdateScore(enemy.PointValue));
-            enemy.OnDestroyedByPlayer.Add(() => PositionRelayer.Instance.RemoveRecipient(enemy));
-
+            enemy.RegisterListener(ParentState);
             CollisionController.Instance.RegisterEnemy(enemy);
             PositionRelayer.Instance.AddRecipient(enemy);
 
@@ -120,15 +137,40 @@ namespace Type.Factories
 
             if (_DataIndex != _CurrentWave.ShipCount) return;
 
-            IsSpawning = false;
-            _DataIndex = 0;
+            foreach (IEnemyFactoryListener listener in _Listeners)
+            {
+                listener.OnWaveCreated();
+            }
+
+            if (_WaveIndex != _LevelData.Count) return;
+
+            foreach (IEnemyFactoryListener listener in _Listeners)
+            {
+                listener.OnAllWavesCreated();
+            }
         }
-        
 
-        /// <inheritdoc />
-        public void Update(TimeSpan timeTilUpdate)
+        /// <summary>
+        /// Stops the factory creating
+        /// </summary>
+        public void Stop()
         {
+            _DataIndex = 0;
+            _WaveIndex++;
+            Creating = false;
+            _TimeSinceLastSpawn = TimeSpan.Zero;
+        }
 
+        /// <summary>
+        /// Resets the data tracker and deactivates the Factory
+        /// </summary>
+        public void Reset()
+        {
+            IsActive = false;
+            Creating = false;
+            _DataIndex = 0;
+            _WaveIndex = 0;
+            _TimeSinceLastSpawn = TimeSpan.Zero;
         }
 
         /// <inheritdoc />
@@ -138,13 +180,23 @@ namespace Type.Factories
         }
 
         /// <inheritdoc />
-        public void Dispose()
+        public void DeregisterListener(IEnemyFactoryListener listener)
         {
-
+            _Listeners.Remove(listener);
         }
 
+        /// <inheritdoc />
+        public void RegisterListener(IEnemyFactoryListener listener)
+        {
+            _Listeners.Add(listener);
+        }
 
-
-
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            _Listeners.Clear();
+            _LevelData.Clear();
+            IsDisposed = true;
+        }
     }
 }
