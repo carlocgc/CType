@@ -8,6 +8,7 @@ using Type.Base;
 using Type.Controllers;
 using Type.Data;
 using Type.Interfaces;
+using Type.Interfaces.Control;
 using Type.Interfaces.Player;
 using Type.Interfaces.Probe;
 using Type.Interfaces.Weapons;
@@ -21,8 +22,6 @@ namespace Type.Objects.Player
     /// </summary>
     public class PlayerAlpha : GameObject, IPlayer
     {
-        /// <summary> List of listeners </summary>
-        private readonly List<IPlayerListener> _Listeners;
         /// <summary> Single point of contact for probes attached to  the player </summary>
         private readonly IProbeController _ProbeController;
         /// <summary> The players shield </summary>
@@ -47,10 +46,8 @@ namespace Type.Objects.Player
 
         /// <inheritdoc />
         public Int32 HitPoints { get; private set; }
-
         /// <inheritdoc />
         public Vector4 HitBox { get; set; }
-
         /// <inheritdoc />
         public Boolean AutoFire
         {
@@ -65,8 +62,6 @@ namespace Type.Objects.Player
 
         public PlayerAlpha()
         {
-            _Listeners = new List<IPlayerListener>();
-
             _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.PLAYER, Texture.GetTexture("Content/Graphics/player.png"))
             {
                 Visible = true,
@@ -94,35 +89,10 @@ namespace Type.Objects.Player
         /// <inheritdoc />
         public void Spawn()
         {
-            Position = _SpawnPosition;
             // TODO Spawn invulnerable for a short time, alpha sprite while invulnerable
 
+            Position = _SpawnPosition;
             CollisionController.Instance.RegisterPlayer(this);
-        }
-
-        /// <inheritdoc />
-        public void UpdateAnalogData(Vector2 direction, Single strength)
-        {
-            _Direction = direction;
-            _MoveStrength = strength;
-        }
-
-        /// <summary>
-        /// Returns how much the player should move by
-        /// </summary>
-        /// <param name="timeTilUpdate"></param>
-        /// <returns></returns>
-        private Vector2 GetPositionModifier(TimeSpan timeTilUpdate)
-        {
-            Single x, y;
-
-            if (_Direction.X > 0 && Position.X >= ScreenRight - GetSprite().Width / 2 || _Direction.X < 0 && Position.X <= ScreenLeft + GetSprite().Width / 2) x = 0;
-            else x = _Direction.X * _MoveStrength * _MovementSpeed * (Single)timeTilUpdate.TotalSeconds;
-
-            if (_Direction.Y > 0 && Position.Y >= ScreenTop - GetSprite().Height / 2 || _Direction.Y < 0 && Position.Y <= ScreenBottom + GetSprite().Height / 2) y = 0;
-            else y = _Direction.Y * _MoveStrength * _MovementSpeed * (Single)timeTilUpdate.TotalSeconds;
-
-            return new Vector2(x, y);
         }
 
         /// <inheritdoc />
@@ -153,6 +123,24 @@ namespace Type.Objects.Player
             PositionRelayer.Instance.ProvidePosition(Position);
         }
 
+        /// <summary>
+        /// Returns how much the player should move by
+        /// </summary>
+        /// <param name="timeTilUpdate"></param>
+        /// <returns></returns>
+        private Vector2 GetPositionModifier(TimeSpan timeTilUpdate)
+        {
+            Single x, y;
+
+            if (_Direction.X > 0 && Position.X >= ScreenRight - GetSprite().Width / 2 || _Direction.X < 0 && Position.X <= ScreenLeft + GetSprite().Width / 2) x = 0;
+            else x = _Direction.X * _MoveStrength * _MovementSpeed * (Single)timeTilUpdate.TotalSeconds;
+
+            if (_Direction.Y > 0 && Position.Y >= ScreenTop - GetSprite().Height / 2 || _Direction.Y < 0 && Position.Y <= ScreenBottom + GetSprite().Height / 2) y = 0;
+            else y = _Direction.Y * _MoveStrength * _MovementSpeed * (Single)timeTilUpdate.TotalSeconds;
+
+            return new Vector2(x, y);
+        }
+
         /// <inheritdoc />
         public void Shoot()
         {
@@ -160,18 +148,6 @@ namespace Type.Objects.Player
             _IsWeaponLocked = true;
             GameStats.Instance.BulletsFired++;
             new AudioPlayer("Content/Audio/laser1.wav", false, AudioManager.Category.EFFECT, 0.5f);
-        }
-
-        /// <inheritdoc />
-        public void AddShield()
-        {
-            _Shield.Increase();
-        }
-
-        /// <inheritdoc />
-        public void AddProbe(Int32 id)
-        {
-            _ProbeController.AddProbe(id);
         }
 
         /// <inheritdoc />
@@ -210,6 +186,58 @@ namespace Type.Objects.Player
             }
         }
 
+        #region  UI_Listener
+
+        /// <inheritdoc />
+        public void UpdateAnalogData(Vector2 direction, Single strength)
+        {
+            _Direction = direction;
+            _MoveStrength = strength;
+        }
+
+        /// <inheritdoc />
+        public void FireButtonPressed()
+        {
+            AutoFire = true;
+        }
+
+        /// <inheritdoc />
+        public void FireButtonReleased()
+        {
+            AutoFire = false;
+        }
+
+        /// <inheritdoc />
+        public void ShieldButtonPressed()
+        {
+            _Shield.Increase();
+        }
+
+        /// <inheritdoc />
+        public void AddShield()
+        {
+            _Shield.Increase();
+        }
+
+        /// <inheritdoc />
+        public void ProbeButtonPressed()
+        {
+            AddProbe(0);
+        }
+
+        /// <inheritdoc />
+        public void AddProbe(Int32 id)
+        {
+            _ProbeController.AddProbe(id);
+        }
+
+        #endregion
+
+        #region Listener
+
+        /// <summary> List of listeners </summary>
+        private readonly List<IPlayerListener> _Listeners = new List<IPlayerListener>();
+
         /// <inheritdoc />
         public void RegisterListener(IPlayerListener listener)
         {
@@ -221,6 +249,8 @@ namespace Type.Objects.Player
         {
             _Listeners.Add(listener);
         }
+
+        #endregion
 
         /// <inheritdoc />
         public override void Dispose()

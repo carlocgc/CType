@@ -46,20 +46,12 @@ namespace Type.Factories
         }
 
         /// <summary>
-        /// Assigns list of wave data
+        /// Assigns list of wave data and starts spawning enemies
         /// </summary>
         /// <param name="waves"></param>
-        public void SetLevelData(List<WaveData> waves)
+        public void Start(List<WaveData> waves)
         {
             _LevelData = waves;
-            _WaveIndex = 0;
-        }
-
-        /// <summary>
-        /// Sets the next wave data and begins spawning enemies
-        /// </summary>
-        public void Start()
-        {
             _DataIndex = 0;
             _CurrentWave = _LevelData[_WaveIndex];
             Creating = true;

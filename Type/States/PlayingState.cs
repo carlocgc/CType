@@ -16,7 +16,7 @@ namespace Type.States
     /// <summary>
     /// Game play state
     /// </summary>
-    public class PlayingState : State, IPlayerListener, IEnemyListener, IUIListener
+    public class PlayingState : State, IPlayerListener, IEnemyListener
     {
         /// <summary> Max level of the game </summary>
         private readonly Int32 _MaxLevel = 9;
@@ -37,12 +37,12 @@ namespace Type.States
         private LevelDisplay _LevelDisplay;
         /// <summary> Text to display the score </summary>
         private TextDisplay _ScoreDisplay;
+        /// <summary> Displays the players current lives </summary>
+        private LifeMeter _LifeMeter;
 
         protected override void OnEnter()
         {
             _CurrentLevel = 1;
-
-            CollisionController.Instance.ClearObjects();
 
             EnemyFactory.Instance.Reset();
             EnemyFactory.Instance.ParentState = this;
@@ -56,16 +56,15 @@ namespace Type.States
             _UIScene.Visible = true;
             _UIScene.RegisterListener(_Player);
 
-            _ScoreDisplay = _UIScene
-
+            _ScoreDisplay = _UIScene.ScoreDisplay;
+            _LifeMeter = _UIScene.LifeMeter;
 
             GameStats.Instance.Score = 0;
             GameStats.Instance.GameStart();
 
             _LevelDisplay.ShowLevel(_CurrentLevel, TimeSpan.FromSeconds(2), () =>
             {
-                EnemyFactory.Instance.SetLevelData(LevelLoader.GetWaveData(_CurrentLevel));
-                EnemyFactory.Instance.Start();
+                EnemyFactory.Instance.Start(LevelLoader.GetWaveData(_CurrentLevel));
                 CollisionController.Instance.IsActive = true;
             });
         }
@@ -89,7 +88,7 @@ namespace Type.States
         /// <inheritdoc />
         public void OnPlayerDeath(IPlayer player)
         {
-
+            PlayerDeath();
         }
 
         #endregion
@@ -99,7 +98,7 @@ namespace Type.States
         /// <inheritdoc />
         public void OnEnemyDestroyed(IEnemy enemy)
         {
-            GameStats.Instance.Score += enemy.Points;
+            UpdateScore(enemy.Points);
         }
 
         /// <inheritdoc />
@@ -116,27 +115,24 @@ namespace Type.States
         /// Adds the value to the players current score
         /// </summary>
         /// <param name="amount"></param>
-        public void UpdateScore(Int32 amount)
+        private void UpdateScore(Int32 amount)
         {
-            GameStats.Instance.Score += CurrentScore;
-            _ScoreDisplay.Text = CurrentScore.ToString();
+            GameStats.Instance.Score += amount;
+            _ScoreDisplay.Text = GameStats.Instance.Score.ToString();
         }
 
         /// <summary>
         /// Sets the next level data and displays the current level, ends the game if complete
         /// </summary>
-        public void LevelComplete()
+        private void LevelComplete()
         {
-            if (_CurrentLevel >= _MaxLevel)
-            {
-                GameCompleted();
-            }
+            if (_CurrentLevel >= _MaxLevel) GameCompleted();
             else
             {
                 _CurrentLevel++;
                 _LevelDisplay.ShowLevel(_CurrentLevel, TimeSpan.FromSeconds(2), () =>
                 {
-                    EnemyFactory.Instance.SetLevelData(LevelLoader.GetWaveData(_CurrentLevel));
+                    EnemyFactory.Instance.Start(LevelLoader.GetWaveData(_CurrentLevel));
                 });
             }
         }
@@ -144,19 +140,18 @@ namespace Type.States
         /// <summary>
         /// Called when the player dies checks if game is over
         /// </summary>
-        public void OnPlayerDeath()
+        private void PlayerDeath()
         {
             CollisionController.Instance.ClearObjects();
             EnemyFactory.Instance.Reset();
 
             _LifeMeter.LoseLife();
 
-            if (_LifeMeter.PlayerLives > 0 || IsGameOver) return;
+            if (_LifeMeter.PlayerLives > 0) return;
 
             GameStats.Instance.GameEnd();
-            SetButtonsEnabled(false);
-            SetButtonsVisible(false);
-            IsGameOver = true;
+            _UIScene.Active = false;
+            _GameOver = true;
         }
 
         /// <summary>
@@ -165,46 +160,11 @@ namespace Type.States
         private void GameCompleted()
         {
             GameStats.Instance.GameEnd();
+            CollisionController.Instance.ClearObjects();
             EnemyFactory.Instance.Reset();
-            IsGameComplete = true;
-            SetButtonsEnabled(false);
-            SetButtonsVisible(false);
+            _UIScene.Active = false;
+            _GameComplete = true;
         }
-
-        #endregion
-
-        #region Button_Presses
-
-        /// <inheritdoc />
-        public void UpdateAnalogData(Vector2 direction, Single strength)
-        {
-
-        }
-
-        /// <inheritdoc />
-        public void FireButtonPressed()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc />
-        public void FireButtonReleased()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc />
-        public void ShieldButtonPressed()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc />
-        public void ProbeButtonPressed()
-        {
-            throw new NotImplementedException();
-        }
-
 
         #endregion
 
