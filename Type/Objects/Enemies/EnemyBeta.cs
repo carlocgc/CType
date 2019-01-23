@@ -99,6 +99,8 @@ namespace Type.Objects.Enemies
             {
                 Visible = false,
                 Playing = false,
+                AnimEndBehaviour = AnimatedSprite.EndBehaviour.STOP,
+                CurrentFrame = 0,
             };
             _Explosion.Offset = _Explosion.Size / 2;
 

@@ -100,6 +100,8 @@ namespace Type.Objects.Enemies
             {
                 Visible = false,
                 Playing = false,
+                AnimEndBehaviour = AnimatedSprite.EndBehaviour.STOP,
+                CurrentFrame = 0,
             };
             _Explosion.Offset = _Explosion.Size / 2;
 
@@ -233,6 +235,7 @@ namespace Type.Objects.Enemies
         public override void Dispose()
         {
             base.Dispose();
+            _Explosion.Dispose();
             _Listeners.Clear();
             CollisionController.Instance.DeregisterEnemy(this);
             PositionRelayer.Instance.RemoveRecipient(this);

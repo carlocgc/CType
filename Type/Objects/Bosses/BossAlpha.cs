@@ -97,6 +97,8 @@ namespace Type.Objects.Bosses
             {
                 Visible = false,
                 Playing = false,
+                AnimEndBehaviour = AnimatedSprite.EndBehaviour.STOP,
+                CurrentFrame = 0,
             };
             _Explosion.Scale = new Vector2(9, 9);
             _Explosion.Offset = new Vector2(_Explosion.Size.X / 2 * _Explosion.Scale.X, _Explosion.Size.Y / 2 * _Explosion.Scale.Y);
@@ -235,6 +237,7 @@ namespace Type.Objects.Bosses
         public override void Dispose()
         {
             base.Dispose();
+            _Explosion.Dispose();
             PositionRelayer.Instance.RemoveRecipient(this);
             _Listeners.Clear();
         }
