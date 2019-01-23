@@ -92,7 +92,7 @@ namespace Type.States
         /// <inheritdoc />
         public void OnPlayerDeath(IPlayer player)
         {
-            PlayerDeath();
+            //PlayerDeath();
         }
 
         #endregion

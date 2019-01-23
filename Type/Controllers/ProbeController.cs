@@ -2,6 +2,7 @@
 using OpenTK;
 using System;
 using System.Collections.Generic;
+using AmosShared.Audio;
 using Type.Data;
 using Type.Interfaces.Probe;
 using Type.Objects.Probes;
@@ -76,6 +77,8 @@ namespace Type.Controllers
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
+            new AudioPlayer("Content/Audio/upgrade1.wav", false, AudioManager.Category.EFFECT, 1);
         }
 
         /// <summary>

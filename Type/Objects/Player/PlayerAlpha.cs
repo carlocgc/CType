@@ -8,10 +8,8 @@ using Type.Base;
 using Type.Controllers;
 using Type.Data;
 using Type.Interfaces;
-using Type.Interfaces.Control;
 using Type.Interfaces.Player;
 using Type.Interfaces.Probe;
-using Type.Interfaces.Weapons;
 using Type.Objects.Projectiles;
 using static Type.Constants.Global;
 

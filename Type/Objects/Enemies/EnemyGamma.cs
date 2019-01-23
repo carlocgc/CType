@@ -1,15 +1,14 @@
 ﻿using AmosShared.Audio;
+using AmosShared.Base;
 using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
 using OpenTK;
 using System;
 using System.Collections.Generic;
-using AmosShared.Base;
 using Type.Base;
 using Type.Controllers;
 using Type.Data;
 using Type.Interfaces.Enemies;
-using Type.Interfaces.Weapons;
 using Type.Objects.Projectiles;
 using static Type.Constants.Global;
 
