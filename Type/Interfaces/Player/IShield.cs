@@ -4,10 +4,13 @@ using OpenTK;
 
 namespace Type.Interfaces
 {
+    /// <summary>
+    /// Shield that can absorb impacts and has multiple stages
+    /// </summary>
     public interface IShield : IPositionable, IDisposable
     {
         /// <summary>
-        /// Whether the shield is on
+        /// Whether the shield is active
         /// </summary>
         Boolean IsActive { get; }
 
@@ -19,7 +22,7 @@ namespace Type.Interfaces
         /// <summary>
         /// Decreases the shields level
         /// </summary>
-        void Decrease();
+        void Decrease(Int32 damage);
 
         /// <summary>
         /// Completely deactivates the shield
@@ -29,7 +32,7 @@ namespace Type.Interfaces
         /// <summary>
         /// Updates the shield position
         /// </summary>
-        /// <param name="position"></param>
+        /// <param name="position"> The position to provide the shield </param>
         void UpdatePosition(Vector2 position);
     }
 }

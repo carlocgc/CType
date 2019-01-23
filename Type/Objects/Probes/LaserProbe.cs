@@ -5,6 +5,7 @@ using System;
 using Type.Base;
 using Type.Data;
 using Type.Interfaces.Probe;
+using Type.Interfaces.Weapons;
 using Type.Objects.Projectiles;
 
 namespace Type.Objects.Probes
@@ -27,8 +28,12 @@ namespace Type.Objects.Probes
         /// <summary>  Angle the probe is at from north </summary>
         private Single _Angle;
 
-        /// <summary> Whether the probe should be shooting </summary>
-        public Boolean Shoot { get; set; }
+        /// <inheritdoc />
+        public Vector4 HitBox { get; set; }
+        /// <inheritdoc />
+        public Boolean AutoFire { get; set; }
+        /// <inheritdoc />
+        public Int32 HitPoints { get; }
 
         /// <summary>
         /// Laser probe that orbits the player ship
@@ -47,17 +52,10 @@ namespace Type.Objects.Probes
             _FireRate = TimeSpan.FromMilliseconds(100);
 
             _OrbitAnchor = orbitPosition;
-            Position = new Vector2(_OrbitAnchor.X, _OrbitAnchor.Y + _Radius);
-        }
+            HitBox = GetRect();
+            HitPoints = 1;
 
-        /// <summary>
-        /// Creates a new Bullet
-        /// </summary>
-        private void FireForward()
-        {
-            new Bullet("Content/Graphics/bullet.png", Position + new Vector2(_Sprite.Width / 2, 0), new Vector2(1, 0), 1000, 0, true, new Vector4(1, 1, 1, 1));
-            _IsWeaponLocked = true;
-            GameStats.Instance.BulletsFired++;
+            Position = new Vector2(_OrbitAnchor.X, _OrbitAnchor.Y + _Radius);
         }
 
         public void UpdatePosition(Vector2 position)
@@ -73,6 +71,7 @@ namespace Type.Objects.Probes
             if (!_Sprite.Visible) _Sprite.Visible = true;
         }
 
+        /// <inheritdoc />
         public override void Update(TimeSpan timeTilUpdate)
         {
             base.Update(timeTilUpdate);
@@ -86,7 +85,25 @@ namespace Type.Objects.Probes
                 }
             }
 
-            if (Shoot && !_IsWeaponLocked) FireForward();
+            if (AutoFire && !_IsWeaponLocked) Shoot();
+        }
+
+        /// <inheritdoc />
+        public void Shoot()
+        {
+            new Laser(Position + new Vector2(_Sprite.Width / 2, 0), new Vector2(1, 0), 1000, 0);
+            _IsWeaponLocked = true;
+            GameStats.Instance.BulletsFired++;
+        }
+
+        /// <inheritdoc />
+        public void Hit(IProjectile projectile)
+        {
+        }
+
+        /// <inheritdoc />
+        public void Destroy()
+        {
         }
     }
 }

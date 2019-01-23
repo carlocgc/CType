@@ -1,14 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using OpenTK;
+﻿using OpenTK;
+using System;
+using Type.Interfaces.Collisions;
+using Type.Interfaces.Weapons;
 
 namespace Type.Interfaces.Probe
 {
-    public interface IProbe : IDisposable
+    /// <summary>
+    /// Object that is attached to the player
+    /// </summary>
+    public interface IProbe : ICollidable, IHitable, IDestroyable, IDisposable, IProjectileShooter
     {
-        Boolean Shoot { get; set; }
-
+        /// <summary>
+        /// Update position data
+        /// </summary>
+        /// <param name="position"></param>
         void UpdatePosition(Vector2 position);
     }
 }

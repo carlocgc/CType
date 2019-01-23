@@ -53,7 +53,7 @@ namespace Type.Controllers
         {
             foreach (IPositionRecipient recipient in _Recipients)
             {
-                recipient.Receive(position);
+                recipient.UpdatePositionData(position);
             }
         }
 
