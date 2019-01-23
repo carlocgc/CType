@@ -69,7 +69,7 @@ namespace Type.Objects.Projectiles
             if (!OnScreen) Destroy();
         }
 
-        public void Hit(IProjectile projectile)
+        public void Hit(Int32 damage)
         {
         }
 

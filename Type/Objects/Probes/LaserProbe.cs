@@ -97,7 +97,7 @@ namespace Type.Objects.Probes
         }
 
         /// <inheritdoc />
-        public void Hit(IProjectile projectile)
+        public void Hit(Int32 damage)
         {
         }
 

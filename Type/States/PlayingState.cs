@@ -44,13 +44,13 @@ namespace Type.States
         {
             _CurrentLevel = 1;
 
-            EnemyFactory.Instance.Reset();
             EnemyFactory.Instance.ParentState = this;
 
             _GameScene = new GameScene();
             _GameScene.Visible = true;
 
             _Player = _GameScene.Player;
+            _Player.RegisterListener(this);
 
             _UIScene = new UIScene();
             _UIScene.RegisterListener(_Player);
@@ -86,6 +86,7 @@ namespace Type.States
         /// <inheritdoc />
         public void OnPlayerHit(IPlayer player)
         {
+
         }
 
         /// <inheritdoc />
@@ -102,12 +103,14 @@ namespace Type.States
         public void OnEnemyDestroyed(IEnemy enemy)
         {
             UpdateScore(enemy.Points);
+            if (!EnemyFactory.Instance.Creating && CollisionController.Instance.Enemies == 0) LevelComplete();
         }
 
         /// <inheritdoc />
         public void OnEnemyOffscreen(IEnemy enemy)
         {
             enemy.Dispose();
+            if (!EnemyFactory.Instance.Creating && CollisionController.Instance.Enemies == 0) LevelComplete();
         }
 
         #endregion
@@ -146,15 +149,18 @@ namespace Type.States
         private void PlayerDeath()
         {
             CollisionController.Instance.ClearObjects();
-            EnemyFactory.Instance.Reset();
 
             _LifeMeter.LoseLife();
 
-            if (_LifeMeter.PlayerLives > 0) return;
-
-            GameStats.Instance.GameEnd();
-            _UIScene.Active = false;
-            _GameOver = true;
+            if (_LifeMeter.PlayerLives > 0)
+            {
+                _Player.Spawn();
+                EnemyFactory.Instance.RestartWave();
+            }
+            else
+            {
+                GameOver();
+            }
         }
 
         /// <summary>
@@ -164,20 +170,32 @@ namespace Type.States
         {
             GameStats.Instance.GameEnd();
             CollisionController.Instance.ClearObjects();
-            EnemyFactory.Instance.Reset();
+            EnemyFactory.Instance.Stop();
             _UIScene.Active = false;
             _GameComplete = true;
+        }
+
+        /// <summary>
+        /// Ends the game and sets the next state to Game over state
+        /// </summary>
+        private void GameOver()
+        {
+            GameStats.Instance.GameEnd();
+            CollisionController.Instance.ClearObjects();
+            EnemyFactory.Instance.Stop();
+            _UIScene.Active = false;
+            _GameOver = true;
         }
 
         #endregion
 
         protected override void OnExit()
         {
+            EnemyFactory.Instance.ParentState = null;
+            CollisionController.Instance.IsActive = false;
             _GameScene.Dispose();
             _UIScene.Dispose();
             Dispose();
         }
-
-
     }
 }

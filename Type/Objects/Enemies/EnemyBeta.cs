@@ -50,7 +50,7 @@ namespace Type.Objects.Enemies
         private Single _Speed;
 
         /// <summary> Whether the enemy is on screen </summary>
-        private Boolean OnScreen => Position.X >= ScreenLeft && Position.Y >= ScreenBottom && Position.Y <= ScreenTop;
+        private Boolean OnScreen => Position.X + _Sprite.Offset.X >= ScreenLeft && Position.Y + _Sprite.Offset.Y >= ScreenBottom && Position.Y - _Sprite.Offset.Y <= ScreenTop;
         /// <summary> Whether the enemy is on screen and can be hit </summary>
         public Boolean IsAlive { get; private set; }
         /// <summary> Point valuie for this enemy </summary>
@@ -72,7 +72,6 @@ namespace Type.Objects.Enemies
             _Speed = 600;
             _FireRate = TimeSpan.FromSeconds(0.8f);
 
-            HitBox = GetRect();
             HitPoints = 9;
             Points = 25;
 
@@ -83,6 +82,8 @@ namespace Type.Objects.Enemies
             _Sprite.Offset = _Sprite.Size / 2;
             _Sprite.RotationOrigin = _Sprite.Size / 2;
             AddSprite(_Sprite);
+
+            HitBox = GetRect();
 
             _Explosion = new AnimatedSprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, new[]
             {
@@ -120,9 +121,9 @@ namespace Type.Objects.Enemies
         }
 
         /// <inheritdoc />
-        public void Hit(IProjectile projectile)
+        public void Hit(Int32 damage)
         {
-            HitPoints -= projectile?.Damage ?? HitPoints;
+            HitPoints -= damage;
 
             if (!_IsSoundPlaying)
             {

@@ -115,17 +115,17 @@ namespace Type.Factories
 
             if (_DataIndex != _CurrentWave.ShipCount) return;
 
-            Stop();
+            WaveComplete();
 
             if (_WaveIndex != _LevelData.Count) return;
 
-            Reset();
+            Stop();
         }
 
         /// <summary>
         /// Stops the factory creating
         /// </summary>
-        public void Stop()
+        private void WaveComplete()
         {
             _DataIndex = 0;
             _WaveIndex++;
@@ -134,9 +134,19 @@ namespace Type.Factories
         }
 
         /// <summary>
+        /// Restarts the current wave
+        /// </summary>
+        public void RestartWave()
+        {
+            _DataIndex = 0;
+            Creating = true;
+            _TimeSinceLastSpawn = TimeSpan.Zero;
+        }
+
+        /// <summary>
         /// Resets the data tracker and deactivates the Factory
         /// </summary>
-        public void Reset()
+        public void Stop()
         {
             Creating = false;
             _DataIndex = 0;

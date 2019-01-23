@@ -81,6 +81,7 @@ namespace Type.Objects.Bosses
             _Sprite.Offset = _Sprite.Size / 2;
             _Sprite.RotationOrigin = _Sprite.Size / 2;
             AddSprite(_Sprite);
+            HitBox = GetRect();
 
             _Explosion = new AnimatedSprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, new[]
             {
@@ -125,9 +126,9 @@ namespace Type.Objects.Bosses
         }
 
         /// <inheritdoc />
-        public void Hit(IProjectile projectile)
+        public void Hit(Int32 damage)
         {
-            HitPoints -= projectile.Damage;
+            HitPoints -= damage;
 
             if (!_IsSoundPlaying)
             {

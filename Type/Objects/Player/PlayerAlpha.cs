@@ -151,15 +151,15 @@ namespace Type.Objects.Player
         }
 
         /// <inheritdoc />
-        public void Hit(IProjectile projectile)
+        public void Hit(Int32 damage)
         {
             if (_Shield.IsActive)
             {
-                _Shield.Decrease(projectile.Damage);
+                _Shield.Decrease(damage);
                 return;
             }
 
-            HitPoints -= projectile?.Damage ?? HitPoints;
+            HitPoints -= damage;
 
             foreach (IPlayerListener listener in _Listeners)
             {
