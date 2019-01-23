@@ -7,7 +7,6 @@ using System.Linq;
 using Type.Interfaces.Enemies;
 using Type.Interfaces.Player;
 using Type.Interfaces.Weapons;
-using Type.Objects.Projectiles;
 
 namespace Type.Controllers
 {

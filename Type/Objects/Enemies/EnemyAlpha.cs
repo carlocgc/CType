@@ -204,6 +204,7 @@ namespace Type.Objects.Enemies
             if (!_IsMoving) return;
 
             Position += _MoveDirection * _Speed * (Single)timeTilUpdate.TotalSeconds;
+            _Explosion.Position = Position;
             HitBox = GetRect();
 
             if (OnScreen) return;

@@ -101,8 +101,9 @@ namespace Type.Objects.Bosses
             _Explosion.Scale = new Vector2(9, 9);
             _Explosion.Offset = new Vector2(_Explosion.Size.X / 2 * _Explosion.Scale.X, _Explosion.Size.Y / 2 * _Explosion.Scale.Y);
 
-            Position = new Vector2(Renderer.Instance.TargetDimensions.X /2 + _Sprite.Offset.X, yPos);
-            _StopPosition = new Vector2(Renderer.Instance.TargetDimensions.X / 4, 0);            
+            Position = new Vector2(Renderer.Instance.TargetDimensions.X / 2 + _Sprite.Offset.X, yPos);
+            _Explosion.Position = Position;
+            _StopPosition = new Vector2(Renderer.Instance.TargetDimensions.X / 4, 0);
         }
 
         /// <inheritdoc />
