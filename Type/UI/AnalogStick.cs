@@ -70,6 +70,7 @@ namespace Type.UI
             _Top = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/analog_top.png"))
             {
                 Offset = new Vector2(105, 105),
+                Colour = new Vector4(1, 1, 1, 0.5f),
                 Position = startPosition,
             };
             _Base = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/analog_base.png"))

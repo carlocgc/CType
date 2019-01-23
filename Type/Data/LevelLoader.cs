@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text;
-using AmosShared.Base;
+﻿using AmosShared.Base;
 using OpenTK;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Type.Data
 {
@@ -21,32 +18,51 @@ namespace Type.Data
         /// <returns></returns>
         public List<WaveData> GetWaveData(Int32 level)
         {
+            // Get level data as a string
             String filepath = $"Content/Level/level-{level}.txt";
-
             String data = DataLoader.ReadTextFile(filepath, false);
 
-            //StreamReader sr = new StreamReader(filepath);
-            List<String> lines = new List<String>();
+            List<String> waveStrings = new List<String>();
             List<WaveData> _Waves = new List<WaveData>();
 
-            lines = data.Split(':').ToList();
+            // Split string into wave strings
+            waveStrings = data.Split(':').ToList();
 
-            foreach (String line in lines)
+            // Process each wave
+            foreach (String line in waveStrings)
             {
-                String[] parts = line.Split(',');
+                // Split wave string into each enemy data section
+                String[] enemyStrings = line.Split(',');
                 List<Vector2> positions = new List<Vector2>();
+                List<Int32> types = new List<Int32>();
+                List<Single> delays = new List<Single>();
 
-                Single.TryParse(parts[0], out Single interval);
-                Int32.TryParse(parts[1], out Int32 shiptype);
-
-                for (int i = 2; i < parts.Length; i++)
+                // For each enemy in the wave
+                foreach (String es in enemyStrings)
                 {
-                    positions.Add(new Vector2(1100, Int32.Parse(parts[i])));
+                    // Split enemy data section into : type, Y position, spawn delay
+                    String[] shipdata = es.Split('_');
+                    Int32.TryParse(shipdata[0], out Int32 shiptype);
+                    Single.TryParse(shipdata[1], out Single yPos);
+                    Single.TryParse(shipdata[2], out Single delay);
+
+                    // Add each parsed string to its respective list
+                    types.Add(shiptype);
+                    positions.Add(new Vector2(1100, yPos));
+                    delays.Add(delay);
                 }
 
-                _Waves.Add(new WaveData(TimeSpan.FromSeconds(interval), shiptype, positions.ToArray()));
+                // Create the delay time spans
+                List<TimeSpan> delaySpans = new List<TimeSpan>();
+                foreach (Single delay in delays)
+                {
+                    delaySpans.Add(TimeSpan.FromSeconds(delay));
+                }
+
+                // Create the wave data
+                _Waves.Add(new WaveData(delaySpans.ToArray(), types.ToArray(), positions.ToArray()));
             }
-            //sr.Close();
+
             return _Waves;
         }
     }
