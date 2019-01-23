@@ -8,7 +8,7 @@ namespace Type.Interfaces.Player
     /// <summary>
     /// Interface for the player ship
     /// </summary>
-    public interface IPlayer : ISpawnable, ICollidable, IProjectileShooter, IAnalogListener, INotifier<IPlayerListener>
+    public interface IPlayer : ISpawnable, ICollidable, IProjectileShooter, IUIListener, INotifier<IPlayerListener>
     {
         /// <summary>
         /// Increase the shield level on the player

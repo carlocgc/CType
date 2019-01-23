@@ -1,71 +1,83 @@
 ﻿using AmosShared.State;
 using System;
+using AmosShared.Graphics.Drawables;
+using OpenTK;
 using Type.Controllers;
+using Type.Data;
 using Type.Factories;
-using Type.Interfaces.Communication;
+using Type.Interfaces.Control;
 using Type.Interfaces.Enemies;
 using Type.Interfaces.Player;
 using Type.Scenes;
+using Type.UI;
 
 namespace Type.States
 {
     /// <summary>
     /// Game play state
     /// </summary>
-    public class PlayingState : State, IEnemyFactoryListener, IPlayerListener, IEnemyListener
+    public class PlayingState : State, IPlayerListener, IEnemyListener, IUIListener
     {
-        /// <summary> Main scene of the game </summary>
-        private GameScene _Scene;
+        /// <summary> Max level of the game </summary>
+        private readonly Int32 _MaxLevel = 9;
 
-        /// <summary> Total enemies killed or offscreen this wave</summary>
-        private Int32 _EnemiesKilled;
-
-        /// <summary> Whether all the enemies in the wave have been destroyed or left the screen </summary>
-        private Boolean WaveComplete => _EnemiesKilled == EnemyFactory.Instance.WaveCount;
-
-        /// <summary> Whether all the enemies have been killed this level </summary>
-        private Boolean LevelComplete => _EnemiesKilled == EnemyFactory.Instance.TotalEnemiesThisLevel();
+        /// <summary> Scene for game objects </summary>
+        private GameScene _GameScene;
+        /// <summary> Scene for UI objects </summary>
+        private UIScene _UIScene;
+        /// <summary> The player </summary>
+        private IPlayer _Player;
+        /// <summary> The current level </summary>
+        private Int32 _CurrentLevel;
+        /// <summary> Whether the game is over </summary>
+        private Boolean _GameOver;
+        /// <summary> Whether the game is complete </summary>
+        private Boolean _GameComplete;
+        /// <summary> Displays the current level as text on the screen </summary>
+        private LevelDisplay _LevelDisplay;
+        /// <summary> Text to display the score </summary>
+        private TextDisplay _ScoreDisplay;
 
         protected override void OnEnter()
         {
+            _CurrentLevel = 1;
+
             CollisionController.Instance.ClearObjects();
 
             EnemyFactory.Instance.Reset();
             EnemyFactory.Instance.ParentState = this;
 
-            _Scene = new GameScene();
-            _Scene.Visible = true;
-            _Scene.StartGame();
+            _GameScene = new GameScene();
+            _GameScene.Visible = true;
+
+            _Player = _GameScene.Player;
+
+            _UIScene = new UIScene();
+            _UIScene.Visible = true;
+            _UIScene.RegisterListener(_Player);
+
+            _ScoreDisplay = _UIScene
+
+
+            GameStats.Instance.Score = 0;
+            GameStats.Instance.GameStart();
+
+            _LevelDisplay.ShowLevel(_CurrentLevel, TimeSpan.FromSeconds(2), () =>
+            {
+                EnemyFactory.Instance.SetLevelData(LevelLoader.GetWaveData(_CurrentLevel));
+                EnemyFactory.Instance.Start();
+                CollisionController.Instance.IsActive = true;
+            });
         }
 
         public override Boolean IsComplete()
         {
-            if (_Scene.IsGameOver) ChangeState(new GameOverState(_Scene.CurrentScore));
-            else if (_Scene.IsGameComplete) ChangeState(new GameCompleteState(_Scene.CurrentScore));
+            if (_GameOver) ChangeState(new GameOverState());
+            else if (_GameComplete) ChangeState(new GameCompleteState());
 
-            Boolean gameEnded = _Scene.IsGameOver || _Scene.IsGameComplete;
+            Boolean gameEnded = _GameOver || _GameComplete;
             return gameEnded;
         }
-
-        #region Factory
-
-        /// <inheritdoc />
-        public void OnFactoryStarted()
-        {
-            CollisionController.Instance.IsActive = true;
-        }
-
-        /// <inheritdoc />
-        public void OnWaveCreated()
-        {
-        }
-
-        /// <inheritdoc />
-        public void OnAllWavesCreated()
-        {
-        }
-
-        #endregion
 
         #region Player
 
@@ -77,7 +89,7 @@ namespace Type.States
         /// <inheritdoc />
         public void OnPlayerDeath(IPlayer player)
         {
-            _Scene.OnPlayerDeath();
+
         }
 
         #endregion
@@ -87,28 +99,122 @@ namespace Type.States
         /// <inheritdoc />
         public void OnEnemyDestroyed(IEnemy enemy)
         {
-            _EnemiesKilled++;
-            _Scene.UpdateScore(enemy.Points);
-            if (WaveComplete && !LevelComplete) EnemyFactory.Instance.Start();
-            else if (LevelComplete) _Scene.LevelComplete();
+            GameStats.Instance.Score += enemy.Points;
         }
 
         /// <inheritdoc />
         public void OnEnemyOffscreen(IEnemy enemy)
         {
-            _EnemiesKilled++;
             enemy.Dispose();
-            if (WaveComplete && !LevelComplete) EnemyFactory.Instance.Start();
-            else if (LevelComplete) _Scene.LevelComplete();
         }
+
+        #endregion
+
+        #region Game_Logic
+
+        /// <summary>
+        /// Adds the value to the players current score
+        /// </summary>
+        /// <param name="amount"></param>
+        public void UpdateScore(Int32 amount)
+        {
+            GameStats.Instance.Score += CurrentScore;
+            _ScoreDisplay.Text = CurrentScore.ToString();
+        }
+
+        /// <summary>
+        /// Sets the next level data and displays the current level, ends the game if complete
+        /// </summary>
+        public void LevelComplete()
+        {
+            if (_CurrentLevel >= _MaxLevel)
+            {
+                GameCompleted();
+            }
+            else
+            {
+                _CurrentLevel++;
+                _LevelDisplay.ShowLevel(_CurrentLevel, TimeSpan.FromSeconds(2), () =>
+                {
+                    EnemyFactory.Instance.SetLevelData(LevelLoader.GetWaveData(_CurrentLevel));
+                });
+            }
+        }
+
+        /// <summary>
+        /// Called when the player dies checks if game is over
+        /// </summary>
+        public void OnPlayerDeath()
+        {
+            CollisionController.Instance.ClearObjects();
+            EnemyFactory.Instance.Reset();
+
+            _LifeMeter.LoseLife();
+
+            if (_LifeMeter.PlayerLives > 0 || IsGameOver) return;
+
+            GameStats.Instance.GameEnd();
+            SetButtonsEnabled(false);
+            SetButtonsVisible(false);
+            IsGameOver = true;
+        }
+
+        /// <summary>
+        /// Ends the playing state and set the next state to be <see cref="GameCompleteState"/>
+        /// </summary>
+        private void GameCompleted()
+        {
+            GameStats.Instance.GameEnd();
+            EnemyFactory.Instance.Reset();
+            IsGameComplete = true;
+            SetButtonsEnabled(false);
+            SetButtonsVisible(false);
+        }
+
+        #endregion
+
+        #region Button_Presses
+
+        /// <inheritdoc />
+        public void UpdateAnalogData(Vector2 direction, Single strength)
+        {
+
+        }
+
+        /// <inheritdoc />
+        public void FireButtonPressed()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public void FireButtonReleased()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public void ShieldButtonPressed()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public void ProbeButtonPressed()
+        {
+            throw new NotImplementedException();
+        }
+
 
         #endregion
 
         protected override void OnExit()
         {
-            _Scene.Dispose();
+            _GameScene.Dispose();
+            _UIScene.Dispose();
             Dispose();
         }
+
 
     }
 }
