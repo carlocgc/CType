@@ -1,11 +1,9 @@
 ﻿using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
 using AmosShared.Touch;
+using OpenTK;
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Runtime.InteropServices.WindowsRuntime;
-using OpenTK;
 using Type.Interfaces;
 using Type.Interfaces.Control;
 using Type.UI;
@@ -41,6 +39,7 @@ namespace Type.Scenes
             set
             {
                 _Active = value;
+                Visible = value;
                 SetState(_Active);
             }
         }

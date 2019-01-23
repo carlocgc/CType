@@ -53,11 +53,14 @@ namespace Type.States
             _Player = _GameScene.Player;
 
             _UIScene = new UIScene();
-            _UIScene.Visible = true;
             _UIScene.RegisterListener(_Player);
-
+            _UIScene.AnalogStick.RegisterListener(_Player);
             _ScoreDisplay = _UIScene.ScoreDisplay;
             _LifeMeter = _UIScene.LifeMeter;
+            _LevelDisplay = _UIScene.LevelDisplay;
+            _UIScene.Active = true;
+
+            _GameScene.StartBackgroundScroll();
 
             GameStats.Instance.Score = 0;
             GameStats.Instance.GameStart();
