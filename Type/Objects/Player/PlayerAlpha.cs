@@ -87,10 +87,7 @@ namespace Type.Objects.Player
         /// <inheritdoc />
         public void Spawn()
         {
-            // TODO Spawn invulnerable for a short time, alpha sprite while invulnerable
-
             Position = _SpawnPosition;
-            CollisionController.Instance.RegisterPlayer(this);
         }
 
         /// <inheritdoc />
@@ -177,7 +174,6 @@ namespace Type.Objects.Player
             _ProbeController.RemoveAll();
 
             GameStats.Instance.Deaths++;
-            CollisionController.Instance.RegisterPlayer(this);
 
             foreach (IPlayerListener listener in _Listeners)
             {

@@ -76,8 +76,14 @@ namespace Type.Objects.Projectiles
         /// <inheritdoc />
         public void Destroy()
         {
-            CollisionController.Instance.DeregisterProjectile(this);
             Dispose();
+        }
+
+        /// <inheritdoc />
+        public override void Dispose()
+        {
+            CollisionController.Instance.DeregisterProjectile(this);
+            base.Dispose();
         }
     }
 }

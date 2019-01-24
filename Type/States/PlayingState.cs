@@ -42,7 +42,7 @@ namespace Type.States
 
         protected override void OnEnter()
         {
-            _CurrentLevel = 9;
+            _CurrentLevel = 1;
 
             _EnemyFactory = new EnemyFactory();
             _EnemyFactory.RegisterListener(this);
@@ -53,6 +53,7 @@ namespace Type.States
 
             _Player = _GameScene.Player;
             _Player.RegisterListener(this);
+            CollisionController.Instance.RegisterPlayer(_Player);
 
             _UIScene = new UIScene();
             _UIScene.RegisterListener(_Player);

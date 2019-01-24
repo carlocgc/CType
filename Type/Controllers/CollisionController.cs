@@ -214,12 +214,12 @@ namespace Type.Controllers
         /// </summary>
         private void ClearProjectiles()
         {
-            foreach (IProjectile projectile in _EnemyProjectiles)
+            foreach (IProjectile projectile in _EnemyProjectiles.ToList())
             {
                 projectile.Dispose();
             }
             _EnemyProjectiles.Clear();
-            foreach (IProjectile projectile in _PlayerProjectiles)
+            foreach (IProjectile projectile in _PlayerProjectiles.ToList())
             {
                 projectile.Dispose();
             }
