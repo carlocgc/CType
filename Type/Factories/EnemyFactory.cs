@@ -115,11 +115,14 @@ namespace Type.Factories
 
             if (_DataIndex != _CurrentWave.ShipCount) return;
 
-            WaveComplete();
-
-            if (_WaveIndex != _LevelData.Count) return;
-
-            Stop();
+            if (_WaveIndex != _LevelData.Count - 1)
+            {
+                WaveComplete();
+            }
+            else
+            {
+                Stop();
+            }
         }
 
         /// <summary>
@@ -129,7 +132,7 @@ namespace Type.Factories
         {
             _DataIndex = 0;
             _WaveIndex++;
-            Creating = false;
+            _CurrentWave = _LevelData[_WaveIndex];
             _TimeSinceLastSpawn = TimeSpan.Zero;
         }
 
