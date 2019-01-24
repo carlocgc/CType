@@ -1,6 +1,8 @@
 ﻿using AmosShared.Audio;
 using AmosShared.Graphics;
 using System;
+using System.Collections.Generic;
+using Type.Interfaces.Enemies;
 using Type.Interfaces.Player;
 using Type.Objects.Player;
 using Type.Objects.World;
@@ -20,6 +22,8 @@ namespace Type.Scenes
         /// <summary> Scrolling object </summary>
         private readonly ScrollingObject _Clusters;
 
+        /// <summary> List of all enemies </summary>
+        public List<IEnemy> Enemies { get; }
         /// <summary> The players ship </summary>
         public IPlayer Player { get; }
 
@@ -32,6 +36,7 @@ namespace Type.Scenes
             _PlanetsNear = new ScrollingObject(250, 350, "Content/Graphics/planet-near-", 9, 10, 30, Constants.ZOrders.PLANETS_NEAR);
 
             Player = new PlayerAlpha();
+            Enemies = new List<IEnemy>();
 
             new AudioPlayer("Content/Audio/bgm-1.wav", true, AudioManager.Category.MUSIC, 1);
         }
@@ -57,6 +62,11 @@ namespace Type.Scenes
         {
             base.Dispose();
 
+            foreach (IEnemy enemy in Enemies)
+            {
+                enemy.Dispose();
+            }
+            Enemies.Clear();
             Player.Dispose();
 
             _BackgroundNear.Dispose();

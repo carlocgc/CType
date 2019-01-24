@@ -32,6 +32,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IShieldButtonListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IUIListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Enemies\IEnemy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Enemies\IEnemyFactoryListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Enemies\IEnemyListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Collisions\IDestroyable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Collisions\IHitable.cs" />

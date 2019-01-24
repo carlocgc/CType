@@ -14,7 +14,7 @@ namespace Type.States
     /// <summary>
     /// Game play state
     /// </summary>
-    public class PlayingState : State, IPlayerListener, IEnemyListener
+    public class PlayingState : State, IPlayerListener, IEnemyListener, IEnemyFactoryListener
     {
         /// <summary> Max level of the game </summary>
         private readonly Int32 _MaxLevel = 9;
@@ -99,6 +99,12 @@ namespace Type.States
         #endregion
 
         #region Enemy
+
+        /// <inheritdoc />
+        public void EnemyCreated(IEnemy enemy)
+        {
+            _GameScene.Enemies.Add(enemy);
+        }
 
         /// <inheritdoc />
         public void OnEnemyDestroyed(IEnemy enemy)

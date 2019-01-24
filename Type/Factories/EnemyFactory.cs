@@ -3,6 +3,7 @@ using AmosShared.Interfaces;
 using System;
 using System.Collections.Generic;
 using Type.Data;
+using Type.Interfaces;
 using Type.Interfaces.Enemies;
 using Type.Objects.Bosses;
 using Type.Objects.Enemies;
@@ -14,7 +15,7 @@ namespace Type.Factories
     /// Spawns enemy ships from a given <see cref="WaveData"/> object
     /// </summary>
 
-    public class EnemyFactory : IUpdatable
+    public class EnemyFactory : IUpdatable, INotifier<IEnemyFactoryListener>
     {
         /// <summary> Tracker of the current wave data object </summary>
         private Int32 _WaveIndex;
@@ -102,6 +103,11 @@ namespace Type.Factories
 
             enemy.RegisterListener(ParentState);
 
+            foreach (IEnemyFactoryListener listener in _Listeners)
+            {
+                listener.EnemyCreated(enemy);
+            }
+
             _TimeSinceLastSpawn = TimeSpan.Zero;
             _DataIndex++;
 
@@ -161,5 +167,23 @@ namespace Type.Factories
             _LevelData.Clear();
             IsDisposed = true;
         }
+
+        #region Listener
+
+        private readonly List<IEnemyFactoryListener> _Listeners = new List<IEnemyFactoryListener>();
+
+        /// <inheritdoc />
+        public void RegisterListener(IEnemyFactoryListener listener)
+        {
+            if (!_Listeners.Contains(listener)) _Listeners.Add(listener);
+        }
+
+        /// <inheritdoc />
+        public void DeregisterListener(IEnemyFactoryListener listener)
+        {
+            if (_Listeners.Contains(listener)) _Listeners.Add(listener);
+        }
+
+        #endregion
     }
 }
