@@ -93,15 +93,15 @@ namespace Type.Objects.Enemies
 
             _Explosion = new AnimatedSprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, new[]
             {
-                Texture.GetTexture("Content/Graphics/Explosion/explosion00.png"),
-                Texture.GetTexture("Content/Graphics/Explosion/explosion01.png"),
-                Texture.GetTexture("Content/Graphics/Explosion/explosion02.png"),
-                Texture.GetTexture("Content/Graphics/Explosion/explosion03.png"),
-                Texture.GetTexture("Content/Graphics/Explosion/explosion04.png"),
-                Texture.GetTexture("Content/Graphics/Explosion/explosion05.png"),
-                Texture.GetTexture("Content/Graphics/Explosion/explosion06.png"),
-                Texture.GetTexture("Content/Graphics/Explosion/explosion07.png"),
-                Texture.GetTexture("Content/Graphics/Explosion/explosion08.png"),
+                Texture.GetTexture("Content/Graphics/Explosion2/pixelExplosion00.png"),
+                Texture.GetTexture("Content/Graphics/Explosion2/pixelExplosion01.png"),
+                Texture.GetTexture("Content/Graphics/Explosion2/pixelExplosion02.png"),
+                Texture.GetTexture("Content/Graphics/Explosion2/pixelExplosion03.png"),
+                Texture.GetTexture("Content/Graphics/Explosion2/pixelExplosion04.png"),
+                Texture.GetTexture("Content/Graphics/Explosion2/pixelExplosion05.png"),
+                Texture.GetTexture("Content/Graphics/Explosion2/pixelExplosion06.png"),
+                Texture.GetTexture("Content/Graphics/Explosion2/pixelExplosion07.png"),
+                Texture.GetTexture("Content/Graphics/Explosion2/pixelExplosion08.png"),
             }, 9)
             {
                 Visible = false,
@@ -109,7 +109,7 @@ namespace Type.Objects.Enemies
                 AnimEndBehaviour = AnimatedSprite.EndBehaviour.STOP,
                 CurrentFrame = 0,
             };
-            _Explosion.Scale = new Vector2(2.3f, 2.3f);
+            _Explosion.Scale = new Vector2(2.25f, 2.25f);
             _Explosion.Offset = new Vector2(_Explosion.Size.X / 2 * _Explosion.Scale.X, _Explosion.Size.Y / 2 * _Explosion.Scale.Y);
 
             Position = new Vector2(Renderer.Instance.TargetDimensions.X / 2 + _Sprite.Offset.X, yPos);
@@ -122,7 +122,7 @@ namespace Type.Objects.Enemies
         {
             Vector2 bulletDirection = _DirectionTowardsPlayer;
             if (bulletDirection != Vector2.Zero) bulletDirection.Normalize();
-            new PlasmaBall(Position, bulletDirection, 1000, new Vector4(255, 0, 255, 1));
+            new PlasmaBall(Position, bulletDirection, 1100, new Vector4(255, 0, 255, 1));
 
             _IsWeaponLocked = true;
             new AudioPlayer("Content/Audio/laser4.wav", false, AudioManager.Category.EFFECT, 1);
@@ -253,7 +253,7 @@ namespace Type.Objects.Enemies
         public override void Dispose()
         {
             base.Dispose();
-            _Explosion.Dispose();
+            if (!_Explosion.IsDisposed) _Explosion.Dispose();
 
             _Listeners.Clear();
             CollisionController.Instance.DeregisterEnemy(this);
