@@ -145,6 +145,11 @@ namespace Type.Objects.Enemies
 
             GameStats.Instance.EnemiesKilled++;
 
+            foreach (IEnemyListener listener in _Listeners)
+            {
+                listener.OnEnemyDestroyed(this);
+            }
+
             _Explosion.AddFrameAction((anim) =>
             {
                 Dispose();
@@ -152,8 +157,6 @@ namespace Type.Objects.Enemies
             _Sprite.Visible = false;
             _Explosion.Visible = true;
             _Explosion.Playing = true;
-
-
         }
 
         /// <inheritdoc />

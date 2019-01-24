@@ -19,7 +19,7 @@ namespace Type.Objects.Enemies
     /// </summary>
     public class EnemyGamma : GameObject, IEnemy
     {
-        /// <summary> How long to wait before playing the hit sound</summary>
+      /// <summary> How long to wait before playing the hit sound</summary>
         private readonly TimeSpan _HitSoundInterval = TimeSpan.FromSeconds(0.2f); // TODO FIXME Work around to stop so many sounds playing
         /// <summary> How long since the last hit occured </summary>
         private TimeSpan _TimeSinceLastSound; // TODO FIXME Work around to stop so many sounds playing
@@ -74,13 +74,14 @@ namespace Type.Objects.Enemies
             HitPoints = 12;
             Points = 50;
 
-            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, Texture.GetTexture("Content/Graphics/enemy1.png"))
+            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, Texture.GetTexture("Content/Graphics/enemy3.png"))
             {
                 Visible = true,
             };
             _Sprite.Offset = _Sprite.Size / 2;
             _Sprite.RotationOrigin = _Sprite.Size / 2;
             AddSprite(_Sprite);
+
             HitBox = GetRect();
 
             _Explosion = new AnimatedSprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, new[]
@@ -139,7 +140,15 @@ namespace Type.Objects.Enemies
         public void Destroy()
         {
             IsAlive = false;
+            PositionRelayer.Instance.RemoveRecipient(this);
+            CollisionController.Instance.DeregisterEnemy(this);
+
             GameStats.Instance.EnemiesKilled++;
+
+            foreach (IEnemyListener listener in _Listeners)
+            {
+                listener.OnEnemyDestroyed(this);
+            }
 
             _Explosion.AddFrameAction((anim) =>
             {
@@ -148,8 +157,6 @@ namespace Type.Objects.Enemies
             _Sprite.Visible = false;
             _Explosion.Visible = true;
             _Explosion.Playing = true;
-
-            PositionRelayer.Instance.RemoveRecipient(this);
         }
 
         /// <inheritdoc />
@@ -167,18 +174,6 @@ namespace Type.Objects.Enemies
             _DirectionTowardsPlayer = _PlayerPosition - Position;
 
             Rotation = (Single)Math.Atan2(_DirectionTowardsPlayer.Y, _DirectionTowardsPlayer.X);
-        }
-
-        /// <inheritdoc />
-        public void RegisterListener(IEnemyListener listener)
-        {
-            _Listeners.Add(listener);
-        }
-
-        /// <inheritdoc />
-        public void DeregisterListener(IEnemyListener listener)
-        {
-            _Listeners.Remove(listener);
         }
 
         /// <inheritdoc />
@@ -211,6 +206,7 @@ namespace Type.Objects.Enemies
                     }
                 }
             }
+
             if (!_IsMoving) return;
 
             Position += _MoveDirection * _Speed * (Single)timeTilUpdate.TotalSeconds;
@@ -228,11 +224,29 @@ namespace Type.Objects.Enemies
         }
 
         /// <inheritdoc />
+        public void RegisterListener(IEnemyListener listener)
+        {
+            _Listeners.Add(listener);
+        }
+
+        /// <inheritdoc />
+        public void DeregisterListener(IEnemyListener listener)
+        {
+            _Listeners.Remove(listener);
+        }
+
+        /// <inheritdoc />
         public override void Dispose()
         {
             base.Dispose();
-            _Explosion.Dispose();
+
+            if (!_Explosion.IsDisposed)
+            {
+                _Explosion.Dispose();
+            }
             _Listeners.Clear();
+            CollisionController.Instance.DeregisterEnemy(this);
+            PositionRelayer.Instance.RemoveRecipient(this);
         }
     }
 }
