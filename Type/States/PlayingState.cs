@@ -1,11 +1,9 @@
-﻿using AmosShared.State;
+﻿using AmosShared.Graphics.Drawables;
+using AmosShared.State;
 using System;
-using AmosShared.Graphics.Drawables;
-using OpenTK;
 using Type.Controllers;
 using Type.Data;
 using Type.Factories;
-using Type.Interfaces.Control;
 using Type.Interfaces.Enemies;
 using Type.Interfaces.Player;
 using Type.Scenes;
