@@ -2,6 +2,7 @@
 using AmosShared.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Type.Interfaces.Enemies;
 using Type.Interfaces.Player;
 using Type.Objects.Player;
@@ -55,7 +56,10 @@ namespace Type.Scenes
 
         public override void Update(TimeSpan timeSinceUpdate)
         {
-
+            foreach (IEnemy enemy in Enemies.Where(e => e.IsDisposed).ToList())
+            {
+                Enemies.Remove(enemy);
+            }
         }
 
         public override void Dispose()

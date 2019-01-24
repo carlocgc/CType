@@ -239,7 +239,12 @@ namespace Type.Objects.Bosses
         public override void Dispose()
         {
             base.Dispose();
-            if (!_Explosion.IsDisposed) _Explosion.Dispose();
+
+            _Explosion.Playing = false;
+            _Explosion.Visible = false;
+            _Explosion.RemoveAllFrameActions();
+            _Explosion.Dispose();
+
             PositionRelayer.Instance.RemoveRecipient(this);
             CollisionController.Instance.DeregisterEnemy(this);
             _Listeners.Clear();

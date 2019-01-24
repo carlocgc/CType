@@ -107,9 +107,10 @@ namespace Type.Objects.Enemies
                 AnimEndBehaviour = AnimatedSprite.EndBehaviour.STOP,
                 CurrentFrame = 0,
             };
-            _Explosion.Offset = _Explosion.Size / 2;
+            _Explosion.Scale = new Vector2(2.2f, 2.2f);
+            _Explosion.Offset = new Vector2(_Explosion.Size.X / 2 * _Explosion.Scale.X, _Explosion.Size.Y / 2 * _Explosion.Scale.Y);
 
-            Position = new Vector2(Renderer.Instance.TargetDimensions.X /2 + _Sprite.Offset.X, yPos);
+            Position = new Vector2(Renderer.Instance.TargetDimensions.X / 2 + _Sprite.Offset.X, yPos);
             _Explosion.Position = Position;
             PositionRelayer.Instance.AddRecipient(this);
         }
@@ -251,10 +252,11 @@ namespace Type.Objects.Enemies
         {
             base.Dispose();
 
-            if (!_Explosion.IsDisposed)
-            {
-                _Explosion.Dispose();
-            }
+            _Explosion.Playing = false;
+            _Explosion.Visible = false;
+            _Explosion.RemoveAllFrameActions();
+            _Explosion.Dispose();
+
             _Listeners.Clear();
             CollisionController.Instance.DeregisterEnemy(this);
             PositionRelayer.Instance.RemoveRecipient(this);

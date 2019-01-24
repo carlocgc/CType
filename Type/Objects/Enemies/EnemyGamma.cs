@@ -19,7 +19,7 @@ namespace Type.Objects.Enemies
     /// </summary>
     public class EnemyGamma : GameObject, IEnemy
     {
-      /// <summary> How long to wait before playing the hit sound</summary>
+        /// <summary> How long to wait before playing the hit sound</summary>
         private readonly TimeSpan _HitSoundInterval = TimeSpan.FromSeconds(0.2f); // TODO FIXME Work around to stop so many sounds playing
         /// <summary> How long since the last hit occured </summary>
         private TimeSpan _TimeSinceLastSound; // TODO FIXME Work around to stop so many sounds playing
@@ -109,9 +109,10 @@ namespace Type.Objects.Enemies
                 AnimEndBehaviour = AnimatedSprite.EndBehaviour.STOP,
                 CurrentFrame = 0,
             };
-            _Explosion.Offset = _Explosion.Size / 2;
+            _Explosion.Scale = new Vector2(2.3f, 2.3f);
+            _Explosion.Offset = new Vector2(_Explosion.Size.X / 2 * _Explosion.Scale.X, _Explosion.Size.Y / 2 * _Explosion.Scale.Y);
 
-            Position = new Vector2(Renderer.Instance.TargetDimensions.X /2 + _Sprite.Offset.X, yPos);
+            Position = new Vector2(Renderer.Instance.TargetDimensions.X / 2 + _Sprite.Offset.X, yPos);
             _Explosion.Position = Position;
             PositionRelayer.Instance.AddRecipient(this);
         }
@@ -253,10 +254,11 @@ namespace Type.Objects.Enemies
         {
             base.Dispose();
 
-            if (!_Explosion.IsDisposed)
-            {
-                _Explosion.Dispose();
-            }
+            _Explosion.Playing = false;
+            _Explosion.Visible = false;
+            _Explosion.RemoveAllFrameActions();
+            _Explosion.Dispose();
+
             _Listeners.Clear();
             CollisionController.Instance.DeregisterEnemy(this);
             PositionRelayer.Instance.RemoveRecipient(this);
