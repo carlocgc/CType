@@ -81,7 +81,7 @@ namespace Type.Controllers
         public void RegisterPlayer(IPlayer player)
         {
             _Player = player;
-        }
+        }        
 
         #endregion
 
@@ -102,6 +102,8 @@ namespace Type.Controllers
         /// </summary>
         private void CheckProjectilesToPlayer()
         {
+            if (_Player == null) return;
+
             foreach (IProjectile projectile in _EnemyProjectiles.ToList())
             {
                 if (Intersects(projectile.HitBox, _Player.HitBox))
@@ -133,6 +135,9 @@ namespace Type.Controllers
         /// </summary>
         private void CheckPlayerToEnemies()
         {
+            if (_Player == null) return;
+            ;
+
             foreach (IEnemy enemy in _Enemies.ToList())
             {
                 if (Intersects(_Player.HitBox, enemy.HitBox))
@@ -247,6 +252,14 @@ namespace Type.Controllers
             {
                 _PlayerProjectiles.Remove(projectile);
             }
+        }
+
+        /// <summary>
+        /// Removes the player from the controller
+        /// </summary>
+        public void DeregisterPlayer()
+        {
+            _Player = null;
         }
 
         #endregion

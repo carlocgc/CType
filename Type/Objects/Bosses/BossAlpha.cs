@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using Type.Base;
 using Type.Controllers;
 using Type.Interfaces.Enemies;
-using Type.Interfaces.Weapons;
 using Type.Objects.Projectiles;
 
 namespace Type.Objects.Bosses
@@ -68,8 +67,8 @@ namespace Type.Objects.Bosses
             _IsMoving = true;
             _IsWeaponLocked = true;
             _MoveDirection = new Vector2(-1, 0);
-            _Speed = 600;
-            _FireRate = TimeSpan.FromSeconds(1.1f);
+            _Speed = 250;
+            _FireRate = TimeSpan.FromSeconds(0.8f);
 
             HitPoints = 200;
             Points = 5000;
@@ -107,6 +106,7 @@ namespace Type.Objects.Bosses
             Position = new Vector2(Renderer.Instance.TargetDimensions.X / 2 + _Sprite.Offset.X, yPos);
             _Explosion.Position = Position;
             _StopPosition = new Vector2(Renderer.Instance.TargetDimensions.X / 4, 0);
+            PositionRelayer.Instance.AddRecipient(this);
         }
 
         /// <inheritdoc />
@@ -168,9 +168,9 @@ namespace Type.Objects.Bosses
             Vector2 bulletDirection = _DirectionTowardsPlayer;
             if (bulletDirection != Vector2.Zero) bulletDirection.Normalize();
 
-            new PlasmaBall(Position, bulletDirection, 1050, new Vector4(255, 0, 255, 1));
-            new PlasmaBall(Position, bulletDirection, 1050, new Vector4(255, 0, 255, 1));
-            new PlasmaBall(Position, bulletDirection, 1050, new Vector4(255, 0, 255, 1));
+            new PlasmaBall(Position -= new Vector2(0, -50), bulletDirection, 1050, new Vector4(255, 0, 255, 255));
+            new PlasmaBall(Position, bulletDirection, 1050, new Vector4(255, 0, 255, 255));
+            new PlasmaBall(Position -= new Vector2(0, -50), bulletDirection, 1050, new Vector4(255, 0, 255, 255));
 
             _IsWeaponLocked = true;
             new AudioPlayer("Content/Audio/laser4.wav", false, AudioManager.Category.EFFECT, 1);

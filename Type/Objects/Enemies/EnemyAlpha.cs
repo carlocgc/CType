@@ -56,7 +56,6 @@ namespace Type.Objects.Enemies
             Position.Y + _Sprite.Offset.Y >= ScreenBottom &&
             Position.Y - _Sprite.Offset.Y <= ScreenTop;
 
-
         /// <summary> Whether the enemy has been destroyed  </summary>
         public Boolean IsDestroyed { get; private set; }
         /// <summary> Point valuie for this enemy </summary>

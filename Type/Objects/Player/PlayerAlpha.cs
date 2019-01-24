@@ -177,6 +177,7 @@ namespace Type.Objects.Player
             _ProbeController.RemoveAll();
 
             GameStats.Instance.Deaths++;
+            CollisionController.Instance.RegisterPlayer(this);
 
             foreach (IPlayerListener listener in _Listeners)
             {
