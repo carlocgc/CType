@@ -25,13 +25,13 @@ namespace Type.Objects.Projectiles
         public Int32 HitPoints { get; private set; }
 
         /// <inheritdoc />
-        public Int32 Damage { get; private set; }
-
-        /// <inheritdoc />
         public Vector4 HitBox { get; set; }
 
+        /// <inheritdoc />
+        public Int32 Damage { get; }
+
         /// <summary> Whether the enemy is on screen </summary>
-        private Boolean OnScreen => Position.X <= ScreenRight && Position.Y >= ScreenBottom && Position.Y <= ScreenTop;
+        private Boolean OnScreen => Position.X - _Sprite.Offset.X <= ScreenRight && Position.Y - _Sprite.Offset.Y >= ScreenBottom && Position.Y + _Sprite.Offset.Y <= ScreenTop;
 
         public Laser(Vector2 spawnPos, Vector2 direction, Single speed, Double rotation)
         {

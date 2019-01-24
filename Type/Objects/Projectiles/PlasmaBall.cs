@@ -29,14 +29,14 @@ namespace Type.Objects.Projectiles
         public Vector4 HitBox { get; set; }
 
         /// <summary> Whether the enemy is on screen </summary>
-        private Boolean OnScreen => Position.X >= ScreenLeft && Position.Y >= ScreenBottom && Position.Y <= ScreenTop;
+        private Boolean OnScreen => Position.X + _Sprite.Offset.X / 2 >= ScreenLeft && Position.Y - _Sprite.Offset.X / 2 >= ScreenBottom && Position.Y + _Sprite.Offset.X / 2<= ScreenTop;
 
         public PlasmaBall(Vector2 spawnPos, Vector2 direction, Single speed, Vector4 colour)
         {
             _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.BULLETS, Texture.GetTexture("Content/Graphics/enemybullet.png"))
             {
                 Visible = true,
-                //Colour = colour,
+                Colour = colour,
             };
             _Sprite.Offset = _Sprite.Size / 2;
             _Sprite.RotationOrigin = _Sprite.Size / 2;
