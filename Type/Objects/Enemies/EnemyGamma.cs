@@ -47,11 +47,18 @@ namespace Type.Objects.Enemies
         private Boolean _IsMoving;
         /// <summary> movement speed of the enemy </summary>
         private Single _Speed;
-
+        /// <summary> Whether the enemy has entered the game area </summary>
+        private Boolean InPlay;
         /// <summary> Whether the enemy is on screen </summary>
-        private Boolean OnScreen => Position.X + _Sprite.Offset.X >= ScreenLeft && Position.Y + _Sprite.Offset.Y >= ScreenBottom && Position.Y - _Sprite.Offset.Y <= ScreenTop;
-        /// <summary> Whether the enemy is on screen and can be hit </summary>
-        public Boolean IsAlive { get; private set; }
+        private Boolean OnScreen =>
+            Position.X + _Sprite.Offset.X >= ScreenLeft &&
+            Position.X - _Sprite.Offset.X <= ScreenRight &&
+            Position.Y + _Sprite.Offset.Y >= ScreenBottom &&
+            Position.Y - _Sprite.Offset.Y <= ScreenTop;
+
+
+        /// <summary> Whether the enemy has been destroyed  </summary>
+        public Boolean IsDestroyed { get; private set; }
         /// <summary> Point valuie for this enemy </summary>
         public Int32 Points { get; private set; }
         /// <inheritdoc />
@@ -106,7 +113,7 @@ namespace Type.Objects.Enemies
 
             Position = new Vector2(Renderer.Instance.TargetDimensions.X /2 + _Sprite.Offset.X, yPos);
             _Explosion.Position = Position;
-            IsAlive = true;
+            PositionRelayer.Instance.AddRecipient(this);
         }
 
         /// <inheritdoc />
@@ -140,7 +147,7 @@ namespace Type.Objects.Enemies
         /// <inheritdoc />
         public void Destroy()
         {
-            IsAlive = false;
+            IsDestroyed = true;
             PositionRelayer.Instance.RemoveRecipient(this);
             CollisionController.Instance.DeregisterEnemy(this);
 
@@ -181,46 +188,51 @@ namespace Type.Objects.Enemies
         public override void Update(TimeSpan timeTilUpdate)
         {
             base.Update(timeTilUpdate);
-            if (IsAlive)
+            if (_IsMoving)
             {
-                if (_IsSoundPlaying) // TODO FIXME Work around to limit sounds created
-                {
-                    _TimeSinceLastSound += timeTilUpdate;
-                    if (_TimeSinceLastSound >= _HitSoundInterval)
-                    {
-                        _IsSoundPlaying = false;
-                        _TimeSinceLastSound = TimeSpan.Zero;
-                    }
-                }
+                Position += _MoveDirection * _Speed * (Single)timeTilUpdate.TotalSeconds;
+                _Explosion.Position = Position;
+                HitBox = GetRect();
+            }
 
-                if (!_IsWeaponLocked)
+            if (IsDestroyed) return;
+
+            if (_IsSoundPlaying) // TODO FIXME Work around to limit sounds created
+            {
+                _TimeSinceLastSound += timeTilUpdate;
+                if (_TimeSinceLastSound >= _HitSoundInterval)
                 {
-                    Shoot();
-                }
-                else
-                {
-                    _TimeSinceLastFired += timeTilUpdate;
-                    if (_TimeSinceLastFired >= _FireRate)
-                    {
-                        _IsWeaponLocked = false;
-                        _TimeSinceLastFired = TimeSpan.Zero;
-                    }
+                    _IsSoundPlaying = false;
+                    _TimeSinceLastSound = TimeSpan.Zero;
                 }
             }
 
-            if (!_IsMoving) return;
-
-            Position += _MoveDirection * _Speed * (Single)timeTilUpdate.TotalSeconds;
-            _Explosion.Position = Position;
-            HitBox = GetRect();
-
-            if (OnScreen) return;
-
-            IsAlive = false;
-            for (Int32 i = _Listeners.Count - 1; i >= 0; i--)
+            if (!_IsWeaponLocked)
             {
-                IEnemyListener listener = _Listeners[i];
-                listener.OnEnemyOffscreen(this);
+                Shoot();
+            }
+            else
+            {
+                _TimeSinceLastFired += timeTilUpdate;
+                if (_TimeSinceLastFired >= _FireRate)
+                {
+                    _IsWeaponLocked = false;
+                    _TimeSinceLastFired = TimeSpan.Zero;
+                }
+            }
+
+            if (OnScreen && !InPlay) // If first time on screen
+            {
+                InPlay = true;
+                CollisionController.Instance.RegisterEnemy(this);
+            }
+            else if (!OnScreen && InPlay) // If alive and offscreen
+            {
+                for (Int32 i = _Listeners.Count - 1; i >= 0; i--)
+                {
+                    IEnemyListener listener = _Listeners[i];
+                    listener.OnEnemyOffscreen(this);
+                }
             }
         }
 

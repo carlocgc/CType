@@ -2,7 +2,6 @@
 using AmosShared.Interfaces;
 using System;
 using System.Collections.Generic;
-using Type.Controllers;
 using Type.Data;
 using Type.Interfaces.Enemies;
 using Type.Objects.Bosses;
@@ -17,11 +16,6 @@ namespace Type.Factories
 
     public class EnemyFactory : IUpdatable
     {
-        /// <summary> The instance of the Enemy Factory </summary>
-        private static EnemyFactory _Instance;
-        /// <summary> The instance of the Enemy Factory </summary>
-        public static EnemyFactory Instance => _Instance ?? (_Instance = new EnemyFactory());
-
         /// <summary> Tracker of the current wave data object </summary>
         private Int32 _WaveIndex;
         /// <summary> Tracker for current place in the wave data </summary>
@@ -40,7 +34,7 @@ namespace Type.Factories
         /// <summary> Whether enemies are being created </summary>
         public Boolean Creating { get; private set; }
 
-        private EnemyFactory()
+        public EnemyFactory()
         {
             UpdateManager.Instance.AddUpdatable(this);
         }
@@ -107,8 +101,6 @@ namespace Type.Factories
             }
 
             enemy.RegisterListener(ParentState);
-            CollisionController.Instance.RegisterEnemy(enemy);
-            PositionRelayer.Instance.AddRecipient(enemy);
 
             _TimeSinceLastSpawn = TimeSpan.Zero;
             _DataIndex++;

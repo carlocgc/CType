@@ -23,6 +23,8 @@ namespace Type.States
         private GameScene _GameScene;
         /// <summary> Scene for UI objects </summary>
         private UIScene _UIScene;
+        /// <summary> Factory that will create enemies </summary>
+        private EnemyFactory _EnemyFactory;
         /// <summary> The player </summary>
         private IPlayer _Player;
         /// <summary> The current level </summary>
@@ -42,7 +44,8 @@ namespace Type.States
         {
             _CurrentLevel = 1;
 
-            EnemyFactory.Instance.ParentState = this;
+            _EnemyFactory = new EnemyFactory();
+            _EnemyFactory.ParentState = this;
 
             _GameScene = new GameScene();
             _GameScene.Visible = true;
@@ -65,7 +68,7 @@ namespace Type.States
 
             _LevelDisplay.ShowLevel(_CurrentLevel, TimeSpan.FromSeconds(2), () =>
             {
-                EnemyFactory.Instance.Start(LevelLoader.GetWaveData(_CurrentLevel));
+                _EnemyFactory.Start(LevelLoader.GetWaveData(_CurrentLevel));
                 CollisionController.Instance.IsActive = true;
             });
         }
@@ -101,14 +104,14 @@ namespace Type.States
         public void OnEnemyDestroyed(IEnemy enemy)
         {
             UpdateScore(enemy.Points);
-            if (!EnemyFactory.Instance.Creating && CollisionController.Instance.Enemies == 0) LevelComplete();
+            if (!_EnemyFactory.Creating && CollisionController.Instance.Enemies == 0) LevelComplete();
         }
 
         /// <inheritdoc />
         public void OnEnemyOffscreen(IEnemy enemy)
         {
             enemy.Dispose();
-            if (!EnemyFactory.Instance.Creating && CollisionController.Instance.Enemies == 0) LevelComplete();
+            if (!_EnemyFactory.Creating && CollisionController.Instance.Enemies == 0) LevelComplete();
         }
 
         #endregion
@@ -136,7 +139,7 @@ namespace Type.States
                 _CurrentLevel++;
                 _LevelDisplay.ShowLevel(_CurrentLevel, TimeSpan.FromSeconds(2), () =>
                 {
-                    EnemyFactory.Instance.Start(LevelLoader.GetWaveData(_CurrentLevel));
+                    _EnemyFactory.Start(LevelLoader.GetWaveData(_CurrentLevel));
                 });
             }
         }
@@ -153,7 +156,7 @@ namespace Type.States
             if (_LifeMeter.PlayerLives > 0)
             {
                 _Player.Spawn();
-                EnemyFactory.Instance.RestartWave();
+                _EnemyFactory.RestartWave();
             }
             else
             {
@@ -167,8 +170,9 @@ namespace Type.States
         private void GameCompleted()
         {
             GameStats.Instance.GameEnd();
+            CollisionController.Instance.IsActive = false;
             CollisionController.Instance.ClearObjects();
-            EnemyFactory.Instance.Stop();
+            _EnemyFactory.Stop();
             _UIScene.Active = false;
             _GameComplete = true;
         }
@@ -179,8 +183,9 @@ namespace Type.States
         private void GameOver()
         {
             GameStats.Instance.GameEnd();
+            CollisionController.Instance.IsActive = false;
             CollisionController.Instance.ClearObjects();
-            EnemyFactory.Instance.Stop();
+            _EnemyFactory.Stop();
             _UIScene.Active = false;
             _GameOver = true;
         }
@@ -189,8 +194,9 @@ namespace Type.States
 
         protected override void OnExit()
         {
-            EnemyFactory.Instance.ParentState = null;
             CollisionController.Instance.IsActive = false;
+            CollisionController.Instance.ClearObjects();
+            _EnemyFactory.Dispose();
             _GameScene.Dispose();
             _UIScene.Dispose();
             Dispose();
