@@ -230,7 +230,7 @@ namespace Type.Controllers
         /// <param name="enemy"></param>
         public void DeregisterEnemy(IEnemy enemy)
         {
-            _Enemies.Remove(enemy);
+            if (_Enemies.Contains(enemy)) _Enemies.Remove(enemy);
         }
 
         /// <summary>
