@@ -71,10 +71,10 @@ namespace Type.Objects.Bosses
             _Speed = 600;
             _FireRate = TimeSpan.FromSeconds(1.1f);
 
-            HitPoints = 9;
+            HitPoints = 200;
             Points = 5000;
 
-            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, Texture.GetTexture("Content/Graphics/enemy1.png"))
+            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, Texture.GetTexture("Content/Graphics/Bosses/boss1.png"))
             {
                 Visible = true,
             };
@@ -197,6 +197,7 @@ namespace Type.Objects.Bosses
                 _TimeSinceLastFired = TimeSpan.Zero;
 
                 Position += _MoveDirection * _Speed * (Single)timeTilUpdate.TotalSeconds;
+                _Explosion.Position = Position;
                 HitBox = GetRect();
 
                 if (Position.X <= _StopPosition.X)
@@ -238,8 +239,9 @@ namespace Type.Objects.Bosses
         public override void Dispose()
         {
             base.Dispose();
-            _Explosion.Dispose();
+            if (!_Explosion.IsDisposed) _Explosion.Dispose();
             PositionRelayer.Instance.RemoveRecipient(this);
+            CollisionController.Instance.DeregisterEnemy(this);
             _Listeners.Clear();
         }
     }

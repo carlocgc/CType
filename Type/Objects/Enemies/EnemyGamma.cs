@@ -71,10 +71,10 @@ namespace Type.Objects.Enemies
             _Speed = 600;
             _FireRate = TimeSpan.FromSeconds(0.7f);
 
-            HitPoints = 12;
+            HitPoints = 5;
             Points = 50;
 
-            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, Texture.GetTexture("Content/Graphics/enemy3.png"))
+            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, Texture.GetTexture("Content/Graphics/enemy4.png"))
             {
                 Visible = true,
             };
@@ -105,6 +105,7 @@ namespace Type.Objects.Enemies
             _Explosion.Offset = _Explosion.Size / 2;
 
             Position = new Vector2(Renderer.Instance.TargetDimensions.X /2 + _Sprite.Offset.X, yPos);
+            _Explosion.Position = Position;
             IsAlive = true;
         }
 

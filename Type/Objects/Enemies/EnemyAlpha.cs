@@ -105,6 +105,7 @@ namespace Type.Objects.Enemies
             _Explosion.Offset = _Explosion.Size / 2;
 
             Position = new Vector2(Renderer.Instance.TargetDimensions.X /2 + _Sprite.Offset.X, yPos);
+            _Explosion.Position = Position;
             IsAlive = true;
         }
 
