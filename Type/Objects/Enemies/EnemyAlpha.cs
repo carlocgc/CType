@@ -86,15 +86,15 @@ namespace Type.Objects.Enemies
 
             _Explosion = new AnimatedSprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, new[]
             {
-                Texture.GetTexture("Content/Graphics/Explosion/explosion00.png"),
-                Texture.GetTexture("Content/Graphics/Explosion/explosion01.png"),
-                Texture.GetTexture("Content/Graphics/Explosion/explosion02.png"),
-                Texture.GetTexture("Content/Graphics/Explosion/explosion03.png"),
-                Texture.GetTexture("Content/Graphics/Explosion/explosion04.png"),
-                Texture.GetTexture("Content/Graphics/Explosion/explosion05.png"),
-                Texture.GetTexture("Content/Graphics/Explosion/explosion06.png"),
-                Texture.GetTexture("Content/Graphics/Explosion/explosion07.png"),
-                Texture.GetTexture("Content/Graphics/Explosion/explosion08.png"),
+                Texture.GetTexture("Content/Graphics/Explosion2/pixelExplosion00.png"),
+                Texture.GetTexture("Content/Graphics/Explosion2/pixelExplosion01.png"),
+                Texture.GetTexture("Content/Graphics/Explosion2/pixelExplosion02.png"),
+                Texture.GetTexture("Content/Graphics/Explosion2/pixelExplosion03.png"),
+                Texture.GetTexture("Content/Graphics/Explosion2/pixelExplosion04.png"),
+                Texture.GetTexture("Content/Graphics/Explosion2/pixelExplosion05.png"),
+                Texture.GetTexture("Content/Graphics/Explosion2/pixelExplosion06.png"),
+                Texture.GetTexture("Content/Graphics/Explosion2/pixelExplosion07.png"),
+                Texture.GetTexture("Content/Graphics/Explosion2/pixelExplosion08.png"),
             }, 9)
             {
                 Visible = false,
