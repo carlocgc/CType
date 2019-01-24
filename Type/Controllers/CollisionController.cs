@@ -7,7 +7,6 @@ using System.Linq;
 using Type.Interfaces.Enemies;
 using Type.Interfaces.Player;
 using Type.Interfaces.Weapons;
-using Type.Objects.Projectiles;
 
 namespace Type.Controllers
 {
@@ -34,6 +33,9 @@ namespace Type.Controllers
         public Boolean IsDisposed { get; set; }
         /// <summary> Whether the collision controller is active </summary>
         public Boolean IsActive { get; set; }
+
+        /// <summary> How many enemies are currently registered </summary>
+        public Int32 Enemies => _Enemies.Count;
 
         private CollisionController()
         {
@@ -90,15 +92,15 @@ namespace Type.Controllers
         /// </summary>
         private void CheckCollisions()
         {
-            CheckprojectilesToPlayer();
-            CheckprojectilesToEnemies();
+            CheckProjectilesToEnemies();
             CheckPlayerToEnemies();
+            CheckProjectilesToPlayer();
         }
 
         /// <summary>
         /// Checks for enemy projectiles hitting the player
         /// </summary>
-        private void CheckprojectilesToPlayer()
+        private void CheckProjectilesToPlayer()
         {
             foreach (IProjectile projectile in _EnemyProjectiles.ToList())
             {
@@ -112,7 +114,7 @@ namespace Type.Controllers
         /// <summary>
         /// Checks for player projectiles hitting enemies
         /// </summary>
-        private void CheckprojectilesToEnemies()
+        private void CheckProjectilesToEnemies()
         {
             foreach (IProjectile projectile in _PlayerProjectiles.ToList())
             {
@@ -131,6 +133,8 @@ namespace Type.Controllers
         /// </summary>
         private void CheckPlayerToEnemies()
         {
+            if (_Player == null) return;
+
             foreach (IEnemy enemy in _Enemies.ToList())
             {
                 if (Intersects(_Player.HitBox, enemy.HitBox))
@@ -160,7 +164,8 @@ namespace Type.Controllers
         /// </summary>
         private void HandlePlayerHit(IProjectile projectile = null)
         {
-            _Player.Hit(projectile);
+            Int32 damage = projectile?.Damage ?? 1;
+            _Player.Hit(damage);
 
             if (projectile == null) return;
             _EnemyProjectiles.Remove(projectile);
@@ -173,7 +178,7 @@ namespace Type.Controllers
         private void HandleEnemyHit(IProjectile projectile, IEnemy enemy)
         {
             _PlayerProjectiles.Remove(projectile);
-            enemy.Hit(projectile);
+            enemy.Hit(projectile.Damage);
             projectile?.Destroy();
         }
 
@@ -196,14 +201,12 @@ namespace Type.Controllers
         /// </summary>
         public void ClearObjects()
         {
-            IsActive = false;
             foreach (IEnemy enemy in _Enemies.ToList())
             {
                 enemy.Dispose();
             }
             _Enemies.Clear();
             ClearProjectiles();
-            IsActive = false;
         }
 
         /// <summary>
@@ -211,12 +214,12 @@ namespace Type.Controllers
         /// </summary>
         private void ClearProjectiles()
         {
-            foreach (IProjectile projectile in _EnemyProjectiles)
+            foreach (IProjectile projectile in _EnemyProjectiles.ToList())
             {
                 projectile.Dispose();
             }
             _EnemyProjectiles.Clear();
-            foreach (IProjectile projectile in _PlayerProjectiles)
+            foreach (IProjectile projectile in _PlayerProjectiles.ToList())
             {
                 projectile.Dispose();
             }
@@ -229,7 +232,7 @@ namespace Type.Controllers
         /// <param name="enemy"></param>
         public void DeregisterEnemy(IEnemy enemy)
         {
-            _Enemies.Remove(enemy);
+            if (_Enemies.Contains(enemy)) _Enemies.Remove(enemy);
         }
 
         /// <summary>
@@ -269,14 +272,15 @@ namespace Type.Controllers
 
         public void Dispose()
         {
+            IsDisposed = true;
+            UpdateManager.Instance.RemoveUpdatable(this);
+            ClearProjectiles();
             foreach (IEnemy enemy in _Enemies)
             {
                 enemy.Dispose();
             }
             _Enemies.Clear();
-            ClearProjectiles();
             _Player.Dispose();
-            IsDisposed = true;
         }
     }
 }

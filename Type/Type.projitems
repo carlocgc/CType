@@ -25,10 +25,14 @@
     <Compile Include="$(MSBuildThisFileDirectory)Glide\Tween.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Glide\Tweener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Collisions\ICollidable.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Communication\IEnemyFactoryListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IAnalogListener.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IFireButtonListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IPositionRecipient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IProbeButtonListener.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IShieldButtonListener.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IUIListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Enemies\IEnemy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Enemies\IEnemyFactoryListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Enemies\IEnemyListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Collisions\IDestroyable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Collisions\IHitable.cs" />
@@ -57,6 +61,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\GameOverScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\GameScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\MainMenuScene.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\UIScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)States\GameCompleteState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)States\GameOverState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)States\MainMenuState.cs" />

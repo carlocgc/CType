@@ -14,6 +14,6 @@ namespace Type.Interfaces
         /// <summary>
         /// Hit the <see cref="IHitable"/>
         /// </summary>
-        void Hit(IProjectile projectile);
+        void Hit(Int32 damage);
     }
 }

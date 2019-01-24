@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using Type.Base;
 using Type.Controllers;
 using Type.Interfaces.Enemies;
-using Type.Interfaces.Weapons;
 using Type.Objects.Projectiles;
 
 namespace Type.Objects.Bosses
@@ -68,19 +67,20 @@ namespace Type.Objects.Bosses
             _IsMoving = true;
             _IsWeaponLocked = true;
             _MoveDirection = new Vector2(-1, 0);
-            _Speed = 600;
-            _FireRate = TimeSpan.FromSeconds(1.1f);
+            _Speed = 250;
+            _FireRate = TimeSpan.FromSeconds(0.8f);
 
-            HitPoints = 9;
+            HitPoints = 200;
             Points = 5000;
 
-            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, Texture.GetTexture("Content/Graphics/enemy1.png"))
+            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, Texture.GetTexture("Content/Graphics/Bosses/boss1.png"))
             {
                 Visible = true,
             };
             _Sprite.Offset = _Sprite.Size / 2;
             _Sprite.RotationOrigin = _Sprite.Size / 2;
             AddSprite(_Sprite);
+            HitBox = GetRect();
 
             _Explosion = new AnimatedSprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, new[]
             {
@@ -97,12 +97,16 @@ namespace Type.Objects.Bosses
             {
                 Visible = false,
                 Playing = false,
+                AnimEndBehaviour = AnimatedSprite.EndBehaviour.STOP,
+                CurrentFrame = 0,
             };
             _Explosion.Scale = new Vector2(9, 9);
             _Explosion.Offset = new Vector2(_Explosion.Size.X / 2 * _Explosion.Scale.X, _Explosion.Size.Y / 2 * _Explosion.Scale.Y);
 
-            Position = new Vector2(Renderer.Instance.TargetDimensions.X /2 + _Sprite.Offset.X, yPos);
-            _StopPosition = new Vector2(Renderer.Instance.TargetDimensions.X / 4, 0);            
+            Position = new Vector2(Renderer.Instance.TargetDimensions.X / 2 + _Sprite.Offset.X, yPos);
+            _Explosion.Position = Position;
+            _StopPosition = new Vector2(Renderer.Instance.TargetDimensions.X / 4, 0);
+            PositionRelayer.Instance.AddRecipient(this);
         }
 
         /// <inheritdoc />
@@ -122,9 +126,9 @@ namespace Type.Objects.Bosses
         }
 
         /// <inheritdoc />
-        public void Hit(IProjectile projectile)
+        public void Hit(Int32 damage)
         {
-            HitPoints -= projectile.Damage;
+            HitPoints -= damage;
 
             if (!_IsSoundPlaying)
             {
@@ -164,9 +168,9 @@ namespace Type.Objects.Bosses
             Vector2 bulletDirection = _DirectionTowardsPlayer;
             if (bulletDirection != Vector2.Zero) bulletDirection.Normalize();
 
-            new PlasmaBall(Position, bulletDirection, 1050, new Vector4(255, 0, 255, 1));
-            new PlasmaBall(Position, bulletDirection, 1050, new Vector4(255, 0, 255, 1));
-            new PlasmaBall(Position, bulletDirection, 1050, new Vector4(255, 0, 255, 1));
+            new PlasmaBall(Position - new Vector2(0, 120), bulletDirection, 1050, new Vector4(255, 0, 255, 255));
+            new PlasmaBall(Position, bulletDirection, 1050, new Vector4(255, 0, 255, 255));
+            new PlasmaBall(Position + new Vector2(0, 120), bulletDirection, 1050, new Vector4(255, 0, 255, 255));
 
             _IsWeaponLocked = true;
             new AudioPlayer("Content/Audio/laser4.wav", false, AudioManager.Category.EFFECT, 1);
@@ -193,12 +197,14 @@ namespace Type.Objects.Bosses
                 _TimeSinceLastFired = TimeSpan.Zero;
 
                 Position += _MoveDirection * _Speed * (Single)timeTilUpdate.TotalSeconds;
+                _Explosion.Position = Position;
                 HitBox = GetRect();
 
                 if (Position.X <= _StopPosition.X)
                 {
                     IsAlive = true;
                     _IsMoving = false;
+                    CollisionController.Instance.RegisterEnemy(this);
                 }
             }
 
@@ -234,7 +240,10 @@ namespace Type.Objects.Bosses
         public override void Dispose()
         {
             base.Dispose();
+            if (!_Explosion.IsDisposed) _Explosion.Dispose();
+
             PositionRelayer.Instance.RemoveRecipient(this);
+            CollisionController.Instance.DeregisterEnemy(this);
             _Listeners.Clear();
         }
     }
