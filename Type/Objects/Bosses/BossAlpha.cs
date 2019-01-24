@@ -168,9 +168,9 @@ namespace Type.Objects.Bosses
             Vector2 bulletDirection = _DirectionTowardsPlayer;
             if (bulletDirection != Vector2.Zero) bulletDirection.Normalize();
 
-            new PlasmaBall(Position -= new Vector2(0, -50), bulletDirection, 1050, new Vector4(255, 0, 255, 255));
+            new PlasmaBall(Position - new Vector2(0, 50), bulletDirection, 1050, new Vector4(255, 0, 255, 255));
             new PlasmaBall(Position, bulletDirection, 1050, new Vector4(255, 0, 255, 255));
-            new PlasmaBall(Position -= new Vector2(0, -50), bulletDirection, 1050, new Vector4(255, 0, 255, 255));
+            new PlasmaBall(Position + new Vector2(0, 50), bulletDirection, 1050, new Vector4(255, 0, 255, 255));
 
             _IsWeaponLocked = true;
             new AudioPlayer("Content/Audio/laser4.wav", false, AudioManager.Category.EFFECT, 1);

@@ -81,7 +81,7 @@ namespace Type.Controllers
         public void RegisterPlayer(IPlayer player)
         {
             _Player = player;
-        }        
+        }
 
         #endregion
 
@@ -92,9 +92,9 @@ namespace Type.Controllers
         /// </summary>
         private void CheckCollisions()
         {
-            CheckProjectilesToPlayer();
             CheckProjectilesToEnemies();
             CheckPlayerToEnemies();
+            CheckProjectilesToPlayer();
         }
 
         /// <summary>
@@ -102,8 +102,6 @@ namespace Type.Controllers
         /// </summary>
         private void CheckProjectilesToPlayer()
         {
-            if (_Player == null) return;
-
             foreach (IProjectile projectile in _EnemyProjectiles.ToList())
             {
                 if (Intersects(projectile.HitBox, _Player.HitBox))
@@ -136,7 +134,6 @@ namespace Type.Controllers
         private void CheckPlayerToEnemies()
         {
             if (_Player == null) return;
-            ;
 
             foreach (IEnemy enemy in _Enemies.ToList())
             {
@@ -254,14 +251,6 @@ namespace Type.Controllers
             }
         }
 
-        /// <summary>
-        /// Removes the player from the controller
-        /// </summary>
-        public void DeregisterPlayer()
-        {
-            _Player = null;
-        }
-
         #endregion
 
         /// <summary>
@@ -283,14 +272,15 @@ namespace Type.Controllers
 
         public void Dispose()
         {
+            IsDisposed = true;
+            UpdateManager.Instance.RemoveUpdatable(this);
+            ClearProjectiles();
             foreach (IEnemy enemy in _Enemies)
             {
                 enemy.Dispose();
             }
             _Enemies.Clear();
-            ClearProjectiles();
             _Player.Dispose();
-            IsDisposed = true;
         }
     }
 }

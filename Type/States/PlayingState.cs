@@ -94,7 +94,19 @@ namespace Type.States
         /// <inheritdoc />
         public void OnPlayerDeath(IPlayer player)
         {
-            PlayerDeath();
+            CollisionController.Instance.ClearObjects();
+
+            _LifeMeter.LoseLife();
+
+            if (_LifeMeter.PlayerLives > 0)
+            {
+                _Player.Spawn();
+                _EnemyFactory.RestartWave();
+            }
+            else
+            {
+                GameOver();
+            }
         }
 
         #endregion
@@ -148,26 +160,6 @@ namespace Type.States
                 {
                     _EnemyFactory.Start(LevelLoader.GetWaveData(_CurrentLevel));
                 });
-            }
-        }
-
-        /// <summary>
-        /// Called when the player dies checks if game is over
-        /// </summary>
-        private void PlayerDeath()
-        {
-            CollisionController.Instance.ClearObjects();
-
-            _LifeMeter.LoseLife();
-
-            if (_LifeMeter.PlayerLives > 0)
-            {
-                _Player.Spawn();
-                _EnemyFactory.RestartWave();
-            }
-            else
-            {
-                GameOver();
             }
         }
 
