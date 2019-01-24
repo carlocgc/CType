@@ -251,11 +251,7 @@ namespace Type.Objects.Enemies
         public override void Dispose()
         {
             base.Dispose();
-
-            _Explosion.Playing = false;
-            _Explosion.Visible = false;
-            _Explosion.RemoveAllFrameActions();
-            _Explosion.Dispose();
+            if (!_Explosion.IsDisposed) _Explosion.Dispose();
 
             _Listeners.Clear();
             CollisionController.Instance.DeregisterEnemy(this);

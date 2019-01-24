@@ -45,6 +45,7 @@ namespace Type.States
             _CurrentLevel = 1;
 
             _EnemyFactory = new EnemyFactory();
+            _EnemyFactory.RegisterListener(this);
             _EnemyFactory.ParentState = this;
 
             _GameScene = new GameScene();
