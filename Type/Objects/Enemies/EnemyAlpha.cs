@@ -140,6 +140,9 @@ namespace Type.Objects.Enemies
         public void Destroy()
         {
             IsAlive = false;
+            PositionRelayer.Instance.RemoveRecipient(this);
+            CollisionController.Instance.DeregisterEnemy(this);
+
             GameStats.Instance.EnemiesKilled++;
 
             _Explosion.AddFrameAction((anim) =>
@@ -150,8 +153,7 @@ namespace Type.Objects.Enemies
             _Explosion.Visible = true;
             _Explosion.Playing = true;
 
-            PositionRelayer.Instance.RemoveRecipient(this);
-            CollisionController.Instance.DeregisterEnemy(this);
+
         }
 
         /// <inheritdoc />
@@ -235,7 +237,10 @@ namespace Type.Objects.Enemies
         {
             base.Dispose();
 
-            _Explosion.Dispose();
+            if (!_Explosion.IsDisposed)
+            {
+                _Explosion.Dispose();
+            }
             _Listeners.Clear();
             CollisionController.Instance.DeregisterEnemy(this);
             PositionRelayer.Instance.RemoveRecipient(this);
