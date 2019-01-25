@@ -8,7 +8,7 @@ namespace Type.Interfaces.Powerups
     /// <summary>
     /// Powerup that can collected
     /// </summary>
-    public interface IPowerup : ICollidable, IUpdatable
+    public interface IPowerup : ICollidable, INotifier<IPowerupListener>, IUpdatable
     {
         /// <summary>
         /// The ID of the powerup type

@@ -51,6 +51,9 @@ namespace Type.States
             _EnemyFactory.RegisterListener(this);
             _EnemyFactory.ParentState = this;
 
+            _PowerupFactory = new PowerupFactory();
+            _PowerupFactory.RegisterListener(this);
+
             _GameScene = new GameScene();
             _GameScene.Visible = true;
 
