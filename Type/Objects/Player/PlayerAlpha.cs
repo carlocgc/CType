@@ -226,6 +226,32 @@ namespace Type.Objects.Player
             _ProbeController.AddProbe(id);
         }
 
+        /// <inheritdoc />
+        public void ApplyPowerup(Int32 id)
+        {
+            switch (id)
+            {
+                case 0:
+                    {
+                        return;
+                    }
+                case 1:
+                    {
+                        break;
+                    }
+                case 2:
+                    {
+                        break;
+                    }
+                case 3:
+                    {
+                        break;
+                    }
+                default:
+                    throw new ArgumentOutOfRangeException("Trying to apply a powerup that does not exist");
+            }
+        }
+
         #endregion
 
         #region Listener
