@@ -65,7 +65,7 @@ namespace Type.Scenes
             Sprite probeButton = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/probe-button.png"))
             {
                 Position = new Vector2(450, -450),
-                Visible = true,
+                Visible = false,
                 Colour = new Vector4(1, 1, 1, (Single)0.5)
             };
             ProbeButton = new Button(Int32.MaxValue, probeButton) { OnButtonPress = ProbeButtonOnPress };
@@ -73,7 +73,7 @@ namespace Type.Scenes
             Sprite shieldButton = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/shield_button.png"))
             {
                 Position = new Vector2(320, -450),
-                Visible = true,
+                Visible = false,
                 Colour = new Vector4(1, 1, 1, (Single)0.5)
             };
             ShieldButton = new Button(Int32.MaxValue, shieldButton) { OnButtonPress = ShieldButtonPress };
@@ -87,15 +87,15 @@ namespace Type.Scenes
         private void SetState(Boolean state)
         {
             FireButton.TouchEnabled = state;
-            ProbeButton.TouchEnabled = state;
-            ShieldButton.TouchEnabled = state;
-            AnalogStick.TouchEnabled = state;
-
             FireButton.Visible = state;
-            ProbeButton.Visible = state;
-            ShieldButton.Visible = state;
+            AnalogStick.TouchEnabled = state;
             AnalogStick.Visible = state;
             AnalogStick.ListeningForMove = state;
+
+            //ProbeButton.TouchEnabled = state;
+            //ProbeButton.Visible = state;
+            //ShieldButton.TouchEnabled = state;
+            //ShieldButton.Visible = state;
         }
 
         #region Inputs

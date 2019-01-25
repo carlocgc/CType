@@ -46,7 +46,9 @@ namespace Type
 
             public const Int32 BULLETS = 78;
 
-            public const Int32 ENEMIES = 79;
+            public const Int32 POWERUPS = 79;
+
+            public const Int32 ENEMIES = 85;
 
             public const Int32 PLAYER = 90;
 

@@ -9,6 +9,7 @@ using Type.Controllers;
 using Type.Data;
 using Type.Interfaces;
 using Type.Interfaces.Player;
+using Type.Interfaces.Powerups;
 using Type.Interfaces.Probe;
 using Type.Objects.Projectiles;
 using static Type.Constants.Global;
@@ -224,6 +225,59 @@ namespace Type.Objects.Player
         public void AddProbe(Int32 id)
         {
             _ProbeController.AddProbe(id);
+            _ProbeController.Shoot = AutoFire;
+        }
+
+        /// <summary>
+        /// Adds a life to the player
+        /// </summary>
+        private void AddLife()
+        {
+            foreach (IPlayerListener listener in _Listeners)
+            {
+                listener.OnLifeAdded(this);
+            }
+        }
+
+        /// <summary>
+        /// Add points
+        /// </summary>
+        private void AddPoints(Int32 value)
+        {
+            foreach (IPlayerListener listener in _Listeners)
+            {
+                listener.OnPointPickup(value);
+            }
+        }
+
+        /// <inheritdoc />
+        public void ApplyPowerup(IPowerup powerup)
+        {
+            switch (powerup.ID)
+            {
+                case 0:
+                    {
+                        AddLife();
+                        return;
+                    }
+                case 1:
+                    {
+                        AddShield();
+                        break;
+                    }
+                case 2:
+                    {
+                        AddProbe(0);
+                        break;
+                    }
+                case 3:
+                    {
+                        AddPoints(powerup.PointValue);
+                        break;
+                    }
+                default:
+                    throw new ArgumentOutOfRangeException("Powerup does not exist");
+            }
         }
 
         #endregion

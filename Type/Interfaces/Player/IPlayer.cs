@@ -1,6 +1,7 @@
 ﻿using System;
 using Type.Interfaces.Collisions;
 using Type.Interfaces.Control;
+using Type.Interfaces.Powerups;
 using Type.Interfaces.Weapons;
 
 namespace Type.Interfaces.Player
@@ -20,5 +21,10 @@ namespace Type.Interfaces.Player
         /// </summary>
         /// <param name="id"> The type of probe to add </param>
         void AddProbe(Int32 id);
+
+        /// <summary>
+        /// Apply a power of the given type
+        /// </summary>
+        void ApplyPowerup(IPowerup powerup);
     }
 }

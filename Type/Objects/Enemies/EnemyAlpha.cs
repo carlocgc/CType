@@ -5,7 +5,6 @@ using AmosShared.Graphics.Drawables;
 using OpenTK;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using Type.Base;
 using Type.Controllers;
 using Type.Data;
@@ -81,8 +80,8 @@ namespace Type.Objects.Enemies
             _IsMoving = true;
             _IsWeaponLocked = true;
             _MoveDirection = new Vector2(-1, 0);
-            _Speed = 500;
-            _FireRate = TimeSpan.FromSeconds(1.1f);
+            _Speed = 400;
+            _FireRate = TimeSpan.FromSeconds(2f);
 
             HitPoints = 2;
             Points = 10;
