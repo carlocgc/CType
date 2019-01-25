@@ -20,5 +20,11 @@ namespace Type.Interfaces.Player
         /// </summary>
         /// <param name="id"> The type of probe to add </param>
         void AddProbe(Int32 id);
+
+        /// <summary>
+        /// Apply a power of the given type
+        /// </summary>
+        /// <param name="id"> The type of powerup </param>
+        void ApplyPowerup(Int32 id);
     }
 }
