@@ -225,6 +225,7 @@ namespace Type.Objects.Player
         public void AddProbe(Int32 id)
         {
             _ProbeController.AddProbe(id);
+            _ProbeController.Shoot = AutoFire;
         }
 
         /// <summary>
