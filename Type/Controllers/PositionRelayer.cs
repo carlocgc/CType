@@ -4,7 +4,7 @@ using Type.Interfaces.Control;
 
 namespace Type.Controllers
 {
-    public class PositionRelayer
+    public sealed class PositionRelayer
     {
         /// <summary> The instance of the PositionRelayer</summary>
         private static PositionRelayer _Instance;
@@ -20,7 +20,7 @@ namespace Type.Controllers
         /// <summary>
         /// Relays the given position to all registered <see cref="IPositionRecipient"/>'s
         /// </summary>
-        public PositionRelayer()
+        private PositionRelayer()
         {
             _Recipients = new List<IPositionRecipient>();
         }
@@ -31,6 +31,7 @@ namespace Type.Controllers
         /// <param name="recipient"></param>
         public void AddRecipient(IPositionRecipient recipient)
         {
+            if (_Recipients.Contains(recipient)) return;
             _Recipients.Add(recipient);
             RelayPosition(_PositionToRelay);
         }
@@ -53,7 +54,7 @@ namespace Type.Controllers
         {
             foreach (IPositionRecipient recipient in _Recipients)
             {
-                recipient.Receive(position);
+                recipient.UpdatePositionData(position);
             }
         }
 
@@ -63,7 +64,7 @@ namespace Type.Controllers
         /// <param name="recipient"></param>
         public void RemoveRecipient(IPositionRecipient recipient)
         {
-            _Recipients.Remove(recipient);
+           if (_Recipients.Contains(recipient)) _Recipients.Remove(recipient);
         }
     }
 }

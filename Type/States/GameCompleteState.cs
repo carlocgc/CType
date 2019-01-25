@@ -1,24 +1,22 @@
 ﻿using AmosShared.State;
 using System;
+using Type.Data;
 using Type.Scenes;
 
 namespace Type.States
 {
     public class GameCompleteState : State
     {
-        private readonly Int32 _Score;
-
         private GameCompleteScene _Scene;
 
-        public GameCompleteState(Int32 score)
+        public GameCompleteState()
         {
-            _Score = score;
         }
 
         protected override void OnEnter()
         {
             _Scene = new GameCompleteScene { Visible = true };
-            _Scene.Start(_Score);
+            _Scene.Start();
         }
 
         public override Boolean IsComplete()

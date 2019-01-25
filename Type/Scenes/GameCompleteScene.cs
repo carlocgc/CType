@@ -5,6 +5,7 @@ using System;
 using AmosShared.Audio;
 using AmosShared.Base;
 using OpenTK;
+using Type.Data;
 using Type.UI;
 
 namespace Type.Scenes
@@ -46,7 +47,7 @@ namespace Type.Scenes
             };
             _ScoreText.Offset = new Vector2(_ScoreText.Size.X * _ScoreText.Scale.X, _ScoreText.Size.Y * _ScoreText.Scale.Y) / 2;
             AddDrawable(_ScoreText);
-            _Background = new Sprite(Game.MainCanvas, Constants.ZOrders.BACKGROUND, Texture.GetTexture("Content/Graphics/GameOverBG.png"))
+            _Background = new Sprite(Game.MainCanvas, Constants.ZOrders.BACKGROUND, Texture.GetTexture("Content/Graphics/Background/GameOverBG.png"))
             {
                 Position = new Vector2(-960, -540),
                 Colour = new Vector4(0.7f, 0.7f, 0.7f, 1)
@@ -75,9 +76,9 @@ namespace Type.Scenes
 
         }
 
-        public void Start(Int32 score)
+        public void Start()
         {
-            _ScoreText.Text = $"SCORE {score}";
+            _ScoreText.Text = $"SCORE {GameStats.Instance.Score}";
             _ScoreText.Offset = new Vector2(_ScoreText.Size.X * _ScoreText.Scale.X, _ScoreText.Size.Y * _ScoreText.Scale.Y) / 2;
 
             _Background.Visible = true;

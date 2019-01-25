@@ -87,6 +87,10 @@
       <Link>Content\Audio\gameOverBgm.wav</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\Assets\Audio\Hello.wav">
+      <Link>Content\Audio\Hello.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\Assets\Audio\hurt3.wav">
       <Link>Content\Audio\hurt3.wav</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -129,6 +133,130 @@
     </Content>
     <Content Include="..\Assets\Audio\upgrade1.wav">
       <Link>Content\Audio\upgrade1.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Audio\Woosh.wav">
+      <Link>Content\Audio\Woosh.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Background\Clusters\cluster-1.png">
+      <Link>Content\Graphics\Background\Clusters\cluster-1.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Background\Clusters\cluster-2.png">
+      <Link>Content\Graphics\Background\Clusters\cluster-2.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Background\Clusters\cluster-3.png">
+      <Link>Content\Graphics\Background\Clusters\cluster-3.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Background\Clusters\cluster-4.png">
+      <Link>Content\Graphics\Background\Clusters\cluster-4.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Background\Clusters\cluster-5.png">
+      <Link>Content\Graphics\Background\Clusters\cluster-5.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Background\Clusters\cluster-6.png">
+      <Link>Content\Graphics\Background\Clusters\cluster-6.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Background\Clusters\cluster-7.png">
+      <Link>Content\Graphics\Background\Clusters\cluster-7.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Background\GameCompleteBG.png">
+      <Link>Content\Graphics\Background\GameCompleteBG.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Background\GameOverBG.png">
+      <Link>Content\Graphics\Background\GameOverBG.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Background\MainMenuBG-2.png">
+      <Link>Content\Graphics\Background\MainMenuBG-2.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Background\Planets\planet-far-1.png">
+      <Link>Content\Graphics\Background\Planets\planet-far-1.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Background\Planets\planet-far-2.png">
+      <Link>Content\Graphics\Background\Planets\planet-far-2.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Background\Planets\planet-far-3.png">
+      <Link>Content\Graphics\Background\Planets\planet-far-3.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Background\Planets\planet-far-4.png">
+      <Link>Content\Graphics\Background\Planets\planet-far-4.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Background\Planets\planet-far-5.png">
+      <Link>Content\Graphics\Background\Planets\planet-far-5.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Background\Planets\planet-far-6.png">
+      <Link>Content\Graphics\Background\Planets\planet-far-6.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Background\Planets\planet-far-7.png">
+      <Link>Content\Graphics\Background\Planets\planet-far-7.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Background\Planets\planet-far-8.png">
+      <Link>Content\Graphics\Background\Planets\planet-far-8.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Background\Planets\planet-far-9.png">
+      <Link>Content\Graphics\Background\Planets\planet-far-9.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Background\Planets\planet-near-1.png">
+      <Link>Content\Graphics\Background\Planets\planet-near-1.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Background\Planets\planet-near-2.png">
+      <Link>Content\Graphics\Background\Planets\planet-near-2.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Background\Planets\planet-near-3.png">
+      <Link>Content\Graphics\Background\Planets\planet-near-3.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Background\Planets\planet-near-4.png">
+      <Link>Content\Graphics\Background\Planets\planet-near-4.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Background\Planets\planet-near-5.png">
+      <Link>Content\Graphics\Background\Planets\planet-near-5.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Background\Planets\planet-near-6.png">
+      <Link>Content\Graphics\Background\Planets\planet-near-6.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Background\Planets\planet-near-7.png">
+      <Link>Content\Graphics\Background\Planets\planet-near-7.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Background\Planets\planet-near-8.png">
+      <Link>Content\Graphics\Background\Planets\planet-near-8.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Background\Planets\planet-near-9.png">
+      <Link>Content\Graphics\Background\Planets\planet-near-9.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Background\stars-1.png">
+      <Link>Content\Graphics\Background\stars-1.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Background\stars-2.png">
+      <Link>Content\Graphics\Background\stars-2.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\Assets\Graphics\Bosses\boss1.png">
@@ -179,40 +307,36 @@
       <Link>Content\Graphics\Buttons\up.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Assets\Graphics\cluster-1.png">
-      <Link>Content\Graphics\cluster-1.png</Link>
+    <Content Include="..\Assets\Graphics\Enemies\enemy1.png">
+      <Link>Content\Graphics\Enemies\enemy1.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Assets\Graphics\cluster-2.png">
-      <Link>Content\Graphics\cluster-2.png</Link>
+    <Content Include="..\Assets\Graphics\Enemies\enemy2.png">
+      <Link>Content\Graphics\Enemies\enemy2.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Assets\Graphics\cluster-3.png">
-      <Link>Content\Graphics\cluster-3.png</Link>
+    <Content Include="..\Assets\Graphics\Enemies\enemy3.png">
+      <Link>Content\Graphics\Enemies\enemy3.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Assets\Graphics\cluster-4.png">
-      <Link>Content\Graphics\cluster-4.png</Link>
+    <Content Include="..\Assets\Graphics\Enemies\enemy4.png">
+      <Link>Content\Graphics\Enemies\enemy4.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Assets\Graphics\cluster-5.png">
-      <Link>Content\Graphics\cluster-5.png</Link>
+    <Content Include="..\Assets\Graphics\Enemies\enemybullet.png">
+      <Link>Content\Graphics\Enemies\enemybullet.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Assets\Graphics\cluster-6.png">
-      <Link>Content\Graphics\cluster-6.png</Link>
+    <Content Include="..\Assets\Graphics\Engine\amos_logo_box.png">
+      <Link>Content\Graphics\Engine\amos_logo_box.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Assets\Graphics\cluster-7.png">
-      <Link>Content\Graphics\cluster-7.png</Link>
+    <Content Include="..\Assets\Graphics\Engine\amos_logo_head.png">
+      <Link>Content\Graphics\Engine\amos_logo_head.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Assets\Graphics\enemy4.png">
-      <Link>Content\Graphics\enemy4.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Assets\Graphics\enemybullet.png">
-      <Link>Content\Graphics\enemybullet.png</Link>
+    <Content Include="..\Assets\Graphics\Engine\engine_background.png">
+      <Link>Content\Graphics\Engine\engine_background.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\Assets\Graphics\Explosion2\pixelExplosion00.png">
@@ -287,92 +411,16 @@
       <Link>Content\Graphics\Explosion\explosion08.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Assets\Graphics\GameCompleteBG.png">
-      <Link>Content\Graphics\GameCompleteBG.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Assets\Graphics\GameOverBG.png">
-      <Link>Content\Graphics\GameOverBG.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="..\Assets\Graphics\KenPixel\KenPixel.json">
       <Link>Content\Graphics\KenPixel\KenPixel.json</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Assets\Graphics\MainMenuBG-2.png">
-      <Link>Content\Graphics\MainMenuBG-2.png</Link>
+    <Content Include="..\Assets\Graphics\Player\alpha-laser.png">
+      <Link>Content\Graphics\Player\alpha-laser.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Assets\Graphics\planet-far-1.png">
-      <Link>Content\Graphics\planet-far-1.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Assets\Graphics\planet-far-2.png">
-      <Link>Content\Graphics\planet-far-2.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Assets\Graphics\planet-far-3.png">
-      <Link>Content\Graphics\planet-far-3.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Assets\Graphics\planet-far-4.png">
-      <Link>Content\Graphics\planet-far-4.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Assets\Graphics\planet-far-5.png">
-      <Link>Content\Graphics\planet-far-5.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Assets\Graphics\planet-far-6.png">
-      <Link>Content\Graphics\planet-far-6.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Assets\Graphics\planet-far-7.png">
-      <Link>Content\Graphics\planet-far-7.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Assets\Graphics\planet-far-8.png">
-      <Link>Content\Graphics\planet-far-8.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Assets\Graphics\planet-far-9.png">
-      <Link>Content\Graphics\planet-far-9.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Assets\Graphics\planet-near-1.png">
-      <Link>Content\Graphics\planet-near-1.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Assets\Graphics\planet-near-2.png">
-      <Link>Content\Graphics\planet-near-2.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Assets\Graphics\planet-near-3.png">
-      <Link>Content\Graphics\planet-near-3.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Assets\Graphics\planet-near-4.png">
-      <Link>Content\Graphics\planet-near-4.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Assets\Graphics\planet-near-5.png">
-      <Link>Content\Graphics\planet-near-5.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Assets\Graphics\planet-near-6.png">
-      <Link>Content\Graphics\planet-near-6.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Assets\Graphics\planet-near-7.png">
-      <Link>Content\Graphics\planet-near-7.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Assets\Graphics\planet-near-8.png">
-      <Link>Content\Graphics\planet-near-8.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Assets\Graphics\planet-near-9.png">
-      <Link>Content\Graphics\planet-near-9.png</Link>
+    <Content Include="..\Assets\Graphics\Player\player-alpha.png">
+      <Link>Content\Graphics\Player\player-alpha.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\Assets\Graphics\Probes\laser-probe.png">
@@ -391,12 +439,8 @@
       <Link>Content\Graphics\Shield\shield3.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Assets\Graphics\stars-1.png">
-      <Link>Content\Graphics\stars-1.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Assets\Graphics\stars-2.png">
-      <Link>Content\Graphics\stars-2.png</Link>
+    <Content Include="..\Assets\Graphics\UI\player-alpha-lifeicon.png">
+      <Link>Content\Graphics\UI\player-alpha-lifeicon.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\Assets\Level\level-1.txt">
@@ -441,32 +485,8 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Content Include="..\Assets\Graphics\bullet.png">
-      <Link>Content\Graphics\bullet.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Assets\Graphics\enemy1.png">
-      <Link>Content\Graphics\enemy1.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Assets\Graphics\enemy2.png">
-      <Link>Content\Graphics\enemy2.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Assets\Graphics\enemy3.png">
-      <Link>Content\Graphics\enemy3.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="..\Assets\Graphics\KenPixel\KenPixel.png">
       <Link>Content\Graphics\KenPixel\KenPixel.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Assets\Graphics\lifeicon.png">
-      <Link>Content\Graphics\lifeicon.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Assets\Graphics\player.png">
-      <Link>Content\Graphics\player.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

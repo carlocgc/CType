@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
+using AmosShared.Base;
 
 namespace Type
 {
@@ -19,6 +20,15 @@ namespace Type
             public const Boolean SHOW_FPS = true;
             /// <summary> Draws white pixels over the game objects </summary>
             public const Boolean SHOW_SPRITE_AREAS = false;
+
+            /// <summary> The top of the screen </summary>
+            public static Single ScreenTop = Renderer.Instance.TargetDimensions.Y / 2;
+            /// <summary> The right of the screen </summary>
+            public static Single ScreenRight = Renderer.Instance.TargetDimensions.X / 2;
+            /// <summary> The left of the screen </summary>
+            public static Single ScreenLeft = -Renderer.Instance.TargetDimensions.X / 2;
+            /// <summary> The bottom of the screen </summary>
+            public static Single ScreenBottom = -Renderer.Instance.TargetDimensions.Y / 2;
         }
 
         /// <summary>
@@ -43,6 +53,14 @@ namespace Type
             public const Int32 SHIELD = 95;
 
             public const Int32 UI = 1000;
+
+            public const Int32 ENGINE_HEAD = 1499;
+
+            public const Int32 ENGINE_LOGO = 1500;
+
+            public const Int32 INFO_SCREENS = 9999;
+
+            public const Int32 ABOVE_GAME = 10000;
         }
 
         /// <summary>
