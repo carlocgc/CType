@@ -6,6 +6,7 @@ using Type.Data;
 using Type.Factories;
 using Type.Interfaces.Enemies;
 using Type.Interfaces.Player;
+using Type.Interfaces.Powerups;
 using Type.Scenes;
 using Type.UI;
 
@@ -14,7 +15,7 @@ namespace Type.States
     /// <summary>
     /// Game play state
     /// </summary>
-    public class PlayingState : State, IPlayerListener, IEnemyListener, IEnemyFactoryListener
+    public class PlayingState : State, IPlayerListener, IEnemyListener, IEnemyFactoryListener, IPowerupListener, IPowerupFactoryListener
     {
         /// <summary> Max level of the game </summary>
         private readonly Int32 _MaxLevel = 9;
@@ -97,6 +98,7 @@ namespace Type.States
         {
             CollisionController.Instance.ClearObjects();
             _GameScene.RemoveEnemies();
+            _GameScene.RemovePowerUps();
 
             _LifeMeter.LoseLife();
 
@@ -133,6 +135,28 @@ namespace Type.States
         {
             enemy.Dispose();
             if (!_EnemyFactory.Creating && CollisionController.Instance.Enemies == 0) LevelComplete();
+        }
+
+        #endregion
+
+
+        #region  Powerups
+
+        /// <inheritdoc />
+        public void OnPowerupCreated(IPowerup powerup)
+        {
+
+        }
+
+        /// <inheritdoc />
+        public void OnPowerupApplied(Int32 ID)
+        {
+        }
+
+        /// <inheritdoc />
+        public void OnPowerupExpired()
+        {
+
         }
 
         #endregion
@@ -202,5 +226,6 @@ namespace Type.States
             _UIScene.Dispose();
             Dispose();
         }
+
     }
 }
