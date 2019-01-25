@@ -87,6 +87,10 @@
       <Link>Content\Audio\gameOverBgm.wav</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\Assets\Audio\Hello.wav">
+      <Link>Content\Audio\Hello.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\Assets\Audio\hurt3.wav">
       <Link>Content\Audio\hurt3.wav</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -129,6 +133,10 @@
     </Content>
     <Content Include="..\Assets\Audio\upgrade1.wav">
       <Link>Content\Audio\upgrade1.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Audio\Woosh.wav">
+      <Link>Content\Audio\Woosh.wav</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\Assets\Graphics\Background\Clusters\cluster-1.png">
@@ -317,6 +325,18 @@
     </Content>
     <Content Include="..\Assets\Graphics\Enemies\enemybullet.png">
       <Link>Content\Graphics\Enemies\enemybullet.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Engine\amos_logo_box.png">
+      <Link>Content\Graphics\Engine\amos_logo_box.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Engine\amos_logo_head.png">
+      <Link>Content\Graphics\Engine\amos_logo_head.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Engine\engine_background.png">
+      <Link>Content\Graphics\Engine\engine_background.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\Assets\Graphics\Explosion2\pixelExplosion00.png">
