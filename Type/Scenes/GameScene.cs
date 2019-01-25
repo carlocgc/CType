@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Type.Interfaces.Enemies;
 using Type.Interfaces.Player;
+using Type.Interfaces.Powerups;
 using Type.Objects.Player;
 using Type.Objects.World;
 
@@ -30,6 +31,9 @@ namespace Type.Scenes
         /// <summary> List of all enemies </summary>
         public List<IEnemy> Enemies { get; }
 
+        /// <summary> List of all the power ups </summary>
+        public List<IPowerup> Powerups { get; }
+
         /// <summary> The players ship </summary>
         public IPlayer Player { get; }
 
@@ -43,6 +47,7 @@ namespace Type.Scenes
 
             Player = new PlayerAlpha();
             Enemies = new List<IEnemy>();
+            Powerups = new List<IPowerup>();
 
             new AudioPlayer("Content/Audio/bgm-1.wav", true, AudioManager.Category.MUSIC, 1);
         }
@@ -67,6 +72,17 @@ namespace Type.Scenes
             foreach (IEnemy enemy in Enemies.Where(e => !e.IsDisposed).ToList())
             {
                 enemy.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// Removes disposed powerups from the scene, used when the layer dies to clean up the scene
+        /// </summary>
+        public void RemovePowerUps()
+        {
+            foreach (IPowerup powerup in Powerups.Where(e => !e.IsDisposed).ToList())
+            {
+                powerup.Dispose();
             }
         }
 
