@@ -53,6 +53,14 @@ namespace Type
             public const Int32 SHIELD = 95;
 
             public const Int32 UI = 1000;
+
+            public const Int32 ENGINE_HEAD = 1499;
+
+            public const Int32 ENGINE_LOGO = 1500;
+
+            public const Int32 INFO_SCREENS = 9999;
+
+            public const Int32 ABOVE_GAME = 10000;
         }
 
         /// <summary>

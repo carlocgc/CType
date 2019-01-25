@@ -34,7 +34,7 @@ namespace Type
 
             SpritesheetLoader.LoadSheet("Content/Graphics/KenPixel/", "KenPixel.png", "KenPixel.json");
 
-            StateManager.Instance.StartState(new MainMenuState());
+            StateManager.Instance.StartState(new EngineSplashState());
         }
 
         protected override Vector2 CalculateExtraOffset(float heightDifference)
