@@ -70,7 +70,7 @@ namespace Type.Objects.Bosses
             _Speed = 250;
             _FireRate = TimeSpan.FromSeconds(0.8f);
 
-            HitPoints = 200;
+            HitPoints = 5000;
             Points = 5000;
 
             _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, Texture.GetTexture("Content/Graphics/Bosses/boss1.png"))
