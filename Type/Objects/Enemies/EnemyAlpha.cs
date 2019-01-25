@@ -80,7 +80,7 @@ namespace Type.Objects.Enemies
             HitPoints = 2;
             Points = 10;
 
-            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, Texture.GetTexture("Content/Graphics/enemy1.png"))
+            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, Texture.GetTexture("Content/Graphics/Enemies/enemy1.png"))
             {
                 Visible = true,
             };
@@ -253,8 +253,11 @@ namespace Type.Objects.Enemies
         public override void Dispose()
         {
             base.Dispose();
-            if (!_Explosion.IsDisposed) _Explosion.Dispose();
 
+            if (!_Explosion.IsDisposed)
+            {
+                _Explosion.Dispose();
+            }
             _Listeners.Clear();
             CollisionController.Instance.DeregisterEnemy(this);
             PositionRelayer.Instance.RemoveRecipient(this);

@@ -33,7 +33,7 @@ namespace Type.Objects.Projectiles
 
         public PlasmaBall(Vector2 spawnPos, Vector2 direction, Single speed, Vector4 colour)
         {
-            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.BULLETS, Texture.GetTexture("Content/Graphics/enemybullet.png"))
+            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.BULLETS, Texture.GetTexture("Content/Graphics/Enemies/enemybullet.png"))
             {
                 Visible = true,
                 Colour = colour,

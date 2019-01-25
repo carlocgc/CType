@@ -60,7 +60,7 @@ namespace Type.Objects.Player
 
         public PlayerAlpha()
         {
-            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.PLAYER, Texture.GetTexture("Content/Graphics/player.png"))
+            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.PLAYER, Texture.GetTexture("Content/Graphics/Player/player-alpha.png"))
             {
                 Visible = true,
             };
