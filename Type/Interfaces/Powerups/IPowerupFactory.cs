@@ -14,7 +14,6 @@ namespace Type.Interfaces.Powerups
         /// </summary>
         /// <param name="weight"> Weight category </param>
         /// <param name="position"> Position to spawn powerup </param>
-        /// <param name="amount"> Amount of power ups to spawn </param>
-        void Create(Int32 weight, Vector2 position, Int32 amount);
+        void Create(Int32 weight, Vector2 position);
     }
 }
