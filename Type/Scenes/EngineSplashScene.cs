@@ -26,13 +26,13 @@ namespace Type.Scenes
 
             _Logo = new Sprite(Game.MainCanvas, Constants.ZOrders.ENGINE_LOGO, Texture.GetTexture("Content/Graphics/Engine/amos_logo_box.png"))
             {
-                Position = new Vector2(0, 0),
+                Position = new Vector2(0, -50),
                 Visible = true,
             };
             _Logo.Offset = _Logo.Size / 2;
             _Head = new Sprite(Game.MainCanvas, Constants.ZOrders.ENGINE_HEAD, Texture.GetTexture("Content/Graphics/Engine/amos_logo_head.png"))
             {
-                Position = new Vector2(0, 0),
+                Position = new Vector2(0, -50),
                 Visible = true,
             };
             _Head.Offset = new Vector2(_Head.Size.X / 2, _Head.Offset.Y);
