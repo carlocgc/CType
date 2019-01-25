@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.ctype" android:versionCode="2" android:versionName="0.2.0">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.ctype" android:versionCode="3" android:versionName="0.3.0">
 	<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28" />
 	<application android:allowBackup="true" android:label="@string/app_name"></application>
 </manifest>
