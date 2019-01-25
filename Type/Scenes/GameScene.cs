@@ -98,11 +98,17 @@ namespace Type.Scenes
         {
             base.Dispose();
 
+            foreach (IPowerup powerup in Powerups)
+            {
+                powerup.Dispose();
+            }
+            Powerups.Clear();
             foreach (IEnemy enemy in Enemies)
             {
                 enemy.Dispose();
             }
             Enemies.Clear();
+
             Player.Dispose();
 
             _BackgroundNear.Dispose();
