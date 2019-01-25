@@ -1,10 +1,9 @@
-﻿using OpenTK;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using AmosShared.Base;
+﻿using AmosShared.Base;
 using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
+using OpenTK;
+using System;
+using System.Collections.Generic;
 using Type.Base;
 using Type.Interfaces;
 using Type.Interfaces.Player;
@@ -12,6 +11,9 @@ using Type.Interfaces.Powerups;
 
 namespace Type.Powerups
 {
+    /// <summary>
+    /// Powerup that grants an extra life
+    /// </summary>
     public class ExtraLifePowerup : GameObject, IPowerup, INotifier<IPowerupListener>
     {
         /// <summary> Center screen, point around which the powerup will orbit </summary>
@@ -44,12 +46,6 @@ namespace Type.Powerups
         /// <inheritdoc />
         public Int32 HitPoints { get; }
 
-        /// <inheritdoc />
-        public Vector2 Position { get; set; }
-
-        /// <inheritdoc />
-        public Boolean IsDisposed { get; set; }
-
         public ExtraLifePowerup(Vector2 position)
         {
             ID = 1;
@@ -66,7 +62,7 @@ namespace Type.Powerups
         /// <inheritdoc />
         public void Apply(IPlayer player)
         {
-
+            player.ApplyPowerup(ID);
 
             foreach (IPowerupListener listener in _Listeners)
             {
