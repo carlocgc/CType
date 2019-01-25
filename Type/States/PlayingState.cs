@@ -93,6 +93,18 @@ namespace Type.States
         #region Player
 
         /// <inheritdoc />
+        public void OnLifeAdded(IPlayer player)
+        {
+            _LifeMeter.AddLife();
+        }
+
+        /// <inheritdoc />
+        public void OnPointPickup(Int32 value)
+        {
+            UpdateScore(value);
+        }
+
+        /// <inheritdoc />
         public void OnPlayerHit(IPlayer player)
         {
 
@@ -137,7 +149,7 @@ namespace Type.States
                 LevelComplete();
                 return;
             }
-            _PowerupFactory.Create(0, enemy.Position);
+            _PowerupFactory.Create(0, enemy.Position, _CurrentLevel);
         }
 
         /// <inheritdoc />

@@ -14,6 +14,7 @@ namespace Type.Interfaces.Powerups
         /// </summary>
         /// <param name="weight"> Weight category </param>
         /// <param name="position"> Position to spawn powerup </param>
-        void Create(Int32 weight, Vector2 position);
+        /// <param name="currentLevel"> The current level, used as a point multiplier </param>
+        void Create(Int32 weight, Vector2 position, Int32 currentLevel);
     }
 }

@@ -12,19 +12,24 @@ using static Type.Constants.Global;
 namespace Type.Powerups
 {
     /// <summary>
-    /// Powerup that grants an extra life
+    /// Powerup that grants a probe
     /// </summary>
-    public class ExtraLifePowerup : GameObject, IPowerup
+    public class ProbePowerup : GameObject, IPowerup
     {
         private readonly Random _Rnd = new Random(Environment.TickCount);
+
         /// <summary> Sprite for the powerup </summary>
         private readonly Sprite _Sprite;
+
         /// <summary> How long it takes for the powerup to expire </summary>
         private readonly TimeSpan _ExpireTime = TimeSpan.FromSeconds(10);
+
         /// <summary> how long ahs passed since this power up was created </summary>
         private TimeSpan _TimeSinceCreated;
+
         /// <summary> _direction the powerup is moving </summary>
         private Vector2 _Direction;
+
         /// <summary> The speed the powerup is moving </summary>
         private Single _Speed = 200;
 
@@ -40,18 +45,15 @@ namespace Type.Powerups
         /// <inheritdoc />
         public Int32 HitPoints { get; }
 
-        public ExtraLifePowerup(Vector2 position)
+        public ProbePowerup(Vector2 position)
         {
-            ID = 0;
-            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.POWERUPS, Texture.GetTexture("Content/Graphics/Powerups/extralife_powerup.png"))
-            {
-                Visible = true,
-            };
+            ID = 2;
+            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.POWERUPS, Texture.GetTexture("Content/Graphics/Powerups/weapon_powerup.png")) { Visible = true, };
             _Sprite.Offset = _Sprite.Size / 2;
             AddSprite(_Sprite);
             Position = position;
             HitBox = GetRect();
-            _Direction = new Vector2((Single)_Rnd.NextDouble() * -1, (Single)_Rnd.NextDouble());
+            _Direction = new Vector2((Single)_Rnd.NextDouble(), (Single)_Rnd.NextDouble());
 
         }
 
@@ -64,6 +66,7 @@ namespace Type.Powerups
             {
                 listener.OnPowerupApplied(this);
             }
+
             CollisionController.Instance.DeregisterPowerup(this);
             Dispose();
         }
@@ -81,6 +84,7 @@ namespace Type.Powerups
             {
                 listener.OnPowerupExpired(this);
             }
+
             Dispose();
         }
 
@@ -93,7 +97,8 @@ namespace Type.Powerups
         /// <inheritdoc />
         public void Update(TimeSpan timeTilUpdate)
         {
-            Position += _Direction * _Speed * (Single)timeTilUpdate.TotalSeconds; ;
+            Position += _Direction * _Speed * (Single)timeTilUpdate.TotalSeconds;
+            ;
 
             if (Position.X >= ScreenRight - GetSprite().Width / 2 || Position.X <= ScreenLeft + GetSprite().Width / 2)
             {

@@ -19,7 +19,7 @@ namespace Type.Factories
         }
 
         /// <inheritdoc />
-        public void Create(Int32 weight, Vector2 position)
+        public void Create(Int32 weight, Vector2 position, Int32 currentLevel)
         {
             IPowerup powerup;
 
@@ -28,14 +28,28 @@ namespace Type.Factories
             {
                 case 0:
                     {
-                        //Int32 rnd = _Rnd.Next(0, 4);
-                        Int32 rnd = 0;
+                        Int32 rnd = _Rnd.Next(0, 4);
 
                         switch (rnd)
                         {
                             case 0:
                                 {
                                     powerup = new ExtraLifePowerup(position);
+                                    break;
+                                }
+                            case 1:
+                                {
+                                    powerup = new ShieldPowerup(position);
+                                    break;
+                                }
+                            case 2:
+                                {
+                                    powerup = new ProbePowerup(position);
+                                    break;
+                                }
+                            case 3:
+                                {
+                                    powerup = new PointsPickup(position, currentLevel);
                                     break;
                                 }
 

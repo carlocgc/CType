@@ -1,8 +1,9 @@
-﻿using AmosShared.Graphics;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
 using OpenTK;
-using System;
-using System.Collections.Generic;
 using Type.Base;
 using Type.Controllers;
 using Type.Interfaces.Player;
@@ -12,9 +13,9 @@ using static Type.Constants.Global;
 namespace Type.Powerups
 {
     /// <summary>
-    /// Powerup that grants an extra life
+    /// Pickup that gives points
     /// </summary>
-    public class ExtraLifePowerup : GameObject, IPowerup
+    public class PointsPickup : GameObject, IPowerup
     {
         private readonly Random _Rnd = new Random(Environment.TickCount);
         /// <summary> Sprite for the powerup </summary>
@@ -40,10 +41,10 @@ namespace Type.Powerups
         /// <inheritdoc />
         public Int32 HitPoints { get; }
 
-        public ExtraLifePowerup(Vector2 position)
+        public PointsPickup(Vector2 position, Int32 level)
         {
-            ID = 0;
-            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.POWERUPS, Texture.GetTexture("Content/Graphics/Powerups/extralife_powerup.png"))
+            ID = 3;
+            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.POWERUPS, Texture.GetTexture("Content/Graphics/Powerups/points_powerup.png"))
             {
                 Visible = true,
             };
@@ -51,7 +52,8 @@ namespace Type.Powerups
             AddSprite(_Sprite);
             Position = position;
             HitBox = GetRect();
-            _Direction = new Vector2((Single)_Rnd.NextDouble() * -1, (Single)_Rnd.NextDouble());
+            _Direction = new Vector2((Single)_Rnd.NextDouble(), (Single)_Rnd.NextDouble());
+            PointValue = 100 * level;
 
         }
 

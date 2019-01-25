@@ -12,9 +12,9 @@ using static Type.Constants.Global;
 namespace Type.Powerups
 {
     /// <summary>
-    /// Powerup that grants an extra life
+    /// Powerup that grants a shield level
     /// </summary>
-    public class ExtraLifePowerup : GameObject, IPowerup
+    public class ShieldPowerup : GameObject, IPowerup
     {
         private readonly Random _Rnd = new Random(Environment.TickCount);
         /// <summary> Sprite for the powerup </summary>
@@ -40,10 +40,10 @@ namespace Type.Powerups
         /// <inheritdoc />
         public Int32 HitPoints { get; }
 
-        public ExtraLifePowerup(Vector2 position)
+        public ShieldPowerup(Vector2 position)
         {
-            ID = 0;
-            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.POWERUPS, Texture.GetTexture("Content/Graphics/Powerups/extralife_powerup.png"))
+            ID = 1;
+            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.POWERUPS, Texture.GetTexture("Content/Graphics/Powerups/shield_powerup.png"))
             {
                 Visible = true,
             };
@@ -51,7 +51,7 @@ namespace Type.Powerups
             AddSprite(_Sprite);
             Position = position;
             HitBox = GetRect();
-            _Direction = new Vector2((Single)_Rnd.NextDouble() * -1, (Single)_Rnd.NextDouble());
+            _Direction = new Vector2((Single)_Rnd.NextDouble(), (Single)_Rnd.NextDouble());
 
         }
 

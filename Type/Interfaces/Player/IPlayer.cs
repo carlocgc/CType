@@ -1,6 +1,7 @@
 ﻿using System;
 using Type.Interfaces.Collisions;
 using Type.Interfaces.Control;
+using Type.Interfaces.Powerups;
 using Type.Interfaces.Weapons;
 
 namespace Type.Interfaces.Player
@@ -24,7 +25,6 @@ namespace Type.Interfaces.Player
         /// <summary>
         /// Apply a power of the given type
         /// </summary>
-        /// <param name="id"> The type of powerup </param>
-        void ApplyPowerup(Int32 id);
+        void ApplyPowerup(IPowerup powerup);
     }
 }

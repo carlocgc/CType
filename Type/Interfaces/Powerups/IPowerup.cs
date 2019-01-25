@@ -16,6 +16,11 @@ namespace Type.Interfaces.Powerups
         Int32 ID { get; }
 
         /// <summary>
+        /// The point value of the pickup
+        /// </summary>
+        Int32 PointValue { get; }
+
+        /// <summary>
         /// Apply the powerup to the player
         /// </summary>
         /// <param name="player"> The player ship</param>
