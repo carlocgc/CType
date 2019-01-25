@@ -102,7 +102,7 @@ namespace Type.Controllers
         /// </summary>
         private void CheckProjectilesToPlayer()
         {
-            foreach (IProjectile projectile in _EnemyProjectiles.ToList())
+            foreach (IProjectile projectile in _EnemyProjectiles.Where(p => !p.IsDisposed).ToList())
             {
                 if (Intersects(projectile.HitBox, _Player.HitBox))
                 {
@@ -116,7 +116,7 @@ namespace Type.Controllers
         /// </summary>
         private void CheckProjectilesToEnemies()
         {
-            foreach (IProjectile projectile in _PlayerProjectiles.ToList())
+            foreach (IProjectile projectile in _PlayerProjectiles.Where(p => !p.IsDisposed).ToList())
             {
                 foreach (IEnemy enemy in _Enemies.ToList())
                 {
@@ -135,7 +135,7 @@ namespace Type.Controllers
         {
             if (_Player == null) return;
 
-            foreach (IEnemy enemy in _Enemies.ToList())
+            foreach (IEnemy enemy in _Enemies.Where(p => !p.IsDisposed).ToList())
             {
                 if (Intersects(_Player.HitBox, enemy.HitBox))
                 {
