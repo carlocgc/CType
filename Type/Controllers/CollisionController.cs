@@ -229,7 +229,7 @@ namespace Type.Controllers
         /// <param name="powerup"></param>
         private void HandlePowerupCollision(IPowerup powerup)
         {
-            _Player.ApplyPowerup(powerup.ID);
+            _Player.ApplyPowerup(powerup);
             powerup.Dispose();
         }
 

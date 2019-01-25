@@ -75,8 +75,8 @@ namespace Type.Objects.Enemies
             _IsMoving = true;
             _IsWeaponLocked = true;
             _MoveDirection = new Vector2(-1, 0);
-            _Speed = 600;
-            _FireRate = TimeSpan.FromSeconds(0.7f);
+            _Speed = 400;
+            _FireRate = TimeSpan.FromSeconds(1.4f);
 
             HitPoints = 5;
             Points = 50;
