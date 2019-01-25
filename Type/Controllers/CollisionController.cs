@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Type.Interfaces.Enemies;
 using Type.Interfaces.Player;
+using Type.Interfaces.Powerups;
 using Type.Interfaces.Weapons;
 
 namespace Type.Controllers
@@ -26,6 +27,8 @@ namespace Type.Controllers
         private readonly List<IProjectile> _EnemyProjectiles;
         /// <summary> List of all active enemies </summary>
         private readonly List<IEnemy> _Enemies;
+        /// <summary> List of all the uncollected powerups </summary>
+        private readonly List<IPowerup> _Powerups;
         /// <summary> The players ship </summary>
         private IPlayer _Player;
 
@@ -42,6 +45,7 @@ namespace Type.Controllers
             _PlayerProjectiles = new List<IProjectile>();
             _EnemyProjectiles = new List<IProjectile>();
             _Enemies = new List<IEnemy>();
+            _Powerups = new List<IPowerup>();
             UpdateManager.Instance.AddUpdatable(this);
         }
 
@@ -93,8 +97,9 @@ namespace Type.Controllers
         private void CheckCollisions()
         {
             CheckProjectilesToEnemies();
-            CheckPlayerToEnemies();
             CheckProjectilesToPlayer();
+            CheckPlayerToEnemies();
+            CheckPowerupsToPlayer();
         }
 
         /// <summary>
@@ -145,6 +150,23 @@ namespace Type.Controllers
         }
 
         /// <summary>
+        /// Check collision between player and powerups
+        /// </summary>
+        private void CheckPowerupsToPlayer()
+        {
+            if (_Player == null) return;
+
+            foreach (IPowerup powerup in _Powerups.Where(p => !p.IsDisposed).ToList())
+            {
+                if (Intersects(_Player.HitBox, powerup.HitBox))
+                {
+                    HandlePowerupCollision(powerup);
+                }
+            }
+
+        }
+
+        /// <summary>
         /// returns true if two rectangles intersects
         /// </summary>
         private Boolean Intersects(Vector4 rectA, Vector4 rectB)
@@ -190,6 +212,16 @@ namespace Type.Controllers
         {
             enemy.Destroy();
             HandlePlayerHit();
+        }
+
+        /// <summary>
+        /// Handles collecting of powerups
+        /// </summary>
+        /// <param name="powerup"></param>
+        private void HandlePowerupCollision(IPowerup powerup)
+        {
+            _Player.ApplyPowerup(powerup.ID);
+            powerup.Dispose();
         }
 
         #endregion

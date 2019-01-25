@@ -145,6 +145,7 @@ namespace Type.States
         /// <inheritdoc />
         public void OnPowerupCreated(IPowerup powerup)
         {
+            _GameScene.Powerups.Add(powerup);
 
         }
 
