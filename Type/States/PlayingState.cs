@@ -26,6 +26,8 @@ namespace Type.States
         private UIScene _UIScene;
         /// <summary> Factory that will create enemies </summary>
         private EnemyFactory _EnemyFactory;
+        /// <summary> Factory that creates power ups </summary>
+        private PowerupFactory _PowerupFactory;
         /// <summary> The player </summary>
         private IPlayer _Player;
         /// <summary> The current level </summary>
@@ -127,7 +129,12 @@ namespace Type.States
         public void OnEnemyDestroyed(IEnemy enemy)
         {
             UpdateScore(enemy.Points);
-            if (!_EnemyFactory.Creating && CollisionController.Instance.Enemies == 0) LevelComplete();
+            if (!_EnemyFactory.Creating && CollisionController.Instance.Enemies == 0)
+            {
+                LevelComplete();
+                return;
+            }
+            _PowerupFactory.Create(0, enemy.Position);
         }
 
         /// <inheritdoc />
@@ -146,18 +153,19 @@ namespace Type.States
         public void OnPowerupCreated(IPowerup powerup)
         {
             _GameScene.Powerups.Add(powerup);
-
+            CollisionController.Instance.RegisterPowerup(powerup);
         }
 
         /// <inheritdoc />
-        public void OnPowerupApplied(Int32 ID)
+        public void OnPowerupApplied(IPowerup powerup)
         {
+            _GameScene.Powerups.Remove(powerup);
         }
 
         /// <inheritdoc />
-        public void OnPowerupExpired()
+        public void OnPowerupExpired(IPowerup powerup)
         {
-
+            _GameScene.Powerups.Remove(powerup);
         }
 
         #endregion

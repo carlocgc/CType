@@ -12,12 +12,11 @@ namespace Type.Interfaces.Powerups
         /// <summary>
         /// Invoked when a powerup is applied
         /// </summary>
-        /// <param name="ID"> The type of powerup applied </param>
-        void OnPowerupApplied(Int32 ID);
+        void OnPowerupApplied(IPowerup powerup);
 
         /// <summary>
         /// Invoked when a power up expires
         /// </summary>
-        void OnPowerupExpired();
+        void OnPowerupExpired(IPowerup powerup);
     }
 }

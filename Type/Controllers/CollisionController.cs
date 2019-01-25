@@ -79,6 +79,15 @@ namespace Type.Controllers
         }
 
         /// <summary>
+        /// Adds a powerup to the controller
+        /// </summary>
+        /// <param name="powerup"></param>
+        public void RegisterPowerup(IPowerup powerup)
+        {
+            _Powerups.Add(powerup);
+        }
+
+        /// <summary>
         /// Registers the player object to the collision controller
         /// </summary>
         /// <param name="player"></param>
@@ -281,6 +290,15 @@ namespace Type.Controllers
             {
                 _PlayerProjectiles.Remove(projectile);
             }
+        }
+
+        /// <summary>
+        /// Removes the given powerup from the controller
+        /// </summary>
+        /// <param name="powerup"></param>
+        public void DeregisterPowerup(IPowerup powerup)
+        {
+            if (_Powerups.Contains(powerup)) _Powerups.Remove(powerup);
         }
 
         #endregion

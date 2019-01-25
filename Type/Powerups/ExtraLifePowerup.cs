@@ -5,6 +5,7 @@ using OpenTK;
 using System;
 using System.Collections.Generic;
 using Type.Base;
+using Type.Controllers;
 using Type.Interfaces;
 using Type.Interfaces.Player;
 using Type.Interfaces.Powerups;
@@ -66,7 +67,7 @@ namespace Type.Powerups
 
             foreach (IPowerupListener listener in _Listeners)
             {
-                listener.OnPowerupApplied(ID);
+                listener.OnPowerupApplied(this);
             }
         }
 
@@ -78,9 +79,10 @@ namespace Type.Powerups
         /// <inheritdoc />
         public void Destroy()
         {
+            CollisionController.Instance.DeregisterPowerup(this);
             foreach (IPowerupListener listener in _Listeners)
             {
-                listener.OnPowerupExpired();
+                listener.OnPowerupExpired(this);
             }
             Dispose();
         }
