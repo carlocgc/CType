@@ -96,6 +96,7 @@ namespace Type.States
         public void OnPlayerDeath(IPlayer player)
         {
             CollisionController.Instance.ClearObjects();
+            _GameScene.RemoveEnemies();
 
             _LifeMeter.LoseLife();
 

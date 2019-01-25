@@ -35,7 +35,7 @@ namespace Type.Objects.Projectiles
 
         public Laser(Vector2 spawnPos, Vector2 direction, Single speed, Double rotation)
         {
-            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.BULLETS, Texture.GetTexture("Content/Graphics/bullet.png"))
+            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.BULLETS, Texture.GetTexture("Content/Graphics/Player/alpha-laser.png"))
             {
                 Visible = true,
             };

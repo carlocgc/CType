@@ -24,11 +24,11 @@ namespace Type.UI
             PlayerLives = 3;
             _LifeSprites = new List<Sprite>
             {
-                new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/lifeicon.png")) {Position = new Vector2(-900, 400), Visible = false,},
-                new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/lifeicon.png")) {Position = new Vector2(-836, 400), Visible = false,},
-                new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/lifeicon.png")) {Position = new Vector2(-772, 400), Visible = false,},
-                new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/lifeicon.png")) {Position = new Vector2(-708, 400), Visible = false,},
-                new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/lifeicon.png")) {Position = new Vector2(-644, 400), Visible = false,}
+                new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/UI/player-alpha-lifeicon.png")) {Position = new Vector2(-900, 400), Visible = false,},
+                new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/UI/player-alpha-lifeicon.png")) {Position = new Vector2(-836, 400), Visible = false,},
+                new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/UI/player-alpha-lifeicon.png")) {Position = new Vector2(-772, 400), Visible = false,},
+                new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/UI/player-alpha-lifeicon.png")) {Position = new Vector2(-708, 400), Visible = false,},
+                new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/UI/player-alpha-lifeicon.png")) {Position = new Vector2(-644, 400), Visible = false,}
             };
 
             UpdateSprites();

@@ -5,6 +5,7 @@ using AmosShared.Graphics.Drawables;
 using OpenTK;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using Type.Base;
 using Type.Controllers;
 using Type.Data;
@@ -49,6 +50,12 @@ namespace Type.Objects.Enemies
         private Boolean InPlay;
         /// <summary> movement speed of the enemy </summary>
         private Single _Speed;
+        /// <summary> Initial Y position </summary>
+        private Single _SpawnY;
+        /// <summary> Angle used to oscillate the y axis when moving the enemy </summary>
+        private Single _Yoscillation;
+        /// <summary> How much to increment the oscilation every update </summary>
+        private Single _Yincrement = 0.05f;
         /// <summary> Whether the enemy is on screen </summary>
         private Boolean OnScreen =>
             Position.X + _Sprite.Offset.X >= ScreenLeft &&
@@ -74,13 +81,13 @@ namespace Type.Objects.Enemies
             _IsMoving = true;
             _IsWeaponLocked = true;
             _MoveDirection = new Vector2(-1, 0);
-            _Speed = 600;
+            _Speed = 500;
             _FireRate = TimeSpan.FromSeconds(1.1f);
 
             HitPoints = 2;
             Points = 10;
 
-            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, Texture.GetTexture("Content/Graphics/enemy1.png"))
+            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, Texture.GetTexture("Content/Graphics/Enemies/enemy1.png"))
             {
                 Visible = true,
             };
@@ -191,9 +198,12 @@ namespace Type.Objects.Enemies
 
             if (_IsMoving)
             {
-                Position += _MoveDirection * _Speed * (Single)timeTilUpdate.TotalSeconds;
+
+                Position += new Vector2(_MoveDirection.X * _Speed * (Single)timeTilUpdate.TotalSeconds, _SpawnY + (Single)Math.Sin(_Yoscillation) * _Speed * (Single)timeTilUpdate.TotalSeconds);
                 _Explosion.Position = Position;
                 HitBox = GetRect();
+                _Yoscillation += _Yincrement;
+                if (_Yoscillation > 360f) _Yoscillation = 0;
             }
 
             if (IsDestroyed) return;
@@ -253,8 +263,11 @@ namespace Type.Objects.Enemies
         public override void Dispose()
         {
             base.Dispose();
-            if (!_Explosion.IsDisposed) _Explosion.Dispose();
 
+            if (!_Explosion.IsDisposed)
+            {
+                _Explosion.Dispose();
+            }
             _Listeners.Clear();
             CollisionController.Instance.DeregisterEnemy(this);
             PositionRelayer.Instance.RemoveRecipient(this);

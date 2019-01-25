@@ -45,7 +45,7 @@ namespace Type.Scenes
             _StartText.Offset = new Vector2(_StartText.Size.X * _StartText.Scale.X, _StartText.Size.Y * _StartText.Scale.Y) / 2;
             AddDrawable(_StartText);
 
-            Sprite startButton = new Sprite(Game.MainCanvas, Constants.ZOrders.BACKGROUND, Texture.GetTexture("Content/Graphics/MainMenuBG-2.png"))
+            Sprite startButton = new Sprite(Game.MainCanvas, Constants.ZOrders.BACKGROUND, Texture.GetTexture("Content/Graphics/Background/MainMenuBG-2.png"))
             {
                 Position = new Vector2(-960, -540),
             };

@@ -81,7 +81,7 @@ namespace Type.Objects.Enemies
             HitPoints = 5;
             Points = 50;
 
-            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, Texture.GetTexture("Content/Graphics/enemy4.png"))
+            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, Texture.GetTexture("Content/Graphics/Enemies/enemy4.png"))
             {
                 Visible = true,
             };
