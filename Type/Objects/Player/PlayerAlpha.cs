@@ -204,26 +204,34 @@ namespace Type.Objects.Player
         }
 
         /// <inheritdoc />
-        public void ShieldButtonPressed()
+        private void AddShield(Int32 points)
         {
+            if (_Shield.IsMaxLevel)
+            {
+                foreach (IPlayerListener listener in _Listeners)
+                {
+                    listener.OnPointPickup(points);
+                }
+                new AudioPlayer("Content/Audio/points_instead.wav", false, AudioManager.Category.EFFECT, 1);
+                return;
+            }
+
             _Shield.Increase();
         }
 
         /// <inheritdoc />
-        public void AddShield()
+        private void AddProbe(Int32 id, Int32 points)
         {
-            _Shield.Increase();
-        }
+            if (_ProbeController.WeaponsAtMax)
+            {
+                foreach (IPlayerListener listener in _Listeners)
+                {
+                    listener.OnPointPickup(points);
+                }
+                new AudioPlayer("Content/Audio/points_instead.wav", false, AudioManager.Category.EFFECT, 1);
+                return;
+            }
 
-        /// <inheritdoc />
-        public void ProbeButtonPressed()
-        {
-            AddProbe(0);
-        }
-
-        /// <inheritdoc />
-        public void AddProbe(Int32 id)
-        {
             _ProbeController.AddProbe(id);
             _ProbeController.Shoot = AutoFire;
         }
@@ -231,11 +239,11 @@ namespace Type.Objects.Player
         /// <summary>
         /// Adds a life to the player
         /// </summary>
-        private void AddLife()
+        private void AddLife(Int32 points)
         {
             foreach (IPlayerListener listener in _Listeners)
             {
-                listener.OnLifeAdded(this);
+                listener.OnLifeAdded(this, points);
             }
         }
 
@@ -248,6 +256,8 @@ namespace Type.Objects.Player
             {
                 listener.OnPointPickup(value);
             }
+
+            new AudioPlayer("Content/Audio/points_pickup.wav", false, AudioManager.Category.EFFECT, 1);
         }
 
         /// <inheritdoc />
@@ -257,17 +267,17 @@ namespace Type.Objects.Player
             {
                 case 0:
                     {
-                        AddLife();
+                        AddLife(powerup.PointValue);
                         return;
                     }
                 case 1:
                     {
-                        AddShield();
+                        AddShield(powerup.PointValue);
                         break;
                     }
                 case 2:
                     {
-                        AddProbe(0);
+                        AddProbe(0, powerup.PointValue);
                         break;
                     }
                 case 3:

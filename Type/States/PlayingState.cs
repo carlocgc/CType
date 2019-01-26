@@ -1,6 +1,7 @@
 ﻿using AmosShared.Graphics.Drawables;
 using AmosShared.State;
 using System;
+using AmosShared.Audio;
 using Type.Controllers;
 using Type.Data;
 using Type.Factories;
@@ -93,8 +94,14 @@ namespace Type.States
         #region Player
 
         /// <inheritdoc />
-        public void OnLifeAdded(IPlayer player)
+        public void OnLifeAdded(IPlayer player, Int32 points)
         {
+            if (_LifeMeter.PlayerLives == 5)
+            {
+                UpdateScore(points);
+                new AudioPlayer("Content/Audio/points_instead.wav", false, AudioManager.Category.EFFECT, 1);
+                return;
+            }
             _LifeMeter.AddLife();
         }
 

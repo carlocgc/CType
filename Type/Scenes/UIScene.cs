@@ -15,10 +15,6 @@ namespace Type.Scenes
         private Boolean _Active;
         /// <summary> Fire button </summary>
         public Button FireButton { get; private set; }
-        /// <summary> TODO Test button that adds probes </summary>
-        public Button ProbeButton { get; private set; }
-        /// <summary> TODO Test button that adds shield </summary>
-        public Button ShieldButton { get; private set; }
         /// <summary> Floating analog stick </summary>
         public AnalogStick AnalogStick { get; private set; }
         /// <summary> Text printer that displays the score </summary>
@@ -62,22 +58,6 @@ namespace Type.Scenes
             };
             FireButton = new Button(Int32.MaxValue, fireButton) { OnButtonPress = FireButtonPress, OnButtonRelease = FireButtonRelease };
 
-            Sprite probeButton = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/probe-button.png"))
-            {
-                Position = new Vector2(450, -450),
-                Visible = false,
-                Colour = new Vector4(1, 1, 1, (Single)0.5)
-            };
-            ProbeButton = new Button(Int32.MaxValue, probeButton) { OnButtonPress = ProbeButtonOnPress };
-
-            Sprite shieldButton = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/shield_button.png"))
-            {
-                Position = new Vector2(320, -450),
-                Visible = false,
-                Colour = new Vector4(1, 1, 1, (Single)0.5)
-            };
-            ShieldButton = new Button(Int32.MaxValue, shieldButton) { OnButtonPress = ShieldButtonPress };
-
             LifeMeter = new LifeMeter();
             FrameCounter = new FpsCounter();
             LevelDisplay = new LevelDisplay();
@@ -91,11 +71,6 @@ namespace Type.Scenes
             AnalogStick.TouchEnabled = state;
             AnalogStick.Visible = state;
             AnalogStick.ListeningForMove = state;
-
-            //ProbeButton.TouchEnabled = state;
-            //ProbeButton.Visible = state;
-            //ShieldButton.TouchEnabled = state;
-            //ShieldButton.Visible = state;
         }
 
         #region Inputs
@@ -113,22 +88,6 @@ namespace Type.Scenes
             foreach (IUIListener listener in _Listeners)
             {
                 listener.FireButtonPressed();
-            }
-        }
-
-        private void ProbeButtonOnPress(Button obj)
-        {
-            foreach (IUIListener listener in _Listeners)
-            {
-                listener.ProbeButtonPressed();
-            }
-        }
-
-        private void ShieldButtonPress(Button obj)
-        {
-            foreach (IUIListener listener in _Listeners)
-            {
-                listener.ShieldButtonPressed();
             }
         }
 
@@ -166,8 +125,6 @@ namespace Type.Scenes
             base.Dispose();
             AnalogStick.Dispose();
             FireButton.Dispose();
-            ProbeButton.Dispose();
-            ShieldButton.Dispose();
 
             FrameCounter.Dispose();
             LifeMeter.Dispose();

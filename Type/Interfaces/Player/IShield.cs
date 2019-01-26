@@ -15,6 +15,11 @@ namespace Type.Interfaces
         Boolean IsActive { get; }
 
         /// <summary>
+        /// Whether the shield is max level
+        /// </summary>
+        Boolean IsMaxLevel { get; }
+
+        /// <summary>
         /// Increases the shields level
         /// </summary>
         void Increase();

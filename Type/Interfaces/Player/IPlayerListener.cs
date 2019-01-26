@@ -11,7 +11,8 @@ namespace Type.Interfaces.Player
         /// Invoked when a life is added
         /// </summary>
         /// <param name="player"></param>
-        void OnLifeAdded(IPlayer player);
+        /// <param name="points"></param>
+        void OnLifeAdded(IPlayer player, Int32 points);
 
         /// <summary>
         /// Invoked when points are picked up
