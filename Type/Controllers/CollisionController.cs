@@ -219,8 +219,9 @@ namespace Type.Controllers
         /// <param name="enemy"></param>
         private void HandleEnemyPlayerCollision(IEnemy enemy)
         {
-            enemy.Destroy();
             HandlePlayerHit();
+            if (enemy.IsDisposed) return;
+            enemy.Destroy();
         }
 
         /// <summary>
