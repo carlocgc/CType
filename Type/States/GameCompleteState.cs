@@ -1,6 +1,5 @@
 ﻿using AmosShared.State;
 using System;
-using Type.Data;
 using Type.Scenes;
 
 namespace Type.States
@@ -8,10 +7,6 @@ namespace Type.States
     public class GameCompleteState : State
     {
         private GameCompleteScene _Scene;
-
-        public GameCompleteState()
-        {
-        }
 
         protected override void OnEnter()
         {
@@ -27,8 +22,12 @@ namespace Type.States
 
         protected override void OnExit()
         {
-            _Scene.Visible = false;
-            _Scene.IsComplete = false;
+        }
+
+        /// <inheritdoc />
+        public override void Dispose()
+        {
+            base.Dispose();
             _Scene.Dispose();
         }
     }

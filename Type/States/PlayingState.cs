@@ -20,6 +20,8 @@ namespace Type.States
     {
         /// <summary> Max level of the game </summary>
         private readonly Int32 _MaxLevel = 9;
+        /// <summary> THe type of player craft </summary>
+        private readonly Int32 _PlayerType;
 
         /// <summary> Scene for game objects </summary>
         private GameScene _GameScene;
@@ -44,6 +46,11 @@ namespace Type.States
         /// <summary> Displays the players current lives </summary>
         private LifeMeter _LifeMeter;
 
+        public PlayingState(Int32 type)
+        {
+            _PlayerType = type;
+        }
+
         protected override void OnEnter()
         {
             _CurrentLevel = 1;
@@ -55,14 +62,13 @@ namespace Type.States
             _PowerupFactory = new PowerupFactory();
             _PowerupFactory.RegisterListener(this);
 
-            _GameScene = new GameScene();
-            _GameScene.Visible = true;
+            _GameScene = new GameScene(_PlayerType) {Visible = true};
 
             _Player = _GameScene.Player;
             _Player.RegisterListener(this);
             CollisionController.Instance.RegisterPlayer(_Player);
 
-            _UIScene = new UIScene();
+            _UIScene = new UIScene(_PlayerType);
             _UIScene.RegisterListener(_Player);
             _UIScene.AnalogStick.RegisterListener(_Player);
             _ScoreDisplay = _UIScene.ScoreDisplay;
@@ -250,13 +256,17 @@ namespace Type.States
 
         protected override void OnExit()
         {
+        }
+
+        /// <inheritdoc />
+        public override void Dispose()
+        {
+            base.Dispose();
             CollisionController.Instance.IsActive = false;
             CollisionController.Instance.ClearObjects();
             _EnemyFactory.Dispose();
             _GameScene.Dispose();
             _UIScene.Dispose();
-            Dispose();
         }
-
     }
 }

@@ -40,7 +40,7 @@ namespace Type.Scenes
             }
         }
 
-        public UIScene()
+        public UIScene(Int32 playertype)
         {
             ScoreDisplay = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
@@ -59,7 +59,7 @@ namespace Type.Scenes
             };
             FireButton = new Button(Int32.MaxValue, fireButton) { OnButtonPress = FireButtonPress, OnButtonRelease = FireButtonRelease };
 
-            LifeMeter = new LifeMeter();
+            LifeMeter = new LifeMeter(playertype);
             FrameCounter = new FpsCounter();
             LevelDisplay = new LevelDisplay();
             AnalogStick = new AnalogStick(new Vector2(-620, -220), 110);
