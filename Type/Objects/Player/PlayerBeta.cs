@@ -89,6 +89,7 @@ namespace Type.Objects.Player
         public void Spawn()
         {
             Position = _SpawnPosition;
+            HitPoints = 2;
         }
 
         /// <inheritdoc />
@@ -156,6 +157,7 @@ namespace Type.Objects.Player
             }
 
             HitPoints -= damage;
+            new AudioPlayer("Content/Audio/hurt3.wav", false, AudioManager.Category.EFFECT, 1);
 
             foreach (IPlayerListener listener in _Listeners)
             {
