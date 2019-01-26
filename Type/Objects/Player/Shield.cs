@@ -28,6 +28,9 @@ namespace Type.Objects.Player
         /// <summary> Whether the shield is active </summary>
         public Boolean IsActive { get; private set; }
 
+        /// <inheritdoc />
+        public Boolean IsMaxLevel => _CurrentLevel == _MaxLevel;
+
         /// <summary> Shield that rotects the player for hits, has multiple levels of protection </summary>
         public Shield()
         {

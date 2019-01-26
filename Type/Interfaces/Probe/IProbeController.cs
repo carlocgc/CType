@@ -15,6 +15,11 @@ namespace Type.Interfaces.Probe
         Boolean Shoot { get; set; }
 
         /// <summary>
+        /// Whether probes are at maximum
+        /// </summary>
+        Boolean WeaponsAtMax { get; }
+
+        /// <summary>
         /// Add a probe to the controller
         /// </summary>
         /// <param name="id"> The id of the probe to add </param>

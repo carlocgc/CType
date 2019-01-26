@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using AmosShared.Graphics;
+﻿using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
 using OpenTK;
+using System;
+using System.Collections.Generic;
 using Type.Base;
 using Type.Controllers;
 using Type.Interfaces.Player;
@@ -30,7 +29,7 @@ namespace Type.Powerups
         private Single _Speed = 200;
 
         /// <inheritdoc />
-        public Int32 ID { get; private set; }
+        public Int32 ID { get; }
 
         /// <inheritdoc />
         public Int32 PointValue { get; }
@@ -52,9 +51,9 @@ namespace Type.Powerups
             AddSprite(_Sprite);
             Position = position;
             HitBox = GetRect();
-            _Direction = new Vector2((Single)_Rnd.NextDouble(), (Single)_Rnd.NextDouble());
             PointValue = 100 * level;
 
+            _Direction = new Vector2((Single)Math.Sin(_Rnd.Next(0, 360)), (Single)Math.Sin(_Rnd.Next(0, 360)));
         }
 
         /// <inheritdoc />
@@ -87,24 +86,27 @@ namespace Type.Powerups
         }
 
         /// <inheritdoc />
-        public Boolean CanUpdate()
+        public override void Update(TimeSpan timeTilUpdate)
         {
-            return true;
-        }
+            base.Update(timeTilUpdate);
 
-        /// <inheritdoc />
-        public void Update(TimeSpan timeTilUpdate)
-        {
-            Position += _Direction * _Speed * (Single)timeTilUpdate.TotalSeconds; ;
-
-            if (Position.X >= ScreenRight - GetSprite().Width / 2 || Position.X <= ScreenLeft + GetSprite().Width / 2)
+            Position += _Direction * _Speed * (Single)timeTilUpdate.TotalSeconds;
+            
+            if (_Direction.X > 0 && Position.X >= ScreenRight - _Sprite.Offset.X)
             {
-                _Direction = new Vector2((Single)_Rnd.NextDouble() * -1, _Direction.Y);
+                _Direction = new Vector2((Single)Math.Sin(_Rnd.Next(190, 350)), _Direction.Y);
             }
-
-            if (Position.Y >= ScreenTop - GetSprite().Height / 2 || Position.Y <= ScreenBottom + GetSprite().Height / 2)
+            if (_Direction.X < 0 && Position.X <= ScreenLeft + _Sprite.Offset.X)
             {
-                _Direction = new Vector2(_Direction.X, (Single)_Rnd.NextDouble() * -1);
+                _Direction = new Vector2((Single)Math.Sin(_Rnd.Next(10, 80)), _Direction.Y);
+            }
+            if (_Direction.Y > 0 && Position.Y >= ScreenTop - _Sprite.Offset.Y)
+            {
+                _Direction = new Vector2(_Direction.X, (Single)Math.Sin(_Rnd.Next(190, 350)));
+            }
+            if (_Direction.Y < 0 && Position.Y <= ScreenBottom + _Sprite.Offset.Y)
+            {
+                _Direction = new Vector2(_Direction.X, (Single)Math.Sin(_Rnd.Next(10, 80)));
             }
 
             HitBox = GetRect();

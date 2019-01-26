@@ -16,12 +16,17 @@ namespace Type.Controllers
     {
         /// <summary> List of all the probes </summary>
         private readonly List<IProbe> _Probes;
+        /// <summary> Maximum amount of probes the controoller can have </summary>
+        private readonly Int32 _MaxProbes = 30;
         /// <summary> The position the probes orbit </summary>
         private Vector2 _OrbitPosition;
         /// <summary> Total probes </summary>
         private Int32 _ProbeCount;
         /// <summary> Whether the probes are shooting </summary>
         private Boolean _AutoFire;
+
+        /// <inheritdoc />
+        public Boolean WeaponsAtMax => _Probes.Count == _MaxProbes;
 
         /// <summary> Whether the probes are shooting </summary>
         public Boolean Shoot
