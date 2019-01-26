@@ -24,30 +24,32 @@ namespace Type.Factories
             {
                 case 0:
                     {
-                        Int32 rnd = _Rnd.Next(0, 4);
+                        // -------------------------- STANDARD WEIGHTING (Points 50% - Shield 20% - Probe 20% - Life 10%)
+                        Int32 rnd = _Rnd.Next(0, 101);
 
                         switch (rnd)
                         {
-                            case 0:
-                                {
-                                    powerup = new ExtraLifePowerup(position);
-                                    break;
-                                }
-                            case 1:
-                                {
-                                    powerup = new ShieldPowerup(position);
-                                    break;
-                                }
-                            case 2:
-                                {
-                                    powerup = new ProbePowerup(position);
-                                    break;
-                                }
-                            case 3:
+                            case Int32 n when n >= 0 && n < 75:
                                 {
                                     powerup = new PointsPickup(position, currentLevel);
                                     break;
                                 }
+                            case Int32 n when n >= 75 && n < 90:
+                                {
+                                    powerup = new ShieldPowerup(position);
+                                    break;
+                                }
+                            case Int32 n when n >= 90 && n < 97:
+                                {
+                                    powerup = new ProbePowerup(position);
+                                    break;
+                                }
+                            case Int32 n when n >= 97:
+                                {
+                                    powerup = new ExtraLifePowerup(position);
+                                    break;
+                                }
+
 
                             default:
                                 {
