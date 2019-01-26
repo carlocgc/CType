@@ -19,16 +19,44 @@ namespace Type.UI
         /// <summary> Amount of times the player can die before game over </summary>
         public Int32 PlayerLives { get; private set; }
 
-        public LifeMeter()
+        /// <summary>
+        /// Shows the player lives
+        /// </summary>
+        /// <param name="playerId"> the type of player ship selected </param>
+        public LifeMeter(Int32 playerId)
         {
             PlayerLives = 3;
+
+            String type;
+
+            switch (playerId)
+            {
+                case 0:
+                    {
+                        type = "alpha";
+                        break;
+                    }
+                case 1:
+                    {
+                        type = "beta";
+                        break;
+                    }
+                case 2:
+                    {
+                        type = "gamma";
+                        break;
+                    }
+                default:
+                    throw new ArgumentOutOfRangeException("Player ship type does not exist");
+            }
+
             _LifeSprites = new List<Sprite>
             {
-                new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/UI/player-alpha-lifeicon.png")) {Position = new Vector2(-900, 400), Visible = false,},
-                new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/UI/player-alpha-lifeicon.png")) {Position = new Vector2(-836, 400), Visible = false,},
-                new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/UI/player-alpha-lifeicon.png")) {Position = new Vector2(-772, 400), Visible = false,},
-                new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/UI/player-alpha-lifeicon.png")) {Position = new Vector2(-708, 400), Visible = false,},
-                new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/UI/player-alpha-lifeicon.png")) {Position = new Vector2(-644, 400), Visible = false,}
+                new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture($"Content/Graphics/UI/player-{type}-lifeicon.png")) {Position = new Vector2(-900, 400), Visible = false,},
+                new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture($"Content/Graphics/UI/player-{type}-lifeicon.png")) {Position = new Vector2(-836, 400), Visible = false,},
+                new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture($"Content/Graphics/UI/player-{type}-lifeicon.png")) {Position = new Vector2(-772, 400), Visible = false,},
+                new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture($"Content/Graphics/UI/player-{type}-lifeicon.png")) {Position = new Vector2(-708, 400), Visible = false,},
+                new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture($"Content/Graphics/UI/player-{type}-lifeicon.png")) {Position = new Vector2(-644, 400), Visible = false,}
             };
 
             UpdateSprites();
@@ -49,7 +77,7 @@ namespace Type.UI
         /// </summary>
         public void AddLife()
         {
-            if(PlayerLives >= 5) return;
+            if (PlayerLives >= 5) return;
             PlayerLives++;
             UpdateSprites();
             new AudioPlayer("Content/Audio/lifeup.wav", false, AudioManager.Category.EFFECT, 1);

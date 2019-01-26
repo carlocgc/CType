@@ -431,6 +431,14 @@
       <Link>Content\Graphics\Player\player-alpha.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\Assets\Graphics\Player\player-beta.png">
+      <Link>Content\Graphics\Player\player-beta.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Player\player-gamma.png">
+      <Link>Content\Graphics\Player\player-gamma.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\Assets\Graphics\Powerups\extralife_powerup.png">
       <Link>Content\Graphics\Powerups\extralife_powerup.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -465,6 +473,14 @@
     </Content>
     <Content Include="..\Assets\Graphics\UI\player-alpha-lifeicon.png">
       <Link>Content\Graphics\UI\player-alpha-lifeicon.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\UI\player-beta-lifeicon.png">
+      <Link>Content\Graphics\UI\player-beta-lifeicon.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\UI\player-gamma-lifeicon.png">
+      <Link>Content\Graphics\UI\player-gamma-lifeicon.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\Assets\Level\level-1.txt">

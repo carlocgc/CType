@@ -37,7 +37,7 @@ namespace Type.Scenes
         /// <summary> The players ship </summary>
         public IPlayer Player { get; }
 
-        public GameScene()
+        public GameScene(Int32 playertype)
         {
             _BackgroundFar = new ScrollingBackground(100, "Content/Graphics/Background/stars-1.png");
             _BackgroundNear = new ScrollingBackground(200, "Content/Graphics/Background/stars-2.png");
@@ -45,7 +45,27 @@ namespace Type.Scenes
             _PlanetsFar = new ScrollingObject(200, 250, "Content/Graphics/Background/Planets/planet-far-", 9, 10, 20, Constants.ZOrders.PLANETS_FAR);
             _PlanetsNear = new ScrollingObject(250, 350, "Content/Graphics/Background/Planets/planet-near-", 9, 10, 30, Constants.ZOrders.PLANETS_NEAR);
 
-            Player = new PlayerAlpha();
+            switch (playertype)
+            {
+                case 0:
+                {
+                    Player = new PlayerAlpha();
+                    break;
+                }
+                case 1:
+                {
+                    Player = new PlayerBeta();
+                    break;
+                }
+                case 2:
+                {
+                    Player = new PlayerGamma();
+                    break;
+                }
+                default:
+                    throw new ArgumentOutOfRangeException("Player ship type does not exist");
+            }
+
             Enemies = new List<IEnemy>();
             Powerups = new List<IPowerup>();
 

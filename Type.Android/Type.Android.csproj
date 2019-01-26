@@ -556,6 +556,18 @@
   <ItemGroup>
     <AndroidAsset Include="Assets\Content\Level\level-10.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\Content\Graphics\Player\player-beta.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\Content\Graphics\Player\player-gamma.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\Content\Graphics\UI\player-beta-lifeicon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\Content\Graphics\UI\player-gamma-lifeicon.png" />
+  </ItemGroup>
   <Import Project="..\Type\Type.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Import Project="..\packages\Xamarin.Android.Support.Annotations.28.0.0\build\monoandroid90\Xamarin.Android.Support.Annotations.targets" Condition="Exists('..\packages\Xamarin.Android.Support.Annotations.28.0.0\build\monoandroid90\Xamarin.Android.Support.Annotations.targets')" />

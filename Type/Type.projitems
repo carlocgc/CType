@@ -56,6 +56,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\EnemyBeta.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\EnemyGamma.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Player\PlayerAlpha.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Player\PlayerBeta.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Player\PlayerGamma.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Player\Shield.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Probes\LaserProbe.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Projectiles\Laser.cs" />
