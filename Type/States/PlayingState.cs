@@ -1,11 +1,13 @@
 ﻿using AmosShared.Graphics.Drawables;
 using AmosShared.State;
 using System;
+using AmosShared.Audio;
 using Type.Controllers;
 using Type.Data;
 using Type.Factories;
 using Type.Interfaces.Enemies;
 using Type.Interfaces.Player;
+using Type.Interfaces.Powerups;
 using Type.Scenes;
 using Type.UI;
 
@@ -14,7 +16,7 @@ namespace Type.States
     /// <summary>
     /// Game play state
     /// </summary>
-    public class PlayingState : State, IPlayerListener, IEnemyListener, IEnemyFactoryListener
+    public class PlayingState : State, IPlayerListener, IEnemyListener, IEnemyFactoryListener, IPowerupListener, IPowerupFactoryListener
     {
         /// <summary> Max level of the game </summary>
         private readonly Int32 _MaxLevel = 9;
@@ -25,6 +27,8 @@ namespace Type.States
         private UIScene _UIScene;
         /// <summary> Factory that will create enemies </summary>
         private EnemyFactory _EnemyFactory;
+        /// <summary> Factory that creates power ups </summary>
+        private PowerupFactory _PowerupFactory;
         /// <summary> The player </summary>
         private IPlayer _Player;
         /// <summary> The current level </summary>
@@ -47,6 +51,9 @@ namespace Type.States
             _EnemyFactory = new EnemyFactory();
             _EnemyFactory.RegisterListener(this);
             _EnemyFactory.ParentState = this;
+
+            _PowerupFactory = new PowerupFactory();
+            _PowerupFactory.RegisterListener(this);
 
             _GameScene = new GameScene();
             _GameScene.Visible = true;
@@ -87,6 +94,24 @@ namespace Type.States
         #region Player
 
         /// <inheritdoc />
+        public void OnLifeAdded(IPlayer player, Int32 points)
+        {
+            if (_LifeMeter.PlayerLives == 5)
+            {
+                UpdateScore(points);
+                new AudioPlayer("Content/Audio/points_instead.wav", false, AudioManager.Category.EFFECT, 1);
+                return;
+            }
+            _LifeMeter.AddLife();
+        }
+
+        /// <inheritdoc />
+        public void OnPointPickup(Int32 value)
+        {
+            UpdateScore(value);
+        }
+
+        /// <inheritdoc />
         public void OnPlayerHit(IPlayer player)
         {
 
@@ -97,6 +122,7 @@ namespace Type.States
         {
             CollisionController.Instance.ClearObjects();
             _GameScene.RemoveEnemies();
+            _GameScene.RemovePowerUps();
 
             _LifeMeter.LoseLife();
 
@@ -125,7 +151,12 @@ namespace Type.States
         public void OnEnemyDestroyed(IEnemy enemy)
         {
             UpdateScore(enemy.Points);
-            if (!_EnemyFactory.Creating && CollisionController.Instance.Enemies == 0) LevelComplete();
+            if (!_EnemyFactory.Creating && CollisionController.Instance.Enemies == 0)
+            {
+                LevelComplete();
+                return;
+            }
+            _PowerupFactory.Create(0, enemy.Position, _CurrentLevel);
         }
 
         /// <inheritdoc />
@@ -133,6 +164,30 @@ namespace Type.States
         {
             enemy.Dispose();
             if (!_EnemyFactory.Creating && CollisionController.Instance.Enemies == 0) LevelComplete();
+        }
+
+        #endregion
+
+
+        #region  Powerups
+
+        /// <inheritdoc />
+        public void OnPowerupCreated(IPowerup powerup)
+        {
+            _GameScene.Powerups.Add(powerup);
+            CollisionController.Instance.RegisterPowerup(powerup);
+        }
+
+        /// <inheritdoc />
+        public void OnPowerupApplied(IPowerup powerup)
+        {
+            _GameScene.Powerups.Remove(powerup);
+        }
+
+        /// <inheritdoc />
+        public void OnPowerupExpired(IPowerup powerup)
+        {
+            _GameScene.Powerups.Remove(powerup);
         }
 
         #endregion
@@ -202,5 +257,6 @@ namespace Type.States
             _UIScene.Dispose();
             Dispose();
         }
+
     }
 }

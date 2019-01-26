@@ -123,6 +123,14 @@
       <Link>Content\Audio\mainMenuBgm.wav</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\Assets\Audio\points_instead.wav">
+      <Link>Content\Audio\points_instead.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Audio\points_pickup.wav">
+      <Link>Content\Audio\points_pickup.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\Assets\Audio\shield_off.wav">
       <Link>Content\Audio\shield_off.wav</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -421,6 +429,22 @@
     </Content>
     <Content Include="..\Assets\Graphics\Player\player-alpha.png">
       <Link>Content\Graphics\Player\player-alpha.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Powerups\extralife_powerup.png">
+      <Link>Content\Graphics\Powerups\extralife_powerup.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Powerups\points_powerup.png">
+      <Link>Content\Graphics\Powerups\points_powerup.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Powerups\shield_powerup.png">
+      <Link>Content\Graphics\Powerups\shield_powerup.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Powerups\weapon_powerup.png">
+      <Link>Content\Graphics\Powerups\weapon_powerup.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\Assets\Graphics\Probes\laser-probe.png">
