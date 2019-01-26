@@ -1,18 +1,20 @@
-﻿using System.Reflection;
+﻿using Android.App;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Type.Android")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Side scrolling shooter.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("CarloCGC")]
 [assembly: AssemblyProduct("Type.Android")]
 [assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
+[assembly: Application(Icon = "@drawable/icon")]
 
 // Version information for an assembly consists of the following four values:
 //

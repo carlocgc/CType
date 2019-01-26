@@ -48,6 +48,7 @@ namespace Type.Powerups
         public ProbePowerup(Vector2 position)
         {
             ID = 2;
+            PointValue = 200;
             _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.POWERUPS, Texture.GetTexture("Content/Graphics/Powerups/weapon_powerup.png")) { Visible = true, };
             _Sprite.Offset = _Sprite.Size / 2;
             AddSprite(_Sprite);

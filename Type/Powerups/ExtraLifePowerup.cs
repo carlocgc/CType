@@ -43,6 +43,7 @@ namespace Type.Powerups
         public ExtraLifePowerup(Vector2 position)
         {
             ID = 0;
+            PointValue = 500;
             _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.POWERUPS, Texture.GetTexture("Content/Graphics/Powerups/extralife_powerup.png"))
             {
                 Visible = true,

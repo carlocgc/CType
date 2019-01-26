@@ -27,17 +27,17 @@ namespace Type.Scenes
             _TitleText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
                 Text = "C:TYPE",
-                Position = new Vector2(0, 0),
+                Position =  new Vector2(0, 50),
                 Visible = true,
-                Scale = new Vector2(10, 10),
+                Scale = new Vector2(5, 5),
                 Colour = new Vector4(1, 1, 1, 1)
             };
             _TitleText.Offset = new Vector2(_TitleText.Size.X * _TitleText.Scale.X, _TitleText.Size.Y * _TitleText.Scale.Y) / 2;
             AddDrawable(_TitleText);
             _StartText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
-                Text = "TOUCH TO START",
-                Position = new Vector2(0, -325),
+                Text = @"START",
+                Position = new Vector2(10, -325),
                 Visible = true,
                 Scale = new Vector2(1.5f, 1.5f),
                 Colour = new Vector4(0, 0, 0, 1)
