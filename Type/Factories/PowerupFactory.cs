@@ -14,10 +14,6 @@ namespace Type.Factories
         /// <inheritdoc />
         public Boolean IsDisposed { get; set; }
 
-        public PowerupFactory()
-        {
-        }
-
         /// <inheritdoc />
         public void Create(Int32 weight, Vector2 position, Int32 currentLevel)
         {
