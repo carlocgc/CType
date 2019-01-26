@@ -8,10 +8,6 @@ namespace Type.States
     {
         private GameOverScene _Scene;
 
-        public GameOverState()
-        {
-        }
-
         protected override void OnEnter()
         {
             _Scene = new GameOverScene { Visible = true };
@@ -26,10 +22,13 @@ namespace Type.States
 
         protected override void OnExit()
         {
-            _Scene.Visible = false;
-            _Scene.IsComplete = false;
+        }
+
+        /// <inheritdoc />
+        public override void Dispose()
+        {
+            base.Dispose();
             _Scene.Dispose();
-            Dispose();
         }
     }
 }

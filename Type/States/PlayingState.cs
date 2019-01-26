@@ -46,7 +46,7 @@ namespace Type.States
 
         protected override void OnEnter()
         {
-            _CurrentLevel = 1;
+            _CurrentLevel = 9;
 
             _EnemyFactory = new EnemyFactory();
             _EnemyFactory.RegisterListener(this);
@@ -250,13 +250,17 @@ namespace Type.States
 
         protected override void OnExit()
         {
+        }
+
+        /// <inheritdoc />
+        public override void Dispose()
+        {
+            base.Dispose();
             CollisionController.Instance.IsActive = false;
             CollisionController.Instance.ClearObjects();
             _EnemyFactory.Dispose();
             _GameScene.Dispose();
             _UIScene.Dispose();
-            Dispose();
         }
-
     }
 }

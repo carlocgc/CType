@@ -12,8 +12,8 @@ namespace Type.States
         protected override void OnEnter()
         {
             GameStats.Instance.Clear();
-            _Scene = new MainMenuScene {Visible = true};
-            _Scene.Show();            
+            _Scene = new MainMenuScene { Visible = true };
+            _Scene.Show();
         }
 
         public override Boolean IsComplete()
@@ -24,10 +24,13 @@ namespace Type.States
 
         protected override void OnExit()
         {
-            _Scene.Visible = false;
-            _Scene.IsComplete = false;
+        }
+
+        /// <inheritdoc />
+        public override void Dispose()
+        {
+            base.Dispose();
             _Scene.Dispose();
-            Dispose();
         }
     }
 }
