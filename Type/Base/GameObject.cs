@@ -65,7 +65,8 @@ namespace Type.Base
         /// </summary>
         public Vector4 GetRect()
         {
-            return new Vector4(_Sprite.Position.X - _Sprite.Offset.X, _Sprite.Position.Y - _Sprite.Offset.Y, _Sprite.Width, _Sprite.Height);
+            return new Vector4(_Sprite.Position.X - _Sprite.Offset.X * _Sprite.Scale.X, _Sprite.Position.Y - _Sprite.Offset.Y * _Sprite.Scale.Y,
+                _Sprite.Width * _Sprite.Scale.X, _Sprite.Height * _Sprite.Scale.Y);
         }
 
         /// <summary>
@@ -88,6 +89,7 @@ namespace Type.Base
             {
                 _CollideArea = new Sprite(Game.MainCanvas, Int32.MaxValue, Texture.GetPixel())
                 {
+                    Colour = new Vector4(255, 255, 255, 255),
                     Position = _Sprite.Position,
                     Offset = _Sprite.Offset,
                     RotationOrigin = _Sprite.RotationOrigin,

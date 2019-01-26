@@ -65,7 +65,6 @@ namespace Type.States
         /// <inheritdoc />
         protected override void OnExit()
         {
-            Dispose();
         }
 
         /// <inheritdoc />
