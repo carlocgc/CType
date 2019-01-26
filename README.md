@@ -12,11 +12,11 @@ You control a space ship that is flying through space shooting enemies, collecti
 ## Completed elements
 
 * Movement and controls 100% 
-* Shooting and collisions 50%
+* Shooting and collisions 80%
 * Enemies 50%
 * Enemy behaviour 50%
-* Powerups 50%
-* Endgame results 70%
+* Powerups 80%
+* Endgame results 80%
 * Bosses 20%
 
 ## Acknowledgments
