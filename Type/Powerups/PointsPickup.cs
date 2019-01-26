@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using AmosShared.Graphics;
+﻿using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
 using OpenTK;
+using System;
+using System.Collections.Generic;
 using Type.Base;
 using Type.Controllers;
 using Type.Interfaces.Player;
@@ -30,7 +29,7 @@ namespace Type.Powerups
         private Single _Speed = 200;
 
         /// <inheritdoc />
-        public Int32 ID { get; private set; }
+        public Int32 ID { get; }
 
         /// <inheritdoc />
         public Int32 PointValue { get; }
@@ -87,14 +86,10 @@ namespace Type.Powerups
         }
 
         /// <inheritdoc />
-        public Boolean CanUpdate()
+        public override void Update(TimeSpan timeTilUpdate)
         {
-            return true;
-        }
+            base.Update(timeTilUpdate);
 
-        /// <inheritdoc />
-        public void Update(TimeSpan timeTilUpdate)
-        {
             Position += _Direction * _Speed * (Single)timeTilUpdate.TotalSeconds; ;
 
             if (Position.X >= ScreenRight - GetSprite().Width / 2 || Position.X <= ScreenLeft + GetSprite().Width / 2)
