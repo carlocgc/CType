@@ -67,17 +67,20 @@ namespace Type.UI
 
             _Ship = new Sprite(Game.UiCanvas, Constants.ZOrders.UI_OVERLAY, Texture.GetTexture(shipPath))
             {
-                Position = _Button.Position + new Vector2(288, 269),
+                Position = _Button.Position + new Vector2(303, 550),
+                Scale = new Vector2(3, 3),
                 Visible = true,
             };
-            _Ship.Offset = _Ship.Size / 2;
+            _Ship.Offset = new Vector2(_Ship.Size.X / 2 * _Ship.Scale.X, _Ship.Size.Y / 2 * _Ship.Scale.Y);
+            _Ship.RotationOrigin = _Ship.Size / 2;
+            _Ship.Rotation = 1.57;
 
             _ShipName = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI_OVERLAY, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
                 Text = $"{name}",
-                Position = _Button.Position + new Vector2(290, 50),
+                Position = _Button.Position + new Vector2(250, 800),
                 Visible = true,
-                Scale = new Vector2(2, 2),
+                Scale = new Vector2(2.5f, 2.5f),
                 Colour = new Vector4(1, 1, 1, 1)
             };
             _ShipName.Offset = _ShipName.Size / 2;
@@ -85,7 +88,7 @@ namespace Type.UI
             _HitpointsLabel = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI_OVERLAY, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
                 Text = $"HIT POINTS:",
-                Position = _Button.Position + new Vector2(60, 490),
+                Position = _Button.Position + new Vector2(60, 300),
                 Visible = true,
                 Scale = new Vector2(2, 2),
                 Colour = new Vector4(1, 1, 1, 1)
@@ -93,7 +96,7 @@ namespace Type.UI
             _HitpointsValue = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI_OVERLAY, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
                 Text = $"{hitPoints}",
-                Position = _Button.Position + new Vector2(390, 490),
+                Position = _Button.Position + new Vector2(390, 300),
                 Visible = true,
                 Scale = new Vector2(2, 2),
                 Colour = new Vector4(1, 1, 1, 1)
@@ -101,7 +104,7 @@ namespace Type.UI
             _FirerateLabel = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI_OVERLAY, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
                 Text = $"FIRE RATE:",
-                Position = _Button.Position + new Vector2(60, 600),
+                Position = _Button.Position + new Vector2(60, 200),
                 Visible = true,
                 Scale = new Vector2(2, 2),
                 Colour = new Vector4(1, 1, 1, 1)
@@ -109,7 +112,7 @@ namespace Type.UI
             _FirerateValue = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI_OVERLAY, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
                 Text = $"{fireRate}",
-                Position = _Button.Position + new Vector2(390, 600),
+                Position = _Button.Position + new Vector2(390, 200),
                 Visible = true,
                 Scale = new Vector2(2, 2),
                 Colour = new Vector4(1, 1, 1, 1)
@@ -117,7 +120,7 @@ namespace Type.UI
             _EngineSpeedLabel = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI_OVERLAY, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
                 Text = $"SPEED:",
-                Position = _Button.Position + new Vector2(60, 700),
+                Position = _Button.Position + new Vector2(60, 100),
                 Visible = true,
                 Scale = new Vector2(2, 2),
                 Colour = new Vector4(1, 1, 1, 1)
@@ -125,7 +128,7 @@ namespace Type.UI
             _EngineSpeedValue = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI_OVERLAY, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
                 Text = $"{speed}",
-                Position = _Button.Position + new Vector2(390, 700),
+                Position = _Button.Position + new Vector2(390, 100),
                 Visible = true,
                 Scale = new Vector2(2, 2),
                 Colour = new Vector4(1, 1, 1, 1)

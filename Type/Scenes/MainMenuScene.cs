@@ -77,7 +77,6 @@ namespace Type.Scenes
         {
             base.Dispose();
             _StartButton.Dispose();
-            AudioManager.Instance.Dispose();
         }
     }
 }
