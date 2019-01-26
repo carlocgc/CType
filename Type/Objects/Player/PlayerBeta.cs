@@ -17,7 +17,7 @@ using static Type.Constants.Global;
 namespace Type.Objects.Player
 {
     /// <summary>
-    /// Alpha type player craft
+    /// Beta type player craft
     /// </summary>
     public class PlayerBeta : GameObject, IPlayer
     {

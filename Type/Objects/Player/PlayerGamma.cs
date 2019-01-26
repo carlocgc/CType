@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using AmosShared.Audio;
+﻿using AmosShared.Audio;
 using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
 using OpenTK;
+using System;
+using System.Collections.Generic;
 using Type.Base;
 using Type.Controllers;
 using Type.Data;
@@ -17,8 +16,8 @@ using static Type.Constants.Global;
 
 namespace Type.Objects.Player
 {
-     /// <summary>
-    /// Alpha type player craft
+    /// <summary>
+    /// Gamma type player craft
     /// </summary>
     public class PlayerGamma : GameObject, IPlayer
     {
