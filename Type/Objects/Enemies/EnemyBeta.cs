@@ -120,7 +120,7 @@ namespace Type.Objects.Enemies
         {
             Vector2 bulletDirection = _DirectionTowardsPlayer;
             if (bulletDirection != Vector2.Zero) bulletDirection.Normalize();
-            new PlasmaBall(Position, bulletDirection, 1050, new Vector4(255, 255, 0, 255));
+            new PlasmaBall(Position, bulletDirection, 1050, new Vector4(100, 100, 0, 1));
 
             _IsWeaponLocked = true;
             new AudioPlayer("Content/Audio/laser2.wav", false, AudioManager.Category.EFFECT, 1);

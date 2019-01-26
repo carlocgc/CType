@@ -241,15 +241,6 @@
     <AndroidAsset Include="Assets\Content\Graphics\Buttons\fire.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\Content\Graphics\Buttons\left.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\Content\Graphics\Buttons\right.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\Content\Graphics\Buttons\up.png" />
-  </ItemGroup>
-  <ItemGroup>
     <AndroidAsset Include="Assets\Content\Level\level-1.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </AndroidAsset>
@@ -338,9 +329,6 @@
     <AndroidAsset Include="Assets\Content\Graphics\Probes\laser-probe.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\Content\Graphics\Buttons\probe-button.png" />
-  </ItemGroup>
-  <ItemGroup>
     <AndroidAsset Include="Assets\Content\Graphics\Explosion2\pixelExplosion00.png" />
   </ItemGroup>
   <ItemGroup>
@@ -378,9 +366,6 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\Content\Graphics\Shield\shield3.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\Content\Graphics\Buttons\shield_button.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\Content\Audio\gameCompleteBgm.wav" />
@@ -567,6 +552,9 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\Content\Graphics\UI\player-gamma-lifeicon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\Content\Graphics\Buttons\ship_select_button.png" />
   </ItemGroup>
   <Import Project="..\Type\Type.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

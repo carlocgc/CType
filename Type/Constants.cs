@@ -22,13 +22,13 @@ namespace Type
             public const Boolean SHOW_SPRITE_AREAS = false;
 
             /// <summary> The top of the screen </summary>
-            public static Single ScreenTop = Renderer.Instance.TargetDimensions.Y / 2;
+            public static readonly Single ScreenTop = Renderer.Instance.TargetDimensions.Y / 2;
             /// <summary> The right of the screen </summary>
-            public static Single ScreenRight = Renderer.Instance.TargetDimensions.X / 2;
+            public static readonly Single ScreenRight = Renderer.Instance.TargetDimensions.X / 2;
             /// <summary> The left of the screen </summary>
-            public static Single ScreenLeft = -Renderer.Instance.TargetDimensions.X / 2;
+            public static readonly Single ScreenLeft = -Renderer.Instance.TargetDimensions.X / 2;
             /// <summary> The bottom of the screen </summary>
-            public static Single ScreenBottom = -Renderer.Instance.TargetDimensions.Y / 2;
+            public static readonly Single ScreenBottom = -Renderer.Instance.TargetDimensions.Y / 2;
         }
 
         /// <summary>
@@ -55,6 +55,8 @@ namespace Type
             public const Int32 SHIELD = 95;
 
             public const Int32 UI = 1000;
+
+            public const Int32 UI_OVERLAY = 1001;
 
             public const Int32 ENGINE_HEAD = 1499;
 

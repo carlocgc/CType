@@ -18,7 +18,7 @@ namespace Type.States
 
         public override Boolean IsComplete()
         {
-            if (_Scene.IsComplete) ChangeState(new PlayingState(0));
+            if (_Scene.IsComplete) ChangeState(new ShipSelectState());
             return _Scene.IsComplete;
         }
 

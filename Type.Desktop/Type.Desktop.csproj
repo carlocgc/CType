@@ -295,24 +295,8 @@
       <Link>Content\Graphics\Buttons\gameovercontinue.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Assets\Graphics\Buttons\left.png">
-      <Link>Content\Graphics\Buttons\left.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Assets\Graphics\Buttons\probe-button.png">
-      <Link>Content\Graphics\Buttons\probe-button.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Assets\Graphics\Buttons\right.png">
-      <Link>Content\Graphics\Buttons\right.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Assets\Graphics\Buttons\shield_button.png">
-      <Link>Content\Graphics\Buttons\shield_button.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Assets\Graphics\Buttons\up.png">
-      <Link>Content\Graphics\Buttons\up.png</Link>
+    <Content Include="..\Assets\Graphics\Buttons\ship_select_button.png">
+      <Link>Content\Graphics\Buttons\ship_select_button.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\Assets\Graphics\Enemies\enemy1.png">
