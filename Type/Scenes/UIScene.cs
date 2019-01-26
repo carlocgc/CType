@@ -44,6 +44,7 @@ namespace Type.Scenes
         {
             ScoreDisplay = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
+                Text = "0",
                 Position = new Vector2(-900, 460),
                 Visible = true,
                 Scale = new Vector2(2, 2),

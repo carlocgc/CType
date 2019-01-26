@@ -43,6 +43,7 @@ namespace Type.Powerups
         public ShieldPowerup(Vector2 position)
         {
             ID = 1;
+            PointValue = 100;
             _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.POWERUPS, Texture.GetTexture("Content/Graphics/Powerups/shield_powerup.png"))
             {
                 Visible = true,
