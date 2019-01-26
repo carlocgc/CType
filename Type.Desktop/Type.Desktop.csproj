@@ -471,6 +471,10 @@
       <Link>Content\Level\level-1.txt</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\Assets\Level\level-10.txt">
+      <Link>Content\Level\level-10.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\Assets\Level\level-2.txt">
       <Link>Content\Level\level-2.txt</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
