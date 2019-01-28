@@ -31,6 +31,8 @@ namespace Type.Objects.Player
         private readonly Single _MovementSpeed;
         /// <summary> Amount of time between firing </summary>
         private readonly TimeSpan _FireRate;
+        /// <summary> List of the engine effect sprites </summary>
+        private readonly Sprite[] _EngineEffects;
 
         /// <summary> Time since the last bullet was fired </summary>
         private TimeSpan _TimeSinceLastFired;
@@ -59,6 +61,20 @@ namespace Type.Objects.Player
             }
         }
 
+        /// <inheritdoc />
+        public override Vector2 Position
+        {
+            get => base.Position;
+            set
+            {
+                base.Position = value;
+                foreach (Sprite effect in _EngineEffects)
+                {
+                    effect.Position = value;
+                }
+            }
+        }
+
         public PlayerBeta()
         {
             _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.PLAYER, Texture.GetTexture("Content/Graphics/Player/player-beta.png"))
@@ -67,6 +83,12 @@ namespace Type.Objects.Player
             };
             _Sprite.Offset = _Sprite.Size / 2;
             AddSprite(_Sprite);
+
+            _EngineEffects = new Sprite[2];
+            _EngineEffects[0] = new Sprite(Game.MainCanvas, Constants.ZOrders.PLAYER, Texture.GetTexture("Content/Graphics/Player/engine_effect_large.png"));
+            _EngineEffects[0].Offset = new Vector2(23 + _EngineEffects[0].Width, -17);
+            _EngineEffects[1] = new Sprite(Game.MainCanvas, Constants.ZOrders.PLAYER, Texture.GetTexture("Content/Graphics/Player/engine_effect_large.png"));
+            _EngineEffects[1].Offset = new Vector2(23 + _EngineEffects[1].Width, 17 + _EngineEffects[1].Height);
 
             Position = _SpawnPosition;
 
@@ -191,6 +213,8 @@ namespace Type.Objects.Player
         {
             _Direction = direction;
             _MoveStrength = strength;
+
+            foreach (Sprite effect in _EngineEffects) effect.Visible = direction.X > 0;
         }
 
         /// <inheritdoc />
@@ -317,6 +341,7 @@ namespace Type.Objects.Player
         public override void Dispose()
         {
             base.Dispose();
+            foreach (Sprite effect in _EngineEffects) effect.Dispose();
             _Shield.Dispose();
             _ProbeController.Dispose();
         }
