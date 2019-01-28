@@ -48,6 +48,7 @@ namespace Type.UI
                     }
                 case 3:
                     {
+                        PlayerLives = 1;
                         type = "omega";
                         break;
                     }

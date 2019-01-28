@@ -94,8 +94,8 @@ namespace Type.Objects.Player
             AddSprite(_Sprite);
 
             _EngineEffects = new Sprite[1];
-            _EngineEffects[0] = new Sprite(Game.MainCanvas, Constants.ZOrders.PLAYER, Texture.GetTexture("Content/Graphics/Player/engine_effect_large.png"));
-            _EngineEffects[0].Offset = new Vector2(25 + _EngineEffects[0].Width, -23);
+            _EngineEffects[0] = new Sprite(Game.MainCanvas, Constants.ZOrders.PLAYER, Texture.GetTexture("Content/Graphics/Player/omega_engine.png"));
+            _EngineEffects[0].Offset = new Vector2(38 + _EngineEffects[0].Width, 12);
 
             Position = _SpawnPosition;
 
@@ -169,7 +169,8 @@ namespace Type.Objects.Player
         /// <inheritdoc />
         public void Shoot()
         {
-            new Laser(Position + new Vector2(_Sprite.Width / 2, 0), new Vector2(1, 0), 1000, 0);
+            new Bullet(Position + new Vector2(_Sprite.Width / 2, -24), new Vector2(1, 0), 1100, 0);
+            new Bullet(Position + new Vector2(_Sprite.Width / 2, 24), new Vector2(1, 0), 1100, 0);
             _IsWeaponLocked = true;
             GameStats.Instance.BulletsFired++;
             new AudioPlayer("Content/Audio/laser1.wav", false, AudioManager.Category.EFFECT, 0.5f);

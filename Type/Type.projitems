@@ -60,6 +60,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Player\PlayerOmega.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Player\Shield.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Probes\LaserProbe.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Projectiles\Bullet.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Projectiles\Laser.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Projectiles\PlasmaBall.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\World\ScrollingBackground.cs" />

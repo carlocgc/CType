@@ -367,42 +367,6 @@
       <Link>Content\Graphics\Explosion2\pixelExplosion08.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Assets\Graphics\Explosion\explosion00.png">
-      <Link>Content\Graphics\Explosion\explosion00.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Assets\Graphics\Explosion\explosion01.png">
-      <Link>Content\Graphics\Explosion\explosion01.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Assets\Graphics\Explosion\explosion02.png">
-      <Link>Content\Graphics\Explosion\explosion02.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Assets\Graphics\Explosion\explosion03.png">
-      <Link>Content\Graphics\Explosion\explosion03.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Assets\Graphics\Explosion\explosion04.png">
-      <Link>Content\Graphics\Explosion\explosion04.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Assets\Graphics\Explosion\explosion05.png">
-      <Link>Content\Graphics\Explosion\explosion05.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Assets\Graphics\Explosion\explosion06.png">
-      <Link>Content\Graphics\Explosion\explosion06.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Assets\Graphics\Explosion\explosion07.png">
-      <Link>Content\Graphics\Explosion\explosion07.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Assets\Graphics\Explosion\explosion08.png">
-      <Link>Content\Graphics\Explosion\explosion08.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="..\Assets\Graphics\KenPixel\KenPixel.json">
       <Link>Content\Graphics\KenPixel\KenPixel.json</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -417,6 +381,14 @@
     </Content>
     <Content Include="..\Assets\Graphics\Player\engine_effect_small.png">
       <Link>Content\Graphics\Player\engine_effect_small.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Player\omega_bullet.png">
+      <Link>Content\Graphics\Player\omega_bullet.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Player\omega_engine.png">
+      <Link>Content\Graphics\Player\omega_engine.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\Assets\Graphics\Player\player-alpha.png">
