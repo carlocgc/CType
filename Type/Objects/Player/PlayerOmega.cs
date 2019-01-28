@@ -1,9 +1,10 @@
-﻿using AmosShared.Audio;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using AmosShared.Audio;
 using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
 using OpenTK;
-using System;
-using System.Collections.Generic;
 using Type.Base;
 using Type.Controllers;
 using Type.Data;
@@ -17,38 +18,49 @@ using static Type.Constants.Global;
 namespace Type.Objects.Player
 {
     /// <summary>
-    /// Beta type player craft
+    /// Omega type player craft
     /// </summary>
-    public class PlayerBeta : GameObject, IPlayer
+    public class PlayerOmega : GameObject, IPlayer
     {
         /// <summary> Single point of contact for probes attached to  the player </summary>
         private readonly IProbeController _ProbeController;
+
         /// <summary> The players shield </summary>
         private readonly IShield _Shield;
+
         /// <summary> Position on screen where the player is spawned </summary>
         private readonly Vector2 _SpawnPosition = new Vector2(-540, 0);
+
         /// <summary> How fast the player can move in any direction </summary>
         private readonly Single _MovementSpeed;
+
         /// <summary> Amount of time between firing </summary>
         private readonly TimeSpan _FireRate;
+
         /// <summary> List of the engine effect sprites </summary>
         private readonly Sprite[] _EngineEffects;
 
         /// <summary> Time since the last bullet was fired </summary>
         private TimeSpan _TimeSinceLastFired;
+
         /// <summary> The direction to be applied to the position of the player </summary>
         private Vector2 _Direction;
+
         /// <summary> Movement speed modifier </summary>
         private Single _MoveStrength;
+
         /// <summary> Whether firing is allowed </summary>
         private Boolean _IsWeaponLocked;
+
         /// <summary> Whether the ship is autofiring </summary>
         private Boolean _AutoFire;
 
         /// <inheritdoc />
         public Int32 HitPoints { get; private set; }
+
         /// <inheritdoc />
         public Vector4 HitBox { get; set; }
+
         /// <inheritdoc />
         public Boolean AutoFire
         {
@@ -75,26 +87,21 @@ namespace Type.Objects.Player
             }
         }
 
-        public PlayerBeta()
+        public PlayerOmega()
         {
-            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.PLAYER, Texture.GetTexture("Content/Graphics/Player/player-beta.png"))
-            {
-                Visible = true,
-            };
+            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.PLAYER, Texture.GetTexture("Content/Graphics/Player/player_omega.png")) { Visible = true, };
             _Sprite.Offset = _Sprite.Size / 2;
             AddSprite(_Sprite);
 
-            _EngineEffects = new Sprite[2];
-            _EngineEffects[0] = new Sprite(Game.MainCanvas, Constants.ZOrders.PLAYER, Texture.GetTexture("Content/Graphics/Player/engine_effect_large.png"));
-            _EngineEffects[0].Offset = new Vector2(23 + _EngineEffects[0].Width, -17);
-            _EngineEffects[1] = new Sprite(Game.MainCanvas, Constants.ZOrders.PLAYER, Texture.GetTexture("Content/Graphics/Player/engine_effect_large.png"));
-            _EngineEffects[1].Offset = new Vector2(23 + _EngineEffects[1].Width, 17 + _EngineEffects[1].Height);
+            _EngineEffects = new Sprite[1];
+            _EngineEffects[0] = new Sprite(Game.MainCanvas, Constants.ZOrders.PLAYER, Texture.GetTexture("Content/Graphics/Player/omega_engine.png"));
+            _EngineEffects[0].Offset = new Vector2(38 + _EngineEffects[0].Width, 12);
 
             Position = _SpawnPosition;
 
-            _MovementSpeed = 600;
-            _FireRate = TimeSpan.FromMilliseconds(150);
-            HitPoints = 2;
+            _MovementSpeed = 800;
+            _FireRate = TimeSpan.FromMilliseconds(80);
+            HitPoints = 1;
 
             _ProbeController = new ProbeController();
             _ProbeController.UpdatePosition(Position);
@@ -111,7 +118,6 @@ namespace Type.Objects.Player
         public void Spawn()
         {
             Position = _SpawnPosition;
-            HitPoints = 2;
         }
 
         /// <inheritdoc />
@@ -163,7 +169,8 @@ namespace Type.Objects.Player
         /// <inheritdoc />
         public void Shoot()
         {
-            new Laser(Position + new Vector2(_Sprite.Width / 2, 0), new Vector2(1, 0), 1000, 0);
+            new Bullet(Position + new Vector2(_Sprite.Width / 2, -24), new Vector2(1, 0), 1100, 0);
+            new Bullet(Position + new Vector2(_Sprite.Width / 2, 24), new Vector2(1, 0), 1100, 0);
             _IsWeaponLocked = true;
             GameStats.Instance.BulletsFired++;
             new AudioPlayer("Content/Audio/laser1.wav", false, AudioManager.Category.EFFECT, 0.5f);
@@ -179,7 +186,6 @@ namespace Type.Objects.Player
             }
 
             HitPoints -= damage;
-            new AudioPlayer("Content/Audio/hurt3.wav", false, AudioManager.Category.EFFECT, 1);
 
             foreach (IPlayerListener listener in _Listeners)
             {
@@ -238,6 +244,7 @@ namespace Type.Objects.Player
                 {
                     listener.OnPointPickup(points);
                 }
+
                 new AudioPlayer("Content/Audio/points_instead.wav", false, AudioManager.Category.EFFECT, 1);
                 return;
             }
@@ -254,6 +261,7 @@ namespace Type.Objects.Player
                 {
                     listener.OnPointPickup(points);
                 }
+
                 new AudioPlayer("Content/Audio/points_instead.wav", false, AudioManager.Category.EFFECT, 1);
                 return;
             }

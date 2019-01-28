@@ -48,20 +48,25 @@ namespace Type.Scenes
             switch (playertype)
             {
                 case 0:
-                {
-                    Player = new PlayerAlpha();
-                    break;
-                }
+                    {
+                        Player = new PlayerAlpha();
+                        break;
+                    }
                 case 1:
-                {
-                    Player = new PlayerBeta();
-                    break;
-                }
+                    {
+                        Player = new PlayerBeta();
+                        break;
+                    }
                 case 2:
-                {
-                    Player = new PlayerGamma();
-                    break;
-                }
+                    {
+                        Player = new PlayerGamma();
+                        break;
+                    }
+                case 3:
+                    {
+                        Player = new PlayerOmega();
+                        break;
+                    }
                 default:
                     throw new ArgumentOutOfRangeException("Player ship type does not exist");
             }
