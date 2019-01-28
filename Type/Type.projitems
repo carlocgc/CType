@@ -57,8 +57,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Player\PlayerAlpha.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Player\PlayerBeta.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Player\PlayerGamma.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Player\PlayerOmega.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Player\Shield.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Probes\LaserProbe.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Projectiles\Bullet.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Projectiles\Laser.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Projectiles\PlasmaBall.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\World\ScrollingBackground.cs" />
@@ -72,6 +74,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\GameOverScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\GameScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\MainMenuScene.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\SecretShipSelectScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\ShipSelectScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\UIScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)States\EngineSplashState.cs" />
@@ -79,6 +82,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)States\GameOverState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)States\MainMenuState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)States\PlayingState.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)States\SecretShipSelectState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)States\ShipSelectState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\AnalogStick.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\FpsCounter.cs" />

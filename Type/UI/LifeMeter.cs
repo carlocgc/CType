@@ -46,6 +46,12 @@ namespace Type.UI
                         type = "gamma";
                         break;
                     }
+                case 3:
+                    {
+                        PlayerLives = 1;
+                        type = "omega";
+                        break;
+                    }
                 default:
                     throw new ArgumentOutOfRangeException("Player ship type does not exist");
             }
