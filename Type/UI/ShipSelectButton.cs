@@ -64,6 +64,7 @@ namespace Type.UI
                 Visible = true,
             };
             _Button.OnButtonPress += OnButtonPress;
+            _Button.OnButtonRelease += OnButtonRelease;
 
             _Ship = new Sprite(Game.UiCanvas, Constants.ZOrders.UI_OVERLAY, Texture.GetTexture(shipPath))
             {
@@ -136,11 +137,23 @@ namespace Type.UI
 
         }
 
+
         private void OnButtonPress(Button button)
         {
-            foreach (IShipSelectListener listener in _Listeners)
+            for (var index = _Listeners.Count - 1; index >= 0; index--)
             {
-                listener.OnShipSelected(_ID);
+                IShipSelectListener listener = _Listeners[index];
+                listener.OnButtonPressed(_ID);
+            }
+        }
+
+
+        private void OnButtonRelease(Button button)
+        {
+            for (var index = _Listeners.Count - 1; index >= 0; index--)
+            {
+                IShipSelectListener listener = _Listeners[index];
+                listener.OnButtonReleased(_ID);
             }
         }
 
