@@ -95,7 +95,7 @@ namespace Type.Objects.Player
 
             _EngineEffects = new Sprite[1];
             _EngineEffects[0] = new Sprite(Game.MainCanvas, Constants.ZOrders.PLAYER, Texture.GetTexture("Content/Graphics/Player/omega_engine.png"));
-            _EngineEffects[0].Offset = new Vector2(38 + _EngineEffects[0].Width, 12);
+            _EngineEffects[0].Offset = new Vector2(40 + _EngineEffects[0].Width, 12);
 
             Position = _SpawnPosition;
 
