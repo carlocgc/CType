@@ -45,7 +45,7 @@ namespace Type.Scenes
             };
             _Background.Offset = _Background.Size / 2;
 
-            OmegaButton = new ShipSelectButton(3, new Vector2(658, 50), "Content/Graphics/Player/player_omega.png", "OMEGA", 4, 150, 150);
+            OmegaButton = new ShipSelectButton(3, new Vector2(658, 50), "Content/Graphics/Player/player_omega.png", "OMEGA", 1, 200, 120);
         }
 
         /// <inheritdoc />
