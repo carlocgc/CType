@@ -77,17 +77,17 @@ namespace Type.Factories
             {
                 case 0:
                     {
-                        enemy = new EnemyAlpha(_CurrentWave.Ypositions[_DataIndex]);
+                        enemy = new Enemy_01(_CurrentWave.Ypositions[_DataIndex]);
                         break;
                     }
                 case 1:
                     {
-                        enemy = new EnemyBeta(_CurrentWave.Ypositions[_DataIndex]);
+                        enemy = new Enemy_02(_CurrentWave.Ypositions[_DataIndex]);
                         break;
                     }
                 case 2:
                     {
-                        enemy = new EnemyGamma(_CurrentWave.Ypositions[_DataIndex]);
+                        enemy = new Enemy_03(_CurrentWave.Ypositions[_DataIndex]);
                         break;
                     }
                 case 20:
