@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Android.Gms.Ads;
+﻿using Android.Gms.Ads;
+using System;
 using Type.Android;
 
 namespace Type.Ads
@@ -15,11 +13,20 @@ namespace Type.Ads
 
         public InterstitialAd MInterstitialAd { get; private set; }
 
+        public Action OnAddClosed { get; set; }
+
+        public Action OnAddClicked { get; set; }
+
+        public Action OnLeaveApplication { get; set; }
+
         private AdService()
         {
 
         }
 
+        /// <summary>
+        /// Initialises the ad service, should be called when the game initially loads
+        /// </summary>
         public void InitialiseInterstitial()
         {
             MobileAds.Initialize(MainActivity.Instance, "ca-app-pub-4204969324853965~4341189590"); // My Admob ID
@@ -28,6 +35,9 @@ namespace Type.Ads
             LoadInterstitial();
         }
 
+        /// <summary>
+        /// Load the next ad, should be invoked as soon as possible so ad is ready to display when nessesary, usually straight after an ad is shown
+        /// </summary>
         public void LoadInterstitial()
         {
             AdRequest request = new AdRequest.Builder().AddTestDevice("7DBD856302197638").Build(); // TODO FIX TEST AD Remove '.AddTestDevice(XXXXXXX)'
@@ -35,36 +45,43 @@ namespace Type.Ads
         }
 
         /// <summary>
-        /// Show the interstitial ad
+        /// Adds the assignable actions as a listener to the ad events
         /// </summary>
-        /// <param name="onClicked">Action to invoke when the ad has been clicked</param>
-        /// <param name="onLeaveApplication">Action to invoke when the the user has left the application </param>
-        /// <param name="onClosed"> Action to invoke when the ad has closed </param>
-        public void ShowInterstitial(Action onClicked = null, Action onLeaveApplication = null, Action onClosed = null)
+        private void AttachListener()
         {
-            if (!MInterstitialAd.IsLoaded)
-            {
-                onClosed?.Invoke();
-                return;
-            }
-
             CustomAdListener cadl = new CustomAdListener
             {
                 OnAdClickedAction = () =>
                 {
-                    onClicked?.Invoke();
+                    OnAddClicked?.Invoke();
+                    AdService.Instance.LoadInterstitial();
                 },
                 OnAdLeftApplicationAction = () =>
                 {
-                    onLeaveApplication?.Invoke();
+                    OnLeaveApplication?.Invoke();
+                    AdService.Instance.LoadInterstitial();
                 },
                 OnAdClosedAction = () =>
                 {
-                    onClosed?.Invoke();
+                    OnAddClosed?.Invoke();
                     AdService.Instance.LoadInterstitial();
                 }
             };
             AdService.Instance.MInterstitialAd.AdListener = cadl;
+        }
+
+        /// <summary>
+        /// Show the interstitial ad
+        /// </summary>
+        public void ShowInterstitial()
+        {
+            if (!MInterstitialAd.IsLoaded)
+            {
+                OnAddClosed?.Invoke();
+                return;
+            }
+
+            AttachListener();
             AdService.Instance.MInterstitialAd.Show();
         }
     }

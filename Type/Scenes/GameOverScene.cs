@@ -79,7 +79,8 @@ namespace Type.Scenes
             _Music.Stop();
             _ConfirmButton.TouchEnabled = false;
 
-            AdService.Instance.ShowInterstitial(onClosed: () => IsComplete = true);
+            AdService.Instance.OnAddClosed = () => IsComplete = true;
+            AdService.Instance.ShowInterstitial();
         }
 
         public void Start()
