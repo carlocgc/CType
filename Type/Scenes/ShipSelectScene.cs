@@ -13,6 +13,8 @@ namespace Type.Scenes
 
         private readonly Sprite _Background;
 
+        private readonly AudioPlayer _Music;
+
         private Boolean _Active;
 
         public ShipSelectButton AlphaButton { get; }
@@ -53,7 +55,10 @@ namespace Type.Scenes
             AlphaButton = new ShipSelectButton(0, new Vector2(45, 50), "Content/Graphics/Player/player-alpha.png", "ALPHA", 1, 100, 100);
             BetaButton = new ShipSelectButton(1, new Vector2(658, 50), "Content/Graphics/Player/player-beta.png", "BETA", 2, 80, 80);
             GammaButton = new ShipSelectButton(2, new Vector2(1270, 50), "Content/Graphics/Player/player-gamma.png", "GAMMA", 3, 60, 60);
+
+            _Music = new AudioPlayer("Content/Audio/mainMenuBgm.wav", true, AudioManager.Category.MUSIC, 1);
         }
+
 
         /// <inheritdoc />
         public override void Update(TimeSpan timeSinceUpdate)
@@ -64,11 +69,12 @@ namespace Type.Scenes
         public override void Dispose()
         {
             base.Dispose();
+            _Music.Stop();
             _Title.Dispose();
+            _Background.Dispose();
             AlphaButton.Dispose();
             BetaButton.Dispose();
             GammaButton.Dispose();
-            _Background.Dispose();
         }
     }
 }

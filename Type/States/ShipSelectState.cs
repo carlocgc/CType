@@ -79,7 +79,6 @@ namespace Type.States
             if (_IsComplete && !_EnteringSecretMenu)
             {
                 ChangeState(new PlayingState(_Selection));
-                AudioManager.Instance.Dispose();
             }
 
             if (_IsComplete && _EnteringSecretMenu)

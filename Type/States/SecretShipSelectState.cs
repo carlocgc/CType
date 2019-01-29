@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using AmosShared.Audio;
+﻿using AmosShared.Audio;
 using AmosShared.State;
+using System;
 using Type.Interfaces.Control;
 using Type.Scenes;
 
@@ -60,9 +58,6 @@ namespace Type.States
         {
             base.Dispose();
             _Scene.Dispose();
-            AudioManager.Instance.Dispose();
         }
-
-
     }
 }

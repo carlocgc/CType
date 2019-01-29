@@ -1,9 +1,8 @@
-﻿using AmosShared.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using AmosShared.Audio;
+using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
 using OpenTK;
+using System;
 using Type.UI;
 
 namespace Type.Scenes
@@ -13,6 +12,8 @@ namespace Type.Scenes
         private readonly TextDisplay _Title;
 
         private readonly Sprite _Background;
+
+        private readonly AudioPlayer _Music;
 
         private Boolean _Active;
 
@@ -46,6 +47,8 @@ namespace Type.Scenes
             _Background.Offset = _Background.Size / 2;
 
             OmegaButton = new ShipSelectButton(3, new Vector2(658, 50), "Content/Graphics/Player/player_omega.png", "OMEGA", 1, 200, 120);
+
+            _Music = new AudioPlayer("Content/Audio/mainMenuBgm.wav", true, AudioManager.Category.MUSIC, 1);
         }
 
         /// <inheritdoc />
@@ -58,6 +61,7 @@ namespace Type.Scenes
         public override void Dispose()
         {
             base.Dispose();
+            _Music.Stop();
             _Title.Dispose();
             _Background.Dispose();
             OmegaButton.Dispose();
