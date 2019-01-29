@@ -73,11 +73,15 @@ namespace Type.Scenes
 
         private void OnButtonPress(Button obj)
         {
-            _Music.Stop();
-            _ConfirmButton.TouchEnabled = false;
-
-            AdService.Instance.OnAddClosed = () => IsComplete = true;
-            AdService.Instance.ShowInterstitial();
+            if (AdService.Instance.MInterstitialAd.IsLoaded)
+            {
+                AdService.Instance.OnAddClosed = () => IsComplete = true;
+                AdService.Instance.ShowInterstitial();
+            }
+            else
+            {
+                IsComplete = true;
+            }
         }
 
         /// <summary> Updates the scene </summary>
@@ -101,6 +105,7 @@ namespace Type.Scenes
         public override void Dispose()
         {
             base.Dispose();
+            _Music.Stop();
             _ConfirmButton.Dispose();
             _StatsDisplay.Dispose();
         }

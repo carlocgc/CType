@@ -76,11 +76,15 @@ namespace Type.Scenes
 
         private void OnButtonPress(Button button)
         {
-            _Music.Stop();
-            _ConfirmButton.TouchEnabled = false;
-
-            AdService.Instance.OnAddClosed = () => IsComplete = true;
-            AdService.Instance.ShowInterstitial();
+            if (AdService.Instance.MInterstitialAd.IsLoaded)
+            {
+                AdService.Instance.OnAddClosed = () => IsComplete = true;
+                AdService.Instance.ShowInterstitial();
+            }
+            else
+            {
+                IsComplete = true;
+            }
         }
 
         public void Start()
@@ -98,13 +102,13 @@ namespace Type.Scenes
 
         public override void Update(TimeSpan timeSinceUpdate)
         {
-
         }
 
         /// <summary> Disposes of the scene </summary>
         public override void Dispose()
         {
             base.Dispose();
+            _Music.Stop();
             _ConfirmButton.Dispose();
             _Background.Dispose();
             _StatsDisplay.Dispose();

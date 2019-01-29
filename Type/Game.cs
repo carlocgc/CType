@@ -30,7 +30,7 @@ namespace Type
             UiCanvas = new Canvas(new Camera(Vector2.Zero, new Vector2(1920, 1080)), 1,
                 new Shader());
 
-            AdService.Instance.InitialiseInterstitial();
+            AdService.Instance.Initialise();
 
             SpritesheetLoader.LoadSheet("Content/Graphics/KenPixel/", "KenPixel.png", "KenPixel.json");
 
