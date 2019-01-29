@@ -108,7 +108,6 @@ namespace Type.Scenes
             _ConfirmButton.Dispose();
             _Background.Dispose();
             _StatsDisplay.Dispose();
-            //AudioManager.Instance.Dispose();
         }
     }
 }
