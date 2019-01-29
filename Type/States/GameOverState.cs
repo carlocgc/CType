@@ -1,6 +1,8 @@
 ﻿using AmosShared.State;
 using System;
 using Type.Scenes;
+using Android.Gms.Ads;
+using Java.Nio.Channels;
 
 namespace Type.States
 {
@@ -11,6 +13,17 @@ namespace Type.States
         protected override void OnEnter()
         {
             _Scene = new GameOverScene { Visible = true };
+
+            Game.MInterstitialAd.RewardedVideoAdClosed += MInterstitialAdOnRewardedVideoAdClosed;
+
+            if (Game.MInterstitialAd.IsLoaded)
+            {
+                Game.MInterstitialAd.Show();
+            }
+        }
+
+        private void MInterstitialAdOnRewardedVideoAdClosed(Object sender, EventArgs eventArgs)
+        {
             _Scene.Start();
         }
 

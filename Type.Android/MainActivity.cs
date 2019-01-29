@@ -10,6 +10,7 @@ namespace Type.Android
         public MainActivity() : base(new Game())
         {
         }
+
     }
 }
 

@@ -9,6 +9,7 @@
     <Import_RootNamespace>Type</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Ads\CustomAdListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Base\GameObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\CollisionController.cs" />
