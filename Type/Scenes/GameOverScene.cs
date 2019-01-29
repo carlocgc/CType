@@ -1,10 +1,14 @@
 ﻿using System;
+using AmosAndroid;
 using AmosShared.Audio;
 using AmosShared.Base;
 using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
 using AmosShared.Touch;
+using Android.Gms.Ads;
 using OpenTK;
+using Type.Ads;
+using Type.Android;
 using Type.Data;
 using Type.UI;
 
@@ -34,7 +38,7 @@ namespace Type.Scenes
             _GameOverText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
                 Text = "GAME OVER",
-                Position =  new Vector2(0, 200),
+                Position = new Vector2(0, 200),
                 Visible = true,
                 Scale = new Vector2(7, 7),
                 Colour = new Vector4(1, 0, 0, 1)
@@ -51,7 +55,7 @@ namespace Type.Scenes
             };
             _ScoreText.Offset = new Vector2(_ScoreText.Size.X * _ScoreText.Scale.X, _ScoreText.Size.Y * _ScoreText.Scale.Y) / 2;
             AddDrawable(_ScoreText);
-            _Background= new Sprite(Game.MainCanvas, Constants.ZOrders.BACKGROUND, Texture.GetTexture("Content/Graphics/Background/GameCompleteBG.png"))
+            _Background = new Sprite(Game.MainCanvas, Constants.ZOrders.BACKGROUND, Texture.GetTexture("Content/Graphics/Background/GameCompleteBG.png"))
             {
                 Position = new Vector2(-960, -540),
                 Colour = new Vector4(0.7f, 0.7f, 0.7f, 1)
@@ -72,8 +76,27 @@ namespace Type.Scenes
         private void OnButtonPress(Button button)
         {
             _ConfirmButton.TouchEnabled = false;
-            _ConfirmButton.Visible = false;
-            IsComplete = true;
+
+            if (MainActivity.Instance.MInterstitialAd.IsLoaded)
+            {
+                CustomAdListener cadl = new CustomAdListener
+                {
+                    OnAdClosedAction = () =>
+                    {
+                        _ConfirmButton.Visible = false;
+                        IsComplete = true;
+                        AdRequest request = new AdRequest.Builder().AddTestDevice("7DBD856302197638").Build(); // Ad request
+                        MainActivity.Instance.MInterstitialAd.LoadAd(request);
+                    }
+                };
+                MainActivity.Instance.MInterstitialAd.AdListener = cadl;
+                MainActivity.Instance.MInterstitialAd.Show();
+            }
+            else
+            {
+                _ConfirmButton.Visible = false;
+                IsComplete = true;
+            }
         }
 
         public void Start()
