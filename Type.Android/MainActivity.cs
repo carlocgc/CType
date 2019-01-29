@@ -19,13 +19,13 @@ namespace Type.Android
             base.OnCreate(bundle);
             MobileAds.Initialize(this, "ca-app-pub-4204969324853965~4341189590"); // My Admob ID
             MInterstitialAd = new InterstitialAd(this);
-            MInterstitialAd.AdUnitId = "ca-app-pub-3940256099942544/1033173712";                   // Test ad unit
+            MInterstitialAd.AdUnitId = "ca-app-pub-3940256099942544/1033173712"; // TODO FIX TEST AD Replace with ad unit id from AdMob
             LoadInterstitial();
         }
 
         private void LoadInterstitial()
         {
-            AdRequest request = new AdRequest.Builder().AddTestDevice("7DBD856302197638").Build(); // Ad request
+            AdRequest request = new AdRequest.Builder().AddTestDevice("7DBD856302197638").Build(); // TODO FIX TEST AD Remove '.AddTestDevice(XXXXXXX)'
             MInterstitialAd.LoadAd(request);
         }
     }

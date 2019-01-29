@@ -85,7 +85,7 @@ namespace Type.Scenes
                     {
                         _ConfirmButton.Visible = false;
                         IsComplete = true;
-                        AdRequest request = new AdRequest.Builder().AddTestDevice("7DBD856302197638").Build(); // Ad request
+                        AdRequest request = new AdRequest.Builder().AddTestDevice("7DBD856302197638").Build(); // TODO FIX TEST AD Remove '.AddTestDevice(XXXXXXX)'
                         MainActivity.Instance.MInterstitialAd.LoadAd(request);
                     }
                 };
