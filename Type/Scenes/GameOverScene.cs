@@ -1,12 +1,10 @@
-﻿using System;
-using AmosAndroid;
-using AmosShared.Audio;
-using AmosShared.Base;
+﻿using AmosShared.Audio;
 using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
 using AmosShared.Touch;
 using Android.Gms.Ads;
 using OpenTK;
+using System;
 using Type.Ads;
 using Type.Android;
 using Type.Data;
@@ -30,8 +28,10 @@ namespace Type.Scenes
         /// <summary> Displays the current game data via text displays </summary>
         private readonly StatsDisplay _StatsDisplay;
 
+        private readonly AudioPlayer _Music;
+
         /// <summary> Whether the confirm button has been pressed </summary>
-        public Boolean IsComplete { get; set; }
+        public Boolean IsComplete { get; private set; }
 
         public GameOverScene()
         {
@@ -69,12 +69,14 @@ namespace Type.Scenes
             _ConfirmButton = new Button(Constants.ZOrders.UI, confirmButton);
             _ConfirmButton.OnButtonPress += OnButtonPress;
 
-            _StatsDisplay = new StatsDisplay();
+            _Music = new AudioPlayer("Content/Audio/gameOverBgm.wav", true, AudioManager.Category.MUSIC, 1);
 
+            _StatsDisplay = new StatsDisplay();
         }
 
         private void OnButtonPress(Button button)
         {
+            _Music.Stop();
             _ConfirmButton.TouchEnabled = false;
 
             if (MainActivity.Instance.MInterstitialAd.IsLoaded)
@@ -83,7 +85,6 @@ namespace Type.Scenes
                 {
                     OnAdClosedAction = () =>
                     {
-                        _ConfirmButton.Visible = false;
                         IsComplete = true;
                         AdRequest request = new AdRequest.Builder().AddTestDevice("7DBD856302197638").Build(); // TODO FIX TEST AD Remove '.AddTestDevice(XXXXXXX)'
                         MainActivity.Instance.MInterstitialAd.LoadAd(request);
@@ -94,7 +95,6 @@ namespace Type.Scenes
             }
             else
             {
-                _ConfirmButton.Visible = false;
                 IsComplete = true;
             }
         }
@@ -110,7 +110,6 @@ namespace Type.Scenes
             _Background.Visible = true;
 
             new AudioPlayer("Content/Audio/gameOver.wav", false, AudioManager.Category.EFFECT, 1);
-            new AudioPlayer("Content/Audio/gameOverBgm.wav", true, AudioManager.Category.MUSIC, 1);
         }
 
         public override void Update(TimeSpan timeSinceUpdate)
@@ -125,7 +124,7 @@ namespace Type.Scenes
             _ConfirmButton.Dispose();
             _Background.Dispose();
             _StatsDisplay.Dispose();
-            AudioManager.Instance.Dispose();
+            //AudioManager.Instance.Dispose();
         }
     }
 }

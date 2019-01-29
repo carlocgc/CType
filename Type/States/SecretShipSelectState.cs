@@ -24,7 +24,6 @@ namespace Type.States
         {
             _Scene.OmegaButton.RegisterListener(this);
             _Scene.Active = true;
-            
         }
 
         /// <inheritdoc />
@@ -59,9 +58,6 @@ namespace Type.States
         {
             base.Dispose();
             _Scene.Dispose();
-            AudioManager.Instance.Dispose();
         }
-
-
     }
 }

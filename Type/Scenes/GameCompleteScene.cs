@@ -26,8 +26,10 @@ namespace Type.Scenes
         /// <summary> Displays the current game data via text displays </summary>
         private readonly StatsDisplay _StatsDisplay;
 
+        private readonly AudioPlayer _Music;
+
         /// <summary> Whether the complete can end </summary>
-        public Boolean IsComplete { get; set; }
+        public Boolean IsComplete { get; private set; }
 
         public GameCompleteScene()
         {
@@ -64,18 +66,21 @@ namespace Type.Scenes
             _ConfirmButton = new Button(Constants.ZOrders.UI, confirmButton);
             _ConfirmButton.OnButtonPress += OnButtonPress;
 
+            _Music = new AudioPlayer("Content/Audio/gameCompleteBgm.wav", true, AudioManager.Category.MUSIC, 1);
+
             _StatsDisplay = new StatsDisplay();
         }
 
         private void OnButtonPress(Button obj)
         {
+            _Music.Stop();
+
             if (MainActivity.Instance.MInterstitialAd.IsLoaded)
             {
                 CustomAdListener cadl = new CustomAdListener
                 {
                     OnAdClosedAction = () =>
                     {
-                        _ConfirmButton.Visible = false;
                         IsComplete = true;
                         AdRequest request = new AdRequest.Builder().AddTestDevice("7DBD856302197638").Build(); // TODO FIX TEST AD Remove '.AddTestDevice(XXXXXXX)'
                         MainActivity.Instance.MInterstitialAd.LoadAd(request);
@@ -86,7 +91,6 @@ namespace Type.Scenes
             }
             else
             {
-                _ConfirmButton.Visible = false;
                 IsComplete = true;
             }
         }
@@ -95,7 +99,6 @@ namespace Type.Scenes
         /// <param name="timeSinceUpdate"></param>
         public override void Update(TimeSpan timeSinceUpdate)
         {
-
         }
 
         public void Start()
@@ -107,8 +110,6 @@ namespace Type.Scenes
 
             _ConfirmButton.TouchEnabled = true;
             _ConfirmButton.Visible = true;
-
-            new AudioPlayer("Content/Audio/gameCompleteBgm.wav", true, AudioManager.Category.MUSIC, 1);
         }
 
         /// <summary> Disposes of the scene </summary>
@@ -117,7 +118,6 @@ namespace Type.Scenes
             base.Dispose();
             _ConfirmButton.Dispose();
             _StatsDisplay.Dispose();
-            AudioManager.Instance.Dispose();
         }
     }
 }

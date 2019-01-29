@@ -62,7 +62,7 @@ namespace Type.States
             _PowerupFactory = new PowerupFactory();
             _PowerupFactory.RegisterListener(this);
 
-            _GameScene = new GameScene(_PlayerType) {Visible = true};
+            _GameScene = new GameScene(_PlayerType) { Visible = true };
 
             _Player = _GameScene.Player;
             _Player.RegisterListener(this);
@@ -262,6 +262,7 @@ namespace Type.States
         public override void Dispose()
         {
             base.Dispose();
+
             CollisionController.Instance.IsActive = false;
             CollisionController.Instance.ClearObjects();
             _EnemyFactory.Dispose();
