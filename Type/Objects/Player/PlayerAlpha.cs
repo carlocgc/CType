@@ -92,8 +92,8 @@ namespace Type.Objects.Player
 
             Position = _SpawnPosition;
 
-            _MovementSpeed = 700;
-            _FireRate = TimeSpan.FromMilliseconds(100);
+            _MovementSpeed = 775;
+            _FireRate = TimeSpan.FromMilliseconds(85);
             HitPoints = 1;
 
             _ProbeController = new ProbeController();
