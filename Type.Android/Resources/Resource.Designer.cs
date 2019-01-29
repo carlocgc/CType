@@ -26,9 +26,6 @@ namespace Type.Android
 		
 		public static void UpdateIdValues()
 		{
-			global::AmosAndroid.Resource.Attribute.adSize = global::Type.Android.Resource.Attribute.adSize;
-			global::AmosAndroid.Resource.Attribute.adSizes = global::Type.Android.Resource.Attribute.adSizes;
-			global::AmosAndroid.Resource.Attribute.adUnitId = global::Type.Android.Resource.Attribute.adUnitId;
 			global::AmosAndroid.Resource.Attribute.buttonSize = global::Type.Android.Resource.Attribute.buttonSize;
 			global::AmosAndroid.Resource.Attribute.circleCrop = global::Type.Android.Resource.Attribute.circleCrop;
 			global::AmosAndroid.Resource.Attribute.colorScheme = global::Type.Android.Resource.Attribute.colorScheme;
@@ -193,12 +190,6 @@ namespace Type.Android
 			global::AmosAndroid.Resource.String.common_open_on_phone = global::Type.Android.Resource.String.common_open_on_phone;
 			global::AmosAndroid.Resource.String.common_signin_button_text = global::Type.Android.Resource.String.common_signin_button_text;
 			global::AmosAndroid.Resource.String.common_signin_button_text_long = global::Type.Android.Resource.String.common_signin_button_text_long;
-			global::AmosAndroid.Resource.String.s1 = global::Type.Android.Resource.String.s1;
-			global::AmosAndroid.Resource.String.s2 = global::Type.Android.Resource.String.s2;
-			global::AmosAndroid.Resource.String.s3 = global::Type.Android.Resource.String.s3;
-			global::AmosAndroid.Resource.String.s4 = global::Type.Android.Resource.String.s4;
-			global::AmosAndroid.Resource.String.s5 = global::Type.Android.Resource.String.s5;
-			global::AmosAndroid.Resource.String.s6 = global::Type.Android.Resource.String.s6;
 			global::AmosAndroid.Resource.String.status_bar_notification_info_overflow = global::Type.Android.Resource.String.status_bar_notification_info_overflow;
 			global::AmosAndroid.Resource.Style.TextAppearance_Compat_Notification = global::Type.Android.Resource.Style.TextAppearance_Compat_Notification;
 			global::AmosAndroid.Resource.Style.TextAppearance_Compat_Notification_Info = global::Type.Android.Resource.Style.TextAppearance_Compat_Notification_Info;
@@ -210,13 +201,8 @@ namespace Type.Android
 			global::AmosAndroid.Resource.Style.TextAppearance_Compat_Notification_Time_Media = global::Type.Android.Resource.Style.TextAppearance_Compat_Notification_Time_Media;
 			global::AmosAndroid.Resource.Style.TextAppearance_Compat_Notification_Title = global::Type.Android.Resource.Style.TextAppearance_Compat_Notification_Title;
 			global::AmosAndroid.Resource.Style.TextAppearance_Compat_Notification_Title_Media = global::Type.Android.Resource.Style.TextAppearance_Compat_Notification_Title_Media;
-			global::AmosAndroid.Resource.Style.Theme_IAPTheme = global::Type.Android.Resource.Style.Theme_IAPTheme;
 			global::AmosAndroid.Resource.Style.Widget_Compat_NotificationActionContainer = global::Type.Android.Resource.Style.Widget_Compat_NotificationActionContainer;
 			global::AmosAndroid.Resource.Style.Widget_Compat_NotificationActionText = global::Type.Android.Resource.Style.Widget_Compat_NotificationActionText;
-			global::AmosAndroid.Resource.Styleable.AdsAttrs = global::Type.Android.Resource.Styleable.AdsAttrs;
-			global::AmosAndroid.Resource.Styleable.AdsAttrs_adSize = global::Type.Android.Resource.Styleable.AdsAttrs_adSize;
-			global::AmosAndroid.Resource.Styleable.AdsAttrs_adSizes = global::Type.Android.Resource.Styleable.AdsAttrs_adSizes;
-			global::AmosAndroid.Resource.Styleable.AdsAttrs_adUnitId = global::Type.Android.Resource.Styleable.AdsAttrs_adUnitId;
 			global::AmosAndroid.Resource.Styleable.FontFamily = global::Type.Android.Resource.Styleable.FontFamily;
 			global::AmosAndroid.Resource.Styleable.FontFamily_fontProviderAuthority = global::Type.Android.Resource.Styleable.FontFamily_fontProviderAuthority;
 			global::AmosAndroid.Resource.Styleable.FontFamily_fontProviderCerts = global::Type.Android.Resource.Styleable.FontFamily_fontProviderCerts;

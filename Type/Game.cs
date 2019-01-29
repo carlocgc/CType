@@ -3,6 +3,7 @@ using AmosShared.Graphics;
 using AmosShared.State;
 using Engine.Shared.Graphics.Textures;
 using OpenTK;
+using Type.Ads;
 using Type.States;
 
 namespace Type
@@ -28,6 +29,8 @@ namespace Type
                 new Shader());
             UiCanvas = new Canvas(new Camera(Vector2.Zero, new Vector2(1920, 1080)), 1,
                 new Shader());
+
+            AdService.Instance.InitialiseInterstitial();
 
             SpritesheetLoader.LoadSheet("Content/Graphics/KenPixel/", "KenPixel.png", "KenPixel.json");
 

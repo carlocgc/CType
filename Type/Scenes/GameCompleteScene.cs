@@ -74,25 +74,9 @@ namespace Type.Scenes
         private void OnButtonPress(Button obj)
         {
             _Music.Stop();
+            _ConfirmButton.TouchEnabled = false;
 
-            if (MainActivity.Instance.MInterstitialAd.IsLoaded)
-            {
-                CustomAdListener cadl = new CustomAdListener
-                {
-                    OnAdClosedAction = () =>
-                    {
-                        IsComplete = true;
-                        AdRequest request = new AdRequest.Builder().AddTestDevice("7DBD856302197638").Build(); // TODO FIX TEST AD Remove '.AddTestDevice(XXXXXXX)'
-                        MainActivity.Instance.MInterstitialAd.LoadAd(request);
-                    }
-                };
-                MainActivity.Instance.MInterstitialAd.AdListener = cadl;
-                MainActivity.Instance.MInterstitialAd.Show();
-            }
-            else
-            {
-                IsComplete = true;
-            }
+            AdService.Instance.ShowInterstitial(onClosed: () => IsComplete = true);
         }
 
         /// <summary> Updates the scene </summary>

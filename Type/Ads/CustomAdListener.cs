@@ -5,33 +5,28 @@ using Android.Gms.Ads;
 
 namespace Type.Ads
 {
+    /// <summary>
+    /// Listenter object attached to advertisement objects that can react to ad events
+    /// </summary>
     public class CustomAdListener : AdListener
     {
+        /// <summary>
+        /// Code to be executed when when the interstitial ad is closed.
+        /// </summary>
         public Action OnAdClosedAction { get; set; }
 
-        public Action OnAdStartedAction { get; set; }
+        /// <summary>
+        /// Code to be executed when the ad is clicked.
+        /// </summary>
+        public Action OnAdClickedAction { get; set; }
+
+        /// <summary>
+        /// Code to be executed when the user has left the app.
+        /// </summary>
+        public Action OnAdLeftApplicationAction { get; set; }
 
         public CustomAdListener()
         {
-        }
-
-        /// <inheritdoc />
-        public override void OnAdFailedToLoad(Int32 errorCode)
-        {
-            base.OnAdFailedToLoad(errorCode);
-        }
-
-        /// <inheritdoc />
-        public override void OnAdLoaded()
-        {
-            base.OnAdLoaded();
-        }
-
-        /// <inheritdoc />
-        public override void OnAdOpened()
-        {
-            base.OnAdOpened();
-            OnAdStartedAction?.Invoke();
         }
 
         /// <inheritdoc />
@@ -42,11 +37,26 @@ namespace Type.Ads
         }
 
         /// <inheritdoc />
+        public override void OnAdClicked()
+        {
+            base.OnAdClicked();
+            OnAdClickedAction?.Invoke();
+        }
+
+        /// <inheritdoc />
+        public override void OnAdLeftApplication()
+        {
+            base.OnAdLeftApplication();
+            OnAdLeftApplicationAction?.Invoke();
+        }
+
+        /// <inheritdoc />
         protected override void Dispose(Boolean disposing)
         {
             base.Dispose(disposing);
-            OnAdStartedAction = null;
             OnAdClosedAction = null;
+            OnAdClickedAction = null;
+            OnAdLeftApplicationAction = null;
         }
     }
 }
