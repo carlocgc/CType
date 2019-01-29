@@ -4,7 +4,10 @@ using AmosShared.Touch;
 using System;
 using AmosShared.Audio;
 using AmosShared.Base;
+using Android.Gms.Ads;
 using OpenTK;
+using Type.Ads;
+using Type.Android;
 using Type.Data;
 using Type.UI;
 
@@ -66,7 +69,26 @@ namespace Type.Scenes
 
         private void OnButtonPress(Button obj)
         {
-            IsComplete = true;
+            if (MainActivity.Instance.MInterstitialAd.IsLoaded)
+            {
+                CustomAdListener cadl = new CustomAdListener
+                {
+                    OnAdClosedAction = () =>
+                    {
+                        _ConfirmButton.Visible = false;
+                        IsComplete = true;
+                        AdRequest request = new AdRequest.Builder().AddTestDevice("7DBD856302197638").Build(); // TODO FIX TEST AD Remove '.AddTestDevice(XXXXXXX)'
+                        MainActivity.Instance.MInterstitialAd.LoadAd(request);
+                    }
+                };
+                MainActivity.Instance.MInterstitialAd.AdListener = cadl;
+                MainActivity.Instance.MInterstitialAd.Show();
+            }
+            else
+            {
+                _ConfirmButton.Visible = false;
+                IsComplete = true;
+            }
         }
 
         /// <summary> Updates the scene </summary>
