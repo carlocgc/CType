@@ -15,9 +15,9 @@ using static Type.Constants.Global;
 namespace Type.Objects.Enemies
 {
     /// <summary>
-    /// Enemy of type beta
+    /// Enemy of type gamma
     /// </summary>
-    public class EnemyBeta : GameObject, IEnemy
+    public class Enemy_03 : GameObject, IEnemy
     {
         /// <summary> How long to wait before playing the hit sound</summary>
         private readonly TimeSpan _HitSoundInterval = TimeSpan.FromSeconds(0.2f); // TODO FIXME Work around to stop so many sounds playing
@@ -49,12 +49,20 @@ namespace Type.Objects.Enemies
         private Single _Speed;
         /// <summary> Whether the enemy has entered the game area </summary>
         private Boolean InPlay;
+        /// <summary> Initial Y position </summary>
+        private Single _SpawnY;
+        /// <summary> Angle used to oscillate the y axis when moving the enemy </summary>
+        private Single _Yoscillation;
+        /// <summary> How much to increment the oscilation every update </summary>
+        private Single _Yincrement = 0.02f;
         /// <summary> Whether the enemy is on screen </summary>
         private Boolean OnScreen =>
             Position.X + _Sprite.Offset.X >= ScreenLeft &&
             Position.X - _Sprite.Offset.X <= ScreenRight &&
             Position.Y + _Sprite.Offset.Y >= ScreenBottom &&
             Position.Y - _Sprite.Offset.Y <= ScreenTop;
+
+
         /// <summary> Whether the enemy has been destroyed  </summary>
         public Boolean IsDestroyed { get; private set; }
         /// <summary> Point valuie for this enemy </summary>
@@ -66,20 +74,20 @@ namespace Type.Objects.Enemies
         /// <inheritdoc />
         public Int32 HitPoints { get; private set; }
 
-        public EnemyBeta(Single yPos)
+        public Enemy_03(Single yPos)
         {
             _Listeners = new List<IEnemyListener>();
 
             _IsMoving = true;
             _IsWeaponLocked = true;
             _MoveDirection = new Vector2(-1, 0);
-            _Speed = 500;
-            _FireRate = TimeSpan.FromSeconds(1.7f);
+            _Speed = 300;
+            _FireRate = TimeSpan.FromSeconds(1.4f);
 
-            HitPoints = 3;
-            Points = 25;
+            HitPoints = 5;
+            Points = 50;
 
-            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, Texture.GetTexture("Content/Graphics/Enemies/enemy2.png"))
+            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, Texture.GetTexture("Content/Graphics/Enemies/enemy4.png"))
             {
                 Visible = true,
             };
@@ -107,7 +115,7 @@ namespace Type.Objects.Enemies
                 AnimEndBehaviour = AnimatedSprite.EndBehaviour.STOP,
                 CurrentFrame = 0,
             };
-            _Explosion.Scale = new Vector2(2.1f, 2.1f);
+            _Explosion.Scale = new Vector2(2.25f, 2.25f);
             _Explosion.Offset = new Vector2(_Explosion.Size.X / 2 * _Explosion.Scale.X, _Explosion.Size.Y / 2 * _Explosion.Scale.Y);
 
             Position = new Vector2(Renderer.Instance.TargetDimensions.X / 2 + _Sprite.Offset.X, yPos);
@@ -120,10 +128,10 @@ namespace Type.Objects.Enemies
         {
             Vector2 bulletDirection = _DirectionTowardsPlayer;
             if (bulletDirection != Vector2.Zero) bulletDirection.Normalize();
-            new PlasmaBall(Position, bulletDirection, 1050, new Vector4(100, 100, 0, 1));
+            new PlasmaBall(Position, bulletDirection, 1100, new Vector4(100, 0, 100, 1));
 
             _IsWeaponLocked = true;
-            new AudioPlayer("Content/Audio/laser2.wav", false, AudioManager.Category.EFFECT, 1);
+            new AudioPlayer("Content/Audio/laser4.wav", false, AudioManager.Category.EFFECT, 1);
         }
 
         /// <inheritdoc />
@@ -189,9 +197,15 @@ namespace Type.Objects.Enemies
             base.Update(timeTilUpdate);
             if (_IsMoving)
             {
-                Position += _MoveDirection * _Speed * (Single)timeTilUpdate.TotalSeconds;
+                Single yModifier;
+                if (_SpawnY > 0) yModifier = (Single)Math.Sin(_Yoscillation);
+                else yModifier =(Single)Math.Cos(_Yoscillation);
+
+                Position += new Vector2(_MoveDirection.X * _Speed * (Single)timeTilUpdate.TotalSeconds, _SpawnY + yModifier * _Speed * (Single)timeTilUpdate.TotalSeconds);
                 _Explosion.Position = Position;
                 HitBox = GetRect();
+                _Yoscillation += _Yincrement;
+                if (_Yoscillation > 360f) _Yoscillation = 0;
             }
 
             if (IsDestroyed) return;

@@ -15,9 +15,9 @@ using static Type.Constants.Global;
 namespace Type.Objects.Enemies
 {
     /// <summary>
-    /// Enemy of type alpha
+    /// Enemy of type beta
     /// </summary>
-    public class EnemyAlpha : GameObject, IEnemy
+    public class Enemy_02 : GameObject, IEnemy
     {
         /// <summary> How long to wait before playing the hit sound</summary>
         private readonly TimeSpan _HitSoundInterval = TimeSpan.FromSeconds(0.2f); // TODO FIXME Work around to stop so many sounds playing
@@ -45,10 +45,10 @@ namespace Type.Objects.Enemies
         private Boolean _IsWeaponLocked;
         /// <summary> Whether the enemy is moving </summary>
         private Boolean _IsMoving;
-        /// <summary> Whether the enemy has entered the game area </summary>
-        private Boolean InPlay;
         /// <summary> movement speed of the enemy </summary>
         private Single _Speed;
+        /// <summary> Whether the enemy has entered the game area </summary>
+        private Boolean InPlay;
         /// <summary> Initial Y position </summary>
         private Single _SpawnY;
         /// <summary> Angle used to oscillate the y axis when moving the enemy </summary>
@@ -61,7 +61,6 @@ namespace Type.Objects.Enemies
             Position.X - _Sprite.Offset.X <= ScreenRight &&
             Position.Y + _Sprite.Offset.Y >= ScreenBottom &&
             Position.Y - _Sprite.Offset.Y <= ScreenTop;
-
         /// <summary> Whether the enemy has been destroyed  </summary>
         public Boolean IsDestroyed { get; private set; }
         /// <summary> Point valuie for this enemy </summary>
@@ -73,20 +72,20 @@ namespace Type.Objects.Enemies
         /// <inheritdoc />
         public Int32 HitPoints { get; private set; }
 
-        public EnemyAlpha(Single yPos)
+        public Enemy_02(Single yPos)
         {
             _Listeners = new List<IEnemyListener>();
 
             _IsMoving = true;
             _IsWeaponLocked = true;
             _MoveDirection = new Vector2(-1, 0);
-            _Speed = 400;
-            _FireRate = TimeSpan.FromSeconds(2f);
+            _Speed = 500;
+            _FireRate = TimeSpan.FromSeconds(1.7f);
 
-            HitPoints = 2;
-            Points = 10;
+            HitPoints = 3;
+            Points = 25;
 
-            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, Texture.GetTexture("Content/Graphics/Enemies/enemy1.png"))
+            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, Texture.GetTexture("Content/Graphics/Enemies/enemy2.png"))
             {
                 Visible = true,
             };
@@ -114,7 +113,7 @@ namespace Type.Objects.Enemies
                 AnimEndBehaviour = AnimatedSprite.EndBehaviour.STOP,
                 CurrentFrame = 0,
             };
-            _Explosion.Scale = new Vector2(2, 2);
+            _Explosion.Scale = new Vector2(2.1f, 2.1f);
             _Explosion.Offset = new Vector2(_Explosion.Size.X / 2 * _Explosion.Scale.X, _Explosion.Size.Y / 2 * _Explosion.Scale.Y);
 
             Position = new Vector2(Renderer.Instance.TargetDimensions.X / 2 + _Sprite.Offset.X, yPos);
@@ -127,7 +126,7 @@ namespace Type.Objects.Enemies
         {
             Vector2 bulletDirection = _DirectionTowardsPlayer;
             if (bulletDirection != Vector2.Zero) bulletDirection.Normalize();
-            new PlasmaBall(Position, bulletDirection, 1000, new Vector4(100, 0, 0, 1));
+            new PlasmaBall(Position, bulletDirection, 1050, new Vector4(100, 100, 0, 1));
 
             _IsWeaponLocked = true;
             new AudioPlayer("Content/Audio/laser2.wav", false, AudioManager.Category.EFFECT, 1);
@@ -194,11 +193,9 @@ namespace Type.Objects.Enemies
         public override void Update(TimeSpan timeTilUpdate)
         {
             base.Update(timeTilUpdate);
-
             if (_IsMoving)
             {
-
-                Position += new Vector2(_MoveDirection.X * _Speed * (Single)timeTilUpdate.TotalSeconds, _SpawnY + (Single)Math.Sin(_Yoscillation) * _Speed * (Single)timeTilUpdate.TotalSeconds);
+                Position += new Vector2(_MoveDirection.X * _Speed * (Single)timeTilUpdate.TotalSeconds, _SpawnY + (Single)Math.Cos(_Yoscillation) * _Speed * (Single)timeTilUpdate.TotalSeconds);
                 _Explosion.Position = Position;
                 HitBox = GetRect();
                 _Yoscillation += _Yincrement;
@@ -262,11 +259,8 @@ namespace Type.Objects.Enemies
         public override void Dispose()
         {
             base.Dispose();
+            if (!_Explosion.IsDisposed) _Explosion.Dispose();
 
-            if (!_Explosion.IsDisposed)
-            {
-                _Explosion.Dispose();
-            }
             _Listeners.Clear();
             CollisionController.Instance.DeregisterEnemy(this);
             PositionRelayer.Instance.RemoveRecipient(this);

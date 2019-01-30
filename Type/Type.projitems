@@ -53,9 +53,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Weapons\IProjectile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Weapons\IProjectileShooter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Bosses\BossAlpha.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\EnemyAlpha.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\EnemyBeta.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\EnemyGamma.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\Enemy_01.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\Enemy_02.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\Enemy_04.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\Enemy_03.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Player\PlayerAlpha.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Player\PlayerBeta.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Player\PlayerGamma.cs" />
