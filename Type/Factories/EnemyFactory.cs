@@ -84,6 +84,11 @@ namespace Type.Factories
                         accel = new WaveMotion(_CurrentWave.MoveDirections[_DataIndex], _CurrentWave.MovementSpeeds[_DataIndex]);
                         break;
                     }
+                case 2:
+                    {
+                        accel = new ElipseMotion(_CurrentWave.MoveDirections[_DataIndex], _CurrentWave.MovementSpeeds[_DataIndex]);
+                        break;
+                    }
                 default:
                     {
                         throw new ArgumentOutOfRangeException("Movement type does not exist");

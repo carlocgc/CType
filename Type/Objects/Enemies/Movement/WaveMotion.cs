@@ -29,7 +29,7 @@ namespace Type.Objects.Enemies.Movement
         /// </summary>
         /// <param name="timeTilUpdate"></param>
         /// <returns> The modifed vector </returns>
-        public Vector2 GetAcceleration(TimeSpan timeTilUpdate)
+        public Vector2 ApplyAcceleration(Vector2 baseVector, TimeSpan timeTilUpdate)
         {
             Single x = _Direction.X * _Speed * (Single) timeTilUpdate.TotalSeconds;
             Single y = (Single) Math.Sin(_Yoscillation) * _Speed * (Single) timeTilUpdate.TotalSeconds;
@@ -37,7 +37,9 @@ namespace Type.Objects.Enemies.Movement
             _Yoscillation += _Yincrement;
             if (_Yoscillation > 360f) _Yoscillation = 0;
 
-            return new Vector2(x, y);
+            baseVector += new Vector2(x, y);
+
+            return baseVector;
         }
     }
 }

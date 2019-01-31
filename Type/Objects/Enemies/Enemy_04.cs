@@ -185,7 +185,7 @@ namespace Type.Objects.Enemies
             base.Update(timeTilUpdate);
             if (_IsMoving)
             {
-                Position += _MovementController.GetAcceleration(timeTilUpdate);
+                Position = _MovementController.ApplyAcceleration(Position, timeTilUpdate);
 
                 _Explosion.Position = Position;
                 HitBox = GetRect();
