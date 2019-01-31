@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Android.Nfc.CardEmulators;
+using OpenTK;
 
 namespace Type.Data
 {
@@ -34,6 +34,10 @@ namespace Type.Data
             List<Single> positions = new List<Single>();
             List<Int32> types = new List<Int32>();
             List<Single> delays = new List<Single>();
+            List<Int32> moveTypes = new List<Int32>();
+            List<Single> xDirections = new List<Single>();
+            List<Single> yDirections = new List<Single>();
+            List<Single> speeds = new List<Single>();
 
             foreach (String waveString in waveStrings)
             {
@@ -65,6 +69,26 @@ namespace Type.Data
                                     delays.Add(Single.Parse(partSplit[1]));
                                     break;
                                 }
+                            case "movetype":
+                                {
+                                    moveTypes.Add(Int32.Parse(partSplit[1]));
+                                    break;
+                                }
+                            case "xdir":
+                                {
+                                    xDirections.Add(Single.Parse(partSplit[1]));
+                                    break;
+                                }
+                            case "ydir":
+                                {
+                                    yDirections.Add(Single.Parse(partSplit[1]));
+                                    break;
+                                }
+                            case "speed":
+                                {
+                                    speeds.Add(Single.Parse(partSplit[1]));
+                                    break;
+                                }
                             default:
                                 {
                                     throw new ArgumentOutOfRangeException("Enemy component does not exist");
@@ -80,12 +104,24 @@ namespace Type.Data
                     delaySpans.Add(TimeSpan.FromSeconds(delay));
                 }
 
+                List<Vector2> directions = new List<Vector2>();
+                Int32 index = 0;
+                foreach (var xDirection in xDirections)
+                {
+                    directions.Add(new Vector2(xDirection, yDirections[index]));
+                    index++;
+                }
+
                 // Create the wave data
-                _Waves.Add(new WaveData(delaySpans.ToArray(), types.ToArray(), positions.ToArray()));
+                _Waves.Add(new WaveData(delaySpans.ToArray(), types.ToArray(), positions.ToArray(), moveTypes.ToArray(), directions.ToArray(), speeds.ToArray()));
 
                 delaySpans.Clear();
                 types.Clear();
                 positions.Clear();
+                moveTypes.Clear();
+                xDirections.Clear();
+                yDirections.Clear();
+                speeds.Clear();
             }
 
             return _Waves;

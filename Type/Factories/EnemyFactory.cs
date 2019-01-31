@@ -5,8 +5,10 @@ using System.Collections.Generic;
 using Type.Data;
 using Type.Interfaces;
 using Type.Interfaces.Enemies;
+using Type.Interfaces.Movement;
 using Type.Objects.Bosses;
 using Type.Objects.Enemies;
+using Type.Objects.Enemies.Movement;
 using Type.States;
 
 namespace Type.Factories
@@ -71,23 +73,43 @@ namespace Type.Factories
         /// </summary>
         private void Create()
         {
+            IAccelerationProvider accel = null;
             IEnemy enemy;
+
+            switch (_CurrentWave.MovementTypes[_DataIndex])
+            {
+                case 0:
+                {
+                    // No movement provider
+                    break;
+                }
+                case 1:
+                {
+                    accel = new WaveMotion(_CurrentWave.Ypositions[_DataIndex], _CurrentWave.MoveDirections[_DataIndex], _CurrentWave.MovementSpeeds[_DataIndex]);
+                    break;
+                }
+                default:
+                {
+                    throw new ArgumentOutOfRangeException("Movement type does not exist");
+                }
+            }
+
 
             switch (_CurrentWave.EnemyTypes[_DataIndex])
             {
                 case 0:
                     {
-                        enemy = new Enemy_01(_CurrentWave.Ypositions[_DataIndex]);
+                        enemy = new Enemy_01(_CurrentWave.Ypositions[_DataIndex], accel);
                         break;
                     }
                 case 1:
                     {
-                        enemy = new Enemy_02(_CurrentWave.Ypositions[_DataIndex]);
+                        enemy = new Enemy_02(_CurrentWave.Ypositions[_DataIndex], accel);
                         break;
                     }
                 case 2:
                     {
-                        enemy = new Enemy_03(_CurrentWave.Ypositions[_DataIndex]);
+                        enemy = new Enemy_03(_CurrentWave.Ypositions[_DataIndex], accel);
                         break;
                     }
                 case 20:
