@@ -4,16 +4,15 @@ using OpenTK;
 namespace Type.Interfaces.Movement
 {
     /// <summary>
-    /// Object that implements this interface will modify a given vector with some acceleration logic and return the result
+    /// Object that implements this interface will provide an acceleration vector based on some rule
     /// </summary>
     public interface IAccelerationProvider
     {
         /// <summary>
-        /// Updates a given vector using a modifier
+        /// Gets acceleration vector
         /// </summary>
-        /// <param name="position"> The vector to be modified </param>
         /// <param name="timeTilUpdate"></param>
-        /// <returns> The modifed vector </returns>
-        Vector2 UpdatePosition(TimeSpan timeTilUpdate);
+        /// <returns> The acceleration vector  </returns>
+        Vector2 GetAcceleration(TimeSpan timeTilUpdate);
     }
 }

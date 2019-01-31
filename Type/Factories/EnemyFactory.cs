@@ -76,25 +76,21 @@ namespace Type.Factories
             IAccelerationProvider accel = null;
             IEnemy enemy;
 
+            // Create move component
             switch (_CurrentWave.MovementTypes[_DataIndex])
             {
-                case 0:
-                {
-                    // No movement provider
-                    break;
-                }
                 case 1:
-                {
-                    accel = new WaveMotion(_CurrentWave.Ypositions[_DataIndex], _CurrentWave.MoveDirections[_DataIndex], _CurrentWave.MovementSpeeds[_DataIndex]);
-                    break;
-                }
+                    {
+                        accel = new WaveMotion(_CurrentWave.MoveDirections[_DataIndex], _CurrentWave.MovementSpeeds[_DataIndex]);
+                        break;
+                    }
                 default:
-                {
-                    throw new ArgumentOutOfRangeException("Movement type does not exist");
-                }
+                    {
+                        throw new ArgumentOutOfRangeException("Movement type does not exist");
+                    }
             }
 
-
+            // Create enemy
             switch (_CurrentWave.EnemyTypes[_DataIndex])
             {
                 case 0:
