@@ -2,11 +2,9 @@
 using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
 using AmosShared.Touch;
-using Android.Gms.Ads;
 using OpenTK;
 using System;
 using Type.Ads;
-using Type.Android;
 using Type.Data;
 using Type.UI;
 

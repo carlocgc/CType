@@ -9,6 +9,7 @@ using Type.Base;
 using Type.Controllers;
 using Type.Data;
 using Type.Interfaces.Enemies;
+using Type.Interfaces.Movement;
 using Type.Objects.Projectiles;
 using static Type.Constants.Global;
 
@@ -26,6 +27,7 @@ namespace Type.Objects.Enemies
         /// <summary> Whether a sound is playing </summary>
         private Boolean _IsSoundPlaying; // TODO FIXME Work around to stop so many sounds playing
 
+        private readonly IAccelerationProvider _MovementController;
         /// <summary> Animation of an explosion, played on death </summary>
         private readonly AnimatedSprite _Explosion;
         /// <summary> List of <see cref="IEnemyListener"/>'s </summary>
@@ -35,8 +37,6 @@ namespace Type.Objects.Enemies
         private TimeSpan _TimeSinceLastFired;
         /// <summary> Firerate of the enemy </summary>
         private TimeSpan _FireRate;
-        /// <summary> Direction the enemy is moving </summary>
-        private Vector2 _MoveDirection;
         /// <summary> The players current position </summary>
         private Vector2 _PlayerPosition;
         /// <summary> Relative direction to the player from this enemy </summary>
@@ -45,16 +45,8 @@ namespace Type.Objects.Enemies
         private Boolean _IsWeaponLocked;
         /// <summary> Whether the enemy is moving </summary>
         private Boolean _IsMoving;
-        /// <summary> movement speed of the enemy </summary>
-        private Single _Speed;
         /// <summary> Whether the enemy has entered the game area </summary>
         private Boolean InPlay;
-        /// <summary> Initial Y position </summary>
-        private Single _SpawnY;
-        /// <summary> Angle used to oscillate the y axis when moving the enemy </summary>
-        private Single _Yoscillation;
-        /// <summary> How much to increment the oscilation every update </summary>
-        private Single _Yincrement = 0.05f;
         /// <summary> Whether the enemy is on screen </summary>
         private Boolean OnScreen =>
             Position.X + _Sprite.Offset.X >= ScreenLeft &&
@@ -72,14 +64,12 @@ namespace Type.Objects.Enemies
         /// <inheritdoc />
         public Int32 HitPoints { get; private set; }
 
-        public Enemy_02(Single yPos)
+        public Enemy_02(Single yPos, IAccelerationProvider moveController)
         {
             _Listeners = new List<IEnemyListener>();
 
             _IsMoving = true;
             _IsWeaponLocked = true;
-            _MoveDirection = new Vector2(-1, 0);
-            _Speed = 500;
             _FireRate = TimeSpan.FromSeconds(1.7f);
 
             HitPoints = 3;
@@ -118,6 +108,9 @@ namespace Type.Objects.Enemies
 
             Position = new Vector2(Renderer.Instance.TargetDimensions.X / 2 + _Sprite.Offset.X, yPos);
             _Explosion.Position = Position;
+
+            _MovementController = moveController;
+
             PositionRelayer.Instance.AddRecipient(this);
         }
 
@@ -195,11 +188,10 @@ namespace Type.Objects.Enemies
             base.Update(timeTilUpdate);
             if (_IsMoving)
             {
-                Position += new Vector2(_MoveDirection.X * _Speed * (Single)timeTilUpdate.TotalSeconds, _SpawnY + (Single)Math.Cos(_Yoscillation) * _Speed * (Single)timeTilUpdate.TotalSeconds);
+                Position = _MovementController.ApplyAcceleration(Position, timeTilUpdate);
+
                 _Explosion.Position = Position;
                 HitBox = GetRect();
-                _Yoscillation += _Yincrement;
-                if (_Yoscillation > 360f) _Yoscillation = 0;
             }
 
             if (IsDestroyed) return;

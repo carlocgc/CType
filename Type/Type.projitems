@@ -40,6 +40,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Collisions\IHitable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Communication\INotifier.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\GameData\IPoints.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Movement\IAccelerationProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Player\IShield.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Player\IPlayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Player\IPlayerListener.cs" />
@@ -57,6 +58,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\Enemy_02.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\Enemy_04.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\Enemy_03.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\Movement\EllipseDecreaseMotion.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\Movement\EllipseIncreaseMotion.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\Movement\LinearMotion.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\Movement\WaveMotion.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Player\PlayerAlpha.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Player\PlayerBeta.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Player\PlayerGamma.cs" />
