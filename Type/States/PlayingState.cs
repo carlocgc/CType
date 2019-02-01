@@ -53,7 +53,7 @@ namespace Type.States
 
         protected override void OnEnter()
         {
-            _CurrentLevel = 6;
+            _CurrentLevel = 1;
 
             _EnemyFactory = new EnemyFactory();
             _EnemyFactory.RegisterListener(this);
