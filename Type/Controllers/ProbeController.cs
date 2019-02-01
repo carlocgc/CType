@@ -17,7 +17,7 @@ namespace Type.Controllers
         /// <summary> List of all the probes </summary>
         private readonly List<IProbe> _Probes;
         /// <summary> Maximum amount of probes the controoller can have </summary>
-        private readonly Int32 _MaxProbes = 30;
+        private readonly Int32 _MaxProbes = 6;
         /// <summary> The position the probes orbit </summary>
         private Vector2 _OrbitPosition;
         /// <summary> Total probes </summary>
