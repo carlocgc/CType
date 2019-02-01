@@ -7,14 +7,14 @@ namespace Type.Objects.Enemies.Movement
     /// <summary>
     /// Creates movement in an elipse while decreasing Y axis
     /// </summary>
-    public class ElipseDecreaseMotion : IAccelerationProvider
+    public class EllipseDecreaseMotion : IAccelerationProvider
     {
         /// <summary> Movement speed </summary>
         private readonly Single _Speed;
         /// <summary> Movement direction </summary>
         private Vector2 _Direction;
 
-        public ElipseDecreaseMotion(Vector2 direction, Single speed)
+        public EllipseDecreaseMotion(Vector2 direction, Single speed)
         {
             _Direction = direction;
             _Speed = speed;
