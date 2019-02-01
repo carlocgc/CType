@@ -98,5 +98,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)UI\LifeMeter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\ShipSelectButton.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\StatsDisplay.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\TimedCallback.cs" />
   </ItemGroup>
 </Project>
