@@ -79,6 +79,16 @@ namespace Type.Factories
             // Create move component
             switch (_CurrentWave.MovementTypes[_DataIndex])
             {
+                case -1:
+                    {
+                        // No acceleration provider
+                        break;
+                    }
+                case 0:
+                    {
+                        accel = new LinearMotion(_CurrentWave.MoveDirections[_DataIndex], _CurrentWave.MovementSpeeds[_DataIndex]);
+                        break;
+                    }
                 case 1:
                     {
                         accel = new WaveMotion(_CurrentWave.MoveDirections[_DataIndex], _CurrentWave.MovementSpeeds[_DataIndex]);
@@ -87,6 +97,11 @@ namespace Type.Factories
                 case 2:
                     {
                         accel = new EllipseDecreaseMotion(_CurrentWave.MoveDirections[_DataIndex], _CurrentWave.MovementSpeeds[_DataIndex]);
+                        break;
+                    }
+                case 3:
+                    {
+                        accel = new EllipseIncreaseMotion(_CurrentWave.MoveDirections[_DataIndex], _CurrentWave.MovementSpeeds[_DataIndex]);
                         break;
                     }
                 default:
