@@ -86,7 +86,7 @@ namespace Type.Factories
                     }
                 case 2:
                     {
-                        accel = new ElipseMotion(_CurrentWave.MoveDirections[_DataIndex], _CurrentWave.MovementSpeeds[_DataIndex]);
+                        accel = new ElipseDecreaseMotion(_CurrentWave.MoveDirections[_DataIndex], _CurrentWave.MovementSpeeds[_DataIndex]);
                         break;
                     }
                 default:
