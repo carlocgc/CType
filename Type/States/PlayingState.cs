@@ -19,7 +19,7 @@ namespace Type.States
     public class PlayingState : State, IPlayerListener, IEnemyListener, IEnemyFactoryListener, IPowerupListener, IPowerupFactoryListener
     {
         /// <summary> Max level of the game </summary>
-        private readonly Int32 _MaxLevel = 2;
+        private readonly Int32 _MaxLevel = 3;
         /// <summary> THe type of player craft </summary>
         private readonly Int32 _PlayerType;
 
@@ -53,7 +53,7 @@ namespace Type.States
 
         protected override void OnEnter()
         {
-            _CurrentLevel = 2;
+            _CurrentLevel = 1;
 
             _EnemyFactory = new EnemyFactory();
             _EnemyFactory.RegisterListener(this);
