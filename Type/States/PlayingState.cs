@@ -2,6 +2,7 @@
 using AmosShared.State;
 using System;
 using AmosShared.Audio;
+using OpenTK;
 using Type.Controllers;
 using Type.Data;
 using Type.Factories;
@@ -124,7 +125,7 @@ namespace Type.States
         }
 
         /// <inheritdoc />
-        public void OnPlayerDeath(IPlayer player)
+        public void OnPlayerDeath(IPlayer player, Int32 probeCount, Vector2 position)
         {
             CollisionController.Instance.ClearObjects();
             _GameScene.RemoveEnemies();
@@ -136,6 +137,10 @@ namespace Type.States
             {
                 _Player.Spawn();
                 _EnemyFactory.RestartWave();
+                if (probeCount > 0)
+                {
+                    _PowerupFactory.Create(1, position, _CurrentLevel);
+                }
             }
             else
             {

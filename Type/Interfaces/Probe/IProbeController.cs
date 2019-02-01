@@ -15,6 +15,11 @@ namespace Type.Interfaces.Probe
         Boolean Shoot { get; set; }
 
         /// <summary>
+        /// Current probe count
+        /// </summary>
+        Int32 CurrentProbes { get; }
+
+        /// <summary>
         /// Whether probes are at maximum
         /// </summary>
         Boolean WeaponsAtMax { get; }
