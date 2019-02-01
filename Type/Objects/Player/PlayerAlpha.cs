@@ -45,6 +45,8 @@ namespace Type.Objects.Player
         /// <summary> Whether the ship is autofiring </summary>
         private Boolean _AutoFire;
 
+        /// <summary> Current amount of probes the player has </summary>
+        public Int32 CurrentProbes => _ProbeController.CurrentProbes;
         /// <inheritdoc />
         public Int32 HitPoints { get; private set; }
         /// <inheritdoc />
@@ -68,6 +70,7 @@ namespace Type.Objects.Player
             set
             {
                 base.Position = value;
+                HitBox = GetRect();
                 foreach (Sprite effect in _EngineEffects)
                 {
                     effect.Position = value;
@@ -98,13 +101,8 @@ namespace Type.Objects.Player
 
             _ProbeController = new ProbeController();
             _ProbeController.UpdatePosition(Position);
-
             _Shield = new Shield();
             _Shield.UpdatePosition(Position);
-
-            HitBox = GetRect();
-
-            Spawn();
         }
 
         /// <inheritdoc />
@@ -193,6 +191,8 @@ namespace Type.Objects.Player
         /// <inheritdoc />
         public void Destroy()
         {
+            Int32 probeCount = _ProbeController.CurrentProbes;
+
             HitPoints = 0;
             _ProbeController.RemoveAll();
 
@@ -200,7 +200,7 @@ namespace Type.Objects.Player
 
             foreach (IPlayerListener listener in _Listeners)
             {
-                listener.OnPlayerDeath(this);
+                listener.OnPlayerDeath(this, probeCount, Position);
             }
         }
 

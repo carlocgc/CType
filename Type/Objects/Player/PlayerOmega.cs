@@ -24,36 +24,29 @@ namespace Type.Objects.Player
     {
         /// <summary> Single point of contact for probes attached to  the player </summary>
         private readonly IProbeController _ProbeController;
-
         /// <summary> The players shield </summary>
         private readonly IShield _Shield;
-
         /// <summary> Position on screen where the player is spawned </summary>
         private readonly Vector2 _SpawnPosition = new Vector2(-540, 0);
-
         /// <summary> How fast the player can move in any direction </summary>
         private readonly Single _MovementSpeed;
-
         /// <summary> Amount of time between firing </summary>
         private readonly TimeSpan _FireRate;
-
         /// <summary> List of the engine effect sprites </summary>
         private readonly Sprite[] _EngineEffects;
-
         /// <summary> Time since the last bullet was fired </summary>
         private TimeSpan _TimeSinceLastFired;
-
         /// <summary> The direction to be applied to the position of the player </summary>
         private Vector2 _Direction;
-
         /// <summary> Movement speed modifier </summary>
         private Single _MoveStrength;
-
         /// <summary> Whether firing is allowed </summary>
         private Boolean _IsWeaponLocked;
-
         /// <summary> Whether the ship is autofiring </summary>
         private Boolean _AutoFire;
+
+        /// <summary> Current amount of probes the player has </summary>
+        public Int32 CurrentProbes => _ProbeController.CurrentProbes;
 
         /// <inheritdoc />
         public Int32 HitPoints { get; private set; }
@@ -80,6 +73,7 @@ namespace Type.Objects.Player
             set
             {
                 base.Position = value;
+                HitBox = GetRect();
                 foreach (Sprite effect in _EngineEffects)
                 {
                     effect.Position = value;
@@ -105,13 +99,8 @@ namespace Type.Objects.Player
 
             _ProbeController = new ProbeController();
             _ProbeController.UpdatePosition(Position);
-
             _Shield = new Shield();
             _Shield.UpdatePosition(Position);
-
-            HitBox = GetRect();
-
-            Spawn();
         }
 
         /// <inheritdoc />
@@ -141,8 +130,6 @@ namespace Type.Objects.Player
             }
 
             Position += GetPositionModifier(timeTilUpdate);
-            HitBox = GetRect();
-
             _ProbeController.UpdatePosition(Position);
             _Shield.UpdatePosition(Position);
             PositionRelayer.Instance.ProvidePosition(Position);
@@ -201,6 +188,8 @@ namespace Type.Objects.Player
         /// <inheritdoc />
         public void Destroy()
         {
+            Int32 probeCount = _ProbeController.CurrentProbes;
+
             HitPoints = 0;
             _ProbeController.RemoveAll();
 
@@ -208,7 +197,7 @@ namespace Type.Objects.Player
 
             foreach (IPlayerListener listener in _Listeners)
             {
-                listener.OnPlayerDeath(this);
+                listener.OnPlayerDeath(this, probeCount, Position);
             }
         }
 

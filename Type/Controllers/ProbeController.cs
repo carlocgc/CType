@@ -25,6 +25,11 @@ namespace Type.Controllers
         /// <summary> Whether the probes are shooting </summary>
         private Boolean _AutoFire;
 
+        /// <summary>
+        /// Current probe count
+        /// </summary>
+        public Int32 CurrentProbes => _ProbeCount;
+
         /// <inheritdoc />
         public Boolean WeaponsAtMax => _Probes.Count == _MaxProbes;
 

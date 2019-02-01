@@ -22,9 +22,10 @@ namespace Type.Factories
             // Weight category for different distribution of powerups
             switch (weight)
             {
+                // -------------------------- STANDARD WEIGHTING (Points 50% - Shield 5% - Probe 5% - Life 1%)
                 case 0:
                     {
-                        // -------------------------- STANDARD WEIGHTING (Points 50% - Shield 20% - Probe 20% - Life 10%)
+
                         Int32 rnd = _Rnd.Next(0, 101);
 
                         switch (rnd)
@@ -49,8 +50,6 @@ namespace Type.Factories
                                     powerup = new ExtraLifePowerup(position);
                                     break;
                                 }
-
-
                             default:
                                 {
                                     throw new ArgumentOutOfRangeException("Powerup type does not exist");
@@ -59,9 +58,15 @@ namespace Type.Factories
 
                         break;
                     }
+                // -------------------------- PLAYER DEATH WEIGHTING (Probe 100%)
+                case 1:
+                    {
+                        powerup = new ProbePowerup(position);
+                        break;
+                    }
                 default:
                     {
-                        throw new ArgumentOutOfRangeException("Powerupfactory weight category does not exist");
+                        throw new ArgumentOutOfRangeException("Powerup factory weight category does not exist");
                     }
             }
 
@@ -70,6 +75,7 @@ namespace Type.Factories
                 listener.OnPowerupCreated(powerup);
             }
         }
+
 
         #region Listener
 
