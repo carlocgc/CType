@@ -46,11 +46,10 @@ namespace Type.Objects.Projectiles
 
             _Direction = direction;
             _Speed = speed;
-
-            HitBox = GetRect();
             Position = spawnPos;
             Rotation = rotation;
             Damage = 1;
+            HitBox = GetRect();
 
             CollisionController.Instance.RegisterPlayerProjectile(this);
         }
