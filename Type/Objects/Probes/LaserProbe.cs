@@ -49,7 +49,7 @@ namespace Type.Objects.Probes
             _Radius = 150;
             _Angle = angle;
             _Speed = 0.05f;
-            _FireRate = TimeSpan.FromMilliseconds(300);
+            _FireRate = TimeSpan.FromMilliseconds(250);
 
             _OrbitAnchor = orbitPosition;
             HitBox = GetRect();
