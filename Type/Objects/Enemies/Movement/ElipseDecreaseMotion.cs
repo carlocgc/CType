@@ -4,14 +4,17 @@ using Type.Interfaces.Movement;
 
 namespace Type.Objects.Enemies.Movement
 {
-    public class ElipseMotion : IAccelerationProvider
+    /// <summary>
+    /// Creates movement in an elipse while decreasing Y axis
+    /// </summary>
+    public class ElipseDecreaseMotion : IAccelerationProvider
     {
         /// <summary> Movement speed </summary>
         private readonly Single _Speed;
         /// <summary> Movement direction </summary>
         private Vector2 _Direction;
 
-        public ElipseMotion(Vector2 direction, Single speed)
+        public ElipseDecreaseMotion(Vector2 direction, Single speed)
         {
             _Direction = direction;
             _Speed = speed;
@@ -24,9 +27,8 @@ namespace Type.Objects.Enemies.Movement
         /// <returns> The modifed vector </returns>
         public Vector2 ApplyAcceleration(Vector2 baseVector, TimeSpan timeTilUpdate)
         {
-            if (baseVector.Y >= 0) baseVector.Y -= _Speed * (Single) timeTilUpdate.TotalSeconds;
-            if (baseVector.Y < 0) baseVector.Y += _Speed * (Single) timeTilUpdate.TotalSeconds;
-            baseVector.X = 1f/200f * (baseVector.Y * 2);
+            baseVector.Y -= _Speed * (Single) timeTilUpdate.TotalSeconds;
+            baseVector.X = 1f/200f * (baseVector.Y * baseVector.Y);
 
             return baseVector;
         }
