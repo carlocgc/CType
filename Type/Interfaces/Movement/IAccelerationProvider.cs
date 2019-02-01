@@ -12,7 +12,7 @@ namespace Type.Interfaces.Movement
         /// Apply acceleration to a vector
         /// </summary>
         /// <param name="baseVector"> The vector to apply acceleration to </param>
-        /// <param name="timeTilUpdate"></param>
+        /// <param name="timeTilUpdate"> Update time </param>
         /// <returns> The acceleration vector  </returns>
         Vector2 ApplyAcceleration(Vector2 baseVector, TimeSpan timeTilUpdate);
     }
