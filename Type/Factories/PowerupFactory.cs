@@ -29,22 +29,22 @@ namespace Type.Factories
 
                         switch (rnd)
                         {
-                            case Int32 n when n >= 0 && n < 75:
+                            case Int32 n when n >= 0 && n < 90:
                                 {
                                     powerup = new PointsPickup(position, currentLevel);
                                     break;
                                 }
-                            case Int32 n when n >= 75 && n < 90:
+                            case Int32 n when n >= 90 && n < 95:
                                 {
                                     powerup = new ShieldPowerup(position);
                                     break;
                                 }
-                            case Int32 n when n >= 90 && n < 97:
+                            case Int32 n when n >= 95 && n < 99:
                                 {
                                     powerup = new ProbePowerup(position);
                                     break;
                                 }
-                            case Int32 n when n >= 97:
+                            case Int32 n when n >= 99:
                                 {
                                     powerup = new ExtraLifePowerup(position);
                                     break;
