@@ -13,14 +13,12 @@ namespace Type.UI
     {
         /// <summary> Text that displays the current level </summary>
         private readonly TextDisplay _Display;
-        /// <summary> Whether the text is being displayed </summary>
-        private Boolean _Active;
-        /// <summary> How long the text has been displayed for </summary>
-        private TimeSpan _DisplayTime;
-        /// <summary> How long to display the text for </summary>
-        private TimeSpan _TargetDisplayTime;
         /// <summary> Whether the text has finished displaying </summary>
         private Action _OnComplete;
+        /// <summary> Callback from when the text is hidden </summary>
+        private TimedCallback _ShownCallback;
+        /// <summary> Callback to invoke the complete action </summary>
+        private TimedCallback _CompleteCallback;
 
         public LevelDisplay()
         {
@@ -43,9 +41,8 @@ namespace Type.UI
             _Display.Text = $"LEVEL {level}";
             _Display.Offset = new Vector2(_Display.Size.X * _Display.Scale.X, _Display.Size.Y * _Display.Scale.Y) / 2;
             _Display.Visible = true;
-            _TargetDisplayTime = duration;
             _OnComplete = onComplete;
-            _Active = true;
+            _ShownCallback = new TimedCallback(TimeSpan.FromSeconds(2), Complete);
         }
 
         /// <summary>
@@ -54,24 +51,17 @@ namespace Type.UI
         private void Complete()
         {
             _Display.Visible = false;
-            _DisplayTime = TimeSpan.Zero;
-            _TargetDisplayTime = TimeSpan.Zero;
-            _OnComplete.Invoke();
-            _Active = false;
-            //new AudioPlayer("Content/Audio/begin.wav", false, AudioManager.Category.EFFECT, 1);
+            _CompleteCallback = new TimedCallback(TimeSpan.FromSeconds(1), _OnComplete.Invoke);
         }
 
-        public override void Update(TimeSpan timeTilUpdate)
+        /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
+        public override void Dispose()
         {
-            base.Update(timeTilUpdate);
-            if (!_Active) return;
-
-            _DisplayTime += timeTilUpdate;
-
-            if (_DisplayTime >= _TargetDisplayTime)
-            {
-                Complete();
-            }
+            base.Dispose();
+            _ShownCallback?.Dispose();
+            _CompleteCallback?.Dispose();
+            _ShownCallback = null;
+            _CompleteCallback = null;
         }
     }
 }

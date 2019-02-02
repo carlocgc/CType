@@ -34,7 +34,7 @@ namespace Type.Objects.Player
         /// <summary> List of the engine effect sprites </summary>
         private readonly Sprite[] _EngineEffects;
         /// <summary> How long the player is invincible when spawned </summary>
-        private readonly TimeSpan _InvincibilityDuration = TimeSpan.FromSeconds(2);
+        private readonly TimeSpan _InvincibilityDuration = TimeSpan.FromSeconds(5);
 
         /// <summary> Time since the last bullet was fired </summary>
         private TimeSpan _TimeSinceLastFired;

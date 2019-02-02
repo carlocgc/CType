@@ -8,6 +8,7 @@ using Type.Base;
 using Type.Controllers;
 using Type.Interfaces;
 using Type.Interfaces.Enemies;
+using static Type.Constants.Global;
 
 namespace Type.Objects.Bosses
 {
@@ -37,6 +38,13 @@ namespace Type.Objects.Bosses
         private Vector2 _PlayerPosition;
 
         private Boolean _AutoFire;
+
+        /// <summary> Whether the enemy is on screen </summary>
+        public Boolean OnScreen =>
+            Position.X - _Sprite.Offset.X >= ScreenLeft &&
+            Position.X + _Sprite.Offset.X <= ScreenRight &&
+            Position.Y - _Sprite.Offset.Y >= ScreenBottom &&
+            Position.Y + _Sprite.Offset.Y <= ScreenTop;
 
         /// <summary> The position of the object </summary>
         public override Vector2 Position
@@ -107,7 +115,7 @@ namespace Type.Objects.Bosses
 
             BossCannon topMostCannon = new BossCannon(75, TimeSpan.FromMilliseconds(1500)) {Offset = new Vector2(113, -200)};
             BossCannon topCannon = new BossCannon(100, TimeSpan.FromMilliseconds(1200)) {Offset = new Vector2(102, -130)};
-            BossCannon middleCannon = new BossCannon(150, TimeSpan.FromMilliseconds(1000)) {Offset = new Vector2(-149, 0)};
+            BossCannon middleCannon = new BossCannon(125, TimeSpan.FromMilliseconds(1000)) {Offset = new Vector2(-149, 0)};
             BossCannon bottomCannon = new BossCannon(100, TimeSpan.FromMilliseconds(1200)) {Offset = new Vector2(102, 130)};
             BossCannon bottomMostCannon = new BossCannon(75, TimeSpan.FromMilliseconds(1500)) {Offset = new Vector2(113, 200)};
 

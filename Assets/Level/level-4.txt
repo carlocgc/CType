@@ -1,4 +1,4 @@
-wave,true:
+wave:
 type=0|ypos=50|delay=0.5|movetype=1|xdir=-1|ydir=0|speed=520;
 type=1|ypos=-50|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
 type=1|ypos=50|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
@@ -11,7 +11,7 @@ type=0|ypos=50|delay=0.5|movetype=1|xdir=-1|ydir=0|speed=520;
 type=1|ypos=-50|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
 type=1|ypos=50|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
 type=0|ypos=-50|delay=0.5|movetype=1|xdir=-1|ydir=0|speed=520
-_wave,true:
+_wave:
 type=0|ypos=50|delay=0.5|movetype=1|xdir=-1|ydir=0|speed=520;
 type=1|ypos=-50|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
 type=1|ypos=50|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
@@ -24,7 +24,7 @@ type=0|ypos=50|delay=0.5|movetype=1|xdir=-1|ydir=0|speed=520;
 type=1|ypos=-50|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
 type=1|ypos=50|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
 type=0|ypos=-50|delay=0.5|movetype=1|xdir=-1|ydir=0|speed=520
-_wave,true:
+_wave:
 type=1|ypos=400|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
 type=1|ypos=350|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
 type=1|ypos=300|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
@@ -43,7 +43,7 @@ type=1|ypos=-300|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
 type=1|ypos=-350|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
 type=1|ypos=-400|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
 type=1|ypos=-450|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520
-_wave,true:
+_wave:
 type=1|ypos=400|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
 type=1|ypos=350|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
 type=1|ypos=300|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
@@ -62,7 +62,7 @@ type=1|ypos=-300|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
 type=1|ypos=-350|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
 type=1|ypos=-400|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
 type=1|ypos=-450|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520
-_wave,true:
+_wave:
 type=0|ypos=50|delay=0.5|movetype=1|xdir=-1|ydir=0|speed=520;
 type=1|ypos=-50|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
 type=1|ypos=50|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
@@ -75,7 +75,7 @@ type=0|ypos=50|delay=0.5|movetype=1|xdir=-1|ydir=0|speed=520;
 type=1|ypos=-50|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
 type=1|ypos=50|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
 type=0|ypos=-50|delay=0.5|movetype=1|xdir=-1|ydir=0|speed=520
-_wave,true:
+_wave:
 type=0|ypos=50|delay=0.5|movetype=1|xdir=-1|ydir=0|speed=520;
 type=1|ypos=-50|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
 type=1|ypos=50|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
@@ -88,7 +88,7 @@ type=0|ypos=50|delay=0.5|movetype=1|xdir=-1|ydir=0|speed=520;
 type=1|ypos=-50|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
 type=1|ypos=50|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
 type=0|ypos=-50|delay=0.5|movetype=1|xdir=-1|ydir=0|speed=520
-_wave,true:
+_wave:
 type=1|ypos=400|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
 type=1|ypos=350|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
 type=1|ypos=300|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
@@ -107,7 +107,7 @@ type=1|ypos=-300|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
 type=1|ypos=-350|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
 type=1|ypos=-400|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
 type=1|ypos=-450|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520
-_wave,true:
+_wave:
 type=1|ypos=400|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
 type=1|ypos=350|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
 type=1|ypos=300|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
@@ -126,7 +126,7 @@ type=1|ypos=-300|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
 type=1|ypos=-350|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
 type=1|ypos=-400|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
 type=1|ypos=-450|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520
-_wave,true:
+_wave:
 type=0|ypos=50|delay=0.5|movetype=1|xdir=-1|ydir=0|speed=520;
 type=1|ypos=-50|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
 type=1|ypos=50|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
@@ -139,7 +139,7 @@ type=0|ypos=50|delay=0.5|movetype=1|xdir=-1|ydir=0|speed=520;
 type=1|ypos=-50|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
 type=1|ypos=50|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
 type=0|ypos=-50|delay=0.5|movetype=1|xdir=-1|ydir=0|speed=520
-_wave,true:
+_wave:
 type=0|ypos=50|delay=0.5|movetype=1|xdir=-1|ydir=0|speed=520;
 type=1|ypos=-50|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
 type=1|ypos=50|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
@@ -152,7 +152,7 @@ type=0|ypos=50|delay=0.5|movetype=1|xdir=-1|ydir=0|speed=520;
 type=1|ypos=-50|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
 type=1|ypos=50|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
 type=0|ypos=-50|delay=0.5|movetype=1|xdir=-1|ydir=0|speed=520
-_wave,true:
+_wave:
 type=1|ypos=400|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
 type=1|ypos=350|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
 type=1|ypos=300|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
@@ -171,7 +171,7 @@ type=1|ypos=-300|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
 type=1|ypos=-350|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
 type=1|ypos=-400|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
 type=1|ypos=-450|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520
-_wave,true:
+_wave:
 type=1|ypos=400|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
 type=1|ypos=350|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
 type=1|ypos=300|delay=0.5|movetype=0|xdir=-1|ydir=0|speed=520;
