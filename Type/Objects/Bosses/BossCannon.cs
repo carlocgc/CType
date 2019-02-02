@@ -214,20 +214,11 @@ namespace Type.Objects.Bosses
         }
 
         /// <summary>
-        /// Update position data
-        /// </summary>
-        /// <param name="position"> The received position data </param>
-        public void UpdatePositionData(Vector2 position)
-        {
-
-        }
-
-        /// <summary>
         /// Hit the <see cref="IHitable"/>
         /// </summary>
         public void Hit(Int32 damage)
         {
-            if (HitPoints <= 0) return;
+            if (IsDestroyed) return;
 
             HitPoints -= damage;
 
@@ -252,12 +243,20 @@ namespace Type.Objects.Bosses
         /// </summary>
         public void Destroy()
         {
+            IsDestroyed = true;
             AutoFire = false;
-            foreach (IEnemyListener listener in _Listeners)
-            {
-                listener.OnEnemyDestroyed(this);
-            }
+
             _Gun.Visible = false;
+
+            _Explosion.AddFrameAction((anim) =>
+            {
+                for (var i = _Listeners.Count - 1; i >= 0; i--)
+                {
+                    IEnemyListener listener = _Listeners[i];
+                    listener.OnEnemyDestroyed(this);
+                }
+                Dispose();
+            }, 8);
             _Explosion.Visible = true;
             _Explosion.Playing = true;
         }
@@ -274,20 +273,25 @@ namespace Type.Objects.Bosses
             _Listeners.Remove(listener);
         }
 
+        /// <summary>
+        /// Update position data
+        /// </summary>
+        /// <param name="position"> The received position data </param>
+        public void UpdatePositionData(Vector2 position)
+        {
+        }
+
         /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
-        public void Dispose()
+        public override void Dispose()
         {
             _ColourCallback?.CancelAndComplete();
             base.Dispose();
 
             _Gun.Dispose();
             _Base.Dispose();
-            if (!_Explosion.IsDisposed)
-            {
-                _Explosion.Dispose();
-            }
-            _Listeners.Clear();
+            if (!_Explosion.IsDisposed) _Explosion.Dispose();
             CollisionController.Instance.DeregisterEnemy(this);
+            _Listeners.Clear();
         }
     }
 }

@@ -3,6 +3,7 @@ using AmosShared.Graphics.Drawables;
 using OpenTK;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using AmosShared.Base;
 using Type.Base;
 using Type.Controllers;
@@ -41,6 +42,8 @@ namespace Type.Objects.Bosses
         private Sprite _Sprite;
 
         private Boolean _IsMoving;
+
+        private Boolean _IsRetreating;
 
         private Vector2 _StopPosition;
 
@@ -108,11 +111,13 @@ namespace Type.Objects.Bosses
             Position = new Vector2(Renderer.Instance.TargetDimensions.X / 2 + _Sprite.Width / 2, 0);
             _Sprite.Offset = _Sprite.Size / 2;
 
-            _TopCannon = new BossCannon(100, TimeSpan.FromMilliseconds(1500));
+            _TopCannon = new BossCannon(10, TimeSpan.FromMilliseconds(1500));
             _TopCannon.Offset = new Vector2(102, -130);
-            _MiddleCannon = new BossCannon(100, TimeSpan.FromMilliseconds(1000));
+
+            _MiddleCannon = new BossCannon(10, TimeSpan.FromMilliseconds(1000));
             _MiddleCannon.Offset = new Vector2(-149, 0);
-            _BottomCannon = new BossCannon(100, TimeSpan.FromMilliseconds(1500));
+
+            _BottomCannon = new BossCannon(10, TimeSpan.FromMilliseconds(1500));
             _BottomCannon.Offset = new Vector2(102, 130);
 
             _Cannons.Add(_TopCannon);
@@ -143,11 +148,24 @@ namespace Type.Objects.Bosses
             UpdateRotation();
         }
 
+        /// <summary>
+        /// Updates the ship rotation so it is facing the players poistion
+        /// </summary>
+        private void UpdateRotation()
+        {
+            foreach (BossCannon cannon in _Cannons)
+            {
+                cannon.DirectionTowardsPlayer = _PlayerPosition - cannon.Position;
+                cannon.Rotation = (Single)Math.Atan2(cannon.DirectionTowardsPlayer.Y, cannon.DirectionTowardsPlayer.X);
+            }
+        }
+
         /// <summary> Called to update the object </summary>
         /// <param name="timeTilUpdate"></param>
         public override void Update(TimeSpan timeTilUpdate)
         {
             base.Update(timeTilUpdate);
+
             if (_IsMoving)
             {
                 Position += _MoveDirection * _Speed * (Single)timeTilUpdate.TotalSeconds;
@@ -157,24 +175,25 @@ namespace Type.Objects.Bosses
                     _IsMoving = false;
                     foreach (BossCannon cannon in _Cannons)
                     {
-                        //cannon.AutoFire = true;
                         CollisionController.Instance.RegisterEnemy(cannon);
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// Updates the ship rotation so it is facing the players poistion
-        /// </summary>
-        private void UpdateRotation()
-        {
-            _DirectionTowardsPlayer = _PlayerPosition - Position;
-            foreach (BossCannon cannon in _Cannons)
+            if (_IsRetreating)
             {
-                cannon.DirectionTowardsPlayer = _DirectionTowardsPlayer;
+                Position -= _MoveDirection * _Speed * (Single)timeTilUpdate.TotalSeconds;
+
+                if (Position.X - _Sprite.Width / 2 > Renderer.Instance.TargetDimensions.X / 2 && _IsRetreating)
+                {
+                    _IsRetreating = false;
+                    for (var i = _Listeners.Count - 1; i >= 0; i--)
+                    {
+                        IEnemyListener listener = _Listeners[i];
+                        listener.OnEnemyDestroyed(this);
+                    }
+                    Dispose();
+                }
             }
-            Rotation = (Single)Math.Atan2(_DirectionTowardsPlayer.Y, _DirectionTowardsPlayer.X);
         }
 
         /// <summary>
@@ -183,14 +202,10 @@ namespace Type.Objects.Bosses
         /// <param name="enemy"> The enemy that has been destroyed </param>
         public void OnEnemyDestroyed(IEnemy enemy)
         {
-            _DestroyedCannons++;
-            if (_DestroyedCannons < _Cannons.Count) return;
+            _Cannons.Remove(enemy as BossCannon);
+            if (_Cannons.Count != 0) return;
 
-            foreach (BossCannon cannon in _Cannons)
-            {
-                CollisionController.Instance.DeregisterEnemy(cannon);
-                cannon.Dispose();
-            }
+            _IsRetreating = true;
         }
 
         /// <summary>
@@ -238,11 +253,7 @@ namespace Type.Objects.Bosses
         public override void Dispose()
         {
             base.Dispose();
-            foreach (BossCannon cannon in _Cannons)
-            {
-                CollisionController.Instance.DeregisterEnemy(cannon);
-                cannon.Dispose();
-            }
+            _Cannons.Clear();
             _Sprite.Dispose();
             PositionRelayer.Instance.RemoveRecipient(this);
         }
