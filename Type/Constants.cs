@@ -46,7 +46,7 @@ namespace Type
             }
 
             /// <summary> The hihghscore leaderboard </summary>
-            public static readonly String HIGHSCORE = "CgkIptDTkNIIEAIQAQ";
+            public static readonly String HIGHSCORE = "CgkIqLOFpcMIEAIQAQ";
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace Type
                 };
             }
 
-            public static readonly String COMPLETE_LEVEL_1 = "CgkIptDTkNIIEAIQAw";
+            public static readonly String COMPLETE_LEVEL_1 = "CgkIqLOFpcMIEAIQAg";
         }
 
         /// <summary>

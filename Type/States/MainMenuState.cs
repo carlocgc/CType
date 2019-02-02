@@ -13,7 +13,7 @@ namespace Type.States
         {
             GameStats.Instance.Clear();
             _Scene = new MainMenuScene { Visible = true };
-            _Scene.Show();
+            _Scene.Show();            
         }
 
         public override Boolean IsComplete()
