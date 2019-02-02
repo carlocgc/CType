@@ -33,6 +33,8 @@ namespace Type.Objects.Player
         private readonly TimeSpan _FireRate;
         /// <summary> List of the engine effect sprites </summary>
         private readonly Sprite[] _EngineEffects;
+        /// <summary> How long the player is invincible when spawned </summary>
+        private readonly TimeSpan _InvincibilityDuration = TimeSpan.FromSeconds(2);
 
         /// <summary> Time since the last bullet was fired </summary>
         private TimeSpan _TimeSinceLastFired;
@@ -44,6 +46,12 @@ namespace Type.Objects.Player
         private Boolean _IsWeaponLocked;
         /// <summary> Whether the ship is autofiring </summary>
         private Boolean _AutoFire;
+        /// <summary> Whether the player is invincible </summary>
+        private Boolean _Invincible;
+        /// <summary> Whether the sprite is dimmed, used during invincibility to set the correct colour </summary>
+        private Boolean _IsDimmed;
+        /// <summary> Callback to reset colour while flashing </summary>
+        private TimedCallback _InvincibleColourCallback;
 
         /// <summary> Current amount of probes the player has </summary>
         public Int32 CurrentProbes => _ProbeController.CurrentProbes;
@@ -109,6 +117,44 @@ namespace Type.Objects.Player
         public void Spawn()
         {
             Position = _SpawnPosition;
+            HitPoints = 1;
+            StartInvincible();
+        }
+
+        /// <summary>
+        /// Makes the player invincible
+        /// </summary>
+        private void StartInvincible()
+        {
+            _Invincible = true;
+            FlashSprite();
+            new TimedCallback(_InvincibilityDuration, () => { _Invincible = false; });
+        }
+
+        /// <summary>
+        /// Flashes the player sprite, used while invincible
+        /// </summary>
+        private void FlashSprite()
+        {
+            if (!_Invincible)
+            {
+                _InvincibleColourCallback?.Dispose();
+                _Sprite.Colour = new Vector4(1, 1, 1, 1);
+                _IsDimmed = false;
+                return;
+            }
+
+            if (_IsDimmed)
+            {
+                _Sprite.Colour = new Vector4(1, 1, 1, 1);
+                _IsDimmed = false;
+            }
+            else
+            {
+                _Sprite.Colour = new Vector4(1, 1, 1, 0.3f);
+                _IsDimmed = true;
+            }
+            _InvincibleColourCallback = new TimedCallback(TimeSpan.FromMilliseconds(100), FlashSprite);
         }
 
         /// <inheritdoc />
@@ -174,6 +220,8 @@ namespace Type.Objects.Player
                 _Shield.Decrease(damage);
                 return;
             }
+
+            if (_Invincible) return;
 
             HitPoints -= damage;
 

@@ -20,7 +20,7 @@ namespace Type.States
     public class PlayingState : State, IPlayerListener, IEnemyListener, IEnemyFactoryListener, IPowerupListener, IPowerupFactoryListener
     {
         /// <summary> Max level of the game </summary>
-        private readonly Int32 _MaxLevel = 10;
+        private readonly Int32 _MaxLevel = 8;
         /// <summary> THe type of player craft </summary>
         private readonly Int32 _PlayerType;
 
@@ -87,6 +87,7 @@ namespace Type.States
                 _EnemyFactory.Start(LevelLoader.GetWaveData(_CurrentLevel));
                 CollisionController.Instance.IsActive = true;
             });
+            _Player.Spawn();
         }
 
         public override Boolean IsComplete()
