@@ -4,7 +4,6 @@ using AmosShared.Graphics.Drawables;
 using OpenTK;
 using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using Type.Base;
 using Type.Controllers;
 using Type.Data;
