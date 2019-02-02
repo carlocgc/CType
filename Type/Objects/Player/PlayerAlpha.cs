@@ -117,6 +117,7 @@ namespace Type.Objects.Player
         public void Spawn()
         {
             Position = _SpawnPosition;
+            HitPoints = 1;
             StartInvincible();
         }
 
