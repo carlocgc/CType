@@ -270,8 +270,16 @@
       <Link>Content\Graphics\Background\stars-2.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Assets\Graphics\Bosses\boss1.png">
-      <Link>Content\Graphics\Bosses\boss1.png</Link>
+    <Content Include="..\Assets\Graphics\Bosses\boss-cannon.png">
+      <Link>Content\Graphics\Bosses\boss-cannon.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Bosses\boss01-gun-base.png">
+      <Link>Content\Graphics\Bosses\boss01-gun-base.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Bosses\boss01.png">
+      <Link>Content\Graphics\Bosses\boss01.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\Assets\Graphics\Buttons\analog_base.png">

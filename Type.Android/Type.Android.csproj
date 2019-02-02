@@ -365,9 +365,6 @@
     <AndroidAsset Include="Assets\Content\Graphics\Buttons\gameovercontinue.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\Content\Graphics\Bosses\boss1.png" />
-  </ItemGroup>
-  <ItemGroup>
     <AndroidAsset Include="Assets\Content\Level\level-9.txt" />
   </ItemGroup>
   <ItemGroup>
