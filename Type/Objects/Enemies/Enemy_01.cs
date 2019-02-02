@@ -50,11 +50,11 @@ namespace Type.Objects.Enemies
         /// <summary> Whether the enemy has entered the game area </summary>
         private Boolean InPlay;
         /// <summary> Whether the enemy is on screen </summary>
-        private Boolean OnScreen =>
-            Position.X + _Sprite.Offset.X >= ScreenLeft &&
-            Position.X - _Sprite.Offset.X <= ScreenRight &&
-            Position.Y + _Sprite.Offset.Y >= ScreenBottom &&
-            Position.Y - _Sprite.Offset.Y <= ScreenTop;
+        public Boolean OnScreen =>
+            Position.X - _Sprite.Offset.X >= ScreenLeft &&
+            Position.X + _Sprite.Offset.X <= ScreenRight &&
+            Position.Y - _Sprite.Offset.Y >= ScreenBottom &&
+            Position.Y + _Sprite.Offset.Y <= ScreenTop;
 
         /// <summary> Whether the enemy has been destroyed  </summary>
         public Boolean IsDestroyed { get; private set; }

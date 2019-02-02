@@ -1,6 +1,4 @@
-﻿using System;
-using AmosShared.Interfaces;
-using Java.Lang;
+﻿using AmosShared.Interfaces;
 using Type.Interfaces.Collisions;
 using Type.Interfaces.Control;
 using Type.Interfaces.GameData;
@@ -16,5 +14,8 @@ namespace Type.Interfaces.Enemies
     {
         /// <summary> Whether the enemy can be roadkilled </summary>
         Boolean CanBeRoadKilled { get; }
+
+        /// <summary> Whether the enemy is on the screen </summary>
+        Boolean OnScreen { get; }
     }
 }

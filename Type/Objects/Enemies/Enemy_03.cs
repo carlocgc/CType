@@ -49,24 +49,29 @@ namespace Type.Objects.Enemies
         private Boolean _IsMoving;
         /// <summary> Whether the enemy has entered the game area </summary>
         private Boolean InPlay;
-        /// <summary> Whether the enemy is on screen </summary>
-        private Boolean OnScreen =>
-            Position.X + _Sprite.Offset.X >= ScreenLeft &&
-            Position.X - _Sprite.Offset.X <= ScreenRight &&
-            Position.Y + _Sprite.Offset.Y >= ScreenBottom &&
-            Position.Y - _Sprite.Offset.Y <= ScreenTop;
 
+        /// <summary> Whether the enemy is on screen </summary>
+        public Boolean OnScreen =>
+            Position.X - _Sprite.Offset.X >= ScreenLeft &&
+            Position.X + _Sprite.Offset.X <= ScreenRight &&
+            Position.Y - _Sprite.Offset.Y >= ScreenBottom &&
+            Position.Y + _Sprite.Offset.Y <= ScreenTop;
 
         /// <summary> Whether the enemy has been destroyed  </summary>
         public Boolean IsDestroyed { get; private set; }
+
         /// <summary> Point valuie for this enemy </summary>
         public Int32 Points { get; private set; }
+
         /// <inheritdoc />
         public Boolean AutoFire { get; set; }
+
         /// <inheritdoc />
         public Vector4 HitBox { get; set; }
+
         /// <inheritdoc />
         public Int32 HitPoints { get; private set; }
+
         /// <summary> Whether the enemy can be roadkilled </summary>
         public Boolean CanBeRoadKilled { get; }
 

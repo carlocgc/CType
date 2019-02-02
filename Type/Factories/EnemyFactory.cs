@@ -48,10 +48,10 @@ namespace Type.Factories
         /// <param name="waves"></param>
         public void Start(List<WaveData> waves)
         {
+            Creating = true;
             _LevelData = waves;
             _DataIndex = 0;
             _CurrentWave = _LevelData[_WaveIndex];
-            Creating = true;
         }
 
         /// <inheritdoc />

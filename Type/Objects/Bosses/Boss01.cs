@@ -8,6 +8,7 @@ using Type.Base;
 using Type.Controllers;
 using Type.Interfaces;
 using Type.Interfaces.Enemies;
+using static Type.Constants.Global;
 
 namespace Type.Objects.Bosses
 {
@@ -37,6 +38,13 @@ namespace Type.Objects.Bosses
         private Vector2 _PlayerPosition;
 
         private Boolean _AutoFire;
+
+        /// <summary> Whether the enemy is on screen </summary>
+        public Boolean OnScreen =>
+            Position.X - _Sprite.Offset.X >= ScreenLeft &&
+            Position.X + _Sprite.Offset.X <= ScreenRight &&
+            Position.Y - _Sprite.Offset.Y >= ScreenBottom &&
+            Position.Y + _Sprite.Offset.Y <= ScreenTop;
 
         /// <summary> The position of the object </summary>
         public override Vector2 Position
