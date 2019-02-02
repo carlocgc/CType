@@ -94,8 +94,6 @@ namespace Type.Scenes
             _ConfirmButton.Visible = true;
 
             _Background.Visible = true;
-
-            new AudioPlayer("Content/Audio/gameOver.wav", false, AudioManager.Category.EFFECT, 1);
         }
 
         public override void Update(TimeSpan timeSinceUpdate)

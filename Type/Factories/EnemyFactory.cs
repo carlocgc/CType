@@ -175,11 +175,13 @@ namespace Type.Factories
         /// <summary>
         /// Restarts the current wave
         /// </summary>
-        public void RestartWave()
+        public Boolean RestartWave()
         {
+            if (!_CurrentWave.Restartable) return false;
             _DataIndex = 0;
             Creating = true;
             _TimeSinceLastSpawn = TimeSpan.Zero;
+            return true;
         }
 
         /// <summary>

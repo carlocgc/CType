@@ -82,10 +82,6 @@
       <Link>Content\Audio\gameCompleteBgm.wav</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Assets\Audio\gameOver.wav">
-      <Link>Content\Audio\gameOver.wav</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="..\Assets\Audio\gameOverBgm.wav">
       <Link>Content\Audio\gameOverBgm.wav</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

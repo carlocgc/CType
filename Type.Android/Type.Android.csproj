@@ -272,9 +272,6 @@
     <AndroidAsset Include="Assets\Content\Audio\death.wav" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\Content\Audio\gameOver.wav" />
-  </ItemGroup>
-  <ItemGroup>
     <AndroidAsset Include="Assets\Content\Audio\hurt3.wav" />
   </ItemGroup>
   <ItemGroup>
