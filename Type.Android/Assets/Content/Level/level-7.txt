@@ -1,2 +1,2 @@
-wave,false:
+wave:
 type=20|ypos=-0|delay=0.1|movetype=-1|xdir=-1|ydir=0|speed=400

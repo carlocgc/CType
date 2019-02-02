@@ -1,6 +1,5 @@
-﻿using System;
-using Android.Support.V4.Widget;
-using OpenTK;
+﻿using OpenTK;
+using System;
 
 namespace Type.Data
 {
@@ -27,7 +26,6 @@ namespace Type.Data
         /// <summary>
         /// Data for a wave of enemies
         /// </summary>
-        /// <param name="restartable"> Whether this wave can be restarted </param>
         /// <param name="interval"> Interval to spawn each ship </param>
         /// <param name="enemyTypes"> Array of ship types </param>
         /// <param name="yPositions"> Array of positions to spawn the ships </param>
