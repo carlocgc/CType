@@ -40,18 +40,24 @@ namespace Type.Objects.Bosses
         private Vector2 _DirectionTowardsPlayer;
         /// <summary> Whether firing is allowed </summary>
         private Boolean _IsWeaponLocked;
-
+        /// <summary> Sprite for the gun base </summary>
         private Sprite _Base;
-
+        /// <summary> Sprite for the cannon </summary>
         private Sprite _Gun;
 
-        private Vector2 _Offset;
+        /// <summary> Whether the cannon is visible </summary>
         private Boolean _Visible;
 
-        public Vector2 Offset
+        /// <summary> Whether the cannon is visible </summary>
+        public Boolean Visible
         {
-            get => _Offset;
-            set => _Offset = value;
+            get => _Visible;
+            set
+            {
+                _Visible = value;
+                _Gun.Visible = _Visible;
+                _Base.Visible = _Visible;
+            }
         }
 
         /// <summary> The position of the object </summary>
@@ -78,29 +84,11 @@ namespace Type.Objects.Bosses
             }
         }
 
+        /// <summary> The direction towards the player, used to point the cannon in that direction </summary>
         public Vector2 DirectionTowardsPlayer
         {
             get => _DirectionTowardsPlayer;
             set => _DirectionTowardsPlayer = value;
-        }
-
-        /// <summary> Whether the enemy has been destroyed  </summary>
-        public Boolean IsDestroyed { get; private set; }
-
-        /// <summary>
-        /// The hitpoints of the <see cref="IHitable"/>
-        /// </summary>
-        public Int32 HitPoints { get; private set; }
-
-        public Boolean Visible
-        {
-            get => _Visible;
-            set
-            {
-                _Visible = value;
-                _Gun.Visible = _Visible;
-                _Base.Visible = _Visible;
-            }
         }
 
         /// <summary>
@@ -112,6 +100,17 @@ namespace Type.Objects.Bosses
                 _Base.Width * _Base.Scale.X, _Base.Height * _Base.Scale.Y);
             set { }
         }
+
+        /// <summary> Whether the enemy has been destroyed  </summary>
+        public Boolean IsDestroyed { get; private set; }
+
+        /// <summary>
+        /// The hitpoints of the <see cref="IHitable"/>
+        /// </summary>
+        public Int32 HitPoints { get; private set; }
+
+        /// <summary> Offset of the cannon </summary>
+        public Vector2 Offset { get; set; }
 
         /// <summary>
         /// Whether this object is Autofiring

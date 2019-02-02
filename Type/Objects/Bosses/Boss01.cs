@@ -1,15 +1,13 @@
-﻿using AmosShared.Graphics;
+﻿using AmosShared.Base;
+using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
 using OpenTK;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using AmosShared.Base;
 using Type.Base;
 using Type.Controllers;
 using Type.Interfaces;
 using Type.Interfaces.Collisions;
-using Type.Interfaces.Control;
 using Type.Interfaces.Enemies;
 
 namespace Type.Objects.Bosses
@@ -17,37 +15,35 @@ namespace Type.Objects.Bosses
     /// <summary>
     /// Boss that has three destroyable cannons
     /// </summary>
-    public class Boss01 : GameObject, IEnemy, IPositionRecipient, IEnemyListener
+    public class Boss01 : GameObject, IEnemy, IEnemyListener
     {
+        /// <summary> List of the destroyable cannons on the boss </summary>
         private readonly List<BossCannon> _Cannons;
-
+        /// <summary> Movement speed </summary>
         private readonly Single _Speed;
-
-        private readonly Vector2 _MoveDirection;
-
         /// <summary> List of <see cref="IEnemyListener"/>'s </summary>
         private readonly List<IEnemyListener> _Listeners;
+        /// <summary> Move direction </summary>
+        private readonly Vector2 _MoveDirection;
 
+        /// <summary> Top cannon </summary>
         private BossCannon _TopCannon;
-
+        /// <summary> Middle cannon </summary>
         private BossCannon _MiddleCannon;
-
+        /// <summary> Bottom cannon </summary>
         private BossCannon _BottomCannon;
-
         /// <summary> The players current position </summary>
         private Vector2 _PlayerPosition;
         /// <summary> Relative direction to the player from this enemy </summary>
         private Vector2 _DirectionTowardsPlayer;
-
+        /// <summary> Sprite for the boss base </summary>
         private Sprite _Sprite;
-
-        private Boolean _IsMoving;
-
+        /// <summary> Whether the boss is moving onto screen </summary>
+        private Boolean _IsAdvancing;
+        /// <summary> Whether the boss is moving off the screen </summary>
         private Boolean _IsRetreating;
-
+        /// <summary> Where the boss should stop when moving onto screen</summary>
         private Vector2 _StopPosition;
-
-        private Int32 _DestroyedCannons;
 
         /// <summary>
         /// The hitbox of the <see cref="ICollidable"/>
@@ -133,7 +129,7 @@ namespace Type.Objects.Bosses
 
             _Speed = 250f;
             _StopPosition = new Vector2(Renderer.Instance.TargetDimensions.X / 4, 0);
-            _IsMoving = true;
+            _IsAdvancing = true;
 
             PositionRelayer.Instance.AddRecipient(this);
         }
@@ -166,13 +162,13 @@ namespace Type.Objects.Bosses
         {
             base.Update(timeTilUpdate);
 
-            if (_IsMoving)
+            if (_IsAdvancing)
             {
                 Position += _MoveDirection * _Speed * (Single)timeTilUpdate.TotalSeconds;
 
                 if (Position.X <= _StopPosition.X)
                 {
-                    _IsMoving = false;
+                    _IsAdvancing = false;
                     foreach (BossCannon cannon in _Cannons)
                     {
                         CollisionController.Instance.RegisterEnemy(cannon);
@@ -204,9 +200,10 @@ namespace Type.Objects.Bosses
         {
             _Cannons.Remove(enemy as BossCannon);
             if (_Cannons.Count != 0) return;
-
             _IsRetreating = true;
         }
+
+        #region Unusued Interfaces
 
         /// <summary>
         /// Invoked when an enemy leaves the screen
@@ -236,6 +233,8 @@ namespace Type.Objects.Bosses
         public void Shoot()
         {
         }
+
+        #endregion
 
         /// <inheritdoc />
         public void RegisterListener(IEnemyListener listener)
