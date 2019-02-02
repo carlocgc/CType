@@ -53,7 +53,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Probe\IProbeController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Weapons\IProjectile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Weapons\IProjectileShooter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Bosses\Boss01.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Bosses\BossAlpha.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Bosses\BossCannon.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\Enemy_01.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\Enemy_02.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\Enemy_04.cs" />
@@ -98,6 +100,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)UI\LifeMeter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\ShipSelectButton.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\StatsDisplay.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Utility\TimedCallback.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Base\TimedCallback.cs" />
   </ItemGroup>
 </Project>

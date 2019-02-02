@@ -130,7 +130,7 @@ namespace Type.Factories
                     }
                 case 20:
                     {
-                        enemy = new BossAlpha(_CurrentWave.Ypositions[_DataIndex]);
+                        enemy = new Boss01();
                         break;
                     }
                 default:

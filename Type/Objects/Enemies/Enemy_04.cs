@@ -30,6 +30,8 @@ namespace Type.Objects.Enemies
         /// <summary> List of <see cref="IEnemyListener"/>'s </summary>
         private readonly List<IEnemyListener> _Listeners;
 
+        /// <summary> Callback used to change the colour back after being hit by a projectile </summary>
+        private TimedCallback _ColourCallback;
         /// <summary> Time since the last bullet was fired </summary>
         private TimeSpan _TimeSinceLastFired;
         /// <summary> Firerate of the enemy </summary>
@@ -133,6 +135,10 @@ namespace Type.Objects.Enemies
                 _IsSoundPlaying = true;
                 _TimeSinceLastSound = TimeSpan.Zero;
             }
+
+            _Sprite.Colour = new Vector4(1.5f, 1.5f, 1.5f, 1);
+            _ColourCallback?.CancelAndComplete();
+            _ColourCallback = new TimedCallback(TimeSpan.FromMilliseconds(50), () => _Sprite.Colour = new Vector4(1, 1, 1, 1));
 
             if (HitPoints > 0) return;
 
@@ -247,6 +253,7 @@ namespace Type.Objects.Enemies
         /// <inheritdoc />
         public override void Dispose()
         {
+            _ColourCallback?.CancelAndComplete();
             base.Dispose();
             if (!_Explosion.IsDisposed) _Explosion.Dispose();
 

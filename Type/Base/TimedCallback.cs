@@ -1,7 +1,9 @@
 ﻿using System;
+using AmosShared.Base;
 using AmosShared.Interfaces;
+using Android.Hardware;
 
-namespace Type.Utility
+namespace Type.Base
 {
     /// <summary>
     /// Invokes an action after a given duration
@@ -14,8 +16,8 @@ namespace Type.Utility
         private TimeSpan _Elapsed;
         /// <summary> The callback to invoke </summary>
         private Action _Callback;
-        /// <summary> Whether the timer is counting </summary>
-        private Boolean _Updating;
+        /// <summary> Whether the call back has been invoked </summary>
+        private Boolean _Complete;
 
         /// <summary> Whether or not the updatable is disposed </summary>
         public Boolean IsDisposed { get; set; }
@@ -25,7 +27,7 @@ namespace Type.Utility
             _Duration = duration;
             _Callback = callback;
             _Elapsed = TimeSpan.Zero;
-            _Updating = true;
+            UpdateManager.Instance.AddUpdatable(this);
         }
 
         /// <summary>
@@ -33,7 +35,7 @@ namespace Type.Utility
         /// </summary>
         public void CancelAndComplete()
         {
-            _Callback.Invoke();
+            _Callback?.Invoke();
             Dispose();
         }
 
@@ -41,11 +43,11 @@ namespace Type.Utility
         /// <param name="timeTilUpdate"></param>
         public void Update(TimeSpan timeTilUpdate)
         {
-            if (!_Updating) return;
             _Elapsed += timeTilUpdate;
 
-            if (_Elapsed < _Duration) return;
+            if (_Elapsed < _Duration && !_Complete) return;
             _Callback.Invoke();
+            _Complete = true;
             Dispose();
         }
 
@@ -59,8 +61,9 @@ namespace Type.Utility
         /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
         public void Dispose()
         {
-            _Updating = false;
+            UpdateManager.Instance.RemoveUpdatable(this);
             _Callback = null;
+            IsDisposed = true;
         }
     }
 }
