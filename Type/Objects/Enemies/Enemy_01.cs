@@ -166,6 +166,7 @@ namespace Type.Objects.Enemies
                 listener.OnEnemyDestroyed(this);
             }
 
+            new AudioPlayer("Content/Audio/explode.wav", false, AudioManager.Category.EFFECT, 1);
             _Explosion.AddFrameAction((anim) =>
             {
                 Dispose();

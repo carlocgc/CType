@@ -241,6 +241,7 @@ namespace Type.Objects.Bosses
 
             _Gun.Visible = false;
 
+            new AudioPlayer("Content/Audio/explode.wav", false, AudioManager.Category.EFFECT, 1);
             _Explosion.AddFrameAction((anim) =>
             {
                 for (var i = _Listeners.Count - 1; i >= 0; i--)

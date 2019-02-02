@@ -50,13 +50,6 @@ namespace Type.Objects.Enemies
         /// <summary> Whether the enemy has entered the game area </summary>
         private Boolean InPlay;
 
-        /// <summary> Whether the enemy is on screen </summary>
-        public Boolean OnScreen =>
-            Position.X - _Sprite.Offset.X >= ScreenLeft &&
-            Position.X + _Sprite.Offset.X <= ScreenRight &&
-            Position.Y - _Sprite.Offset.Y >= ScreenBottom &&
-            Position.Y + _Sprite.Offset.Y <= ScreenTop;
-
         /// <summary> Whether the enemy has been destroyed  </summary>
         public Boolean IsDestroyed { get; private set; }
 
@@ -64,16 +57,23 @@ namespace Type.Objects.Enemies
         public Int32 Points { get; private set; }
 
         /// <inheritdoc />
+        public Int32 HitPoints { get; private set; }
+
+        /// <inheritdoc />
         public Boolean AutoFire { get; set; }
 
         /// <inheritdoc />
         public Vector4 HitBox { get; set; }
 
-        /// <inheritdoc />
-        public Int32 HitPoints { get; private set; }
-
         /// <summary> Whether the enemy can be roadkilled </summary>
         public Boolean CanBeRoadKilled { get; }
+
+        /// <summary> Whether the enemy is on screen </summary>
+        public Boolean OnScreen =>
+            Position.X - _Sprite.Offset.X >= ScreenLeft &&
+            Position.X + _Sprite.Offset.X <= ScreenRight &&
+            Position.Y - _Sprite.Offset.Y >= ScreenBottom &&
+            Position.Y + _Sprite.Offset.Y <= ScreenTop;
 
         public Enemy_03(Single yPos, IAccelerationProvider moveController)
         {
@@ -172,6 +172,7 @@ namespace Type.Objects.Enemies
                 listener.OnEnemyDestroyed(this);
             }
 
+            new AudioPlayer("Content/Audio/explode.wav", false, AudioManager.Category.EFFECT, 1);
             _Explosion.AddFrameAction((anim) =>
             {
                 Dispose();
