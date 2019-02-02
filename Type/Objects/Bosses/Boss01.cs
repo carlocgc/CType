@@ -113,11 +113,11 @@ namespace Type.Objects.Bosses
             Position = new Vector2(Renderer.Instance.TargetDimensions.X / 2 + _Body.Width / 2, 0);
             _Body.Offset = _Body.Size / 2;
 
-            BossCannon topMostCannon = new BossCannon(75, TimeSpan.FromMilliseconds(1500)) {Offset = new Vector2(113, -200)};
-            BossCannon topCannon = new BossCannon(100, TimeSpan.FromMilliseconds(1200)) {Offset = new Vector2(102, -130)};
-            BossCannon middleCannon = new BossCannon(150, TimeSpan.FromMilliseconds(1000)) {Offset = new Vector2(-149, 0)};
-            BossCannon bottomCannon = new BossCannon(100, TimeSpan.FromMilliseconds(1200)) {Offset = new Vector2(102, 130)};
-            BossCannon bottomMostCannon = new BossCannon(75, TimeSpan.FromMilliseconds(1500)) {Offset = new Vector2(113, 200)};
+            BossCannon topMostCannon = new BossCannon(50, TimeSpan.FromMilliseconds(1500)) {Offset = new Vector2(113, -200)};
+            BossCannon topCannon = new BossCannon(75, TimeSpan.FromMilliseconds(1200)) {Offset = new Vector2(102, -130)};
+            BossCannon middleCannon = new BossCannon(75, TimeSpan.FromMilliseconds(1000)) {Offset = new Vector2(-149, 0)};
+            BossCannon bottomCannon = new BossCannon(75, TimeSpan.FromMilliseconds(1200)) {Offset = new Vector2(102, 130)};
+            BossCannon bottomMostCannon = new BossCannon(50, TimeSpan.FromMilliseconds(1500)) {Offset = new Vector2(113, 200)};
 
             _Cannons.Add(topMostCannon);
             _Cannons.Add(topCannon);
