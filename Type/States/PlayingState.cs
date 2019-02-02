@@ -54,7 +54,7 @@ namespace Type.States
 
         protected override void OnEnter()
         {
-            _CurrentLevel = 1;
+            _CurrentLevel = 7;
 
             _EnemyFactory = new EnemyFactory();
             _EnemyFactory.RegisterListener(this);
@@ -87,6 +87,7 @@ namespace Type.States
                 _EnemyFactory.Start(LevelLoader.GetWaveData(_CurrentLevel));
                 CollisionController.Instance.IsActive = true;
             });
+            _Player.Spawn();
         }
 
         public override Boolean IsComplete()
