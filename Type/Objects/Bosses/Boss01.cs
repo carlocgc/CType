@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using Type.Base;
 using Type.Controllers;
 using Type.Interfaces;
-using Type.Interfaces.Collisions;
 using Type.Interfaces.Enemies;
 
 namespace Type.Objects.Bosses
@@ -65,13 +64,16 @@ namespace Type.Objects.Bosses
                     cannon.Rotation = value;
                 }
             }
-        }
+        }      
 
         /// <inheritdoc />
         public Boolean AutoFire { get; set; }
 
         /// <inheritdoc />
         public Vector4 HitBox { get; set; }
+
+        /// <summary> Whether the enemy can be roadkilled </summary>
+        public Boolean CanBeRoadKilled { get; }
 
         /// <summary> The hitpoints of the <see cref="IHitable"/> </summary>
         public Int32 HitPoints { get; }
@@ -85,6 +87,7 @@ namespace Type.Objects.Bosses
             _Cannons = new List<BossCannon>();
 
             Points = 20000;
+            CanBeRoadKilled = false;
             _MoveDirection = new Vector2(-1, 0);
 
             _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.BOSS_BASE, Texture.GetTexture("Content/Graphics/Bosses/boss01.png"))

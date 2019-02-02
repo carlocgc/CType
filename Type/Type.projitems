@@ -54,7 +54,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Weapons\IProjectile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Weapons\IProjectileShooter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Bosses\Boss01.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Objects\Bosses\BossAlpha.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Bosses\BossCannon.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\Enemy_01.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\Enemy_02.cs" />

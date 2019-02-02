@@ -67,6 +67,8 @@ namespace Type.Objects.Enemies
         public Vector4 HitBox { get; set; }
         /// <inheritdoc />
         public Int32 HitPoints { get; private set; }
+        /// <summary> Whether the enemy can be roadkilled </summary>
+        public Boolean CanBeRoadKilled { get; }
 
         public Enemy_03(Single yPos, IAccelerationProvider moveController)
         {
@@ -78,6 +80,7 @@ namespace Type.Objects.Enemies
 
             HitPoints = 5;
             Points = 50;
+            CanBeRoadKilled = true;
 
             _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, Texture.GetTexture("Content/Graphics/Enemies/enemy4.png"))
             {

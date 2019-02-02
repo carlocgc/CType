@@ -58,14 +58,16 @@ namespace Type.Objects.Enemies
 
         /// <summary> Whether the enemy has been destroyed  </summary>
         public Boolean IsDestroyed { get; private set; }
+        /// <inheritdoc />
+        public Int32 HitPoints { get; private set; }
         /// <summary> Point valuie for this enemy </summary>
         public Int32 Points { get; private set; }
         /// <inheritdoc />
         public Boolean AutoFire { get; set; }
         /// <inheritdoc />
         public Vector4 HitBox { get; set; }
-        /// <inheritdoc />
-        public Int32 HitPoints { get; private set; }
+        /// <summary> Whether the enemy can be roadkilled </summary>
+        public Boolean CanBeRoadKilled { get; }
 
         public Enemy_01(Single yPos, IAccelerationProvider moveController)
         {
@@ -77,6 +79,7 @@ namespace Type.Objects.Enemies
 
             HitPoints = 2;
             Points = 10;
+            CanBeRoadKilled = true;
 
             _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, Texture.GetTexture("Content/Graphics/Enemies/enemy1.png"))
             {

@@ -102,6 +102,9 @@ namespace Type.Objects.Bosses
         /// <summary> Whether this object is Autofiring </summary>
         public Boolean AutoFire { get; set; }
 
+        /// <summary> Whether the enemy can be roadkilled </summary>
+        public Boolean CanBeRoadKilled { get; }
+
         /// <summary> Amount of points this object is worth </summary>
         public Int32 Points { get; }
 
@@ -111,6 +114,7 @@ namespace Type.Objects.Bosses
 
             HitPoints = hitPoints;
             _FireRate = fireRate;
+            CanBeRoadKilled = false;
 
             _Gun = new Sprite(Game.MainCanvas, Constants.ZOrders.BOSS_UPPER, Texture.GetTexture("Content/Graphics/Bosses/boss-cannon.png"));
             _Gun.Offset = _Gun.Size / 2;
