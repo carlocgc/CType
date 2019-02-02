@@ -65,12 +65,19 @@ namespace Type.Objects.Enemies
         /// <summary> Whether the enemy can be roadkilled </summary>
         public Boolean CanBeRoadKilled { get; }
 
-        /// <summary> Whether the enemy is on screen </summary>
+        /// <summary> Whether the enemy is completely on screen, used to add the object to the collision controller </summary>
         public Boolean OnScreen =>
             Position.X - _Sprite.Offset.X >= ScreenLeft &&
             Position.X + _Sprite.Offset.X <= ScreenRight &&
             Position.Y - _Sprite.Offset.Y >= ScreenBottom &&
             Position.Y + _Sprite.Offset.Y <= ScreenTop;
+
+        /// <summary> Whether the enemy is completely offscreen, used to destroy the object </summary>
+        private Boolean OffScreen =>
+            Position.X + _Sprite.Offset.X <= ScreenLeft ||
+            Position.X - _Sprite.Offset.X >= ScreenRight ||
+            Position.Y + _Sprite.Offset.Y <= ScreenBottom ||
+            Position.Y - _Sprite.Offset.Y >= ScreenTop;
 
         public Enemy_04(Single yPos, IAccelerationProvider moveController)
         {
@@ -239,7 +246,7 @@ namespace Type.Objects.Enemies
                 InPlay = true;
                 CollisionController.Instance.RegisterEnemy(this);
             }
-            else if (!OnScreen && InPlay) // If alive and offscreen
+            else if (OffScreen && InPlay) // If alive and offscreen
             {
                 for (Int32 i = _Listeners.Count - 1; i >= 0; i--)
                 {
