@@ -4384,8 +4384,14 @@ namespace Type.Android
 			// aapt resource value: 0x7f080031
 			public const int abc_toolbar_collapse_description = 2131230769;
 			
+			// aapt resource value: 0x7f080051
+			public const int achievement_level_1 = 2131230801;
+			
 			// aapt resource value: 0x7f08004f
-			public const int app_name = 2131230799;
+			public const int app_id = 2131230799;
+			
+			// aapt resource value: 0x7f080053
+			public const int app_name = 2131230803;
 			
 			// aapt resource value: 0x7f08003f
 			public const int appbar_scrolling_view_behavior = 2131230783;
@@ -4459,8 +4465,14 @@ namespace Type.Android
 			// aapt resource value: 0x7f080045
 			public const int hide_bottom_view_on_scroll_behavior = 2131230789;
 			
+			// aapt resource value: 0x7f080052
+			public const int leaderboard_highscore = 2131230802;
+			
 			// aapt resource value: 0x7f080046
 			public const int mtrl_chip_close_icon_content_description = 2131230790;
+			
+			// aapt resource value: 0x7f080050
+			public const int package_name = 2131230800;
 			
 			// aapt resource value: 0x7f080047
 			public const int password_toggle_content_description = 2131230791;

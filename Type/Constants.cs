@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text;
 using AmosShared.Base;
+using AmosShared.Competitive;
 
 namespace Type
 {
@@ -29,6 +30,39 @@ namespace Type
             public static readonly Single ScreenLeft = -Renderer.Instance.TargetDimensions.X / 2;
             /// <summary> The bottom of the screen </summary>
             public static readonly Single ScreenBottom = -Renderer.Instance.TargetDimensions.Y / 2;
+        }
+
+        /// <summary>
+        /// Game related leaderboards
+        /// </summary>
+        public static class Leaderboards
+        {
+            public static String[] GetAll()
+            {
+                return new String[]
+                {
+                    HIGHSCORE,
+                };
+            }
+
+            /// <summary> The hihghscore leaderboard </summary>
+            public static readonly String HIGHSCORE = "CgkIptDTkNIIEAIQAQ";
+        }
+
+        /// <summary>
+        /// Game achievements
+        /// </summary>
+        public static class GameAchievements
+        {
+            public static String[] GetAll()
+            {
+                return new String[]
+                {
+                    COMPLETE_LEVEL_1,
+                };
+            }
+
+            public static readonly String COMPLETE_LEVEL_1 = "CgkIptDTkNIIEAIQAw";
         }
 
         /// <summary>

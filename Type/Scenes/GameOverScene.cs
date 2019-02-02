@@ -4,6 +4,7 @@ using AmosShared.Graphics.Drawables;
 using AmosShared.Touch;
 using OpenTK;
 using System;
+using AmosShared.Competitive;
 using Type.Ads;
 using Type.Data;
 using Type.UI;
@@ -94,6 +95,8 @@ namespace Type.Scenes
             _ConfirmButton.Visible = true;
 
             _Background.Visible = true;
+
+            CompetitiveManager.Instance.ViewAchievements();
         }
 
         public override void Update(TimeSpan timeSinceUpdate)

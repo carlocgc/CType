@@ -1,4 +1,5 @@
 ﻿using AmosShared.Base;
+using AmosShared.Competitive;
 using AmosShared.Graphics;
 using AmosShared.State;
 using Engine.Shared.Graphics.Textures;
@@ -33,6 +34,8 @@ namespace Type
             AdService.Instance.Initialise();
 
             SpritesheetLoader.LoadSheet("Content/Graphics/KenPixel/", "KenPixel.png", "KenPixel.json");
+
+            CompetitiveManager.Instance.Connect();
 
             StateManager.Instance.StartState(new EngineSplashState());
         }
