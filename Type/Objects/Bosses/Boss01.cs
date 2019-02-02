@@ -16,16 +16,16 @@ namespace Type.Objects.Bosses
     /// </summary>
     public sealed class Boss01 : GameObject, IEnemy, IEnemyListener
     {
+        /// <summary> List of <see cref="IEnemyListener"/>'s </summary>
+        private readonly List<IEnemyListener> _Listeners;
         /// <summary> List of the destroyable cannons on the boss </summary>
         private readonly List<BossCannon> _Cannons;
         /// <summary> Movement speed </summary>
         private readonly Single _Speed;
-        /// <summary> List of <see cref="IEnemyListener"/>'s </summary>
-        private readonly List<IEnemyListener> _Listeners;
         /// <summary> Move direction </summary>
         private readonly Vector2 _MoveDirection;
-        /// <summary> Sprite for the boss base </summary>
-        private readonly Sprite _Sprite;
+        /// <summary> Sprite for the boss body </summary>
+        private readonly Sprite _Body;
 
         /// <summary> Whether the boss is moving onto screen </summary>
         private Boolean _IsAdvancing;
@@ -36,6 +36,8 @@ namespace Type.Objects.Bosses
         /// <summary> The players current position </summary>
         private Vector2 _PlayerPosition;
 
+        private Boolean _AutoFire;
+
         /// <summary> The position of the object </summary>
         public override Vector2 Position
         {
@@ -43,8 +45,7 @@ namespace Type.Objects.Bosses
             set
             {
                 base.Position = value;
-
-                _Sprite.Position = value;
+                _Body.Position = value;
                 foreach (BossCannon cannon in _Cannons)
                 {
                     cannon.Position = value;
@@ -67,7 +68,18 @@ namespace Type.Objects.Bosses
         }
 
         /// <inheritdoc />
-        public Boolean AutoFire { get; set; }
+        public Boolean AutoFire
+        {
+            get => _AutoFire;
+            set
+            {
+                _AutoFire = value;
+                foreach (BossCannon cannon in _Cannons)
+                {
+                    cannon.AutoFire = _AutoFire;
+                }
+            }
+        }
 
         /// <inheritdoc />
         public Vector4 HitBox { get; set; }
@@ -86,16 +98,12 @@ namespace Type.Objects.Bosses
             _Listeners = new List<IEnemyListener>();
             _Cannons = new List<BossCannon>();
 
-            Points = 20000;
-            CanBeRoadKilled = false;
-            _MoveDirection = new Vector2(-1, 0);
-
-            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.BOSS_BASE, Texture.GetTexture("Content/Graphics/Bosses/boss01.png"))
+            _Body = new Sprite(Game.MainCanvas, Constants.ZOrders.BOSS_BASE, Texture.GetTexture("Content/Graphics/Bosses/boss01.png"))
             {
                 Visible = true,
             };
-            Position = new Vector2(Renderer.Instance.TargetDimensions.X / 2 + _Sprite.Width / 2, 0);
-            _Sprite.Offset = _Sprite.Size / 2;
+            Position = new Vector2(Renderer.Instance.TargetDimensions.X / 2 + _Body.Width / 2, 0);
+            _Body.Offset = _Body.Size / 2;
 
             BossCannon topMostCannon = new BossCannon(75, TimeSpan.FromMilliseconds(1500)) {Offset = new Vector2(113, -200)};
             BossCannon topCannon = new BossCannon(100, TimeSpan.FromMilliseconds(1200)) {Offset = new Vector2(102, -130)};
@@ -116,9 +124,12 @@ namespace Type.Objects.Bosses
                 cannon.Visible = true;
             }
 
+            Points = 20000;
+            CanBeRoadKilled = false;
             _Speed = 250f;
-            _StopPosition = new Vector2(Renderer.Instance.TargetDimensions.X / 4, 0);
             _IsAdvancing = true;
+            _MoveDirection = new Vector2(-1, 0);
+            _StopPosition = new Vector2(Renderer.Instance.TargetDimensions.X / 4, 0);
 
             PositionRelayer.Instance.AddRecipient(this);
         }
@@ -158,9 +169,9 @@ namespace Type.Objects.Bosses
                 if (Position.X <= _StopPosition.X)
                 {
                     _IsAdvancing = false;
+                    AutoFire = true;
                     foreach (BossCannon cannon in _Cannons)
                     {
-                        cannon.AutoFire = true;
                         CollisionController.Instance.RegisterEnemy(cannon);
                     }
                 }
@@ -169,7 +180,7 @@ namespace Type.Objects.Bosses
             {
                 Position -= _MoveDirection * _Speed * (Single)timeTilUpdate.TotalSeconds;
 
-                if (Position.X - _Sprite.Width / 2 > Renderer.Instance.TargetDimensions.X / 2 && _IsRetreating)
+                if (Position.X - _Body.Width / 2 > Renderer.Instance.TargetDimensions.X / 2 && _IsRetreating)
                 {
                     _IsRetreating = false;
                     for (var i = _Listeners.Count - 1; i >= 0; i--)
@@ -243,7 +254,7 @@ namespace Type.Objects.Bosses
         {
             base.Dispose();
             _Cannons.Clear();
-            _Sprite.Dispose();
+            _Body.Dispose();
             PositionRelayer.Instance.RemoveRecipient(this);
         }
     }
