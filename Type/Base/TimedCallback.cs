@@ -1,7 +1,6 @@
-﻿using System;
-using AmosShared.Base;
+﻿using AmosShared.Base;
 using AmosShared.Interfaces;
-using Android.Hardware;
+using System;
 
 namespace Type.Base
 {
@@ -61,6 +60,7 @@ namespace Type.Base
         /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
         public void Dispose()
         {
+            if (IsDisposed) return;
             UpdateManager.Instance.RemoveUpdatable(this);
             _Callback = null;
             IsDisposed = true;
