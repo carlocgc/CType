@@ -9,7 +9,6 @@ namespace Type.Data
     /// </summary>
     public struct WaveData
     {
-        public readonly Boolean Restartable;
         /// <summary> Amount of ships in the wave </summary>
         public readonly Int32 ShipCount;
         /// <summary> How long between each spawn </summary>
@@ -35,9 +34,8 @@ namespace Type.Data
         /// <param name="moveTypes"> Movement controller types </param>
         /// <param name="directions"> Directions of each ship in the wave </param>
         /// <param name="speeds"> Movement speeds of each ship in the wave </param>
-        public WaveData(Boolean restartable, TimeSpan[] interval, Int32[] enemyTypes, Single[] yPositions, Int32[] moveTypes, Vector2[] directions, Single[] speeds)
+        public WaveData(TimeSpan[] interval, Int32[] enemyTypes, Single[] yPositions, Int32[] moveTypes, Vector2[] directions, Single[] speeds)
         {
-            Restartable = restartable;
             ShipCount = yPositions.Length;
             SpawnInterval = interval;
             EnemyTypes = enemyTypes;
