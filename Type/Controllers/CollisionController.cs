@@ -221,7 +221,7 @@ namespace Type.Controllers
         {
             HandlePlayerHit();
             if (enemy.IsDisposed) return;
-            enemy.Destroy();
+            if (enemy.CanBeRoadKilled) enemy.Destroy();
         }
 
         /// <summary>

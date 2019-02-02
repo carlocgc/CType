@@ -44,10 +44,9 @@ namespace Type.Objects.Projectiles
 
             _Direction = direction;
             _Speed = speed;
-
-            HitBox = GetRect();
             Position = spawnPos;
             Damage = 1;
+            HitBox = GetRect();
 
             CollisionController.Instance.RegisterEnemyProjectile(this);
         }

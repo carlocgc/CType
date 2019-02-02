@@ -9,6 +9,8 @@
     <Import_RootNamespace>Type</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Ads\AdService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Ads\CustomAdListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Base\GameObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\CollisionController.cs" />
@@ -38,6 +40,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Collisions\IHitable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Communication\INotifier.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\GameData\IPoints.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Movement\IAccelerationProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Player\IShield.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Player\IPlayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Player\IPlayerListener.cs" />
@@ -50,10 +53,16 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Probe\IProbeController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Weapons\IProjectile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Weapons\IProjectileShooter.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Objects\Bosses\BossAlpha.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\EnemyAlpha.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\EnemyBeta.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\EnemyGamma.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Bosses\Boss01.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Bosses\BossCannon.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\Enemy_01.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\Enemy_02.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\Enemy_04.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\Enemy_03.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\Movement\EllipseDecreaseMotion.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\Movement\EllipseIncreaseMotion.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\Movement\LinearMotion.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\Movement\WaveMotion.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Player\PlayerAlpha.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Player\PlayerBeta.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Player\PlayerGamma.cs" />
@@ -90,5 +99,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)UI\LifeMeter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\ShipSelectButton.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\StatsDisplay.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Base\TimedCallback.cs" />
   </ItemGroup>
 </Project>

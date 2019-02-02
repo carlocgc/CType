@@ -30,8 +30,12 @@ namespace Type.Objects.Projectiles
         /// <inheritdoc />
         public Int32 Damage { get; }
 
-        /// <summary> Whether the enemy is on screen </summary>
-        private Boolean OnScreen => Position.X - _Sprite.Offset.X <= ScreenRight && Position.Y - _Sprite.Offset.Y >= ScreenBottom && Position.Y + _Sprite.Offset.Y <= ScreenTop;
+        /// <summary> Whether the laser is on screen </summary>
+        private Boolean OnScreen =>
+            Position.X + _Sprite.Offset.X >= ScreenLeft &&
+            Position.X - _Sprite.Offset.X <= ScreenRight &&
+            Position.Y + _Sprite.Offset.Y >= ScreenBottom &&
+            Position.Y - _Sprite.Offset.Y <= ScreenTop;
 
         public Laser(Vector2 spawnPos, Vector2 direction, Single speed, Double rotation)
         {
@@ -46,13 +50,11 @@ namespace Type.Objects.Projectiles
 
             _Direction = direction;
             _Speed = speed;
-
-            HitBox = GetRect();
             Position = spawnPos;
             Rotation = rotation;
             Damage = 1;
-
-            CollisionController.Instance.RegisterPlayerProjectile(this);
+            HitBox = GetRect();
+            if (OnScreen) CollisionController.Instance.RegisterPlayerProjectile(this);
         }
 
         /// <summary>

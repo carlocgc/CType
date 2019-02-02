@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using AmosShared.Audio;
+﻿using AmosShared.Audio;
 using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
 using OpenTK;
+using System;
+using System.Collections.Generic;
 using Type.Base;
 using Type.Controllers;
 using Type.Data;
@@ -24,36 +23,38 @@ namespace Type.Objects.Player
     {
         /// <summary> Single point of contact for probes attached to  the player </summary>
         private readonly IProbeController _ProbeController;
-
         /// <summary> The players shield </summary>
         private readonly IShield _Shield;
-
         /// <summary> Position on screen where the player is spawned </summary>
         private readonly Vector2 _SpawnPosition = new Vector2(-540, 0);
-
         /// <summary> How fast the player can move in any direction </summary>
         private readonly Single _MovementSpeed;
-
         /// <summary> Amount of time between firing </summary>
         private readonly TimeSpan _FireRate;
-
         /// <summary> List of the engine effect sprites </summary>
         private readonly Sprite[] _EngineEffects;
+        /// <summary> How long the player is invincible when spawned </summary>
+        private readonly TimeSpan _InvincibilityDuration = TimeSpan.FromSeconds(2);
 
         /// <summary> Time since the last bullet was fired </summary>
         private TimeSpan _TimeSinceLastFired;
-
         /// <summary> The direction to be applied to the position of the player </summary>
         private Vector2 _Direction;
-
         /// <summary> Movement speed modifier </summary>
         private Single _MoveStrength;
-
         /// <summary> Whether firing is allowed </summary>
         private Boolean _IsWeaponLocked;
-
         /// <summary> Whether the ship is autofiring </summary>
         private Boolean _AutoFire;
+        /// <summary> Whether the player is invincible </summary>
+        private Boolean _Invincible;
+        /// <summary> Whether the sprite is dimmed, used during invincibility to set the correct colour </summary>
+        private Boolean _IsDimmed;
+        /// <summary> Callback to reset colour while flashing </summary>
+        private TimedCallback _InvincibleColourCallback;
+
+        /// <summary> Current amount of probes the player has </summary>
+        public Int32 CurrentProbes => _ProbeController.CurrentProbes;
 
         /// <inheritdoc />
         public Int32 HitPoints { get; private set; }
@@ -80,6 +81,7 @@ namespace Type.Objects.Player
             set
             {
                 base.Position = value;
+                HitBox = GetRect();
                 foreach (Sprite effect in _EngineEffects)
                 {
                     effect.Position = value;
@@ -99,25 +101,58 @@ namespace Type.Objects.Player
 
             Position = _SpawnPosition;
 
-            _MovementSpeed = 800;
-            _FireRate = TimeSpan.FromMilliseconds(80);
+            _MovementSpeed = 900;
+            _FireRate = TimeSpan.FromMilliseconds(75);
             HitPoints = 1;
 
             _ProbeController = new ProbeController();
             _ProbeController.UpdatePosition(Position);
-
             _Shield = new Shield();
             _Shield.UpdatePosition(Position);
-
-            HitBox = GetRect();
-
-            Spawn();
         }
 
         /// <inheritdoc />
         public void Spawn()
         {
             Position = _SpawnPosition;
+            HitPoints = 1;
+            StartInvincible();
+        }
+
+        /// <summary>
+        /// Makes the player invincible
+        /// </summary>
+        private void StartInvincible()
+        {
+            _Invincible = true;
+            FlashSprite();
+            new TimedCallback(_InvincibilityDuration, () => { _Invincible = false; });
+        }
+
+        /// <summary>
+        /// Flashes the player sprite, used while invincible
+        /// </summary>
+        private void FlashSprite()
+        {
+            if (!_Invincible)
+            {
+                _InvincibleColourCallback?.Dispose();
+                _Sprite.Colour = new Vector4(1, 1, 1, 1);
+                _IsDimmed = false;
+                return;
+            }
+
+            if (_IsDimmed)
+            {
+                _Sprite.Colour = new Vector4(1, 1, 1, 1);
+                _IsDimmed = false;
+            }
+            else
+            {
+                _Sprite.Colour = new Vector4(1, 1, 1, 0.3f);
+                _IsDimmed = true;
+            }
+            _InvincibleColourCallback = new TimedCallback(TimeSpan.FromMilliseconds(100), FlashSprite);
         }
 
         /// <inheritdoc />
@@ -141,8 +176,6 @@ namespace Type.Objects.Player
             }
 
             Position += GetPositionModifier(timeTilUpdate);
-            HitBox = GetRect();
-
             _ProbeController.UpdatePosition(Position);
             _Shield.UpdatePosition(Position);
             PositionRelayer.Instance.ProvidePosition(Position);
@@ -185,6 +218,8 @@ namespace Type.Objects.Player
                 return;
             }
 
+            if (_Invincible) return;
+
             HitPoints -= damage;
 
             foreach (IPlayerListener listener in _Listeners)
@@ -201,6 +236,8 @@ namespace Type.Objects.Player
         /// <inheritdoc />
         public void Destroy()
         {
+            Int32 probeCount = _ProbeController.CurrentProbes;
+
             HitPoints = 0;
             _ProbeController.RemoveAll();
 
@@ -208,7 +245,7 @@ namespace Type.Objects.Player
 
             foreach (IPlayerListener listener in _Listeners)
             {
-                listener.OnPlayerDeath(this);
+                listener.OnPlayerDeath(this, probeCount, Position);
             }
         }
 

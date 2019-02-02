@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenTK;
 
 namespace Type.Interfaces.Player
 {
@@ -27,6 +28,6 @@ namespace Type.Interfaces.Player
         /// <summary>
         /// Invoked when the player has died
         /// </summary>
-        void OnPlayerDeath(IPlayer player);
+        void OnPlayerDeath(IPlayer player, Int32 probeCount, Vector2 position);
     }
 }

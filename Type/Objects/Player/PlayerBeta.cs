@@ -33,6 +33,8 @@ namespace Type.Objects.Player
         private readonly TimeSpan _FireRate;
         /// <summary> List of the engine effect sprites </summary>
         private readonly Sprite[] _EngineEffects;
+        /// <summary> How long the player is invincible when spawned </summary>
+        private readonly TimeSpan _InvincibilityDuration = TimeSpan.FromSeconds(5);
 
         /// <summary> Time since the last bullet was fired </summary>
         private TimeSpan _TimeSinceLastFired;
@@ -44,7 +46,15 @@ namespace Type.Objects.Player
         private Boolean _IsWeaponLocked;
         /// <summary> Whether the ship is autofiring </summary>
         private Boolean _AutoFire;
+        /// <summary> Whether the player is invincible </summary>
+        private Boolean _Invincible;
+        /// <summary> Whether the sprite is dimmed, used during invincibility to set the correct colour </summary>
+        private Boolean _IsDimmed;
+        /// <summary> Callback to reset colour while flashing </summary>
+        private TimedCallback _InvincibleColourCallback;
 
+        /// <summary> Current amount of probes the player has </summary>
+        public Int32 CurrentProbes => _ProbeController.CurrentProbes;
         /// <inheritdoc />
         public Int32 HitPoints { get; private set; }
         /// <inheritdoc />
@@ -68,6 +78,7 @@ namespace Type.Objects.Player
             set
             {
                 base.Position = value;
+                HitBox = GetRect();
                 foreach (Sprite effect in _EngineEffects)
                 {
                     effect.Position = value;
@@ -92,19 +103,14 @@ namespace Type.Objects.Player
 
             Position = _SpawnPosition;
 
-            _MovementSpeed = 600;
-            _FireRate = TimeSpan.FromMilliseconds(150);
+            _MovementSpeed = 750;
+            _FireRate = TimeSpan.FromMilliseconds(95);
             HitPoints = 2;
 
             _ProbeController = new ProbeController();
             _ProbeController.UpdatePosition(Position);
-
             _Shield = new Shield();
             _Shield.UpdatePosition(Position);
-
-            HitBox = GetRect();
-
-            Spawn();
         }
 
         /// <inheritdoc />
@@ -112,7 +118,45 @@ namespace Type.Objects.Player
         {
             Position = _SpawnPosition;
             HitPoints = 2;
+            StartInvincible();
         }
+
+        /// <summary>
+        /// Makes the player invincible
+        /// </summary>
+        private void StartInvincible()
+        {
+            _Invincible = true;
+            FlashSprite();
+            new TimedCallback(_InvincibilityDuration, () => { _Invincible = false; });
+        }
+
+        /// <summary>
+        /// Flashes the player sprite, used while invincible
+        /// </summary>
+        private void FlashSprite()
+        {
+            if (!_Invincible)
+            {
+                _InvincibleColourCallback?.Dispose();
+                _Sprite.Colour = new Vector4(1, 1, 1, 1);
+                _IsDimmed = false;
+                return;
+            }
+
+            if (_IsDimmed)
+            {
+                _Sprite.Colour = new Vector4(1, 1, 1, 1);
+                _IsDimmed = false;
+            }
+            else
+            {
+                _Sprite.Colour = new Vector4(1, 1, 1, 0.3f);
+                _IsDimmed = true;
+            }
+            _InvincibleColourCallback = new TimedCallback(TimeSpan.FromMilliseconds(100), FlashSprite);
+        }
+
 
         /// <inheritdoc />
         public override void Update(TimeSpan timeTilUpdate)
@@ -178,6 +222,8 @@ namespace Type.Objects.Player
                 return;
             }
 
+            if (_Invincible) return;
+
             HitPoints -= damage;
             new AudioPlayer("Content/Audio/hurt3.wav", false, AudioManager.Category.EFFECT, 1);
 
@@ -195,6 +241,8 @@ namespace Type.Objects.Player
         /// <inheritdoc />
         public void Destroy()
         {
+            Int32 probeCount = _ProbeController.CurrentProbes;
+
             HitPoints = 0;
             _ProbeController.RemoveAll();
 
@@ -202,7 +250,7 @@ namespace Type.Objects.Player
 
             foreach (IPlayerListener listener in _Listeners)
             {
-                listener.OnPlayerDeath(this);
+                listener.OnPlayerDeath(this, probeCount, Position);
             }
         }
 

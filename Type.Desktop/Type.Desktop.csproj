@@ -57,6 +57,9 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="Xamarin.GooglePlayServices.Ads.Lite">
+      <HintPath>..\packages\Xamarin.GooglePlayServices.Ads.Lite.60.1142.1\lib\MonoAndroid80\Xamarin.GooglePlayServices.Ads.Lite.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -75,12 +78,12 @@
       <Link>Content\Audio\death.wav</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Assets\Audio\gameCompleteBgm.wav">
-      <Link>Content\Audio\gameCompleteBgm.wav</Link>
+    <Content Include="..\Assets\Audio\explode.wav">
+      <Link>Content\Audio\explode.wav</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Assets\Audio\gameOver.wav">
-      <Link>Content\Audio\gameOver.wav</Link>
+    <Content Include="..\Assets\Audio\gameCompleteBgm.wav">
+      <Link>Content\Audio\gameCompleteBgm.wav</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\Assets\Audio\gameOverBgm.wav">
@@ -267,8 +270,16 @@
       <Link>Content\Graphics\Background\stars-2.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Assets\Graphics\Bosses\boss1.png">
-      <Link>Content\Graphics\Bosses\boss1.png</Link>
+    <Content Include="..\Assets\Graphics\Bosses\boss-cannon.png">
+      <Link>Content\Graphics\Bosses\boss-cannon.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Bosses\boss01-gun-base.png">
+      <Link>Content\Graphics\Bosses\boss01-gun-base.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Bosses\boss01.png">
+      <Link>Content\Graphics\Bosses\boss01.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\Assets\Graphics\Buttons\analog_base.png">

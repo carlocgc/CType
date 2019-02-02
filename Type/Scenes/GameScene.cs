@@ -28,6 +28,8 @@ namespace Type.Scenes
         /// <summary> Scrolling object </summary>
         private readonly ScrollingObject _Clusters;
 
+        public readonly AudioPlayer _Music;
+
         /// <summary> List of all enemies </summary>
         public List<IEnemy> Enemies { get; }
 
@@ -74,7 +76,7 @@ namespace Type.Scenes
             Enemies = new List<IEnemy>();
             Powerups = new List<IPowerup>();
 
-            new AudioPlayer("Content/Audio/bgm-1.wav", true, AudioManager.Category.MUSIC, 1);
+            _Music = new AudioPlayer("Content/Audio/bgm-1.wav", true, AudioManager.Category.MUSIC, 1);
         }
 
         /// <summary>
@@ -123,6 +125,8 @@ namespace Type.Scenes
         {
             base.Dispose();
 
+            _Music.Stop();
+
             foreach (IPowerup powerup in Powerups)
             {
                 powerup.Dispose();
@@ -141,8 +145,6 @@ namespace Type.Scenes
             _PlanetsNear.Dispose();
             _PlanetsFar.Dispose();
             _Clusters.Dispose();
-
-            AudioManager.Instance.Dispose();
         }
     }
 }

@@ -3,6 +3,8 @@ using OpenTK;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Boolean = System.Boolean;
+using String = System.String;
 
 namespace Type.Data
 {
@@ -25,31 +27,77 @@ namespace Type.Data
             List<String> waveStrings = new List<String>();
             List<WaveData> _Waves = new List<WaveData>();
 
-            // Split string into wave strings
-            waveStrings = data.Split(':').ToList();
+            String cleanData = data.ToLower().Replace("\r\n", "");
 
-            // Process each wave
-            foreach (String line in waveStrings)
+            // Split data into wave strings
+            waveStrings = cleanData.Split('_').ToList();
+
+            // Temporary data store wave data object
+            List<Single> positions = new List<Single>();
+            List<Int32> types = new List<Int32>();
+            List<Single> delays = new List<Single>();
+            List<Int32> moveTypes = new List<Int32>();
+            List<Single> xDirections = new List<Single>();
+            List<Single> yDirections = new List<Single>();
+            List<Single> speeds = new List<Single>();
+
+            foreach (String waveString in waveStrings)
             {
-                // Split wave string into each enemy data section
-                String[] enemyStrings = line.Split(',');
-                List<Single> positions = new List<Single>();
-                List<Int32> types = new List<Int32>();
-                List<Single> delays = new List<Single>();
+                String[] waveData = waveString.Split(':');
 
-                // For each enemy in the wave
-                foreach (String es in enemyStrings)
+                String[] enemyStrings = waveData[1].Split(';');
+
+                foreach (String enemyString in enemyStrings)
                 {
-                    // Split enemy data section into : type, Y position, spawn delay
-                    String[] shipdata = es.Split('_');
-                    Int32.TryParse(shipdata[0], out Int32 shiptype);
-                    Single.TryParse(shipdata[1], out Single yPos);
-                    Single.TryParse(shipdata[2], out Single delay);
+                    String[] enemieParts = enemyString.Split('|');
 
-                    // Add each parsed string to its respective list
-                    types.Add(shiptype);
-                    positions.Add(yPos);
-                    delays.Add(delay);
+                    foreach (String part in enemieParts)
+                    {
+                        String[] partSplit = part.Split('=');
+
+                        switch (partSplit[0])
+                        {
+                            case "type":
+                                {
+                                    types.Add(Int32.Parse(partSplit[1]));
+                                    break;
+                                }
+                            case "ypos":
+                                {
+                                    positions.Add(Int32.Parse(partSplit[1]));
+                                    break;
+                                }
+                            case "delay":
+                                {
+                                    delays.Add(Single.Parse(partSplit[1]));
+                                    break;
+                                }
+                            case "movetype":
+                                {
+                                    moveTypes.Add(Int32.Parse(partSplit[1]));
+                                    break;
+                                }
+                            case "xdir":
+                                {
+                                    xDirections.Add(Single.Parse(partSplit[1]));
+                                    break;
+                                }
+                            case "ydir":
+                                {
+                                    yDirections.Add(Single.Parse(partSplit[1]));
+                                    break;
+                                }
+                            case "speed":
+                                {
+                                    speeds.Add(Single.Parse(partSplit[1]));
+                                    break;
+                                }
+                            default:
+                                {
+                                    throw new ArgumentOutOfRangeException("Enemy component does not exist");
+                                }
+                        }
+                    }
                 }
 
                 // Create the delay time spans
@@ -59,8 +107,24 @@ namespace Type.Data
                     delaySpans.Add(TimeSpan.FromSeconds(delay));
                 }
 
+                List<Vector2> directions = new List<Vector2>();
+                Int32 index = 0;
+                foreach (var xDirection in xDirections)
+                {
+                    directions.Add(new Vector2(xDirection, yDirections[index]));
+                    index++;
+                }
+
                 // Create the wave data
-                _Waves.Add(new WaveData(delaySpans.ToArray(), types.ToArray(), positions.ToArray()));
+                _Waves.Add(new WaveData(delaySpans.ToArray(), types.ToArray(), positions.ToArray(), moveTypes.ToArray(), directions.ToArray(), speeds.ToArray()));
+
+                delaySpans.Clear();
+                types.Clear();
+                positions.Clear();
+                moveTypes.Clear();
+                xDirections.Clear();
+                yDirections.Clear();
+                speeds.Clear();
             }
 
             return _Waves;

@@ -5,8 +5,10 @@ using System.Collections.Generic;
 using Type.Data;
 using Type.Interfaces;
 using Type.Interfaces.Enemies;
+using Type.Interfaces.Movement;
 using Type.Objects.Bosses;
 using Type.Objects.Enemies;
+using Type.Objects.Enemies.Movement;
 using Type.States;
 
 namespace Type.Factories
@@ -14,7 +16,6 @@ namespace Type.Factories
     /// <summary>
     /// Spawns enemy ships from a given <see cref="WaveData"/> object
     /// </summary>
-
     public class EnemyFactory : IUpdatable, INotifier<IEnemyFactoryListener>
     {
         /// <summary> Tracker of the current wave data object </summary>
@@ -27,13 +28,14 @@ namespace Type.Factories
         private List<WaveData> _LevelData;
         /// <summary> The data for the current wave </summary>
         private WaveData _CurrentWave;
+        /// <summary> Whether enemies are being created </summary>
+        private Boolean _Spawning;
 
         /// <summary> Game state to add as a listener to created enemies </summary>
         public PlayingState ParentState { get; set; }
+
         /// <inheritdoc />
         public Boolean IsDisposed { get; set; }
-        /// <summary> Whether enemies are being created </summary>
-        public Boolean Creating { get; private set; }
 
         public EnemyFactory()
         {
@@ -49,13 +51,26 @@ namespace Type.Factories
             _LevelData = waves;
             _DataIndex = 0;
             _CurrentWave = _LevelData[_WaveIndex];
-            Creating = true;
+
+            Int32 total = 0;
+
+            foreach (WaveData data in _LevelData)
+            {
+                total += data.ShipCount;
+            }
+
+            foreach (IEnemyFactoryListener listener in _Listeners)
+            {
+                listener.OnLevelStarted(total);
+            }
+
+            _Spawning = true;
         }
 
         /// <inheritdoc />
         public void Update(TimeSpan timeTilUpdate)
         {
-            if (Creating)
+            if (_Spawning)
             {
                 _TimeSinceLastSpawn += timeTilUpdate;
 
@@ -71,28 +86,64 @@ namespace Type.Factories
         /// </summary>
         private void Create()
         {
+            IAccelerationProvider accel = null;
             IEnemy enemy;
 
-            switch (_CurrentWave.EnemyTypes[_DataIndex])
+            // Create move component
+            switch (_CurrentWave.MovementTypes[_DataIndex])
             {
+                case -1:
+                    {
+                        // No acceleration provider
+                        break;
+                    }
                 case 0:
                     {
-                        enemy = new EnemyAlpha(_CurrentWave.Ypositions[_DataIndex]);
+                        accel = new LinearMotion(_CurrentWave.MoveDirections[_DataIndex], _CurrentWave.MovementSpeeds[_DataIndex]);
                         break;
                     }
                 case 1:
                     {
-                        enemy = new EnemyBeta(_CurrentWave.Ypositions[_DataIndex]);
+                        accel = new WaveMotion(_CurrentWave.MoveDirections[_DataIndex], _CurrentWave.MovementSpeeds[_DataIndex]);
                         break;
                     }
                 case 2:
                     {
-                        enemy = new EnemyGamma(_CurrentWave.Ypositions[_DataIndex]);
+                        accel = new EllipseDecreaseMotion(_CurrentWave.MoveDirections[_DataIndex], _CurrentWave.MovementSpeeds[_DataIndex]);
+                        break;
+                    }
+                case 3:
+                    {
+                        accel = new EllipseIncreaseMotion(_CurrentWave.MoveDirections[_DataIndex], _CurrentWave.MovementSpeeds[_DataIndex]);
+                        break;
+                    }
+                default:
+                    {
+                        throw new ArgumentOutOfRangeException("Movement type does not exist");
+                    }
+            }
+
+            // Create enemy
+            switch (_CurrentWave.EnemyTypes[_DataIndex])
+            {
+                case 0:
+                    {
+                        enemy = new Enemy_01(_CurrentWave.Ypositions[_DataIndex], accel);
+                        break;
+                    }
+                case 1:
+                    {
+                        enemy = new Enemy_02(_CurrentWave.Ypositions[_DataIndex], accel);
+                        break;
+                    }
+                case 2:
+                    {
+                        enemy = new Enemy_03(_CurrentWave.Ypositions[_DataIndex], accel);
                         break;
                     }
                 case 20:
                     {
-                        enemy = new BossAlpha(_CurrentWave.Ypositions[_DataIndex]);
+                        enemy = new Boss01();
                         break;
                     }
                 default:
@@ -135,24 +186,19 @@ namespace Type.Factories
         }
 
         /// <summary>
-        /// Restarts the current wave
-        /// </summary>
-        public void RestartWave()
-        {
-            _DataIndex = 0;
-            Creating = true;
-            _TimeSinceLastSpawn = TimeSpan.Zero;
-        }
-
-        /// <summary>
         /// Resets the data tracker and deactivates the Factory
         /// </summary>
         public void Stop()
         {
-            Creating = false;
+            _Spawning = false;
             _DataIndex = 0;
             _WaveIndex = 0;
             _TimeSinceLastSpawn = TimeSpan.Zero;
+
+            foreach (IEnemyFactoryListener listener in _Listeners)
+            {
+                listener.OnLevelFinishedSpawning();
+            }
         }
 
         /// <inheritdoc />

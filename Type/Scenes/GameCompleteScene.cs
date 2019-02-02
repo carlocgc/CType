@@ -1,10 +1,10 @@
-﻿using AmosShared.Graphics;
+﻿using AmosShared.Audio;
+using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
 using AmosShared.Touch;
-using System;
-using AmosShared.Audio;
-using AmosShared.Base;
 using OpenTK;
+using System;
+using Type.Ads;
 using Type.Data;
 using Type.UI;
 
@@ -23,8 +23,10 @@ namespace Type.Scenes
         /// <summary> Displays the current game data via text displays </summary>
         private readonly StatsDisplay _StatsDisplay;
 
+        private readonly AudioPlayer _Music;
+
         /// <summary> Whether the complete can end </summary>
-        public Boolean IsComplete { get; set; }
+        public Boolean IsComplete { get; private set; }
 
         public GameCompleteScene()
         {
@@ -61,19 +63,28 @@ namespace Type.Scenes
             _ConfirmButton = new Button(Constants.ZOrders.UI, confirmButton);
             _ConfirmButton.OnButtonPress += OnButtonPress;
 
+            _Music = new AudioPlayer("Content/Audio/gameCompleteBgm.wav", true, AudioManager.Category.MUSIC, 1);
+
             _StatsDisplay = new StatsDisplay();
         }
 
         private void OnButtonPress(Button obj)
         {
-            IsComplete = true;
+            if (AdService.Instance.MInterstitialAd.IsLoaded)
+            {
+                AdService.Instance.OnAddClosed = () => IsComplete = true;
+                AdService.Instance.ShowInterstitial();
+            }
+            else
+            {
+                IsComplete = true;
+            }
         }
 
         /// <summary> Updates the scene </summary>
         /// <param name="timeSinceUpdate"></param>
         public override void Update(TimeSpan timeSinceUpdate)
         {
-
         }
 
         public void Start()
@@ -85,17 +96,15 @@ namespace Type.Scenes
 
             _ConfirmButton.TouchEnabled = true;
             _ConfirmButton.Visible = true;
-
-            new AudioPlayer("Content/Audio/gameCompleteBgm.wav", true, AudioManager.Category.MUSIC, 1);
         }
 
         /// <summary> Disposes of the scene </summary>
         public override void Dispose()
         {
             base.Dispose();
+            _Music.Stop();
             _ConfirmButton.Dispose();
             _StatsDisplay.Dispose();
-            AudioManager.Instance.Dispose();
         }
     }
 }

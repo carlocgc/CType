@@ -2,6 +2,9 @@
 using AmosShared.State;
 using System;
 using AmosShared.Audio;
+using AmosShared.Base;
+using AmosShared.Interfaces;
+using OpenTK;
 using Type.Controllers;
 using Type.Data;
 using Type.Factories;
@@ -16,10 +19,10 @@ namespace Type.States
     /// <summary>
     /// Game play state
     /// </summary>
-    public class PlayingState : State, IPlayerListener, IEnemyListener, IEnemyFactoryListener, IPowerupListener, IPowerupFactoryListener
+    public class PlayingState : State, IPlayerListener, IEnemyListener, IEnemyFactoryListener, IPowerupListener, IPowerupFactoryListener, IUpdatable
     {
         /// <summary> Max level of the game </summary>
-        private readonly Int32 _MaxLevel = 9;
+        private readonly Int32 _MaxLevel = 7;
         /// <summary> THe type of player craft </summary>
         private readonly Int32 _PlayerType;
 
@@ -45,6 +48,12 @@ namespace Type.States
         private TextDisplay _ScoreDisplay;
         /// <summary> Displays the players current lives </summary>
         private LifeMeter _LifeMeter;
+        /// <summary> Total enemies in this level </summary>
+        private Int32 _EnemiesInLevel;
+        /// <summary> Total enemies destroyed this level </summary>
+        private Int32 _EnemiesDestroyedThisLevel;
+        /// <summary> Whether the level can be completed </summary>
+        private Boolean _LevelCanEnd;
 
         public PlayingState(Int32 type)
         {
@@ -62,7 +71,7 @@ namespace Type.States
             _PowerupFactory = new PowerupFactory();
             _PowerupFactory.RegisterListener(this);
 
-            _GameScene = new GameScene(_PlayerType) {Visible = true};
+            _GameScene = new GameScene(_PlayerType) { Visible = true };
 
             _Player = _GameScene.Player;
             _Player.RegisterListener(this);
@@ -86,6 +95,9 @@ namespace Type.States
                 _EnemyFactory.Start(LevelLoader.GetWaveData(_CurrentLevel));
                 CollisionController.Instance.IsActive = true;
             });
+            _Player.Spawn();
+
+            UpdateManager.Instance.AddUpdatable(this);
         }
 
         public override Boolean IsComplete()
@@ -120,22 +132,21 @@ namespace Type.States
         /// <inheritdoc />
         public void OnPlayerHit(IPlayer player)
         {
-
         }
 
         /// <inheritdoc />
-        public void OnPlayerDeath(IPlayer player)
+        public void OnPlayerDeath(IPlayer player, Int32 probeCount, Vector2 position)
         {
-            CollisionController.Instance.ClearObjects();
-            _GameScene.RemoveEnemies();
-            _GameScene.RemovePowerUps();
-
             _LifeMeter.LoseLife();
+            _GameScene.RemovePowerUps();
 
             if (_LifeMeter.PlayerLives > 0)
             {
                 _Player.Spawn();
-                _EnemyFactory.RestartWave();
+                if (probeCount > 0)
+                {
+                    _PowerupFactory.Create(1, position, _CurrentLevel);
+                }
             }
             else
             {
@@ -147,33 +158,46 @@ namespace Type.States
 
         #region Enemy
 
+        /// <summary>
+        /// Invoked when the factory has started a new level
+        /// </summary>
+        /// <param name="levelTotal"></param>
+        public void OnLevelStarted(Int32 levelTotal)
+        {
+            _EnemiesDestroyedThisLevel = 0;
+            _EnemiesInLevel = levelTotal;
+        }
+
         /// <inheritdoc />
         public void EnemyCreated(IEnemy enemy)
         {
             _GameScene.Enemies.Add(enemy);
         }
 
+        /// <summary>
+        /// Invoked when the factory has finished spawning the levels enemies
+        /// </summary>
+        public void OnLevelFinishedSpawning()
+        {
+            _LevelCanEnd = true;
+        }
+
         /// <inheritdoc />
         public void OnEnemyDestroyed(IEnemy enemy)
         {
+            _EnemiesDestroyedThisLevel++;
             UpdateScore(enemy.Points);
-            if (!_EnemyFactory.Creating && CollisionController.Instance.Enemies == 0)
-            {
-                LevelComplete();
-                return;
-            }
             _PowerupFactory.Create(0, enemy.Position, _CurrentLevel);
         }
 
         /// <inheritdoc />
         public void OnEnemyOffscreen(IEnemy enemy)
         {
+            _EnemiesDestroyedThisLevel++;
             enemy.Dispose();
-            if (!_EnemyFactory.Creating && CollisionController.Instance.Enemies == 0) LevelComplete();
         }
 
         #endregion
-
 
         #region  Powerups
 
@@ -215,10 +239,13 @@ namespace Type.States
         /// </summary>
         private void LevelComplete()
         {
+            _LevelCanEnd = false;
+
             if (_CurrentLevel >= _MaxLevel) GameCompleted();
             else
             {
                 _CurrentLevel++;
+                _EnemiesDestroyedThisLevel = 0;
                 _LevelDisplay.ShowLevel(_CurrentLevel, TimeSpan.FromSeconds(2), () =>
                 {
                     _EnemyFactory.Start(LevelLoader.GetWaveData(_CurrentLevel));
@@ -258,10 +285,37 @@ namespace Type.States
         {
         }
 
+        /// <summary> Updates the state </summary>
+        /// <param name="timeTilUpdate"></param>
+        public override void Update(TimeSpan timeSinceUpdate)
+        {
+            base.Update(timeSinceUpdate);
+
+            if (!_LevelCanEnd) return;
+
+            if (_EnemiesDestroyedThisLevel >= _EnemiesInLevel)
+            {
+                LevelComplete();
+            }
+        }
+
+        /// <summary> Whether or not the object can be updated </summary>
+        /// <returns></returns>
+        public Boolean CanUpdate()
+        {
+            return true;
+        }
+
+        /// <summary> Whether or not the updatable is disposed </summary>
+        public Boolean IsDisposed { get; set; }
+
         /// <inheritdoc />
         public override void Dispose()
         {
+            if (IsDisposed) return;
             base.Dispose();
+
+            UpdateManager.Instance.RemoveUpdatable(this);
             CollisionController.Instance.IsActive = false;
             CollisionController.Instance.ClearObjects();
             _EnemyFactory.Dispose();

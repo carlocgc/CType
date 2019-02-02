@@ -19,6 +19,8 @@ namespace Type.Scenes
         /// <summary> Text that promts game start </summary>
         private readonly TextDisplay _StartText;
 
+        private readonly AudioPlayer _Music;
+
         /// <summary> Whether the  player has pressed space and started the game </summary>
         public Boolean IsComplete { get; set; }
 
@@ -52,7 +54,7 @@ namespace Type.Scenes
             _StartButton = new Button(Constants.ZOrders.UI, startButton);
             _StartButton.OnButtonPress += OnButtonPress;
 
-            new AudioPlayer("Content/Audio/mainMenuBgm.wav", true, AudioManager.Category.MUSIC, 1);
+            _Music = new AudioPlayer("Content/Audio/mainMenuBgm.wav", true, AudioManager.Category.MUSIC, 1);
         }
 
         public void Show()
@@ -76,6 +78,7 @@ namespace Type.Scenes
         public override void Dispose()
         {
             base.Dispose();
+            _Music.Stop();
             _StartButton.Dispose();
         }
     }

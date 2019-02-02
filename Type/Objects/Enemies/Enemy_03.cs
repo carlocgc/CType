@@ -9,6 +9,7 @@ using Type.Base;
 using Type.Controllers;
 using Type.Data;
 using Type.Interfaces.Enemies;
+using Type.Interfaces.Movement;
 using Type.Objects.Projectiles;
 using static Type.Constants.Global;
 
@@ -17,7 +18,7 @@ namespace Type.Objects.Enemies
     /// <summary>
     /// Enemy of type gamma
     /// </summary>
-    public class EnemyGamma : GameObject, IEnemy
+    public class Enemy_03 : GameObject, IEnemy
     {
         /// <summary> How long to wait before playing the hit sound</summary>
         private readonly TimeSpan _HitSoundInterval = TimeSpan.FromSeconds(0.2f); // TODO FIXME Work around to stop so many sounds playing
@@ -26,17 +27,18 @@ namespace Type.Objects.Enemies
         /// <summary> Whether a sound is playing </summary>
         private Boolean _IsSoundPlaying; // TODO FIXME Work around to stop so many sounds playing
 
+        private readonly IAccelerationProvider _MovementController;
         /// <summary> Animation of an explosion, played on death </summary>
         private readonly AnimatedSprite _Explosion;
         /// <summary> List of <see cref="IEnemyListener"/>'s </summary>
         private readonly List<IEnemyListener> _Listeners;
 
+        /// <summary> Callback used to change the colour back after being hit by a projectile </summary>
+        private TimedCallback _ColourCallback;
         /// <summary> Time since the last bullet was fired </summary>
         private TimeSpan _TimeSinceLastFired;
         /// <summary> Firerate of the enemy </summary>
         private TimeSpan _FireRate;
-        /// <summary> Direction the enemy is moving </summary>
-        private Vector2 _MoveDirection;
         /// <summary> The players current position </summary>
         private Vector2 _PlayerPosition;
         /// <summary> Relative direction to the player from this enemy </summary>
@@ -45,41 +47,52 @@ namespace Type.Objects.Enemies
         private Boolean _IsWeaponLocked;
         /// <summary> Whether the enemy is moving </summary>
         private Boolean _IsMoving;
-        /// <summary> movement speed of the enemy </summary>
-        private Single _Speed;
         /// <summary> Whether the enemy has entered the game area </summary>
         private Boolean InPlay;
-        /// <summary> Whether the enemy is on screen </summary>
-        private Boolean OnScreen =>
-            Position.X + _Sprite.Offset.X >= ScreenLeft &&
-            Position.X - _Sprite.Offset.X <= ScreenRight &&
-            Position.Y + _Sprite.Offset.Y >= ScreenBottom &&
-            Position.Y - _Sprite.Offset.Y <= ScreenTop;
-
 
         /// <summary> Whether the enemy has been destroyed  </summary>
         public Boolean IsDestroyed { get; private set; }
+
         /// <summary> Point valuie for this enemy </summary>
         public Int32 Points { get; private set; }
-        /// <inheritdoc />
-        public Boolean AutoFire { get; set; }
-        /// <inheritdoc />
-        public Vector4 HitBox { get; set; }
+
         /// <inheritdoc />
         public Int32 HitPoints { get; private set; }
 
-        public EnemyGamma(Single yPos)
+        /// <inheritdoc />
+        public Boolean AutoFire { get; set; }
+
+        /// <inheritdoc />
+        public Vector4 HitBox { get; set; }
+
+        /// <summary> Whether the enemy can be roadkilled </summary>
+        public Boolean CanBeRoadKilled { get; }
+
+        /// <summary> Whether the enemy is completely on screen, used to add the object to the collision controller </summary>
+        public Boolean OnScreen =>
+            Position.X - _Sprite.Offset.X >= ScreenLeft &&
+            Position.X + _Sprite.Offset.X <= ScreenRight &&
+            Position.Y - _Sprite.Offset.Y >= ScreenBottom &&
+            Position.Y + _Sprite.Offset.Y <= ScreenTop;
+
+        /// <summary> Whether the enemy is completely offscreen, used to destroy the object </summary>
+        private Boolean OffScreen =>
+            Position.X + _Sprite.Offset.X <= ScreenLeft ||
+            Position.X - _Sprite.Offset.X >= ScreenRight ||
+            Position.Y + _Sprite.Offset.Y <= ScreenBottom ||
+            Position.Y - _Sprite.Offset.Y >= ScreenTop;
+
+        public Enemy_03(Single yPos, IAccelerationProvider moveController)
         {
             _Listeners = new List<IEnemyListener>();
 
             _IsMoving = true;
             _IsWeaponLocked = true;
-            _MoveDirection = new Vector2(-1, 0);
-            _Speed = 400;
             _FireRate = TimeSpan.FromSeconds(1.4f);
 
             HitPoints = 5;
             Points = 50;
+            CanBeRoadKilled = true;
 
             _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, Texture.GetTexture("Content/Graphics/Enemies/enemy4.png"))
             {
@@ -114,6 +127,9 @@ namespace Type.Objects.Enemies
 
             Position = new Vector2(Renderer.Instance.TargetDimensions.X / 2 + _Sprite.Offset.X, yPos);
             _Explosion.Position = Position;
+
+            _MovementController = moveController;
+
             PositionRelayer.Instance.AddRecipient(this);
         }
 
@@ -140,6 +156,10 @@ namespace Type.Objects.Enemies
                 _TimeSinceLastSound = TimeSpan.Zero;
             }
 
+            _Sprite.Colour = new Vector4(1.5f, 1.5f, 1.5f, 1);
+            _ColourCallback?.CancelAndComplete();
+            _ColourCallback = new TimedCallback(TimeSpan.FromMilliseconds(50), () => _Sprite.Colour = new Vector4(1, 1, 1, 1));
+
             if (HitPoints > 0) return;
 
             Destroy();
@@ -159,6 +179,7 @@ namespace Type.Objects.Enemies
                 listener.OnEnemyDestroyed(this);
             }
 
+            new AudioPlayer("Content/Audio/explode.wav", false, AudioManager.Category.EFFECT, 1);
             _Explosion.AddFrameAction((anim) =>
             {
                 Dispose();
@@ -191,7 +212,8 @@ namespace Type.Objects.Enemies
             base.Update(timeTilUpdate);
             if (_IsMoving)
             {
-                Position += _MoveDirection * _Speed * (Single)timeTilUpdate.TotalSeconds;
+                Position = _MovementController.ApplyAcceleration(Position, timeTilUpdate);
+
                 _Explosion.Position = Position;
                 HitBox = GetRect();
             }
@@ -227,7 +249,7 @@ namespace Type.Objects.Enemies
                 InPlay = true;
                 CollisionController.Instance.RegisterEnemy(this);
             }
-            else if (!OnScreen && InPlay) // If alive and offscreen
+            else if (OffScreen && InPlay) // If alive and offscreen
             {
                 for (Int32 i = _Listeners.Count - 1; i >= 0; i--)
                 {
@@ -252,6 +274,7 @@ namespace Type.Objects.Enemies
         /// <inheritdoc />
         public override void Dispose()
         {
+            _ColourCallback?.CancelAndComplete();
             base.Dispose();
             if (!_Explosion.IsDisposed) _Explosion.Dispose();
 
