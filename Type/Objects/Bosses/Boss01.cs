@@ -25,46 +25,20 @@ namespace Type.Objects.Bosses
         private readonly List<IEnemyListener> _Listeners;
         /// <summary> Move direction </summary>
         private readonly Vector2 _MoveDirection;
-
-        /// <summary> Top cannon </summary>
-        private BossCannon _TopCannon;
-        /// <summary> Middle cannon </summary>
-        private BossCannon _MiddleCannon;
-        /// <summary> Bottom cannon </summary>
-        private BossCannon _BottomCannon;
-        /// <summary> The players current position </summary>
-        private Vector2 _PlayerPosition;
-        /// <summary> Relative direction to the player from this enemy </summary>
-        private Vector2 _DirectionTowardsPlayer;
         /// <summary> Sprite for the boss base </summary>
-        private Sprite _Sprite;
+        private readonly Sprite _Sprite;
+
         /// <summary> Whether the boss is moving onto screen </summary>
         private Boolean _IsAdvancing;
         /// <summary> Whether the boss is moving off the screen </summary>
         private Boolean _IsRetreating;
         /// <summary> Where the boss should stop when moving onto screen</summary>
         private Vector2 _StopPosition;
-
-        /// <summary>
-        /// The hitbox of the <see cref="ICollidable"/>
-        /// </summary>
-        public Vector4 HitBox { get; set; }
-
-        /// <summary>
-        /// The hitpoints of the <see cref="IHitable"/>
-        /// </summary>
-        public Int32 HitPoints { get; }
-
-        /// <summary>
-        /// Whether this object is Autofiring
-        /// </summary>
-        public Boolean AutoFire { get; set; }
-
-        /// <summary> Amount of points this object is worth </summary>
-        public Int32 Points { get; }
+        /// <summary> The players current position </summary>
+        private Vector2 _PlayerPosition;
 
         /// <summary> The position of the object </summary>
-        public Vector2 Position
+        public override Vector2 Position
         {
             get => base.Position;
             set
@@ -93,6 +67,18 @@ namespace Type.Objects.Bosses
             }
         }
 
+        /// <summary> Whether this object is Autofiring </summary>
+        public Boolean AutoFire { get; set; }
+
+        /// <summary> The hitbox of the <see cref="ICollidable"/> </summary>
+        public Vector4 HitBox { get; set; }
+
+        /// <summary> The hitpoints of the <see cref="IHitable"/> </summary>
+        public Int32 HitPoints { get; }
+
+        /// <summary> Amount of points this object is worth </summary>
+        public Int32 Points { get; }
+
         public Boss01()
         {
             _Listeners = new List<IEnemyListener>();
@@ -107,18 +93,13 @@ namespace Type.Objects.Bosses
             Position = new Vector2(Renderer.Instance.TargetDimensions.X / 2 + _Sprite.Width / 2, 0);
             _Sprite.Offset = _Sprite.Size / 2;
 
-            _TopCannon = new BossCannon(10, TimeSpan.FromMilliseconds(1500));
-            _TopCannon.Offset = new Vector2(102, -130);
+            BossCannon topCannon = new BossCannon(10, TimeSpan.FromMilliseconds(1500)) {Offset = new Vector2(102, -130)};
+            BossCannon middleCannon = new BossCannon(10, TimeSpan.FromMilliseconds(1000)) {Offset = new Vector2(-149, 0)};
+            BossCannon bottomCannon = new BossCannon(10, TimeSpan.FromMilliseconds(1500)) {Offset = new Vector2(102, 130)};
 
-            _MiddleCannon = new BossCannon(10, TimeSpan.FromMilliseconds(1000));
-            _MiddleCannon.Offset = new Vector2(-149, 0);
-
-            _BottomCannon = new BossCannon(10, TimeSpan.FromMilliseconds(1500));
-            _BottomCannon.Offset = new Vector2(102, 130);
-
-            _Cannons.Add(_TopCannon);
-            _Cannons.Add(_MiddleCannon);
-            _Cannons.Add(_BottomCannon);
+            _Cannons.Add(topCannon);
+            _Cannons.Add(middleCannon);
+            _Cannons.Add(bottomCannon);
 
             foreach (BossCannon cannon in _Cannons)
             {

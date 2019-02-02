@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using Type.Base;
 using Type.Controllers;
-using Type.Data;
 using Type.Interfaces;
 using Type.Interfaces.Collisions;
 using Type.Interfaces.Enemies;
@@ -23,28 +22,25 @@ namespace Type.Objects.Bosses
         /// <summary> Whether a sound is playing </summary>
         private Boolean _IsSoundPlaying; // TODO FIXME Work around to stop so many sounds playing
 
-        /// <summary> Animation of an explosion, played on death </summary>
-        private readonly AnimatedSprite _Explosion;
         /// <summary> List of <see cref="IEnemyListener"/>'s </summary>
         private readonly List<IEnemyListener> _Listeners;
+        /// <summary> Animation of an explosion, played on death </summary>
+        private readonly AnimatedSprite _Explosion;
+        /// <summary> Sprite for the gun base </summary>
+        private readonly Sprite _Base;
+        /// <summary> Sprite for the cannon </summary>
+        private readonly Sprite _Gun;
+        /// <summary> Firerate of the enemy </summary>
+        private readonly TimeSpan _FireRate;
 
         /// <summary> Callback used to change the colour back after being hit by a projectile </summary>
         private TimedCallback _ColourCallback;
         /// <summary> Time since the last bullet was fired </summary>
         private TimeSpan _TimeSinceLastFired;
-        /// <summary> Firerate of the enemy </summary>
-        private TimeSpan _FireRate;
-        /// <summary> The players current position </summary>
-        private Vector2 _PlayerPosition;
-        /// <summary> Relative direction to the player from this enemy </summary>
-        private Vector2 _DirectionTowardsPlayer;
         /// <summary> Whether firing is allowed </summary>
         private Boolean _IsWeaponLocked;
-        /// <summary> Sprite for the gun base </summary>
-        private Sprite _Base;
-        /// <summary> Sprite for the cannon </summary>
-        private Sprite _Gun;
-
+        /// <summary> Whether the enemy has been destroyed  </summary>
+        private Boolean _IsDestroyed;
         /// <summary> Whether the cannon is visible </summary>
         private Boolean _Visible;
 
@@ -61,7 +57,7 @@ namespace Type.Objects.Bosses
         }
 
         /// <summary> The position of the object </summary>
-        public Vector2 Position
+        public override Vector2 Position
         {
             get => base.Position;
             set
@@ -84,13 +80,6 @@ namespace Type.Objects.Bosses
             }
         }
 
-        /// <summary> The direction towards the player, used to point the cannon in that direction </summary>
-        public Vector2 DirectionTowardsPlayer
-        {
-            get => _DirectionTowardsPlayer;
-            set => _DirectionTowardsPlayer = value;
-        }
-
         /// <summary>
         /// The hitbox of the <see cref="ICollidable"/>
         /// </summary>
@@ -101,27 +90,20 @@ namespace Type.Objects.Bosses
             set { }
         }
 
-        /// <summary> Whether the enemy has been destroyed  </summary>
-        public Boolean IsDestroyed { get; private set; }
-
-        /// <summary>
-        /// The hitpoints of the <see cref="IHitable"/>
-        /// </summary>
+        /// <summary> The hitpoints of the <see cref="IHitable"/> </summary>
         public Int32 HitPoints { get; private set; }
+
+        /// <summary> The direction towards the player, used to point the cannon in that direction </summary>
+        public Vector2 DirectionTowardsPlayer { get; set; }
 
         /// <summary> Offset of the cannon </summary>
         public Vector2 Offset { get; set; }
 
-        /// <summary>
-        /// Whether this object is Autofiring
-        /// </summary>
+        /// <summary> Whether this object is Autofiring </summary>
         public Boolean AutoFire { get; set; }
 
         /// <summary> Amount of points this object is worth </summary>
         public Int32 Points { get; }
-
-        /// <summary> Whether or not the updatable is disposed </summary>
-        public Boolean IsDisposed { get; set; }
 
         public BossCannon(Int32 hitPoints, TimeSpan fireRate)
         {
@@ -171,7 +153,7 @@ namespace Type.Objects.Bosses
         /// </summary>
         public void Shoot()
         {
-            Vector2 bulletDirection = _DirectionTowardsPlayer;
+            Vector2 bulletDirection = DirectionTowardsPlayer;
             if (bulletDirection != Vector2.Zero) bulletDirection.Normalize();
             new PlasmaBall(Position, bulletDirection, 1000, new Vector4(100, 0, 0, 1));
             _IsWeaponLocked = true;
@@ -182,7 +164,7 @@ namespace Type.Objects.Bosses
         /// <param name="timeTilUpdate"></param>
         public void Update(TimeSpan timeTilUpdate)
         {
-            if (IsDestroyed) return;
+            if (_IsDestroyed) return;
 
             if (_IsSoundPlaying) // TODO FIXME Work around to limit sounds created
             {
@@ -217,7 +199,7 @@ namespace Type.Objects.Bosses
         /// </summary>
         public void Hit(Int32 damage)
         {
-            if (IsDestroyed) return;
+            if (_IsDestroyed) return;
 
             HitPoints -= damage;
 
@@ -242,7 +224,7 @@ namespace Type.Objects.Bosses
         /// </summary>
         public void Destroy()
         {
-            IsDestroyed = true;
+            _IsDestroyed = true;
             AutoFire = false;
 
             _Gun.Visible = false;
