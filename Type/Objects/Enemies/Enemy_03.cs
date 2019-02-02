@@ -33,6 +33,8 @@ namespace Type.Objects.Enemies
         /// <summary> List of <see cref="IEnemyListener"/>'s </summary>
         private readonly List<IEnemyListener> _Listeners;
 
+        /// <summary> Callback used to change the colour back after being hit by a projectile </summary>
+        private TimedCallback _ColourCallback;
         /// <summary> Time since the last bullet was fired </summary>
         private TimeSpan _TimeSinceLastFired;
         /// <summary> Firerate of the enemy </summary>
@@ -65,6 +67,8 @@ namespace Type.Objects.Enemies
         public Vector4 HitBox { get; set; }
         /// <inheritdoc />
         public Int32 HitPoints { get; private set; }
+        /// <summary> Whether the enemy can be roadkilled </summary>
+        public Boolean CanBeRoadKilled { get; }
 
         public Enemy_03(Single yPos, IAccelerationProvider moveController)
         {
@@ -76,6 +80,7 @@ namespace Type.Objects.Enemies
 
             HitPoints = 5;
             Points = 50;
+            CanBeRoadKilled = true;
 
             _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, Texture.GetTexture("Content/Graphics/Enemies/enemy4.png"))
             {
@@ -138,6 +143,10 @@ namespace Type.Objects.Enemies
                 _IsSoundPlaying = true;
                 _TimeSinceLastSound = TimeSpan.Zero;
             }
+
+            _Sprite.Colour = new Vector4(1.5f, 1.5f, 1.5f, 1);
+            _ColourCallback?.CancelAndComplete();
+            _ColourCallback = new TimedCallback(TimeSpan.FromMilliseconds(50), () => _Sprite.Colour = new Vector4(1, 1, 1, 1));
 
             if (HitPoints > 0) return;
 
@@ -252,6 +261,7 @@ namespace Type.Objects.Enemies
         /// <inheritdoc />
         public override void Dispose()
         {
+            _ColourCallback?.CancelAndComplete();
             base.Dispose();
             if (!_Explosion.IsDisposed) _Explosion.Dispose();
 

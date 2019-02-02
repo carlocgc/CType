@@ -44,11 +44,19 @@ namespace Type
 
             public const Int32 PLANETS_NEAR = 56;
 
+            public const Int32 BOSS_BASE = 59;
+
+            public const Int32 BOSS_LOWER = 60;
+
             public const Int32 BULLETS = 78;
 
             public const Int32 POWERUPS = 79;
 
+            public const Int32 BOSS_UPPER = 61;
+
             public const Int32 ENEMIES = 85;
+
+            public const Int32 ENEMIES_OVERLAY = 86;
 
             public const Int32 PLAYER = 90;
 
