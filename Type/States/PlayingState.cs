@@ -127,16 +127,17 @@ namespace Type.States
         /// <inheritdoc />
         public void OnPlayerDeath(IPlayer player, Int32 probeCount, Vector2 position)
         {
-            CollisionController.Instance.ClearObjects();
-            _GameScene.RemoveEnemies();
-            _GameScene.RemovePowerUps();
-
             _LifeMeter.LoseLife();
+            _GameScene.RemovePowerUps();
 
             if (_LifeMeter.PlayerLives > 0)
             {
                 _Player.Spawn();
-                _EnemyFactory.RestartWave();
+                if (_EnemyFactory.RestartWave())
+                {
+                    CollisionController.Instance.ClearObjects();
+                    _GameScene.RemoveEnemies();
+                }
                 if (probeCount > 0)
                 {
                     _PowerupFactory.Create(1, position, _CurrentLevel);

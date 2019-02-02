@@ -2,7 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Java.Lang;
 using OpenTK;
+using Boolean = System.Boolean;
+using String = System.String;
 
 namespace Type.Data
 {
@@ -31,6 +34,7 @@ namespace Type.Data
             waveStrings = cleanData.Split('_').ToList();
 
             // Temporary data store wave data object
+            String restartable;
             List<Single> positions = new List<Single>();
             List<Int32> types = new List<Int32>();
             List<Single> delays = new List<Single>();
@@ -42,6 +46,10 @@ namespace Type.Data
             foreach (String waveString in waveStrings)
             {
                 String[] waveData = waveString.Split(':');
+
+                String[] waveParts = waveData[0].Split(',');
+                restartable = waveParts[1];
+
                 String[] enemyStrings = waveData[1].Split(';');
 
                 foreach (String enemyString in enemyStrings)
@@ -97,6 +105,9 @@ namespace Type.Data
                     }
                 }
 
+                // Set restartability
+                Boolean waveRestartable = String.Equals(restartable, "true");
+
                 // Create the delay time spans
                 List<TimeSpan> delaySpans = new List<TimeSpan>();
                 foreach (Single delay in delays)
@@ -113,7 +124,7 @@ namespace Type.Data
                 }
 
                 // Create the wave data
-                _Waves.Add(new WaveData(delaySpans.ToArray(), types.ToArray(), positions.ToArray(), moveTypes.ToArray(), directions.ToArray(), speeds.ToArray()));
+                _Waves.Add(new WaveData(waveRestartable, delaySpans.ToArray(), types.ToArray(), positions.ToArray(), moveTypes.ToArray(), directions.ToArray(), speeds.ToArray()));
 
                 delaySpans.Clear();
                 types.Clear();
