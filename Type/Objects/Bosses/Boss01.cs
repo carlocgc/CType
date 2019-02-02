@@ -15,7 +15,7 @@ namespace Type.Objects.Bosses
     /// <summary>
     /// Boss that has three destroyable cannons
     /// </summary>
-    public class Boss01 : GameObject, IEnemy, IEnemyListener
+    public sealed class Boss01 : GameObject, IEnemy, IEnemyListener
     {
         /// <summary> List of the destroyable cannons on the boss </summary>
         private readonly List<BossCannon> _Cannons;
@@ -67,10 +67,10 @@ namespace Type.Objects.Bosses
             }
         }
 
-        /// <summary> Whether this object is Autofiring </summary>
+        /// <inheritdoc />
         public Boolean AutoFire { get; set; }
 
-        /// <summary> The hitbox of the <see cref="ICollidable"/> </summary>
+        /// <inheritdoc />
         public Vector4 HitBox { get; set; }
 
         /// <summary> The hitpoints of the <see cref="IHitable"/> </summary>
@@ -84,6 +84,7 @@ namespace Type.Objects.Bosses
             _Listeners = new List<IEnemyListener>();
             _Cannons = new List<BossCannon>();
 
+            Points = 20000;
             _MoveDirection = new Vector2(-1, 0);
 
             _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.BOSS_BASE, Texture.GetTexture("Content/Graphics/Bosses/boss01.png"))
@@ -93,13 +94,17 @@ namespace Type.Objects.Bosses
             Position = new Vector2(Renderer.Instance.TargetDimensions.X / 2 + _Sprite.Width / 2, 0);
             _Sprite.Offset = _Sprite.Size / 2;
 
+            BossCannon topMostCannon = new BossCannon(10, TimeSpan.FromMilliseconds(2000)) {Offset = new Vector2(113, -200)};
             BossCannon topCannon = new BossCannon(10, TimeSpan.FromMilliseconds(1500)) {Offset = new Vector2(102, -130)};
             BossCannon middleCannon = new BossCannon(10, TimeSpan.FromMilliseconds(1000)) {Offset = new Vector2(-149, 0)};
             BossCannon bottomCannon = new BossCannon(10, TimeSpan.FromMilliseconds(1500)) {Offset = new Vector2(102, 130)};
+            BossCannon bottomMostCannon = new BossCannon(10, TimeSpan.FromMilliseconds(2000)) {Offset = new Vector2(113, 200)};
 
+            _Cannons.Add(topMostCannon);
             _Cannons.Add(topCannon);
             _Cannons.Add(middleCannon);
             _Cannons.Add(bottomCannon);
+            _Cannons.Add(bottomMostCannon);
 
             foreach (BossCannon cannon in _Cannons)
             {
