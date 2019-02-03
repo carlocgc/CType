@@ -231,7 +231,6 @@ namespace Type.States
         private void UpdateScore(Int32 amount)
         {
             GameStats.Instance.Score += amount;
-            LeaderboardController.Instance.ScoreUpdated(GameStats.Instance.Score);
             _ScoreDisplay.Text = GameStats.Instance.Score.ToString();
         }
 

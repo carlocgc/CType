@@ -10,6 +10,8 @@ Save this file as res/values/games-ids.xml in your project.
   <string name="package_name" translatable="false">com.ctype</string>
   <!-- achievement Level 1 -->
   <string name="achievement_level_1" translatable="false">CgkIqLOFpcMIEAIQAg</string>
+  <!-- achievement 1,000,000 Scored -->
+  <string name="achievement_1000000_scored" translatable="false">CgkIqLOFpcMIEAIQAw</string>
   <!-- leaderboard HighScore -->
   <string name="leaderboard_highscore" translatable="false">CgkIqLOFpcMIEAIQAQ</string>
 </resources>

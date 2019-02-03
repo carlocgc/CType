@@ -46,7 +46,7 @@ namespace Type
             }
 
             /// <summary> The hihghscore leaderboard </summary>
-            public static readonly String HIGHSCORE = "CgkIqLOFpcMIEAIQAQ";
+            private static readonly String HIGHSCORE = "CgkIqLOFpcMIEAIQAQ";
         }
 
         /// <summary>
@@ -59,10 +59,13 @@ namespace Type
                 return new String[]
                 {
                     COMPLETE_LEVEL_1,
+                    SCORE_ONE_MILLION
                 };
             }
 
-            public static readonly String COMPLETE_LEVEL_1 = "CgkIqLOFpcMIEAIQAg";
+            private static readonly String COMPLETE_LEVEL_1 = "CgkIqLOFpcMIEAIQAg";
+
+            private static readonly String SCORE_ONE_MILLION = "CgkIqLOFpcMIEAIQAw";
         }
 
         /// <summary>

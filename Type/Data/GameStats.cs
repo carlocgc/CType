@@ -1,5 +1,7 @@
 ﻿using AmosShared.Interfaces;
 using System;
+using AmosShared.Base;
+using Type.Controllers;
 
 namespace Type.Data
 {
@@ -19,10 +21,16 @@ namespace Type.Data
             }
         }
 
+        /// <summary> Running total of all time score </summary>
+        private Int64 _AllTimeScore;
+        /// <summary> The players current highscore, loaded from data store </summary>
+        private Int64 _HighScore;
         /// <summary> Time the game started </summary>
         private DateTime _StartTime;
         /// <summary> Time the game ended</summary>
         private DateTime _EndTime;
+
+        private Int32 _Score;
 
         /// <summary> How many shots the player fired </summary>
         public Int32 BulletsFired { get; set; }
@@ -34,8 +42,17 @@ namespace Type.Data
         public Int32 Deaths { get; set; }
         /// <summary> How many enemies the player has killed </summary>
         public Int32 EnemiesKilled { get; set; }
+
         /// <summary> Player score </summary>
-        public Int32 Score { get; set; }
+        public Int32 Score
+        {
+            get => _Score;
+            set
+            {
+                _Score = value;
+                _AllTimeScore = _AllTimeScore + _Score;
+            }
+        }
 
         /// <summary> Total game time </summary>
         public TimeSpan PlayTime => _EndTime - _StartTime;
@@ -46,14 +63,24 @@ namespace Type.Data
         public void GameStart()
         {
             _StartTime = DateTime.Now;
+            _AllTimeScore = Convert.ToInt64(DataLoader.GetValue("ALLTIME_SCORE"));
+            _HighScore = Convert.ToInt64(DataLoader.GetValue("HIGH_SCORE"));
         }
 
         /// <summary>
-        /// Sets the game end time
+        /// Sets the game end time, and saves score
         /// </summary>
         public void GameEnd()
         {
             _EndTime = DateTime.Now;
+
+            // Save highscore
+            if (_Score > _HighScore) DataLoader.SetValue("HIGH_SCORE", _Score);
+            LeaderboardController.Instance.ScoreUpdated(_Score);
+
+            // Save all-time score
+            DataLoader.SetValue("ALLTIME_SCORE", _AllTimeScore);
+            AchievementController.Instance.AllTimeScoreUpdated(_AllTimeScore);
         }
 
         public void Clear()
