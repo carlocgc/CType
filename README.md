@@ -8,9 +8,10 @@ You control a space ship that is flying through space shooting enemies, collecti
 ## Demo
 * [Gameplay](https://www.youtube.com/watch?v=qXOPcCnZn6w)
 
+## Testing
+https://play.google.com/apps/testing/com.ctype
+
 ## Acknowledgments
 
 * Amerigo Moscaroli for his renderer
 
-## Testing
-https://play.google.com/apps/testing/com.ctype
