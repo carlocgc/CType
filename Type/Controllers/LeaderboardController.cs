@@ -20,6 +20,8 @@ namespace Type.Controllers
 
         public void ScoreUpdated(Int32 score)
         {
+            if (!CompetitiveManager.Instance.Loaded) return;
+
             // Update Highscore board
             CompetitiveManager.Instance.UpdateLeaderboardProgress(0, score);
         }

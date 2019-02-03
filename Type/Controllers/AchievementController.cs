@@ -26,6 +26,8 @@ namespace Type.Controllers
         /// <param name="level"></param>
         public void LevelCompleted(Int32 level)
         {
+            if (!CompetitiveManager.Instance.Loaded) return;
+
             switch (level)
             {
                 case 1:
