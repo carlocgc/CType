@@ -3,6 +3,7 @@ using AmosShared.Base;
 using AmosShared.Competitive;
 using AmosShared.Graphics;
 using AmosShared.State;
+using Android.Provider;
 using Engine.Shared.Graphics.Textures;
 using OpenTK;
 using Type.Ads;
