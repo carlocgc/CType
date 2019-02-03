@@ -10,6 +10,18 @@ Save this file as res/values/games-ids.xml in your project.
   <string name="package_name" translatable="false">com.ctype</string>
   <!-- achievement Level 1 -->
   <string name="achievement_level_1" translatable="false">CgkIqLOFpcMIEAIQAg</string>
+  <!-- achievement Level 5 -->
+  <string name="achievement_level_5" translatable="false">CgkIqLOFpcMIEAIQBA</string>
+  <!-- achievement Underdog -->
+  <string name="achievement_underdog" translatable="false">CgkIqLOFpcMIEAIQCQ</string>
+  <!-- achievement Alpha Victor -->
+  <string name="achievement_alpha_victor" translatable="false">CgkIqLOFpcMIEAIQBQ</string>
+  <!-- achievement Beta Victor -->
+  <string name="achievement_beta_victor" translatable="false">CgkIqLOFpcMIEAIQBg</string>
+  <!-- achievement Gamma Victor -->
+  <string name="achievement_gamma_victor" translatable="false">CgkIqLOFpcMIEAIQBw</string>
+  <!-- achievement Prototype -->
+  <string name="achievement_prototype" translatable="false">CgkIqLOFpcMIEAIQCA</string>
   <!-- achievement 1,000,000 Scored -->
   <string name="achievement_1000000_scored" translatable="false">CgkIqLOFpcMIEAIQAw</string>
   <!-- leaderboard HighScore -->

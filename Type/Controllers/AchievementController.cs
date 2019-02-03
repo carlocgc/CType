@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using AmosShared.Base;
-using AmosShared.Competitive;
+﻿using AmosShared.Competitive;
+using System;
 
 namespace Type.Controllers
 {
@@ -19,7 +16,6 @@ namespace Type.Controllers
 
         private AchievementController()
         {
-
         }
 
         /// <summary>
@@ -36,8 +32,18 @@ namespace Type.Controllers
                     {
                         if (CompetitiveManager.Instance.GetAchievement(0).PercentageComplete < 1)
                         {
-                            // Level 1 complete
+                            // ACHIEVEMENT : Level 1 complete
                             CompetitiveManager.Instance.SetAchievementProgress(0, 1);
+                        }
+
+                        break;
+                    }
+                case 5:
+                    {
+                        if (CompetitiveManager.Instance.GetAchievement(1).PercentageComplete < 1)
+                        {
+                            // ACHIEVEMENT : Level 5 complete
+                            CompetitiveManager.Instance.SetAchievementProgress(1, 1);
                         }
 
                         break;
@@ -61,11 +67,82 @@ namespace Type.Controllers
             }
 
             if (!CompetitiveManager.Instance.Loaded) return;
-            
-            if (CompetitiveManager.Instance.GetAchievement(0).PercentageComplete < 1)
+
+            if (CompetitiveManager.Instance.GetAchievement(7).PercentageComplete < 1)
             {
-                // Level 1 complete
-                CompetitiveManager.Instance.SetAchievementProgress(1, percentage);
+                // ACHIEVEMENT :  Score one million
+                CompetitiveManager.Instance.SetAchievementProgress(7, percentage);
+            }
+        }
+
+        /// <summary>
+        /// Updates the prototype achievement
+        /// </summary>
+        public void PrototypeFound()
+        {
+            if (!CompetitiveManager.Instance.Loaded) return;
+
+            if (CompetitiveManager.Instance.GetAchievement(6).PercentageComplete < 1)
+            {
+                // ACHIEVEMENT :  Prototype
+                CompetitiveManager.Instance.SetAchievementProgress(6, 1);
+            }
+        }
+
+        /// <summary>
+        /// Updates game complete achievements
+        /// </summary>
+        /// <param name="playerShipId"></param>
+        public void GameComplete(Int32 playerShipId)
+        {
+            if (!CompetitiveManager.Instance.Loaded) return;
+
+            switch (playerShipId)
+            {
+                case 0:
+                {
+                    if (CompetitiveManager.Instance.GetAchievement(3).PercentageComplete < 1)
+                    {
+                        // ACHIEVEMENT : Alpha victor
+                        CompetitiveManager.Instance.SetAchievementProgress(3, 1);
+                    }
+
+                    break;
+                }
+                case 1:
+                {
+                    if (CompetitiveManager.Instance.GetAchievement(4).PercentageComplete < 1)
+                    {
+                        // ACHIEVEMENT : Beta victor
+                        CompetitiveManager.Instance.SetAchievementProgress(4, 1);
+                    }
+
+                    break;
+                }
+                case 2:
+                {
+                    if (CompetitiveManager.Instance.GetAchievement(5).PercentageComplete < 1)
+                    {
+                        // ACHIEVEMENT : Gamma victor
+                        CompetitiveManager.Instance.SetAchievementProgress(5, 1);
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Updates the underdog achievement
+        /// </summary>
+        public void Underdog()
+        {
+            if (!CompetitiveManager.Instance.Loaded) return;
+
+            if (CompetitiveManager.Instance.GetAchievement(2).PercentageComplete < 1)
+            {
+                // ACHIEVEMENT : Underdog
+                CompetitiveManager.Instance.SetAchievementProgress(2, 1);
             }
         }
     }

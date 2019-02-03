@@ -210,6 +210,7 @@ namespace Type.Objects.Bosses
             _Cannons.Remove(enemy as BossCannon);
             if (_Cannons.Count != 0) return;
             _IsRetreating = true;
+            AchievementController.Instance.Underdog();
         }
 
         #region Unusued Interfaces

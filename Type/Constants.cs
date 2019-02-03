@@ -59,12 +59,23 @@ namespace Type
                 return new String[]
                 {
                     COMPLETE_LEVEL_1,
+                    COMPLETE_LEVEL_5,
+                    UNDERDOG,
+                    ALPHA_VICTOR,
+                    BETA_VICTOR,
+                    GAMMA_VICTOR,
+                    PROTOTYPE,
                     SCORE_ONE_MILLION
                 };
             }
 
             private static readonly String COMPLETE_LEVEL_1 = "CgkIqLOFpcMIEAIQAg";
-
+            private static readonly String COMPLETE_LEVEL_5 = "CgkIqLOFpcMIEAIQBA";
+            private static readonly String UNDERDOG = "CgkIqLOFpcMIEAIQCQ";
+            private static readonly String ALPHA_VICTOR = "CgkIqLOFpcMIEAIQBQ";
+            private static readonly String BETA_VICTOR = "CgkIqLOFpcMIEAIQBg";
+            private static readonly String GAMMA_VICTOR = "CgkIqLOFpcMIEAIQBw";
+            private static readonly String PROTOTYPE = "CgkIqLOFpcMIEAIQCA";
             private static readonly String SCORE_ONE_MILLION = "CgkIqLOFpcMIEAIQAw";
         }
 

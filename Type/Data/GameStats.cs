@@ -62,6 +62,7 @@ namespace Type.Data
         /// </summary>
         public void GameStart()
         {
+            Score = 0;
             _StartTime = DateTime.Now;
             _AllTimeScore = Convert.ToInt64(DataLoader.GetValue("ALLTIME_SCORE"));
             _HighScore = Convert.ToInt64(DataLoader.GetValue("HIGH_SCORE"));
@@ -90,8 +91,6 @@ namespace Type.Data
             ShieldsCreated = 0;
             EnemiesKilled = 0;
             Deaths = 0;
-            GameStart();
-            GameEnd();
         }
     }
 }

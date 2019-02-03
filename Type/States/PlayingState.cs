@@ -87,15 +87,14 @@ namespace Type.States
 
             _GameScene.StartBackgroundScroll();
 
-            GameStats.Instance.Score = 0;
-            GameStats.Instance.GameStart();
-
             _LevelDisplay.ShowLevel(_CurrentLevel, TimeSpan.FromSeconds(2), () =>
             {
                 _EnemyFactory.Start(LevelLoader.GetWaveData(_CurrentLevel));
                 CollisionController.Instance.IsActive = true;
             });
+
             _Player.Spawn();
+            GameStats.Instance.GameStart();
 
             UpdateManager.Instance.AddUpdatable(this);
         }
@@ -103,7 +102,7 @@ namespace Type.States
         public override Boolean IsComplete()
         {
             if (_GameOver) ChangeState(new GameOverState());
-            else if (_GameComplete) ChangeState(new GameCompleteState());
+            else if (_GameComplete) ChangeState(new GameCompleteState(_PlayerType));
 
             Boolean gameEnded = _GameOver || _GameComplete;
             return gameEnded;
@@ -286,6 +285,7 @@ namespace Type.States
 
         protected override void OnExit()
         {
+
         }
 
         /// <summary> Updates the state </summary>
