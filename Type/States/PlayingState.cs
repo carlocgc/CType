@@ -238,6 +238,8 @@ namespace Type.States
         /// </summary>
         private void LevelComplete()
         {
+            if (_GameOver) return;
+
             _LevelCanEnd = false;
 
             AchievementController.Instance.LevelCompleted(_CurrentLevel);
