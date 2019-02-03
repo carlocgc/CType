@@ -29,14 +29,14 @@ namespace Type.Controllers
             switch (level)
             {
                 case 1:
-                {
-                    if (CompetitiveManager.Instance.GetAchievement(0).PercentageComplete < 1)
                     {
-                        //// Level 1 complete
-                        //CompetitiveManager.Instance.SetAchievementProgress(0, 1);
+                        if (CompetitiveManager.Instance.GetAchievement(0).PercentageComplete < 1)
+                        {
+                            // Level 1 complete
+                            CompetitiveManager.Instance.SetAchievementProgress(0, 1);
+                        }
+                        break;
                     }
-                    break;
-                }
             }
         }
     }

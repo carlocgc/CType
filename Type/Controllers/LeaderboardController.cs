@@ -20,8 +20,8 @@ namespace Type.Controllers
 
         public void ScoreUpdated(Int32 score)
         {
-            //// Update Highscore board
-            // CompetitiveManager.Instance.UpdateLeaderboardProgress(0, score);
+            // Update Highscore board
+            CompetitiveManager.Instance.UpdateLeaderboardProgress(0, score);
         }
     }
 }

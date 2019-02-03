@@ -4,6 +4,7 @@ using AmosShared.Graphics.Drawables;
 using AmosShared.Touch;
 using OpenTK;
 using System;
+using AmosShared.Base;
 using AmosShared.Competitive;
 using Type.Ads;
 using Type.Data;

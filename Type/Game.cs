@@ -1,4 +1,5 @@
-﻿using AmosShared.Base;
+﻿using System;
+using AmosShared.Base;
 using AmosShared.Competitive;
 using AmosShared.Graphics;
 using AmosShared.State;
