@@ -82,6 +82,8 @@ namespace Type.Scenes
             AddDrawable(_StartText);
 
             _Music = new AudioPlayer("Content/Audio/mainMenuBgm.wav", true, AudioManager.Category.MUSIC, 1);
+
+            CompetitiveManager.Instance.Connect();
         }
 
         public void Show()

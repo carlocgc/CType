@@ -36,7 +36,6 @@ namespace Type
 
             SpritesheetLoader.LoadSheet("Content/Graphics/KenPixel/", "KenPixel.png", "KenPixel.json");
 
-            CompetitiveManager.Instance.Connect();
             CompetitiveManager.Instance.LoadData(Constants.GameAchievements.GetAll(), Constants.Leaderboards.GetAll());
 
             StateManager.Instance.StartState(new EngineSplashState());
