@@ -11,7 +11,6 @@ namespace Type.States
 
         protected override void OnEnter()
         {
-            GameStats.Instance.Clear();
             _Scene = new MainMenuScene { Visible = true };
             _Scene.Show();
         }
@@ -31,6 +30,7 @@ namespace Type.States
         {
             base.Dispose();
             _Scene.Dispose();
+            _Scene = null;
         }
     }
 }

@@ -28,6 +28,8 @@ namespace Type.Objects.Bosses
         /// <summary> Sprite for the boss body </summary>
         private readonly Sprite _Body;
 
+        /// <summary> Whether the boss is autofiring </summary>
+        private Boolean _AutoFire;
         /// <summary> Whether the boss is moving onto screen </summary>
         private Boolean _IsAdvancing;
         /// <summary> Whether the boss is moving off the screen </summary>
@@ -36,8 +38,6 @@ namespace Type.Objects.Bosses
         private Vector2 _StopPosition;
         /// <summary> The players current position </summary>
         private Vector2 _PlayerPosition;
-
-        private Boolean _AutoFire;
 
         /// <summary> Whether the enemy is on screen </summary>
         public Boolean OnScreen =>
@@ -210,6 +210,7 @@ namespace Type.Objects.Bosses
             _Cannons.Remove(enemy as BossCannon);
             if (_Cannons.Count != 0) return;
             _IsRetreating = true;
+            AchievementController.Instance.Underdog();
         }
 
         #region Unusued Interfaces
@@ -261,6 +262,8 @@ namespace Type.Objects.Bosses
         public override void Dispose()
         {
             base.Dispose();
+            _Listeners.Clear();
+            foreach (BossCannon cannon in _Cannons) cannon.Dispose();
             _Cannons.Clear();
             _Body.Dispose();
             PositionRelayer.Instance.RemoveRecipient(this);

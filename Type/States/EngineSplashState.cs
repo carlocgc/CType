@@ -71,6 +71,7 @@ namespace Type.States
         public override void Dispose()
         {
             _Scene.Dispose();
+            _Scene = null;
             base.Dispose();
         }
     }

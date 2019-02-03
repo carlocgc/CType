@@ -126,7 +126,13 @@ namespace Type.Objects.Player
         {
             _Invincible = true;
             FlashSprite();
-            new TimedCallback(_InvincibilityDuration, () => { _Invincible = false; });
+            new TimedCallback(_InvincibilityDuration, () =>
+            {
+                _Invincible = false;
+                _InvincibleColourCallback?.Dispose();
+                _Sprite.Colour = new Vector4(1, 1, 1, 1);
+                _IsDimmed = false;
+            });
         }
 
         /// <summary>
@@ -134,14 +140,6 @@ namespace Type.Objects.Player
         /// </summary>
         private void FlashSprite()
         {
-            if (!_Invincible)
-            {
-                _InvincibleColourCallback?.Dispose();
-                _Sprite.Colour = new Vector4(1, 1, 1, 1);
-                _IsDimmed = false;
-                return;
-            }
-
             if (_IsDimmed)
             {
                 _Sprite.Colour = new Vector4(1, 1, 1, 1);

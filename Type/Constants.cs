@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text;
 using AmosShared.Base;
+using AmosShared.Competitive;
 
 namespace Type
 {
@@ -29,6 +30,53 @@ namespace Type
             public static readonly Single ScreenLeft = -Renderer.Instance.TargetDimensions.X / 2;
             /// <summary> The bottom of the screen </summary>
             public static readonly Single ScreenBottom = -Renderer.Instance.TargetDimensions.Y / 2;
+        }
+
+        /// <summary>
+        /// Game related leaderboards
+        /// </summary>
+        public static class Leaderboards
+        {
+            public static String[] GetAll()
+            {
+                return new String[]
+                {
+                    HIGHSCORE,
+                };
+            }
+
+            /// <summary> The hihghscore leaderboard </summary>
+            private static readonly String HIGHSCORE = "CgkIqLOFpcMIEAIQCg";
+        }
+
+        /// <summary>
+        /// Game achievements
+        /// </summary>
+        public static class GameAchievements
+        {
+            public static String[] GetAll()
+            {
+                return new String[]
+                {
+                    COMPLETE_LEVEL_1,
+                    COMPLETE_LEVEL_5,
+                    UNDERDOG,
+                    ALPHA_VICTOR,
+                    BETA_VICTOR,
+                    GAMMA_VICTOR,
+                    PROTOTYPE,
+                    SCORE_ONE_MILLION
+                };
+            }
+
+            private static readonly String COMPLETE_LEVEL_1 = "CgkIqLOFpcMIEAIQAg";
+            private static readonly String COMPLETE_LEVEL_5 = "CgkIqLOFpcMIEAIQBA";
+            private static readonly String UNDERDOG = "CgkIqLOFpcMIEAIQCQ";
+            private static readonly String ALPHA_VICTOR = "CgkIqLOFpcMIEAIQBQ";
+            private static readonly String BETA_VICTOR = "CgkIqLOFpcMIEAIQBg";
+            private static readonly String GAMMA_VICTOR = "CgkIqLOFpcMIEAIQBw";
+            private static readonly String PROTOTYPE = "CgkIqLOFpcMIEAIQCA";
+            private static readonly String SCORE_ONE_MILLION = "CgkIqLOFpcMIEAIQAw";
         }
 
         /// <summary>

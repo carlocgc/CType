@@ -1,5 +1,6 @@
 ﻿using AmosShared.State;
 using System;
+using Type.Data;
 using Type.Scenes;
 
 namespace Type.States
@@ -22,6 +23,7 @@ namespace Type.States
 
         protected override void OnExit()
         {
+            GameStats.Instance.Clear();
         }
 
         /// <inheritdoc />
@@ -29,6 +31,7 @@ namespace Type.States
         {
             base.Dispose();
             _Scene.Dispose();
+            _Scene = null;
         }
     }
 }

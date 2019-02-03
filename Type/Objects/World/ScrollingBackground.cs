@@ -4,21 +4,18 @@ using OpenTK;
 using System;
 using System.Collections.Generic;
 using Type.Base;
-using Type.Glide;
 
 namespace Type.Objects.World
 {
     public class ScrollingBackground : GameObject
     {
-        private readonly Tweener _Tweener = new Tweener();
-
         private readonly List<Sprite> _Sprites = new List<Sprite>();
+
+        private readonly Single _Speed;
 
         private readonly String _AssetPath;
 
         private Boolean _Updating;
-
-        private Single _Speed;
 
         public ScrollingBackground(Single speed, String assetPath) : base()
         {
@@ -68,7 +65,7 @@ namespace Type.Objects.World
                 }
                 else
                 {
-                    _Sprites[i].Position = new Vector2(_Sprites[i -1].Position.X + _Sprites[i -1].Width, -540);
+                    _Sprites[i].Position = new Vector2(_Sprites[i - 1].Position.X + _Sprites[i - 1].Width, -540);
                 }
 
             }

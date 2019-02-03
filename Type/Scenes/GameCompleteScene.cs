@@ -4,6 +4,7 @@ using AmosShared.Graphics.Drawables;
 using AmosShared.Touch;
 using OpenTK;
 using System;
+using AmosShared.Competitive;
 using Type.Ads;
 using Type.Data;
 using Type.UI;
@@ -14,6 +15,10 @@ namespace Type.Scenes
     {
         /// <summary> Button used to return to main menu </summary>
         private readonly Button _ConfirmButton;
+        /// <summary> Button that will show the obtained achievements </summary>
+        private readonly Button _AchievementsButton;
+        /// <summary> Button that will show the leaderboards </summary>
+        private readonly Button _LeaderboardButton;
         /// <summary> Sprite for the background </summary>
         private readonly Sprite _Background;
         /// <summary> Text displaying the word congratulations </summary>
@@ -56,6 +61,20 @@ namespace Type.Scenes
             };
             AddDrawable(_Background);
 
+            Sprite achievementsButton = new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/trophy.png"))
+            {
+                Position = new Vector2(-900, -500),
+            };
+            _AchievementsButton = new Button(Constants.ZOrders.UI, achievementsButton);
+            _AchievementsButton.OnButtonPress += AchievementsButtonOnPress;
+
+            Sprite leaderboardButton = new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/leaderboard.png"))
+            {
+                Position = new Vector2(-900, -380),
+            };
+            _LeaderboardButton = new Button(Constants.ZOrders.UI, leaderboardButton);
+            _LeaderboardButton.OnButtonPress += LeaderboardButtonOnPress;
+
             Sprite confirmButton = new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/completecontinue.png"))
             {
                 Position = new Vector2(-200, -450),
@@ -81,6 +100,16 @@ namespace Type.Scenes
             }
         }
 
+        private void AchievementsButtonOnPress(Button button)
+        {
+            CompetitiveManager.Instance.ViewAchievements();
+        }
+
+        private void LeaderboardButtonOnPress(Button button)
+        {
+            CompetitiveManager.Instance.ViewLeaderboards();
+        }
+
         /// <summary> Updates the scene </summary>
         /// <param name="timeSinceUpdate"></param>
         public override void Update(TimeSpan timeSinceUpdate)
@@ -96,6 +125,10 @@ namespace Type.Scenes
 
             _ConfirmButton.TouchEnabled = true;
             _ConfirmButton.Visible = true;
+            _AchievementsButton.TouchEnabled = true;
+            _AchievementsButton.Visible = true;
+            _LeaderboardButton.TouchEnabled = true;
+            _LeaderboardButton.Visible = true;
         }
 
         /// <summary> Disposes of the scene </summary>
@@ -103,6 +136,11 @@ namespace Type.Scenes
         {
             base.Dispose();
             _Music.Stop();
+            _Background.Dispose();
+            _CongratsText.Dispose();
+            _ScoreText.Dispose();
+            _AchievementsButton.Dispose();
+            _LeaderboardButton.Dispose();
             _ConfirmButton.Dispose();
             _StatsDisplay.Dispose();
         }
