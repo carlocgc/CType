@@ -80,10 +80,7 @@ namespace Type.UI
         /// <inheritdoc />
         public void Dispose()
         {
-            foreach (TextDisplay display in _Text)
-            {
-                display.Dispose();
-            }
+            foreach (TextDisplay display in _Text) display.Dispose();
         }
     }
 }

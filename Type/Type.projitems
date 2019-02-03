@@ -13,7 +13,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Ads\CustomAdListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Base\GameObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controllers\AchievementController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\CollisionController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controllers\LeaderboardController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\PositionRelayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\ProbeController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\GameStats.cs" />

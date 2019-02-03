@@ -1,6 +1,9 @@
-﻿using AmosShared.Base;
+﻿using System;
+using AmosShared.Base;
+using AmosShared.Competitive;
 using AmosShared.Graphics;
 using AmosShared.State;
+using Android.Provider;
 using Engine.Shared.Graphics.Textures;
 using OpenTK;
 using Type.Ads;
@@ -33,6 +36,8 @@ namespace Type
             AdService.Instance.Initialise();
 
             SpritesheetLoader.LoadSheet("Content/Graphics/KenPixel/", "KenPixel.png", "KenPixel.json");
+
+            CompetitiveManager.Instance.LoadData(Constants.GameAchievements.GetAll(), Constants.Leaderboards.GetAll());
 
             StateManager.Instance.StartState(new EngineSplashState());
         }

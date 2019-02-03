@@ -1,6 +1,7 @@
 ﻿using AmosShared.Audio;
 using AmosShared.State;
 using System;
+using Type.Controllers;
 using Type.Interfaces.Control;
 using Type.Scenes;
 
@@ -8,7 +9,7 @@ namespace Type.States
 {
     public class SecretShipSelectState : State, IShipSelectListener
     {
-        private readonly SecretShipSelectScene _Scene;
+        private SecretShipSelectScene _Scene;
 
         private Boolean _IsComplete;
 
@@ -16,14 +17,16 @@ namespace Type.States
 
         public SecretShipSelectState()
         {
-            _Scene = new SecretShipSelectScene();
+
         }
 
         /// <inheritdoc />
         protected override void OnEnter()
         {
+            _Scene = new SecretShipSelectScene();
             _Scene.OmegaButton.RegisterListener(this);
             _Scene.Active = true;
+            AchievementController.Instance.PrototypeFound();
         }
 
         /// <inheritdoc />
@@ -58,6 +61,7 @@ namespace Type.States
         {
             base.Dispose();
             _Scene.Dispose();
+            _Scene = null;
         }
     }
 }

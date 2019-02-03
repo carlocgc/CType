@@ -144,6 +144,7 @@ namespace Type.Objects.Player
             {
                 sprite.Dispose();
             }
+            _Sprites.Clear();
         }
     }
 }

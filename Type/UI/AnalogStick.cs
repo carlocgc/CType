@@ -208,7 +208,7 @@ namespace Type.UI
             base.Dispose();
             _Base.Dispose();
             _Top.Dispose();
-
+            _Listeners.Clear();
             TouchManager.Instance.RemoveTouchListener(this);
         }
     }

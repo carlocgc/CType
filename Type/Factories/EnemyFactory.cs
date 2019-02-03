@@ -210,7 +210,11 @@ namespace Type.Factories
         /// <inheritdoc />
         public void Dispose()
         {
+            if (IsDisposed) return;
+            _Spawning = false;
+            _Listeners.Clear();
             _LevelData.Clear();
+            ParentState = null;
             IsDisposed = true;
         }
 

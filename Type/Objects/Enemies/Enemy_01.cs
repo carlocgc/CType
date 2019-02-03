@@ -278,10 +278,7 @@ namespace Type.Objects.Enemies
             _ColourCallback?.CancelAndComplete();
             base.Dispose();
 
-            if (!_Explosion.IsDisposed)
-            {
-                _Explosion.Dispose();
-            }
+            if (!_Explosion.IsDisposed) _Explosion.Dispose();
             _Listeners.Clear();
             CollisionController.Instance.DeregisterEnemy(this);
             PositionRelayer.Instance.RemoveRecipient(this);
