@@ -26,34 +26,34 @@ namespace Type.States
         /// <summary> THe type of player craft </summary>
         private readonly Int32 _PlayerType;
 
-        /// <summary> Scene for game objects </summary>
-        private GameScene _GameScene;
-        /// <summary> Scene for UI objects </summary>
-        private UIScene _UIScene;
         /// <summary> Factory that will create enemies </summary>
         private EnemyFactory _EnemyFactory;
         /// <summary> Factory that creates power ups </summary>
         private PowerupFactory _PowerupFactory;
-        /// <summary> The player </summary>
-        private IPlayer _Player;
-        /// <summary> The current level </summary>
-        private Int32 _CurrentLevel;
-        /// <summary> Whether the game is over </summary>
-        private Boolean _GameOver;
-        /// <summary> Whether the game is complete </summary>
-        private Boolean _GameComplete;
+        /// <summary> Scene for game objects </summary>
+        private GameScene _GameScene;
+        /// <summary> Scene for UI objects </summary>
+        private UIScene _UIScene;
         /// <summary> Displays the current level as text on the screen </summary>
         private LevelDisplay _LevelDisplay;
         /// <summary> Text to display the score </summary>
         private TextDisplay _ScoreDisplay;
         /// <summary> Displays the players current lives </summary>
         private LifeMeter _LifeMeter;
+        /// <summary> The player </summary>
+        private IPlayer _Player;
+        /// <summary> Whether the game is over </summary>
+        private Boolean _GameOver;
+        /// <summary> Whether the game is complete </summary>
+        private Boolean _GameComplete;
+        /// <summary> Whether the level can be completed </summary>
+        private Boolean _LevelCanEnd;
+        /// <summary> The current level </summary>
+        private Int32 _CurrentLevel;
         /// <summary> Total enemies in this level </summary>
         private Int32 _EnemiesInLevel;
         /// <summary> Total enemies destroyed this level </summary>
         private Int32 _EnemiesDestroyedThisLevel;
-        /// <summary> Whether the level can be completed </summary>
-        private Boolean _LevelCanEnd;
 
         public PlayingState(Int32 type)
         {
@@ -274,7 +274,8 @@ namespace Type.States
             GameStats.Instance.GameEnd();
             CollisionController.Instance.IsActive = false;
             CollisionController.Instance.ClearObjects();
-            _EnemyFactory.Stop();
+            _LevelDisplay.Dispose();
+            _EnemyFactory.Dispose();
             _UIScene.Active = false;
             _GameOver = true;
         }
@@ -318,9 +319,20 @@ namespace Type.States
             UpdateManager.Instance.RemoveUpdatable(this);
             CollisionController.Instance.IsActive = false;
             CollisionController.Instance.ClearObjects();
+
+            _LevelDisplay = null;
+            _ScoreDisplay = null;
+            _LifeMeter = null;
+            _Player = null;
+
+            _PowerupFactory.Dispose();
+            _PowerupFactory = null;
             _EnemyFactory.Dispose();
+            _EnemyFactory = null;
             _GameScene.Dispose();
+            _GameScene = null;
             _UIScene.Dispose();
+            _UIScene = null;
         }
     }
 }

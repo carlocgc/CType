@@ -60,6 +60,8 @@ namespace Type.UI
             base.Dispose();
             _ShownCallback?.Dispose();
             _CompleteCallback?.Dispose();
+            _Display.Dispose();
+            _OnComplete = null;
             _ShownCallback = null;
             _CompleteCallback = null;
         }

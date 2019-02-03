@@ -29,6 +29,7 @@ namespace Type.States
         {
             base.Dispose();
             _Scene.Dispose();
+            _Scene = null;
         }
     }
 }

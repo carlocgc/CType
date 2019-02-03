@@ -8,7 +8,7 @@ namespace Type.States
 {
     public class SecretShipSelectState : State, IShipSelectListener
     {
-        private readonly SecretShipSelectScene _Scene;
+        private SecretShipSelectScene _Scene;
 
         private Boolean _IsComplete;
 
@@ -16,12 +16,13 @@ namespace Type.States
 
         public SecretShipSelectState()
         {
-            _Scene = new SecretShipSelectScene();
+
         }
 
         /// <inheritdoc />
         protected override void OnEnter()
         {
+            _Scene = new SecretShipSelectScene();
             _Scene.OmegaButton.RegisterListener(this);
             _Scene.Active = true;
         }
@@ -58,6 +59,7 @@ namespace Type.States
         {
             base.Dispose();
             _Scene.Dispose();
+            _Scene = null;
         }
     }
 }

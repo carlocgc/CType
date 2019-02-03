@@ -124,16 +124,13 @@ namespace Type.Scenes
         public override void Dispose()
         {
             base.Dispose();
+            _Listeners.Clear();
             AnalogStick.Dispose();
             FireButton.Dispose();
-
+            LevelDisplay.Dispose();
             FrameCounter.Dispose();
             LifeMeter.Dispose();
             ScoreDisplay.Dispose();
-
-            _Listeners.Clear();
         }
-
-
     }
 }

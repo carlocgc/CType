@@ -281,11 +281,11 @@ namespace Type.Objects.Bosses
             _ColourCallback?.CancelAndComplete();
             base.Dispose();
 
+            CollisionController.Instance.DeregisterEnemy(this);
+            if (!_Explosion.IsDisposed) _Explosion.Dispose();
+            _Listeners.Clear();
             _Gun.Dispose();
             _Base.Dispose();
-            if (!_Explosion.IsDisposed) _Explosion.Dispose();
-            CollisionController.Instance.DeregisterEnemy(this);
-            _Listeners.Clear();
         }
     }
 }

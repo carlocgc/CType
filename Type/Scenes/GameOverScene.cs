@@ -24,6 +24,10 @@ namespace Type.Scenes
         private readonly Sprite _Background;
         /// <summary> Confirm button that ends the game over state </summary>
         private readonly Button _ConfirmButton;
+        /// <summary> Button that will show the obtained achievements </summary>
+        private readonly Button _AchievementsButton;
+        /// <summary> Button that will show the leaderboards </summary>
+        private readonly Button _LeaderboardButton;
         /// <summary> Displays the current game data via text displays </summary>
         private readonly StatsDisplay _StatsDisplay;
 
@@ -61,19 +65,48 @@ namespace Type.Scenes
             };
             AddDrawable(_Background);
 
+            Sprite achievementsButton = new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/trophy.png"))
+            {
+                Position = new Vector2(-900, -500),
+            };
+            _AchievementsButton = new Button(Constants.ZOrders.UI, achievementsButton);
+            _AchievementsButton.OnButtonPress += AchievementsButtonOnPress;
+
+            Sprite leaderboardButton = new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/leaderboard.png"))
+            {
+                Position = new Vector2(-900, -380),
+            };
+            _LeaderboardButton = new Button(Constants.ZOrders.UI, leaderboardButton);
+            _LeaderboardButton.OnButtonPress += LeaderboardButtonOnPress;
+
             Sprite confirmButton = new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/gameovercontinue.png"))
             {
                 Position = new Vector2(-200, -450),
             };
             _ConfirmButton = new Button(Constants.ZOrders.UI, confirmButton);
-            _ConfirmButton.OnButtonPress += OnButtonPress;
+            _ConfirmButton.OnButtonPress += ConfirmPress;
 
             _Music = new AudioPlayer("Content/Audio/gameOverBgm.wav", true, AudioManager.Category.MUSIC, 1);
 
             _StatsDisplay = new StatsDisplay();
         }
 
-        private void OnButtonPress(Button button)
+        public void Start()
+        {
+            _ScoreText.Text = $"SCORE {GameStats.Instance.Score}";
+            _ScoreText.Offset = new Vector2(_ScoreText.Size.X * _ScoreText.Scale.X, _ScoreText.Size.Y * _ScoreText.Scale.Y) / 2;
+
+            _ConfirmButton.TouchEnabled = true;
+            _ConfirmButton.Visible = true;
+            _AchievementsButton.TouchEnabled = true;
+            _AchievementsButton.Visible = true;
+            _LeaderboardButton.TouchEnabled = true;
+            _LeaderboardButton.Visible = true;
+
+            _Background.Visible = true;
+        }
+
+        private void ConfirmPress(Button button)
         {
             if (AdService.Instance.MInterstitialAd.IsLoaded)
             {
@@ -86,17 +119,14 @@ namespace Type.Scenes
             }
         }
 
-        public void Start()
+        private void AchievementsButtonOnPress(Button button)
         {
-            _ScoreText.Text = $"SCORE {GameStats.Instance.Score}";
-            _ScoreText.Offset = new Vector2(_ScoreText.Size.X * _ScoreText.Scale.X, _ScoreText.Size.Y * _ScoreText.Scale.Y) / 2;
-
-            _ConfirmButton.TouchEnabled = true;
-            _ConfirmButton.Visible = true;
-
-            _Background.Visible = true;
-
             CompetitiveManager.Instance.ViewAchievements();
+        }
+
+        private void LeaderboardButtonOnPress(Button button)
+        {
+            CompetitiveManager.Instance.ViewLeaderboards();
         }
 
         public override void Update(TimeSpan timeSinceUpdate)
@@ -108,7 +138,11 @@ namespace Type.Scenes
         {
             base.Dispose();
             _Music.Stop();
+            _GameOverText.Dispose();
+            _ScoreText.Dispose();
             _ConfirmButton.Dispose();
+            _AchievementsButton.Dispose();
+            _LeaderboardButton.Dispose();
             _Background.Dispose();
             _StatsDisplay.Dispose();
         }

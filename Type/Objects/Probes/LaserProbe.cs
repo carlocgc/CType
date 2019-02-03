@@ -5,7 +5,6 @@ using System;
 using Type.Base;
 using Type.Data;
 using Type.Interfaces.Probe;
-using Type.Interfaces.Weapons;
 using Type.Objects.Projectiles;
 
 namespace Type.Objects.Probes
