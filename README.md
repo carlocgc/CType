@@ -11,3 +11,6 @@ You control a space ship that is flying through space shooting enemies, collecti
 ## Acknowledgments
 
 * Amerigo Moscaroli for his renderer
+
+## Testing
+https://play.google.com/apps/testing/com.ctype
