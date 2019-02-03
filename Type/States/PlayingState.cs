@@ -231,6 +231,7 @@ namespace Type.States
         private void UpdateScore(Int32 amount)
         {
             GameStats.Instance.Score += amount;
+            LeaderboardController.Instance.ScoreUpdated(GameStats.Instance.Score);
             _ScoreDisplay.Text = GameStats.Instance.Score.ToString();
         }
 
@@ -240,6 +241,8 @@ namespace Type.States
         private void LevelComplete()
         {
             _LevelCanEnd = false;
+
+            AchievementController.Instance.LevelCompleted(_CurrentLevel);
 
             if (_CurrentLevel >= _MaxLevel) GameCompleted();
             else
