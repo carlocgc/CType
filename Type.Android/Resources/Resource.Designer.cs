@@ -4487,7 +4487,7 @@ namespace Type.Android
 			public const int hide_bottom_view_on_scroll_behavior = 2131230789;
 			
 			// aapt resource value: 0x7f080059
-			public const int leaderboard_highscore = 2131230809;
+			public const int leaderboard_highscores = 2131230809;
 			
 			// aapt resource value: 0x7f080046
 			public const int mtrl_chip_close_icon_content_description = 2131230790;

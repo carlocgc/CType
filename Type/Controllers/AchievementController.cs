@@ -57,21 +57,18 @@ namespace Type.Controllers
         /// <param name="allTimeScore"></param>
         public void AllTimeScoreUpdated(Int64 allTimeScore)
         {
+            if (!CompetitiveManager.Instance.Loaded) return;
+
             Int64 mil = 1000000000;
             Single percentage = 0;
 
             if (allTimeScore >= mil) percentage = 1;
-            else
-            {
-                percentage = allTimeScore / mil;
-            }
+            else percentage = (Single)allTimeScore / mil;
 
-            if (!CompetitiveManager.Instance.Loaded) return;
-
-            if (CompetitiveManager.Instance.GetAchievement(7).PercentageComplete < 1)
+            if (CompetitiveManager.Instance.GetAchievement(7).PercentageComplete < 1 && percentage >= 1)
             {
                 // ACHIEVEMENT :  Score one million
-                CompetitiveManager.Instance.SetAchievementProgress(7, percentage);
+                CompetitiveManager.Instance.SetAchievementProgress(7, 1);
             }
         }
 
@@ -100,35 +97,35 @@ namespace Type.Controllers
             switch (playerShipId)
             {
                 case 0:
-                {
-                    if (CompetitiveManager.Instance.GetAchievement(3).PercentageComplete < 1)
                     {
-                        // ACHIEVEMENT : Alpha victor
-                        CompetitiveManager.Instance.SetAchievementProgress(3, 1);
-                    }
+                        if (CompetitiveManager.Instance.GetAchievement(3).PercentageComplete < 1)
+                        {
+                            // ACHIEVEMENT : Alpha victor
+                            CompetitiveManager.Instance.SetAchievementProgress(3, 1);
+                        }
 
-                    break;
-                }
+                        break;
+                    }
                 case 1:
-                {
-                    if (CompetitiveManager.Instance.GetAchievement(4).PercentageComplete < 1)
                     {
-                        // ACHIEVEMENT : Beta victor
-                        CompetitiveManager.Instance.SetAchievementProgress(4, 1);
-                    }
+                        if (CompetitiveManager.Instance.GetAchievement(4).PercentageComplete < 1)
+                        {
+                            // ACHIEVEMENT : Beta victor
+                            CompetitiveManager.Instance.SetAchievementProgress(4, 1);
+                        }
 
-                    break;
-                }
+                        break;
+                    }
                 case 2:
-                {
-                    if (CompetitiveManager.Instance.GetAchievement(5).PercentageComplete < 1)
                     {
-                        // ACHIEVEMENT : Gamma victor
-                        CompetitiveManager.Instance.SetAchievementProgress(5, 1);
-                    }
+                        if (CompetitiveManager.Instance.GetAchievement(5).PercentageComplete < 1)
+                        {
+                            // ACHIEVEMENT : Gamma victor
+                            CompetitiveManager.Instance.SetAchievementProgress(5, 1);
+                        }
 
-                    break;
-                }
+                        break;
+                    }
             }
         }
 

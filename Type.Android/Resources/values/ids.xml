@@ -24,6 +24,6 @@ Save this file as res/values/games-ids.xml in your project.
   <string name="achievement_prototype" translatable="false">CgkIqLOFpcMIEAIQCA</string>
   <!-- achievement 1,000,000 Scored -->
   <string name="achievement_1000000_scored" translatable="false">CgkIqLOFpcMIEAIQAw</string>
-  <!-- leaderboard HighScore -->
-  <string name="leaderboard_highscore" translatable="false">CgkIqLOFpcMIEAIQAQ</string>
+  <!-- leaderboard HighScores -->
+  <string name="leaderboard_highscores" translatable="false">CgkIqLOFpcMIEAIQCg</string>
 </resources>

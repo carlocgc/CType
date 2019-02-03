@@ -46,7 +46,7 @@ namespace Type
             }
 
             /// <summary> The hihghscore leaderboard </summary>
-            private static readonly String HIGHSCORE = "CgkIqLOFpcMIEAIQAQ";
+            private static readonly String HIGHSCORE = "CgkIqLOFpcMIEAIQCg";
         }
 
         /// <summary>
