@@ -101,7 +101,4 @@
     <Compile Include="$(MSBuildThisFileDirectory)UI\StatsDisplay.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Base\TimedCallback.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)Competitive\" />
-  </ItemGroup>
 </Project>
