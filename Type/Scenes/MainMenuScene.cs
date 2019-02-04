@@ -52,14 +52,14 @@ namespace Type.Scenes
 
             Sprite achievementsButton = new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/trophy.png"))
             {
-                Position = new Vector2(-900, 380),
+                Position = new Vector2(-900, 350),
             };
             _AchievementsButton = new Button(Constants.ZOrders.UI, achievementsButton);
             _AchievementsButton.OnButtonPress += AchievementsButtonOnPress;
 
             Sprite leaderboardButton = new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/leaderboard.png"))
             {
-                Position = new Vector2(-900, 250),
+                Position = new Vector2(770, 350),
             };
             _LeaderboardButton = new Button(Constants.ZOrders.UI, leaderboardButton);
             _LeaderboardButton.OnButtonPress += LeaderboardButtonOnPress;

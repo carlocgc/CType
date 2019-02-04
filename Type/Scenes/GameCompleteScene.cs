@@ -29,6 +29,8 @@ namespace Type.Scenes
         private readonly StatsDisplay _StatsDisplay;
         /// <summary> Text on the confirm button </summary>
         private readonly TextDisplay _ConfirmText;
+        /// <summary> Text to display when a new highscore is achieved </summary>
+        private TextDisplay _HighScoreText;
         /// <summary> Background music for the scene </summary>
         private readonly AudioPlayer _Music;
 
@@ -42,11 +44,20 @@ namespace Type.Scenes
                 Text = "CONGRATULATIONS",
                 Position = new Vector2(0, 300),
                 Visible = true,
-                Scale = new Vector2(6, 6),
+                Scale = new Vector2(5, 5),
                 Colour = new Vector4(0, 0, 1, 1)
             };
             _CongratsText.Offset = new Vector2(_CongratsText.Size.X * _CongratsText.Scale.X, _CongratsText.Size.Y * _CongratsText.Scale.Y) / 2;
             AddDrawable(_CongratsText);
+            _HighScoreText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
+            {
+                Text = "NEW HIGHSCORE",
+                Position = new Vector2(0, 100),
+                Scale = new Vector2(4, 4),
+                Colour = new Vector4(255, 255, 0, 1)
+            };
+            _HighScoreText.Offset = new Vector2(_HighScoreText.Size.X * _HighScoreText.Scale.X, _HighScoreText.Size.Y * _HighScoreText.Scale.Y) / 2;
+            AddDrawable(_HighScoreText);
             _ScoreText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
                 Position = new Vector2(0, 0),
@@ -65,14 +76,14 @@ namespace Type.Scenes
 
             Sprite achievementsButton = new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/trophy.png"))
             {
-                Position = new Vector2(-900, -500),
+                Position = new Vector2(-900, 350),
             };
             _AchievementsButton = new Button(Constants.ZOrders.UI, achievementsButton);
             _AchievementsButton.OnButtonPress += AchievementsButtonOnPress;
 
             Sprite leaderboardButton = new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/leaderboard.png"))
             {
-                Position = new Vector2(-900, -380),
+                Position = new Vector2(770, 350),
             };
             _LeaderboardButton = new Button(Constants.ZOrders.UI, leaderboardButton);
             _LeaderboardButton.OnButtonPress += LeaderboardButtonOnPress;
@@ -140,6 +151,8 @@ namespace Type.Scenes
             _LeaderboardButton.TouchEnabled = true;
             _LeaderboardButton.Visible = true;
             _ConfirmText.Visible = true;
+
+            _HighScoreText.Visible = GameStats.Instance.IsNewHighScore;
         }
 
         /// <summary> Disposes of the scene </summary>
@@ -155,6 +168,7 @@ namespace Type.Scenes
             _LeaderboardButton.Dispose();
             _ConfirmButton.Dispose();
             _StatsDisplay.Dispose();
+            _HighScoreText.Dispose();
         }
     }
 }
