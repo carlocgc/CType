@@ -387,6 +387,7 @@ namespace Type.Objects.Player
         public override void Dispose()
         {
             base.Dispose();
+            _InvincibleColourCallback.Dispose();
             foreach (Sprite effect in _EngineEffects) effect.Dispose();
             _Shield.Dispose();
             _ProbeController.Dispose();
