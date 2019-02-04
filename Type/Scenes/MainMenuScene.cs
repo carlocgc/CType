@@ -30,7 +30,7 @@ namespace Type.Scenes
         private readonly AudioPlayer _Music;
 
         /// <summary> Whether the  player has pressed space and started the game </summary>
-        public Boolean IsComplete { get; set; }
+        public Boolean IsComplete { get; private set; }
 
         public MainMenuScene()
         {
@@ -42,7 +42,7 @@ namespace Type.Scenes
             _TitleText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
                 Text = "C:TYPE",
-                Position =  new Vector2(0, 50),
+                Position =  new Vector2(0, 0),
                 Visible = true,
                 Scale = new Vector2(5, 5),
                 Colour = new Vector4(1, 1, 1, 1)
@@ -52,14 +52,14 @@ namespace Type.Scenes
 
             Sprite achievementsButton = new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/trophy.png"))
             {
-                Position = new Vector2(-900, -500),
+                Position = new Vector2(-900, 380),
             };
             _AchievementsButton = new Button(Constants.ZOrders.UI, achievementsButton);
             _AchievementsButton.OnButtonPress += AchievementsButtonOnPress;
 
             Sprite leaderboardButton = new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/leaderboard.png"))
             {
-                Position = new Vector2(-900, -380),
+                Position = new Vector2(-900, 250),
             };
             _LeaderboardButton = new Button(Constants.ZOrders.UI, leaderboardButton);
             _LeaderboardButton.OnButtonPress += LeaderboardButtonOnPress;

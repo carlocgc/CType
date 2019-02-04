@@ -1,11 +1,10 @@
 ﻿using AmosShared.Audio;
+using AmosShared.Competitive;
 using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
 using AmosShared.Touch;
 using OpenTK;
 using System;
-using AmosShared.Base;
-using AmosShared.Competitive;
 using Type.Ads;
 using Type.Data;
 using Type.UI;
@@ -31,7 +30,9 @@ namespace Type.Scenes
         private readonly Button _LeaderboardButton;
         /// <summary> Displays the current game data via text displays </summary>
         private readonly StatsDisplay _StatsDisplay;
-
+        /// <summary> Text on the confirm button </summary>
+        private readonly TextDisplay _ConfirmText;
+        /// <summary> Background music for the scene </summary>
         private readonly AudioPlayer _Music;
 
         /// <summary> Whether the confirm button has been pressed </summary>
@@ -42,7 +43,7 @@ namespace Type.Scenes
             _GameOverText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
                 Text = "GAME OVER",
-                Position = new Vector2(0, 200),
+                Position = new Vector2(0, 300),
                 Visible = true,
                 Scale = new Vector2(7, 7),
                 Colour = new Vector4(1, 0, 0, 1)
@@ -66,16 +67,16 @@ namespace Type.Scenes
             };
             AddDrawable(_Background);
 
-            Sprite achievementsButton = new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/trophy.png"))
+            Sprite achievementsButton = new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/trophy-red.png"))
             {
-                Position = new Vector2(-900, -500),
+                Position = new Vector2(-900, -500)
             };
             _AchievementsButton = new Button(Constants.ZOrders.UI, achievementsButton);
             _AchievementsButton.OnButtonPress += AchievementsButtonOnPress;
 
-            Sprite leaderboardButton = new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/leaderboard.png"))
+            Sprite leaderboardButton = new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/leaderboard-red.png"))
             {
-                Position = new Vector2(-900, -380),
+                Position = new Vector2(-900, -380)
             };
             _LeaderboardButton = new Button(Constants.ZOrders.UI, leaderboardButton);
             _LeaderboardButton.OnButtonPress += LeaderboardButtonOnPress;
@@ -86,6 +87,15 @@ namespace Type.Scenes
             };
             _ConfirmButton = new Button(Constants.ZOrders.UI, confirmButton);
             _ConfirmButton.OnButtonPress += ConfirmPress;
+
+            _ConfirmText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI_OVERLAY, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
+            {
+                Text = @"CONFIRM",
+                Position = new Vector2(0, confirmButton.Position.Y + confirmButton.Height / 2),
+                Scale = new Vector2(2.5f, 2.5f),
+            };
+            _ConfirmText.Offset = new Vector2(_ConfirmText.Size.X * _ConfirmText.Scale.X, _ConfirmText.Size.Y * _ConfirmText.Scale.Y) / 2;
+            AddDrawable(_ConfirmText);
 
             _Music = new AudioPlayer("Content/Audio/gameOverBgm.wav", true, AudioManager.Category.MUSIC, 1);
 
@@ -103,7 +113,7 @@ namespace Type.Scenes
             _AchievementsButton.Visible = true;
             _LeaderboardButton.TouchEnabled = true;
             _LeaderboardButton.Visible = true;
-
+            _ConfirmText.Visible = true;
             _Background.Visible = true;
         }
 
@@ -142,6 +152,7 @@ namespace Type.Scenes
             _GameOverText.Dispose();
             _ScoreText.Dispose();
             _ConfirmButton.Dispose();
+            _ConfirmText.Dispose();
             _AchievementsButton.Dispose();
             _LeaderboardButton.Dispose();
             _Background.Dispose();

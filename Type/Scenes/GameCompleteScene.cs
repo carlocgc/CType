@@ -27,7 +27,9 @@ namespace Type.Scenes
         private readonly TextDisplay _ScoreText;
         /// <summary> Displays the current game data via text displays </summary>
         private readonly StatsDisplay _StatsDisplay;
-
+        /// <summary> Text on the confirm button </summary>
+        private readonly TextDisplay _ConfirmText;
+        /// <summary> Background music for the scene </summary>
         private readonly AudioPlayer _Music;
 
         /// <summary> Whether the complete can end </summary>
@@ -38,7 +40,7 @@ namespace Type.Scenes
             _CongratsText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
                 Text = "CONGRATULATIONS",
-                Position = new Vector2(0, 200),
+                Position = new Vector2(0, 300),
                 Visible = true,
                 Scale = new Vector2(6, 6),
                 Colour = new Vector4(0, 0, 1, 1)
@@ -82,6 +84,15 @@ namespace Type.Scenes
             _ConfirmButton = new Button(Constants.ZOrders.UI, confirmButton);
             _ConfirmButton.OnButtonPress += OnButtonPress;
 
+            _ConfirmText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI_OVERLAY, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
+            {
+                Text = @"CONFIRM",
+                Position = new Vector2(0, confirmButton.Position.Y + confirmButton.Height / 2),
+                Scale = new Vector2(2.5f, 2.5f),
+            };
+            _ConfirmText.Offset = new Vector2(_ConfirmText.Size.X * _ConfirmText.Scale.X, _ConfirmText.Size.Y * _ConfirmText.Scale.Y) / 2;
+            AddDrawable(_ConfirmText);
+
             _Music = new AudioPlayer("Content/Audio/gameCompleteBgm.wav", true, AudioManager.Category.MUSIC, 1);
 
             _StatsDisplay = new StatsDisplay();
@@ -122,13 +133,13 @@ namespace Type.Scenes
             _ScoreText.Offset = new Vector2(_ScoreText.Size.X * _ScoreText.Scale.X, _ScoreText.Size.Y * _ScoreText.Scale.Y) / 2;
 
             _Background.Visible = true;
-
             _ConfirmButton.TouchEnabled = true;
             _ConfirmButton.Visible = true;
             _AchievementsButton.TouchEnabled = true;
             _AchievementsButton.Visible = true;
             _LeaderboardButton.TouchEnabled = true;
             _LeaderboardButton.Visible = true;
+            _ConfirmText.Visible = true;
         }
 
         /// <summary> Disposes of the scene </summary>
@@ -137,6 +148,7 @@ namespace Type.Scenes
             base.Dispose();
             _Music.Stop();
             _Background.Dispose();
+            _ConfirmText.Dispose();
             _CongratsText.Dispose();
             _ScoreText.Dispose();
             _AchievementsButton.Dispose();
