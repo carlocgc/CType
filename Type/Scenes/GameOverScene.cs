@@ -109,7 +109,7 @@ namespace Type.Scenes
 
         private void ConfirmPress(Button button)
         {
-            if (AdService.Instance.MInterstitialAd.IsLoaded)
+            if (AdService.Instance.IsLoaded)
             {
                 AdService.Instance.OnAddClosed = () => IsComplete = true;
                 AdService.Instance.ShowInterstitial();

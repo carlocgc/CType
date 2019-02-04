@@ -1,143 +1,91 @@
-﻿using Android.Gms.Ads;
+﻿#if __ANDROID__
+using Type.Android.Services;
+#elif DESKTOP
+using Type.Desktop.Services;
+#endif
 using System;
-using Android.Views;
-using Android.Widget;
-using Type.Android;
+using Type.Interfaces.Service;
 
 namespace Type.Ads
 {
-    public class AdService
+    /// <summary>
+    /// Advertisement Service
+    /// </summary>
+    public sealed class AdService
     {
         /// <summary> The instance of the AdService </summary>
         private static AdService _Instance;
-        /// <summary> The instance of the AdService </summary>
+
+        /// <summary> The instance of the PlayStoreAdService </summary>
         public static AdService Instance => _Instance ?? (_Instance = new AdService());
 
-        public Action OnAddClosed { get; set; }
+        /// <summary> Platform specific ad service </summary>
+        private readonly IAdService _AdServiceProvider;
 
-        public Action OnAddClicked { get; set; }
+        /// <summary> Whether an ad is loaded </summary>
+        public Boolean IsLoaded => _AdServiceProvider.IsLoaded;
 
-        public Action OnLeaveApplication { get; set; }
+        /// <summary>
+        /// Invoked when an ad is closed by the user
+        /// </summary>
+        public Action OnAddClosed
+        {
+            get => _AdServiceProvider.OnAddClosed;
+            set => _AdServiceProvider.OnAddClosed = value;
+        }
+
+        /// <summary>
+        /// Invoked when an ad is clicked by the user
+        /// </summary>
+        public Action OnAddClicked
+        {
+            get => _AdServiceProvider.OnAddClicked;
+            set => _AdServiceProvider.OnAddClicked = value;
+        }
+
+        /// <summary>
+        /// Invoked when the application has been left, usually by clicking an ad
+        /// </summary>
+        public Action OnLeaveApplication
+        {
+            get => _AdServiceProvider.OnLeaveApplication;
+            set => _AdServiceProvider.OnLeaveApplication = value;
+        }
 
         private AdService()
         {
-
-        }
-
-        public void Initialise()
-        {
-            MobileAds.Initialize(MainActivity.Instance, "ca-app-pub-4204969324853965~4341189590"); // My Admob ID
-            CreateInterstitial();
+#if __ANDROID__
+            _AdServiceProvider = new PlayStoreAdService();
+#elif DESKTOP
+            _AdServiceProvider = new DesktopAdService();
+#endif
         }
 
         /// <summary>
-        /// Adds the assignable actions as a listener to the ad events
+        /// Initialises the service by setting the service unique id
         /// </summary>
-        private void AttachListener()
+        /// <param name="serviceId"> Service id, AdMob/Google ads etc. </param>
+        public void Initialise(String serviceId)
         {
-            CustomAdListener cadl = new CustomAdListener
-            {
-                OnAdClickedAction = () =>
-                {
-                    OnAddClicked?.Invoke();
-                    AdService.Instance.LoadInterstitial();
-                },
-                OnAdLeftApplicationAction = () =>
-                {
-                    OnLeaveApplication?.Invoke();
-                    AdService.Instance.LoadInterstitial();
-                },
-                OnAdClosedAction = () =>
-                {
-                    OnAddClosed?.Invoke();
-                    AdService.Instance.LoadInterstitial();
-                }
-            };
-            AdService.Instance.MInterstitialAd.AdListener = cadl;
+            _AdServiceProvider.Initialise(serviceId);
         }
 
         #region Interstitial
-
-        /// <summary>
-        /// Interstitial ad object
-        /// </summary>
-        public InterstitialAd MInterstitialAd { get; private set; }
-
-        /// <summary>
-        /// Creates interstitial ad object, sets the AdUnit id and preloads an ad request
-        /// </summary>
-        private void CreateInterstitial()
-        {
-            MInterstitialAd = new InterstitialAd(MainActivity.Instance);
-            MInterstitialAd.AdUnitId = "ca-app-pub-3940256099942544/1033173712"; // TODO FIX TEST AD Replace with ad unit id from AdMob
-            LoadInterstitial();
-        }
 
         /// <summary>
         /// Load the next ad, should be invoked as soon as possible so ad is ready to display when nessesary, usually straight after an ad is shown
         /// </summary>
         public void LoadInterstitial()
         {
-            AdRequest request = new AdRequest.Builder().AddTestDevice("7DBD856302197638").Build(); // TODO FIX TEST AD Remove '.AddTestDevice(XXXXXXX)'
-            MInterstitialAd.LoadAd(request);
+            _AdServiceProvider.LoadInterstitial();
         }
-
 
         /// <summary>
         /// Show the interstitial ad
         /// </summary>
         public void ShowInterstitial()
         {
-            if (!MInterstitialAd.IsLoaded)
-            {
-                OnAddClosed?.Invoke();
-                return;
-            }
-
-            AttachListener();
-            AdService.Instance.MInterstitialAd.Show();
-        }
-
-        #endregion
-
-        #region  Banner
-
-        /// <summary>
-        /// AdView object
-        /// </summary>
-        private AdView MAdView { get; set; }
-
-        /// <summary>
-        /// WIP Not implemented
-        /// </summary>
-        private void CreateAdView()
-        {
-            throw new NotImplementedException();
-
-            AdView adView = new AdView(MainActivity.Instance);
-            adView.AdSize = AdSize.Banner;
-            adView.AdUnitId = "ca-app-pub-3940256099942544/6300978111"; // TODO FIX TEST AD Replace with ad unit id from AdMob
-            LoadAdView();
-        }
-
-        /// <summary>
-        /// WIP Not implemented
-        /// </summary>
-        public void LoadAdView()
-        {
-            throw new NotImplementedException();
-
-            AdRequest adRequest = new AdRequest.Builder().AddTestDevice("7DBD856302197638").Build();
-            MAdView.LoadAd(adRequest);
-        }
-
-
-        /// <summary>
-        /// WIP not implemented
-        /// </summary>
-        public void ShowAdView()
-        {
-            throw new NotImplementedException("AdViews are not implemented");
+            _AdServiceProvider.ShowInterstitial();
         }
 
         #endregion

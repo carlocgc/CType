@@ -1,9 +1,7 @@
-﻿using System;
-using AmosShared.Base;
+﻿using AmosShared.Base;
 using AmosShared.Competitive;
 using AmosShared.Graphics;
 using AmosShared.State;
-using Android.Provider;
 using Engine.Shared.Graphics.Textures;
 using OpenTK;
 using Type.Ads;
@@ -33,7 +31,7 @@ namespace Type
             UiCanvas = new Canvas(new Camera(Vector2.Zero, new Vector2(1920, 1080)), 1,
                 new Shader());
 
-            AdService.Instance.Initialise();
+            AdService.Instance.Initialise("ca-app-pub-4204969324853965~4341189590");
 
             SpritesheetLoader.LoadSheet("Content/Graphics/KenPixel/", "KenPixel.png", "KenPixel.json");
 

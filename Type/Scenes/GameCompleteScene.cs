@@ -89,7 +89,7 @@ namespace Type.Scenes
 
         private void OnButtonPress(Button obj)
         {
-            if (AdService.Instance.MInterstitialAd.IsLoaded)
+            if (AdService.Instance.IsLoaded)
             {
                 AdService.Instance.OnAddClosed = () => IsComplete = true;
                 AdService.Instance.ShowInterstitial();
