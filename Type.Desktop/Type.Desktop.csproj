@@ -64,6 +64,7 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\DesktopAdService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\Assets\Audio\begin.wav">
@@ -302,12 +303,20 @@
       <Link>Content\Graphics\Buttons\gameovercontinue.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\Assets\Graphics\Buttons\leaderboard-red.png">
+      <Link>Content\Graphics\Buttons\leaderboard-red.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\Assets\Graphics\Buttons\leaderboard.png">
       <Link>Content\Graphics\Buttons\leaderboard.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\Assets\Graphics\Buttons\ship_select_button.png">
       <Link>Content\Graphics\Buttons\ship_select_button.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Buttons\trophy-red.png">
+      <Link>Content\Graphics\Buttons\trophy-red.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\Assets\Graphics\Buttons\trophy.png">
@@ -525,6 +534,10 @@
     <ProjectReference Include="..\SupportingFiles\AmosDesktop\AmosDesktop.csproj">
       <Project>{b4b23ae1-df74-49d9-b85d-62033515baa5}</Project>
       <Name>AmosDesktop</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Type.Android\Type.Android.csproj">
+      <Project>{3DAE946F-A62D-4CCC-81EB-E8661F7AB186}</Project>
+      <Name>Type.Android</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="..\Type\Type.projitems" Label="Shared" />

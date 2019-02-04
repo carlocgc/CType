@@ -54,8 +54,11 @@ namespace Type.Data
             }
         }
 
+        /// <summary> Whether the current score is a new highscore </summary>
+        public Boolean IsNewHighScore { get; set; }
+
         /// <summary> Total game time </summary>
-        public TimeSpan PlayTime => _EndTime - _StartTime;
+        public TimeSpan PlayTime => _EndTime - _StartTime;        
 
         /// <summary>
         /// Sets the game start time
@@ -76,7 +79,12 @@ namespace Type.Data
             _EndTime = DateTime.Now;
 
             // Save highscore
-            if (_Score > _HighScore) DataLoader.SetValue("HIGH_SCORE", _Score);
+            if (_Score > _HighScore)
+            {
+                DataLoader.SetValue("HIGH_SCORE", _Score);
+                IsNewHighScore = true;
+            }
+
             LeaderboardController.Instance.ScoreUpdated(_Score);
 
             // Save all-time score
@@ -91,6 +99,7 @@ namespace Type.Data
             ShieldsCreated = 0;
             EnemiesKilled = 0;
             Deaths = 0;
+            IsNewHighScore = false;
         }
     }
 }

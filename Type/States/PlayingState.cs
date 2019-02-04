@@ -22,7 +22,7 @@ namespace Type.States
     public class PlayingState : State, IPlayerListener, IEnemyListener, IEnemyFactoryListener, IPowerupListener, IPowerupFactoryListener, IUpdatable
     {
         /// <summary> Max level of the game </summary>
-        private readonly Int32 _MaxLevel = 7;
+        private readonly Int32 _MaxLevel = 1;
         /// <summary> THe type of player craft </summary>
         private readonly Int32 _PlayerType;
 

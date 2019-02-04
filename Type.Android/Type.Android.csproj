@@ -180,6 +180,8 @@
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\PlayStoreAdService.cs" />
+    <Compile Include="Services\CustomAdListener.cs" />
   </ItemGroup>
   <ItemGroup>
     <AndroidNativeLibrary Include="lib\arm64-v8a\libopenal32.so" />
@@ -579,6 +581,12 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\Content\Graphics\Buttons\trophy.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\Content\Graphics\Buttons\leaderboard-red.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\Content\Graphics\Buttons\trophy-red.png" />
   </ItemGroup>
   <Import Project="..\Type\Type.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
