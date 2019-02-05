@@ -141,6 +141,11 @@ namespace Type.Factories
                         enemy = new LargeEnemyRed(_CurrentWave.Ypositions[_DataIndex], accel);
                         break;
                     }
+                case 3:
+                    {
+                        enemy = new DualShotEnemyRed(_CurrentWave.Ypositions[_DataIndex], accel);
+                        break;
+                    }
                 case 20:
                     {
                         enemy = new Boss01();
