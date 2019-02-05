@@ -25,5 +25,29 @@ namespace Type.Controllers
             // Update Highscore board
             CompetitiveManager.Instance.UpdateLeaderboardProgress(0, score);
         }
+
+        public void KillsUpdated(Int32 kills)
+        {
+            if (!CompetitiveManager.Instance.Loaded) return;
+
+            // Update kills board
+            CompetitiveManager.Instance.UpdateLeaderboardProgress(1, kills);
+        }
+
+        public void AllTimeScoreUpdated(Int32 alltimeScore)
+        {
+            if (!CompetitiveManager.Instance.Loaded) return;
+
+            // Update alltime score board
+            CompetitiveManager.Instance.UpdateLeaderboardProgress(2, alltimeScore);
+        }
+
+        public void AllTimeKillsUpdated(Int32 alltimeKills)
+        {
+            if (!CompetitiveManager.Instance.Loaded) return;
+
+            // Update alltime kills board
+            CompetitiveManager.Instance.UpdateLeaderboardProgress(3, alltimeKills);
+        }
     }
 }

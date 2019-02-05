@@ -41,12 +41,17 @@ namespace Type
             {
                 return new String[]
                 {
-                    HIGHSCORE,
+                    SINGLERUN_HIGHSCORE,
+                    SINGLERUN_KILLS,
+                    ALLTIME_SCORE,
+                    ALLTIME_KILLS,
                 };
             }
 
-            /// <summary> The hihghscore leaderboard </summary>
-            private static readonly String HIGHSCORE = "CgkIqLOFpcMIEAIQCg";
+            private static readonly String SINGLERUN_HIGHSCORE = "CgkIqLOFpcMIEAIQCg";
+            private static readonly String SINGLERUN_KILLS = "CgkIqLOFpcMIEAIQDQ";
+            private static readonly String ALLTIME_SCORE = "CgkIqLOFpcMIEAIQDA";
+            private static readonly String ALLTIME_KILLS = "CgkIqLOFpcMIEAIQCw";
         }
 
         /// <summary>
@@ -58,8 +63,8 @@ namespace Type
             {
                 return new String[]
                 {
-                    COMPLETE_LEVEL_1,
-                    COMPLETE_LEVEL_5,
+                    COMPLETE_LEVEL_3,
+                    COMPLETE_LEVEL_7,
                     UNDERDOG,
                     ALPHA_VICTOR,
                     BETA_VICTOR,
@@ -69,8 +74,8 @@ namespace Type
                 };
             }
 
-            private static readonly String COMPLETE_LEVEL_1 = "CgkIqLOFpcMIEAIQAg";
-            private static readonly String COMPLETE_LEVEL_5 = "CgkIqLOFpcMIEAIQBA";
+            private static readonly String COMPLETE_LEVEL_3 = "CgkIqLOFpcMIEAIQAg";
+            private static readonly String COMPLETE_LEVEL_7 = "CgkIqLOFpcMIEAIQBA";
             private static readonly String UNDERDOG = "CgkIqLOFpcMIEAIQCQ";
             private static readonly String ALPHA_VICTOR = "CgkIqLOFpcMIEAIQBQ";
             private static readonly String BETA_VICTOR = "CgkIqLOFpcMIEAIQBg";

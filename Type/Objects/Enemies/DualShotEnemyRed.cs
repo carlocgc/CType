@@ -15,10 +15,7 @@ using static Type.Constants.Global;
 
 namespace Type.Objects.Enemies
 {
-    /// <summary>
-    /// Enemy of type beta
-    /// </summary>
-    public class Enemy_02 : GameObject, IEnemy
+    public class DualShotEnemyRed : GameObject, IEnemy
     {
         /// <summary> How long to wait before playing the hit sound</summary>
         private readonly TimeSpan _HitSoundInterval = TimeSpan.FromSeconds(0.2f); // TODO FIXME Work around to stop so many sounds playing
@@ -82,7 +79,7 @@ namespace Type.Objects.Enemies
             Position.Y + _Sprite.Offset.Y <= ScreenBottom ||
             Position.Y - _Sprite.Offset.Y >= ScreenTop;
 
-        public Enemy_02(Single yPos, IAccelerationProvider moveController)
+        public DualShotEnemyRed(Single yPos, IAccelerationProvider moveController)
         {
             _Listeners = new List<IEnemyListener>();
 
@@ -94,7 +91,7 @@ namespace Type.Objects.Enemies
             Points = 25;
             CanBeRoadKilled = true;
 
-            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, Texture.GetTexture("Content/Graphics/Enemies/enemy2.png"))
+            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, Texture.GetTexture("Content/Graphics/Enemies/enemy4.png"))
             {
                 Visible = true,
             };
@@ -139,7 +136,7 @@ namespace Type.Objects.Enemies
             Vector2 bulletDirection = _DirectionTowardsPlayer;
             if (bulletDirection != Vector2.Zero) bulletDirection.Normalize();
             new PlasmaBall(Position, bulletDirection, 1050, new Vector4(100, 100, 0, 1));
-
+            new PlasmaBall(Position, bulletDirection, 1050, new Vector4(100, 100, 0, 1));
             _IsWeaponLocked = true;
             new AudioPlayer("Content/Audio/laser2.wav", false, AudioManager.Category.EFFECT, 1);
         }

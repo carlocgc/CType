@@ -128,17 +128,22 @@ namespace Type.Factories
             {
                 case 0:
                     {
-                        enemy = new Enemy_01(_CurrentWave.Ypositions[_DataIndex], accel);
+                        enemy = new SmallEnemyRed(_CurrentWave.Ypositions[_DataIndex], accel);
                         break;
                     }
                 case 1:
                     {
-                        enemy = new Enemy_02(_CurrentWave.Ypositions[_DataIndex], accel);
+                        enemy = new MediumEnemyRed(_CurrentWave.Ypositions[_DataIndex], accel);
                         break;
                     }
                 case 2:
                     {
-                        enemy = new Enemy_03(_CurrentWave.Ypositions[_DataIndex], accel);
+                        enemy = new LargeEnemyRed(_CurrentWave.Ypositions[_DataIndex], accel);
+                        break;
+                    }
+                case 3:
+                    {
+                        enemy = new DualShotEnemyRed(_CurrentWave.Ypositions[_DataIndex], accel);
                         break;
                     }
                 case 20:
