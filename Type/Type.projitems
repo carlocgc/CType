@@ -57,10 +57,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Weapons\IProjectileShooter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Bosses\Boss01.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Bosses\BossCannon.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\Enemy_01.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\Enemy_02.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\Enemy_04.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\Enemy_03.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\SmallEnemyRed.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\MediumEnemyRed.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\DualShotEnemyRed.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\LargeEnemyRed.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\Movement\EllipseDecreaseMotion.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\Movement\EllipseIncreaseMotion.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\Movement\LinearMotion.cs" />
