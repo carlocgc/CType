@@ -64,9 +64,11 @@ namespace Type
                 return new String[]
                 {
                     COMPLETE_LEVEL_3,
+                    COMPLETE_LEVEL_5,
                     COMPLETE_LEVEL_7,
                     COMPLETE_LEVEL_10,
                     COMPLETE_LEVEL_13,
+                    COMPLETE_LEVEL_15,
                     COMPLETE_LEVEL_17,
                     ALPHA_VICTOR,
                     BETA_VICTOR,
