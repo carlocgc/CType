@@ -21,17 +21,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Engine", "Engine", "{869F30
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Game", "Game", "{9275A5AC-69C1-45B6-83A2-53E8A1194A77}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestDesktop", "SupportingFiles\TestProject\TestDesktop.csproj", "{98DA5F1B-43C9-46DD-A80F-8BCFF8DF99FF}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestAndroid", "SupportingFiles\TestAndroid\TestAndroid.csproj", "{64796FC5-75F7-4ABC-9943-084FE5418D98}"
-EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		SupportingFiles\AmosShared\AmosShared.projitems*{13887a46-7e86-4f55-a5e3-305dfdc1f192}*SharedItemsImports = 4
 		Type\Type.projitems*{3dae946f-a62d-4ccc-81eb-e8661f7ab186}*SharedItemsImports = 4
 		Type\Type.projitems*{5b90ce8e-f31d-497a-9276-f0fb500192ff}*SharedItemsImports = 13
-		SupportingFiles\TestShared\TestShared.projitems*{64796fc5-75f7-4abc-9943-084fe5418d98}*SharedItemsImports = 4
-		SupportingFiles\TestShared\TestShared.projitems*{98da5f1b-43c9-46dd-a80f-8bcff8df99ff}*SharedItemsImports = 4
 		SupportingFiles\AmosShared\AmosShared.projitems*{b4b23ae1-df74-49d9-b85d-62033515baa5}*SharedItemsImports = 4
 		SupportingFiles\AmosShared\AmosShared.projitems*{e1141dba-30ad-45c0-ac94-b0cb1de7aacf}*SharedItemsImports = 4
 		SupportingFiles\AmosShared\AmosShared.projitems*{f182814d-0301-46c6-8f8c-b0ba7f45ce2a}*SharedItemsImports = 13
@@ -64,16 +58,6 @@ Global
 		{E1141DBA-30AD-45C0-AC94-B0CB1DE7AACF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E1141DBA-30AD-45C0-AC94-B0CB1DE7AACF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E1141DBA-30AD-45C0-AC94-B0CB1DE7AACF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{98DA5F1B-43C9-46DD-A80F-8BCFF8DF99FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{98DA5F1B-43C9-46DD-A80F-8BCFF8DF99FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{98DA5F1B-43C9-46DD-A80F-8BCFF8DF99FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{98DA5F1B-43C9-46DD-A80F-8BCFF8DF99FF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{64796FC5-75F7-4ABC-9943-084FE5418D98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{64796FC5-75F7-4ABC-9943-084FE5418D98}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{64796FC5-75F7-4ABC-9943-084FE5418D98}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{64796FC5-75F7-4ABC-9943-084FE5418D98}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{64796FC5-75F7-4ABC-9943-084FE5418D98}.Release|Any CPU.Build.0 = Release|Any CPU
-		{64796FC5-75F7-4ABC-9943-084FE5418D98}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -86,8 +70,6 @@ Global
 		{B4B23AE1-DF74-49D9-B85D-62033515BAA5} = {869F308D-9F32-44BF-AD37-3E4446FF96F7}
 		{E1141DBA-30AD-45C0-AC94-B0CB1DE7AACF} = {869F308D-9F32-44BF-AD37-3E4446FF96F7}
 		{F182814D-0301-46C6-8F8C-B0BA7F45CE2A} = {869F308D-9F32-44BF-AD37-3E4446FF96F7}
-		{98DA5F1B-43C9-46DD-A80F-8BCFF8DF99FF} = {869F308D-9F32-44BF-AD37-3E4446FF96F7}
-		{64796FC5-75F7-4ABC-9943-084FE5418D98} = {869F308D-9F32-44BF-AD37-3E4446FF96F7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1BB235AE-A11B-4A35-97B6-0C04307171CD}
