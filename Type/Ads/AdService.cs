@@ -1,6 +1,6 @@
-﻿#if ANDROID
+﻿#if __ANDROID__
 using Type.Android.Services;
-#elif DESKTOP
+#elif __DESKTOP__
 using Type.Desktop.Services;
 #endif
 using System;
@@ -54,9 +54,9 @@ namespace Type.Ads
 
         private AdService()
         {
-#if ANDROID
+#if __ANDROID__
             _AdServiceProvider = new PlayStoreAdService();
-#elif DESKTOP
+#elif __DESKTOP__
             _AdServiceProvider = new DesktopAdService();
 #endif
         }
