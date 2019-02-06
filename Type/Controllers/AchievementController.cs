@@ -38,12 +38,62 @@ namespace Type.Controllers
 
                         break;
                     }
+                case 5:
+                    {
+                        if (CompetitiveManager.Instance.GetAchievement(0).PercentageComplete < 1)
+                        {
+                            // ACHIEVEMENT : Level 5 complete
+                            CompetitiveManager.Instance.SetAchievementProgress(1, 1);
+                        }
+
+                        break;
+                    }
                 case 7:
                     {
                         if (CompetitiveManager.Instance.GetAchievement(1).PercentageComplete < 1)
                         {
                             // ACHIEVEMENT : Level 7 complete
-                            CompetitiveManager.Instance.SetAchievementProgress(1, 1);
+                            CompetitiveManager.Instance.SetAchievementProgress(2, 1);
+                        }
+
+                        break;
+                    }
+                case 10:
+                    {
+                        if (CompetitiveManager.Instance.GetAchievement(1).PercentageComplete < 1)
+                        {
+                            // ACHIEVEMENT : Level 10 complete
+                            CompetitiveManager.Instance.SetAchievementProgress(3, 1);
+                        }
+
+                        break;
+                    }
+                case 13:
+                    {
+                        if (CompetitiveManager.Instance.GetAchievement(1).PercentageComplete < 1)
+                        {
+                            // ACHIEVEMENT : Level 13 complete
+                            CompetitiveManager.Instance.SetAchievementProgress(4, 1);
+                        }
+
+                        break;
+                    }
+                case 15:
+                    {
+                        if (CompetitiveManager.Instance.GetAchievement(1).PercentageComplete < 1)
+                        {
+                            // ACHIEVEMENT : Level 15 complete
+                            CompetitiveManager.Instance.SetAchievementProgress(5, 1);
+                        }
+
+                        break;
+                    }
+                case 17:
+                    {
+                        if (CompetitiveManager.Instance.GetAchievement(1).PercentageComplete < 1)
+                        {
+                            // ACHIEVEMENT : Level 17 complete
+                            CompetitiveManager.Instance.SetAchievementProgress(6, 1);
                         }
 
                         break;
