@@ -16,9 +16,9 @@ using static Type.Constants.Global;
 namespace Type.Objects.Enemies
 {
     /// <summary>
-    /// Enemy of type alpha
+    /// Enemy of type gamma
     /// </summary>
-    public class SmallEnemyRed : GameObject, IEnemy
+    public class LargeEnemyWeak : GameObject, IEnemy
     {
         /// <summary> How long to wait before playing the hit sound</summary>
         private readonly TimeSpan _HitSoundInterval = TimeSpan.FromSeconds(0.2f); // TODO FIXME Work around to stop so many sounds playing
@@ -53,11 +53,11 @@ namespace Type.Objects.Enemies
         /// <summary> Whether the enemy has been destroyed  </summary>
         public Boolean IsDestroyed { get; private set; }
 
-        /// <inheritdoc />
-        public Int32 HitPoints { get; private set; }
-
         /// <summary> Point valuie for this enemy </summary>
         public Int32 Points { get; private set; }
+
+        /// <inheritdoc />
+        public Int32 HitPoints { get; private set; }
 
         /// <inheritdoc />
         public Boolean AutoFire { get; set; }
@@ -82,19 +82,19 @@ namespace Type.Objects.Enemies
             Position.Y + _Sprite.Offset.Y <= ScreenBottom ||
             Position.Y - _Sprite.Offset.Y >= ScreenTop;
 
-        public SmallEnemyRed(Single yPos, IAccelerationProvider moveController)
+        public LargeEnemyWeak(Single yPos, IAccelerationProvider moveController)
         {
             _Listeners = new List<IEnemyListener>();
 
             _IsMoving = true;
             _IsWeaponLocked = true;
-            _FireRate = TimeSpan.FromSeconds(2f);
+            _FireRate = TimeSpan.FromSeconds(1.4f);
 
-            HitPoints = 2;
-            Points = 10;
+            HitPoints = 5;
+            Points = 50;
             CanBeRoadKilled = true;
 
-            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, Texture.GetTexture("Content/Graphics/Enemies/enemy1.png"))
+            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, Texture.GetTexture("Content/Graphics/Enemies/enemy4.png"))
             {
                 Visible = true,
             };
@@ -122,7 +122,7 @@ namespace Type.Objects.Enemies
                 AnimEndBehaviour = AnimatedSprite.EndBehaviour.STOP,
                 CurrentFrame = 0,
             };
-            _Explosion.Scale = new Vector2(2, 2);
+            _Explosion.Scale = new Vector2(2.25f, 2.25f);
             _Explosion.Offset = new Vector2(_Explosion.Size.X / 2 * _Explosion.Scale.X, _Explosion.Size.Y / 2 * _Explosion.Scale.Y);
 
             Position = new Vector2(Renderer.Instance.TargetDimensions.X / 2 + _Sprite.Offset.X, yPos);
@@ -138,10 +138,10 @@ namespace Type.Objects.Enemies
         {
             Vector2 bulletDirection = _DirectionTowardsPlayer;
             if (bulletDirection != Vector2.Zero) bulletDirection.Normalize();
-            new PlasmaBall(Position, bulletDirection, 1000, new Vector4(100, 0, 0, 1));
+            new PlasmaBall(Position, bulletDirection, 1100, new Vector4(100, 0, 100, 1));
 
             _IsWeaponLocked = true;
-            new AudioPlayer("Content/Audio/laser2.wav", false, AudioManager.Category.EFFECT, 1);
+            new AudioPlayer("Content/Audio/laser4.wav", false, AudioManager.Category.EFFECT, 1);
         }
 
         /// <inheritdoc />
@@ -210,7 +210,6 @@ namespace Type.Objects.Enemies
         public override void Update(TimeSpan timeTilUpdate)
         {
             base.Update(timeTilUpdate);
-
             if (_IsMoving)
             {
                 Position = _MovementController.ApplyAcceleration(Position, timeTilUpdate);
@@ -277,8 +276,8 @@ namespace Type.Objects.Enemies
         {
             _ColourCallback?.CancelAndComplete();
             base.Dispose();
-
             if (!_Explosion.IsDisposed) _Explosion.Dispose();
+
             _Listeners.Clear();
             CollisionController.Instance.DeregisterEnemy(this);
             PositionRelayer.Instance.RemoveRecipient(this);

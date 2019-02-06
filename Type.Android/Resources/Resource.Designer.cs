@@ -4384,35 +4384,50 @@ namespace Type.Android
 			// aapt resource value: 0x7f080031
 			public const int abc_toolbar_collapse_description = 2131230769;
 			
+			// aapt resource value: 0x7f08005d
+			public const int achievement_1000000_scored = 2131230813;
+			
 			// aapt resource value: 0x7f080058
-			public const int achievement_1000000_scored = 2131230808;
+			public const int achievement_alpha_victor = 2131230808;
+			
+			// aapt resource value: 0x7f080059
+			public const int achievement_beta_victor = 2131230809;
+			
+			// aapt resource value: 0x7f08005a
+			public const int achievement_gamma_victor = 2131230810;
 			
 			// aapt resource value: 0x7f080054
-			public const int achievement_alpha_victor = 2131230804;
+			public const int achievement_level_10_cleared = 2131230804;
 			
 			// aapt resource value: 0x7f080055
-			public const int achievement_beta_victor = 2131230805;
+			public const int achievement_level_13_cleared = 2131230805;
 			
 			// aapt resource value: 0x7f080056
-			public const int achievement_gamma_victor = 2131230806;
-			
-			// aapt resource value: 0x7f080051
-			public const int achievement_level_1 = 2131230801;
-			
-			// aapt resource value: 0x7f080052
-			public const int achievement_level_5 = 2131230802;
+			public const int achievement_level_15_cleared = 2131230806;
 			
 			// aapt resource value: 0x7f080057
-			public const int achievement_prototype = 2131230807;
+			public const int achievement_level_17_cleared = 2131230807;
+			
+			// aapt resource value: 0x7f080051
+			public const int achievement_level_3_cleared = 2131230801;
+			
+			// aapt resource value: 0x7f080052
+			public const int achievement_level_5_cleared = 2131230802;
 			
 			// aapt resource value: 0x7f080053
-			public const int achievement_underdog = 2131230803;
+			public const int achievement_level_7_cleared = 2131230803;
+			
+			// aapt resource value: 0x7f08005b
+			public const int achievement_prototype = 2131230811;
+			
+			// aapt resource value: 0x7f08005c
+			public const int achievement_reflexes = 2131230812;
 			
 			// aapt resource value: 0x7f08004f
 			public const int app_id = 2131230799;
 			
-			// aapt resource value: 0x7f08005a
-			public const int app_name = 2131230810;
+			// aapt resource value: 0x7f080062
+			public const int app_name = 2131230818;
 			
 			// aapt resource value: 0x7f08003f
 			public const int appbar_scrolling_view_behavior = 2131230783;
@@ -4486,8 +4501,17 @@ namespace Type.Android
 			// aapt resource value: 0x7f080045
 			public const int hide_bottom_view_on_scroll_behavior = 2131230789;
 			
-			// aapt resource value: 0x7f080059
-			public const int leaderboard_highscores = 2131230809;
+			// aapt resource value: 0x7f080061
+			public const int leaderboard_alltime_kills = 2131230817;
+			
+			// aapt resource value: 0x7f08005f
+			public const int leaderboard_alltime_score = 2131230815;
+			
+			// aapt resource value: 0x7f08005e
+			public const int leaderboard_singlerun_high_score = 2131230814;
+			
+			// aapt resource value: 0x7f080060
+			public const int leaderboard_singlerun_kills = 2131230816;
 			
 			// aapt resource value: 0x7f080046
 			public const int mtrl_chip_close_icon_content_description = 2131230790;

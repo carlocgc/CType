@@ -18,7 +18,7 @@ namespace Type.Objects.Enemies
     /// <summary>
     /// Enemy of type beta
     /// </summary>
-    public class MediumEnemyRed : GameObject, IEnemy
+    public class MediumEnemyStrong : GameObject, IEnemy
     {
         /// <summary> How long to wait before playing the hit sound</summary>
         private readonly TimeSpan _HitSoundInterval = TimeSpan.FromSeconds(0.2f); // TODO FIXME Work around to stop so many sounds playing
@@ -82,19 +82,19 @@ namespace Type.Objects.Enemies
             Position.Y + _Sprite.Offset.Y <= ScreenBottom ||
             Position.Y - _Sprite.Offset.Y >= ScreenTop;
 
-        public MediumEnemyRed(Single yPos, IAccelerationProvider moveController)
+        public MediumEnemyStrong(Single yPos, IAccelerationProvider moveController)
         {
             _Listeners = new List<IEnemyListener>();
 
             _IsMoving = true;
             _IsWeaponLocked = true;
-            _FireRate = TimeSpan.FromSeconds(1.7f);
+            _FireRate = TimeSpan.FromSeconds(1f);
 
-            HitPoints = 3;
-            Points = 25;
+            HitPoints = 4;
+            Points = 100;
             CanBeRoadKilled = true;
 
-            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, Texture.GetTexture("Content/Graphics/Enemies/enemy2.png"))
+            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, Texture.GetTexture("Content/Graphics/Enemies/enemy6.png"))
             {
                 Visible = true,
             };
