@@ -15,7 +15,7 @@ namespace Type.Objects.Bosses
     /// <summary>
     /// Boss that has three destroyable cannons
     /// </summary>
-    public sealed class Boss01 : GameObject, IEnemy, IEnemyListener
+    public sealed class BossFighter : GameObject, IEnemy, IEnemyListener
     {
         /// <summary> List of <see cref="IEnemyListener"/>'s </summary>
         private readonly List<IEnemyListener> _Listeners;
@@ -101,7 +101,7 @@ namespace Type.Objects.Bosses
         /// <summary> Amount of points this object is worth </summary>
         public Int32 Points { get; }
 
-        public Boss01()
+        public BossFighter()
         {
             _Listeners = new List<IEnemyListener>();
             _Cannons = new List<BossCannon>();

@@ -18,7 +18,7 @@ namespace Type.Objects.Enemies
     /// <summary>
     /// Enemy of type gamma
     /// </summary>
-    public class LargeEnemyRed : GameObject, IEnemy
+    public class LargeEnemyWeak : GameObject, IEnemy
     {
         /// <summary> How long to wait before playing the hit sound</summary>
         private readonly TimeSpan _HitSoundInterval = TimeSpan.FromSeconds(0.2f); // TODO FIXME Work around to stop so many sounds playing
@@ -82,7 +82,7 @@ namespace Type.Objects.Enemies
             Position.Y + _Sprite.Offset.Y <= ScreenBottom ||
             Position.Y - _Sprite.Offset.Y >= ScreenTop;
 
-        public LargeEnemyRed(Single yPos, IAccelerationProvider moveController)
+        public LargeEnemyWeak(Single yPos, IAccelerationProvider moveController)
         {
             _Listeners = new List<IEnemyListener>();
 
