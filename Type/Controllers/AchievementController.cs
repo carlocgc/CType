@@ -128,20 +128,6 @@ namespace Type.Controllers
                     }
             }
         }
-
-        /// <summary>
-        /// Updates the underdog achievement
-        /// </summary>
-        public void Underdog()
-        {
-            if (!CompetitiveManager.Instance.Loaded) return;
-
-            if (CompetitiveManager.Instance.GetAchievement(2).PercentageComplete < 1)
-            {
-                // ACHIEVEMENT : Underdog
-                CompetitiveManager.Instance.SetAchievementProgress(2, 1);
-            }
-        }
     }
 }
 
