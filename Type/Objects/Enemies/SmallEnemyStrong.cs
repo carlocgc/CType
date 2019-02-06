@@ -88,9 +88,9 @@ namespace Type.Objects.Enemies
 
             _IsMoving = true;
             _IsWeaponLocked = true;
-            _FireRate = TimeSpan.FromSeconds(0.5f);
+            _FireRate = TimeSpan.FromSeconds(1.1f);
 
-            HitPoints = 4;
+            HitPoints = 3;
             Points = 75;
             CanBeRoadKilled = true;
 
