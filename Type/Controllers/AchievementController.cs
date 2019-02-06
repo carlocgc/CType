@@ -109,7 +109,7 @@ namespace Type.Controllers
         {
             if (!CompetitiveManager.Instance.Loaded) return;
 
-            Int64 mil = 1000000000;
+            Int64 mil = 1000000;
             Single percentage = 0;
 
             if (allTimeScore >= mil) percentage = 1;
@@ -132,6 +132,20 @@ namespace Type.Controllers
             if (CompetitiveManager.Instance.GetAchievement(6).PercentageComplete < 1)
             {
                 // ACHIEVEMENT :  Prototype
+                CompetitiveManager.Instance.SetAchievementProgress(6, 1);
+            }
+        }
+
+        /// <summary>
+        /// Updates the reflexes achievement
+        /// </summary>
+        public void Reflexes()
+        {
+            if (!CompetitiveManager.Instance.Loaded) return;
+
+            if (CompetitiveManager.Instance.GetAchievement(6).PercentageComplete < 1)
+            {
+                // ACHIEVEMENT :  Reflexes
                 CompetitiveManager.Instance.SetAchievementProgress(6, 1);
             }
         }
