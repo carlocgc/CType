@@ -72,7 +72,7 @@ namespace Type.Data
                                     delays.Add(Single.Parse(partSplit[1]));
                                     break;
                                 }
-                            case "movetype":
+                            case "move":
                                 {
                                     moveTypes.Add(Int32.Parse(partSplit[1]));
                                     break;
