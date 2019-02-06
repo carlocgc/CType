@@ -118,7 +118,7 @@ namespace Type.Controllers
             if (CompetitiveManager.Instance.GetAchievement(7).PercentageComplete < 1 && percentage >= 1)
             {
                 // ACHIEVEMENT :  Score one million
-                CompetitiveManager.Instance.SetAchievementProgress(7, 1);
+                CompetitiveManager.Instance.SetAchievementProgress(12, 1);
             }
         }
 
@@ -132,7 +132,7 @@ namespace Type.Controllers
             if (CompetitiveManager.Instance.GetAchievement(6).PercentageComplete < 1)
             {
                 // ACHIEVEMENT :  Prototype
-                CompetitiveManager.Instance.SetAchievementProgress(6, 1);
+                CompetitiveManager.Instance.SetAchievementProgress(10, 1);
             }
         }
 
@@ -146,7 +146,7 @@ namespace Type.Controllers
             if (CompetitiveManager.Instance.GetAchievement(6).PercentageComplete < 1)
             {
                 // ACHIEVEMENT :  Reflexes
-                CompetitiveManager.Instance.SetAchievementProgress(6, 1);
+                CompetitiveManager.Instance.SetAchievementProgress(11, 1);
             }
         }
 
@@ -165,7 +165,7 @@ namespace Type.Controllers
                         if (CompetitiveManager.Instance.GetAchievement(3).PercentageComplete < 1)
                         {
                             // ACHIEVEMENT : Alpha victor
-                            CompetitiveManager.Instance.SetAchievementProgress(3, 1);
+                            CompetitiveManager.Instance.SetAchievementProgress(7, 1);
                         }
 
                         break;
@@ -175,7 +175,7 @@ namespace Type.Controllers
                         if (CompetitiveManager.Instance.GetAchievement(4).PercentageComplete < 1)
                         {
                             // ACHIEVEMENT : Beta victor
-                            CompetitiveManager.Instance.SetAchievementProgress(4, 1);
+                            CompetitiveManager.Instance.SetAchievementProgress(8, 1);
                         }
 
                         break;
@@ -185,7 +185,7 @@ namespace Type.Controllers
                         if (CompetitiveManager.Instance.GetAchievement(5).PercentageComplete < 1)
                         {
                             // ACHIEVEMENT : Gamma victor
-                            CompetitiveManager.Instance.SetAchievementProgress(5, 1);
+                            CompetitiveManager.Instance.SetAchievementProgress(9, 1);
                         }
 
                         break;
