@@ -65,22 +65,30 @@ namespace Type
                 {
                     COMPLETE_LEVEL_3,
                     COMPLETE_LEVEL_7,
-                    UNDERDOG,
+                    COMPLETE_LEVEL_10,
+                    COMPLETE_LEVEL_13,
+                    COMPLETE_LEVEL_17,
                     ALPHA_VICTOR,
                     BETA_VICTOR,
                     GAMMA_VICTOR,
                     PROTOTYPE,
+                    REFLEXES,
                     SCORE_ONE_MILLION
                 };
             }
 
             private static readonly String COMPLETE_LEVEL_3 = "CgkIqLOFpcMIEAIQAg";
+            private static readonly String COMPLETE_LEVEL_5 = "CgkIqLOFpcMIEAIQCQ";
             private static readonly String COMPLETE_LEVEL_7 = "CgkIqLOFpcMIEAIQBA";
-            private static readonly String UNDERDOG = "CgkIqLOFpcMIEAIQCQ";
+            private static readonly String COMPLETE_LEVEL_10 = "CgkIqLOFpcMIEAIQDw";
+            private static readonly String COMPLETE_LEVEL_13 = "CgkIqLOFpcMIEAIQEA";
+            private static readonly String COMPLETE_LEVEL_15 = "CgkIqLOFpcMIEAIQEg";
+            private static readonly String COMPLETE_LEVEL_17 = "CgkIqLOFpcMIEAIQEQ";
             private static readonly String ALPHA_VICTOR = "CgkIqLOFpcMIEAIQBQ";
             private static readonly String BETA_VICTOR = "CgkIqLOFpcMIEAIQBg";
             private static readonly String GAMMA_VICTOR = "CgkIqLOFpcMIEAIQBw";
             private static readonly String PROTOTYPE = "CgkIqLOFpcMIEAIQCA";
+            private static readonly String REFLEXES = "CgkIqLOFpcMIEAIQDg";
             private static readonly String SCORE_ONE_MILLION = "CgkIqLOFpcMIEAIQAw";
         }
 

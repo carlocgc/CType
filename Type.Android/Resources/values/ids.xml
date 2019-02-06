@@ -8,12 +8,20 @@ Save this file as res/values/games-ids.xml in your project.
   <string name="app_id" translatable="false">292940765608</string>
   <!-- package_name -->
   <string name="package_name" translatable="false">com.ctype</string>
-  <!-- achievement Level 1 -->
-  <string name="achievement_level_1" translatable="false">CgkIqLOFpcMIEAIQAg</string>
-  <!-- achievement Level 5 -->
-  <string name="achievement_level_5" translatable="false">CgkIqLOFpcMIEAIQBA</string>
-  <!-- achievement Underdog -->
-  <string name="achievement_underdog" translatable="false">CgkIqLOFpcMIEAIQCQ</string>
+  <!-- achievement Level 3 Cleared -->
+  <string name="achievement_level_3_cleared" translatable="false">CgkIqLOFpcMIEAIQAg</string>
+  <!-- achievement Level 5 Cleared -->
+  <string name="achievement_level_5_cleared" translatable="false">CgkIqLOFpcMIEAIQCQ</string>
+  <!-- achievement Level 7 Cleared -->
+  <string name="achievement_level_7_cleared" translatable="false">CgkIqLOFpcMIEAIQBA</string>
+  <!-- achievement Level 10 Cleared -->
+  <string name="achievement_level_10_cleared" translatable="false">CgkIqLOFpcMIEAIQDw</string>
+  <!-- achievement Level 13 Cleared -->
+  <string name="achievement_level_13_cleared" translatable="false">CgkIqLOFpcMIEAIQEA</string>
+  <!-- achievement Level 15 Cleared -->
+  <string name="achievement_level_15_cleared" translatable="false">CgkIqLOFpcMIEAIQEg</string>
+  <!-- achievement Level 17 Cleared -->
+  <string name="achievement_level_17_cleared" translatable="false">CgkIqLOFpcMIEAIQEQ</string>
   <!-- achievement Alpha Victor -->
   <string name="achievement_alpha_victor" translatable="false">CgkIqLOFpcMIEAIQBQ</string>
   <!-- achievement Beta Victor -->
@@ -22,8 +30,16 @@ Save this file as res/values/games-ids.xml in your project.
   <string name="achievement_gamma_victor" translatable="false">CgkIqLOFpcMIEAIQBw</string>
   <!-- achievement Prototype -->
   <string name="achievement_prototype" translatable="false">CgkIqLOFpcMIEAIQCA</string>
+  <!-- achievement Reflexes -->
+  <string name="achievement_reflexes" translatable="false">CgkIqLOFpcMIEAIQDg</string>
   <!-- achievement 1,000,000 Scored -->
   <string name="achievement_1000000_scored" translatable="false">CgkIqLOFpcMIEAIQAw</string>
-  <!-- leaderboard HighScores -->
-  <string name="leaderboard_highscores" translatable="false">CgkIqLOFpcMIEAIQCg</string>
+  <!-- leaderboard Single-Run High Score -->
+  <string name="leaderboard_singlerun_high_score" translatable="false">CgkIqLOFpcMIEAIQCg</string>
+  <!-- leaderboard All-Time Score -->
+  <string name="leaderboard_alltime_score" translatable="false">CgkIqLOFpcMIEAIQDA</string>
+  <!-- leaderboard Single-Run Kills -->
+  <string name="leaderboard_singlerun_kills" translatable="false">CgkIqLOFpcMIEAIQDQ</string>
+  <!-- leaderboard All-Time Kills -->
+  <string name="leaderboard_alltime_kills" translatable="false">CgkIqLOFpcMIEAIQCw</string>
 </resources>
