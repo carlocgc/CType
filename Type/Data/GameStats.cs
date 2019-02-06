@@ -68,7 +68,7 @@ namespace Type.Data
         }
 
         /// <summary> Whether the current score is a new highscore </summary>
-        public Boolean IsNewHighScore { get; set; }
+        public Boolean IsNewHighScore { get; private set; }
 
         /// <summary> Total game time </summary>
         public TimeSpan PlayTime => _EndTime - _StartTime;
@@ -80,8 +80,8 @@ namespace Type.Data
         {
             Score = 0;
             _StartTime = DateTime.Now;
-            _AllTimeScore = Convert.ToInt32(DataLoader.GetValue("ALLTIME_SCORE"));
             _HighScore = Convert.ToInt32(DataLoader.GetValue("HIGH_SCORE"));
+            _AllTimeScore = Convert.ToInt32(DataLoader.GetValue("ALLTIME_SCORE"));
             _AllTimeKills = Convert.ToInt32(DataLoader.GetValue("ALLTIME_KILLS"));
         }
 

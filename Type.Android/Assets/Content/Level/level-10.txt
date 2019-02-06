@@ -1,4 +1,2 @@
 wave:
-type=20|ypos=-0|delay=0.1|movetype=-1|xdir=-1|ydir=0|speed=400
-_wave:
-type=20|ypos=-0|delay=0.1|movetype=-1|xdir=-1|ydir=0|speed=400
+type=21|ypos=-0|delay=0.1|move=-1|xdir=-1|ydir=0|speed=400

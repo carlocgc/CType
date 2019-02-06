@@ -128,27 +128,42 @@ namespace Type.Factories
             {
                 case 0:
                     {
-                        enemy = new SmallEnemyRed(_CurrentWave.Ypositions[_DataIndex], accel);
+                        enemy = new SmallEnemyWeak(_CurrentWave.Ypositions[_DataIndex], accel);
                         break;
                     }
                 case 1:
                     {
-                        enemy = new MediumEnemyRed(_CurrentWave.Ypositions[_DataIndex], accel);
+                        enemy = new MediumEnemyWeak(_CurrentWave.Ypositions[_DataIndex], accel);
                         break;
                     }
                 case 2:
                     {
-                        enemy = new LargeEnemyRed(_CurrentWave.Ypositions[_DataIndex], accel);
+                        enemy = new LargeEnemyWeak(_CurrentWave.Ypositions[_DataIndex], accel);
                         break;
                     }
                 case 3:
                     {
-                        enemy = new DualShotEnemyRed(_CurrentWave.Ypositions[_DataIndex], accel);
+                        enemy = new SmallEnemyStrong(_CurrentWave.Ypositions[_DataIndex], accel);
+                        break;
+                    }
+                case 4:
+                    {
+                        enemy = new MediumEnemyStrong(_CurrentWave.Ypositions[_DataIndex], accel);
+                        break;
+                    }
+                case 5:
+                    {
+                        enemy = new LargeEnemyStrong(_CurrentWave.Ypositions[_DataIndex], accel);
                         break;
                     }
                 case 20:
                     {
-                        enemy = new Boss01();
+                        enemy = new BossFighter();
+                        break;
+                    }
+                case 21:
+                    {
+                        enemy = new BossStation();
                         break;
                     }
                 default:
