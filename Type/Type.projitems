@@ -31,7 +31,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Collisions\ICollidable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IAnalogListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IFireButtonListener.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IPauseButtonListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IPositionRecipient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IResumeButtonListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IShipSelectListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IUIListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Enemies\IEnemy.cs" />
