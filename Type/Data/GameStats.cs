@@ -25,17 +25,15 @@ namespace Type.Data
         private DateTime _StartTime;
         /// <summary> Time the game ended</summary>
         private DateTime _EndTime;
-        /// <summary> Current game score </summary>
-        private Int32 _Score;
         /// <summary> The players current highscore, loaded from data store </summary>
         private Int32 _HighScore;
         /// <summary> Running total of all time score </summary>
         private Int32 _AllTimeScore;
-        /// <summary> Current run kill count </summary>
-        private Int32 _EnemiesKilled;
         /// <summary> Enemies killed over all play thorughs </summary>
         private Int32 _AllTimeKills;
 
+        /// <summary> Whether the current score is a new highscore </summary>
+        public Boolean IsNewHighScore { get; private set; }
         /// <summary> How many shots the player fired </summary>
         public Int32 BulletsFired { get; set; }
         /// <summary> How many probes the player created </summary>
@@ -44,32 +42,10 @@ namespace Type.Data
         public Int32 ShieldsCreated { get; set; }
         /// <summary> How many times the player died </summary>
         public Int32 Deaths { get; set; }
-
         /// <summary> How many enemies the player has killed </summary>
-        public Int32 EnemiesKilled
-        {
-            get => _EnemiesKilled;
-            set
-            {
-                _EnemiesKilled = value;
-                _AllTimeKills = _AllTimeKills + _EnemiesKilled;
-            }
-        }
-
+        public Int32 EnemiesKilled { get; set; }
         /// <summary> Player score </summary>
-        public Int32 Score
-        {
-            get => _Score;
-            set
-            {
-                _Score = value;
-                _AllTimeScore = _AllTimeScore + _Score;
-            }
-        }
-
-        /// <summary> Whether the current score is a new highscore </summary>
-        public Boolean IsNewHighScore { get; private set; }
-
+        public Int32 Score { get; set; }
         /// <summary> Total game time </summary>
         public TimeSpan PlayTime => _EndTime - _StartTime;
 
@@ -92,10 +68,13 @@ namespace Type.Data
         {
             _EndTime = DateTime.Now;
 
+            _AllTimeKills += EnemiesKilled;
+            _AllTimeScore += Score;
+
             // Save highscore
-            if (_Score > _HighScore)
+            if (Score > _HighScore)
             {
-                DataLoader.SetValue("HIGH_SCORE", _Score);
+                DataLoader.SetValue("HIGH_SCORE", Score);
                 IsNewHighScore = true;
             }
 
@@ -107,9 +86,9 @@ namespace Type.Data
             AchievementController.Instance.AllTimeScoreUpdated(_AllTimeScore);
 
             // Push leaderboard data
-            LeaderboardController.Instance.ScoreUpdated(_Score);
+            LeaderboardController.Instance.ScoreUpdated(Score);
             LeaderboardController.Instance.AllTimeScoreUpdated(_AllTimeScore);
-            LeaderboardController.Instance.KillsUpdated(_EnemiesKilled);
+            LeaderboardController.Instance.KillsUpdated(EnemiesKilled);
             LeaderboardController.Instance.AllTimeKillsUpdated(_AllTimeKills);
         }
 
