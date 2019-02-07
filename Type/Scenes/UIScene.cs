@@ -73,7 +73,7 @@ namespace Type.Scenes
 
             Sprite pauseButton = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/pausebutton.png"))
             {
-                Position = new Vector2(625, 350),
+                Position = new Vector2(770, 350),
                 Visible = false,
                 Colour = new Vector4(1, 1, 1, 0.4f)
             };
@@ -81,7 +81,7 @@ namespace Type.Scenes
 
             Sprite resumeButton = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/playbutton.png"))
             {
-                Position = new Vector2(625, 350),
+                Position = new Vector2(770, 350),
                 Visible = false,
                 Colour = new Vector4(1, 1, 1, 0.4f)
             };

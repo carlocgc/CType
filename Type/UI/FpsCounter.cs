@@ -19,8 +19,8 @@ namespace Type.UI
         {
             _Display = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
-                Position = new Vector2(Renderer.Instance.TargetDimensions.X / 2 - 100,
-                    Renderer.Instance.TargetDimensions.Y / 2 - 60),
+                Position = new Vector2(Renderer.Instance.TargetDimensions.X / 2 - 50,
+                    Renderer.Instance.TargetDimensions.Y / 2 - 30),
                 Visible = true
             };
             _Display.Visible = Constants.Global.SHOW_FPS;
