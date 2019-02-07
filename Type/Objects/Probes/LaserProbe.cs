@@ -45,9 +45,9 @@ namespace Type.Objects.Probes
             _Sprite.Offset = _Sprite.Size / 2;
             AddSprite(_Sprite);
 
-            _Radius = 150;
+            _Radius = 140;
             _Angle = angle;
-            _Speed = 0.05f;
+            _Speed = 4;
             _FireRate = TimeSpan.FromMilliseconds(250);
 
             _OrbitAnchor = orbitPosition;
@@ -57,7 +57,7 @@ namespace Type.Objects.Probes
             Position = new Vector2(_OrbitAnchor.X, _OrbitAnchor.Y + _Radius);
         }
 
-        public void UpdatePosition(Vector2 position)
+        public void UpdatePosition(Vector2 position, Single deltaTime)
         {
             _OrbitAnchor = position;
 
@@ -65,7 +65,7 @@ namespace Type.Objects.Probes
             Single y = _OrbitAnchor.Y + (Single)Math.Sin(_Angle) * _Radius;
             Position = new Vector2(x, y);
 
-            _Angle += _Speed;
+            _Angle += _Speed * deltaTime;
 
             if (!_Sprite.Visible) _Sprite.Visible = true;
         }

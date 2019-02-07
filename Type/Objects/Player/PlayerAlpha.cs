@@ -108,7 +108,8 @@ namespace Type.Objects.Player
             HitPoints = 1;
 
             _ProbeController = new ProbeController();
-            _ProbeController.UpdatePosition(Position);
+            _ProbeController.AddProbe(0);
+            _ProbeController.AddProbe(0);
             _Shield = new Shield();
             _Shield.UpdatePosition(Position);
         }
@@ -178,7 +179,7 @@ namespace Type.Objects.Player
             Position += GetPositionModifier(timeTilUpdate);
             HitBox = GetRect();
 
-            _ProbeController.UpdatePosition(Position);
+            _ProbeController.UpdatePosition(Position, (Single)timeTilUpdate.TotalSeconds);
             _Shield.UpdatePosition(Position);
             PositionRelayer.Instance.ProvidePosition(Position);
         }
