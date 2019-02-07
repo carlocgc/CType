@@ -103,6 +103,7 @@ namespace Type.Scenes
         public override void Dispose()
         {
             base.Dispose();
+            _BackButtonListeners.Clear();
             _Title.Dispose();
             _Background.Dispose();
             _BackButton.Dispose();
