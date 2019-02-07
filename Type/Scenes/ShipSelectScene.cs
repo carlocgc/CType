@@ -1,21 +1,26 @@
 ﻿using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
+using AmosShared.Touch;
 using OpenTK;
 using System;
-using AmosShared.Audio;
+using System.Collections.Generic;
+using Type.Interfaces;
+using Type.Interfaces.Control;
 using Type.UI;
 
 namespace Type.Scenes
 {
-    public class ShipSelectScene : Scene
+    public class ShipSelectScene : Scene, INotifier<IBackButtonListener>
     {
+        private readonly List<IBackButtonListener> _BackButtonListeners = new List<IBackButtonListener>();
+
+        private Boolean _Active;
+
         private readonly TextDisplay _Title;
 
         private readonly Sprite _Background;
 
-        private readonly AudioPlayer _Music;
-
-        private Boolean _Active;
+        private readonly Button _BackButton;
 
         public ShipSelectButton AlphaButton { get; }
 
@@ -56,25 +61,64 @@ namespace Type.Scenes
             BetaButton = new ShipSelectButton(1, new Vector2(658, 50), "Content/Graphics/Player/player-beta.png", "BETA", 2, 80, 80);
             GammaButton = new ShipSelectButton(2, new Vector2(1270, 50), "Content/Graphics/Player/player-gamma.png", "GAMMA", 3, 60, 60);
 
-            _Music = new AudioPlayer("Content/Audio/mainMenuBgm.wav", true, AudioManager.Category.MUSIC, 1);
+            Sprite backButton = new Sprite(Game.MainCanvas, Constants.ZOrders.ABOVE_GAME, Texture.GetTexture("Content/Graphics/Buttons/exitbutton.png"))
+            {
+                Position = new Vector2(770, 375),
+                Visible = false,
+                Colour = new Vector4(1, 1, 1, 1f),
+                Scale = new Vector2(0.8f, 0.8f)
+            };
+            _BackButton = new Button(Int32.MaxValue, backButton) { OnButtonPress = BackButtonOnPress };
+            _BackButton.TouchEnabled = true;
+            _BackButton.Visible = true;
         }
 
+        private void BackButtonOnPress(Button obj)
+        {
+            foreach (IBackButtonListener listener in _BackButtonListeners)
+            {
+                listener.OnBackPressed();
+            }
+        }
 
         /// <inheritdoc />
         public override void Update(TimeSpan timeSinceUpdate)
         {
         }
 
+
+        #region Implementation of INotifier<in IBackButtonListener>
+
+        /// <summary>
+        /// Add a listener
+        /// </summary>
+        public void RegisterListener(IBackButtonListener listener)
+        {
+            if (!_BackButtonListeners.Contains(listener)) _BackButtonListeners.Add(listener);
+        }
+
+        /// <summary>
+        /// Remove a listener
+        /// </summary>
+        public void DeregisterListener(IBackButtonListener listener)
+        {
+            if (_BackButtonListeners.Contains(listener)) _BackButtonListeners.Remove(listener);
+        }
+
+        #endregion
+
         /// <inheritdoc />
         public override void Dispose()
         {
             base.Dispose();
-            _Music.Stop();
+            _BackButtonListeners.Clear();
             _Title.Dispose();
             _Background.Dispose();
+            _BackButton.Dispose();
             AlphaButton.Dispose();
             BetaButton.Dispose();
             GammaButton.Dispose();
         }
+
     }
 }

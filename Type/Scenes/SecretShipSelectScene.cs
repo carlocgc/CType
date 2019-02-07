@@ -1,19 +1,24 @@
-﻿using AmosShared.Audio;
-using AmosShared.Graphics;
+﻿using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
+using AmosShared.Touch;
 using OpenTK;
 using System;
+using System.Collections.Generic;
+using Type.Interfaces;
+using Type.Interfaces.Control;
 using Type.UI;
 
 namespace Type.Scenes
 {
-    public class SecretShipSelectScene : Scene
+    public class SecretShipSelectScene : Scene, INotifier<IBackButtonListener>
     {
+        private readonly List<IBackButtonListener> _BackButtonListeners = new List<IBackButtonListener>();
+
         private readonly TextDisplay _Title;
 
         private readonly Sprite _Background;
 
-        private readonly AudioPlayer _Music;
+        private readonly Button _BackButton;
 
         private Boolean _Active;
 
@@ -46,9 +51,26 @@ namespace Type.Scenes
             };
             _Background.Offset = _Background.Size / 2;
 
-            OmegaButton = new ShipSelectButton(3, new Vector2(658, 50), "Content/Graphics/Player/player_omega.png", "OMEGA", 1, 200, 120);
+            Sprite backButton = new Sprite(Game.MainCanvas, Constants.ZOrders.ABOVE_GAME, Texture.GetTexture("Content/Graphics/Buttons/exitbutton.png"))
+            {
+                Position = new Vector2(770, 375),
+                Visible = false,
+                Colour = new Vector4(1, 1, 1, 1f),
+                Scale = new Vector2(0.8f, 0.8f)
+            };
+            _BackButton = new Button(Int32.MaxValue, backButton) { OnButtonPress = BackButtonOnPress };
+            _BackButton.TouchEnabled = true;
+            _BackButton.Visible = true;
 
-            _Music = new AudioPlayer("Content/Audio/mainMenuBgm.wav", true, AudioManager.Category.MUSIC, 1);
+            OmegaButton = new ShipSelectButton(3, new Vector2(658, 50), "Content/Graphics/Player/player_omega.png", "OMEGA", 1, 200, 120);
+        }
+
+        private void BackButtonOnPress(Button obj)
+        {
+            foreach (IBackButtonListener listener in _BackButtonListeners)
+            {
+                listener.OnBackPressed();
+            }
         }
 
         /// <inheritdoc />
@@ -57,13 +79,33 @@ namespace Type.Scenes
 
         }
 
+        #region Implementation of INotifier<in IBackButtonListener>
+
+        /// <summary>
+        /// Add a listener
+        /// </summary>
+        public void RegisterListener(IBackButtonListener listener)
+        {
+            if (!_BackButtonListeners.Contains(listener)) _BackButtonListeners.Add(listener);
+        }
+
+        /// <summary>
+        /// Remove a listener
+        /// </summary>
+        public void DeregisterListener(IBackButtonListener listener)
+        {
+            if (_BackButtonListeners.Contains(listener)) _BackButtonListeners.Remove(listener);
+        }
+
+        #endregion
+
         /// <inheritdoc />
         public override void Dispose()
         {
             base.Dispose();
-            _Music.Stop();
             _Title.Dispose();
             _Background.Dispose();
+            _BackButton.Dispose();
             OmegaButton.Dispose();
         }
     }

@@ -1,11 +1,9 @@
-﻿using System;
-using System.Diagnostics;
-using AmosShared.Audio;
-using AmosShared.Competitive;
+﻿using AmosShared.Competitive;
 using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
 using AmosShared.Touch;
 using OpenTK;
+using System;
 
 namespace Type.Scenes
 {
@@ -26,8 +24,6 @@ namespace Type.Scenes
         private readonly TextDisplay _TitleText;
         /// <summary> Text that promts game start </summary>
         private readonly TextDisplay _StartText;
-        /// <summary> Background music </summary>
-        private readonly AudioPlayer _Music;
 
         /// <summary> Whether the  player has pressed space and started the game </summary>
         public Boolean IsComplete { get; private set; }
@@ -52,14 +48,14 @@ namespace Type.Scenes
 
             Sprite achievementsButton = new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/trophy.png"))
             {
-                Position = new Vector2(-900, 350),
+                Position = new Vector2(-900, 375),
             };
             _AchievementsButton = new Button(Constants.ZOrders.UI, achievementsButton);
             _AchievementsButton.OnButtonPress += AchievementsButtonOnPress;
 
             Sprite leaderboardButton = new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/leaderboard.png"))
             {
-                Position = new Vector2(770, 350),
+                Position = new Vector2(770, 375),
             };
             _LeaderboardButton = new Button(Constants.ZOrders.UI, leaderboardButton);
             _LeaderboardButton.OnButtonPress += LeaderboardButtonOnPress;
@@ -80,8 +76,6 @@ namespace Type.Scenes
             };
             _StartText.Offset = new Vector2(_StartText.Size.X * _StartText.Scale.X, _StartText.Size.Y * _StartText.Scale.Y) / 2;
             AddDrawable(_StartText);
-
-            _Music = new AudioPlayer("Content/Audio/mainMenuBgm.wav", true, AudioManager.Category.MUSIC, 1);
 
             CompetitiveManager.Instance.Connect();
         }
@@ -121,7 +115,6 @@ namespace Type.Scenes
         public override void Dispose()
         {
             base.Dispose();
-            _Music.Stop();
             _TitleText.Dispose();
             _StartText.Dispose();
             _AchievementsButton.Dispose();
