@@ -14,6 +14,7 @@ namespace Type.Interfaces.Probe
         /// Update position data
         /// </summary>
         /// <param name="position"></param>
-        void UpdatePosition(Vector2 position);
+        /// <param name="deltaTime"></param>
+        void UpdatePosition(Vector2 position, Single deltaTime);
     }
 }

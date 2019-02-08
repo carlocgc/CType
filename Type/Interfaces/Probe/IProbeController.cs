@@ -39,6 +39,7 @@ namespace Type.Interfaces.Probe
         /// Provide position data to the controller
         /// </summary>
         /// <param name="position"> The position to provide </param>
-        void UpdatePosition(Vector2 position);
+        /// <param name="deltaTime"></param>
+        void UpdatePosition(Vector2 position, Single deltaTime);
     }
 }

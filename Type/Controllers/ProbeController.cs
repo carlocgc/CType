@@ -108,13 +108,14 @@ namespace Type.Controllers
         /// Updates the orbit position of all the probes
         /// </summary>
         /// <param name="position"></param>
-        public void UpdatePosition(Vector2 position)
+        /// <param name="deltaTime"></param>
+        public void UpdatePosition(Vector2 position, Single deltaTime)
         {
             _OrbitPosition = position;
 
             foreach (IProbe probe in _Probes)
             {
-                probe.UpdatePosition(_OrbitPosition);
+                probe.UpdatePosition(_OrbitPosition, deltaTime);
             }
         }
 

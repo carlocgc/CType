@@ -299,6 +299,10 @@
       <Link>Content\Graphics\Buttons\completecontinue.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\Assets\Graphics\Buttons\exitbutton.png">
+      <Link>Content\Graphics\Buttons\exitbutton.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\Assets\Graphics\Buttons\fire.png">
       <Link>Content\Graphics\Buttons\fire.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -313,6 +317,18 @@
     </Content>
     <Content Include="..\Assets\Graphics\Buttons\leaderboard.png">
       <Link>Content\Graphics\Buttons\leaderboard.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Buttons\pausebutton.png">
+      <Link>Content\Graphics\Buttons\pausebutton.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Buttons\paused.png">
+      <Link>Content\Graphics\Buttons\paused.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Buttons\playbutton.png">
+      <Link>Content\Graphics\Buttons\playbutton.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\Assets\Graphics\Buttons\ship_select_button.png">
