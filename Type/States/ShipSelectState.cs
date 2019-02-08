@@ -6,9 +6,11 @@ using Type.Scenes;
 
 namespace Type.States
 {
-    public class ShipSelectState : State, IShipSelectListener
+    public class ShipSelectState : State, IShipSelectListener, IBackButtonListener
     {
         private ShipSelectScene _Scene;
+
+        private AudioPlayer _Music;
 
         private Int32 _Selection;
 
@@ -20,11 +22,13 @@ namespace Type.States
 
         private Boolean _ThirdButtonHeld;
 
+        private Boolean _Returning;
+
         private Boolean _EnteringSecretMenu => _FirstButtonHeld && _SecondButtonHeld && _ThirdButtonHeld;
 
-        public ShipSelectState()
+        public ShipSelectState(AudioPlayer music)
         {
-
+            _Music = music;
         }
 
         /// <inheritdoc />
@@ -34,6 +38,7 @@ namespace Type.States
             _Scene.AlphaButton.RegisterListener(this);
             _Scene.BetaButton.RegisterListener(this);
             _Scene.GammaButton.RegisterListener(this);
+            _Scene.RegisterListener(this);
             _Scene.Active = true;
         }
 
@@ -73,17 +78,38 @@ namespace Type.States
             _IsComplete = true;
         }
 
+        #region Implementation of IBackButtonListener
+
+        /// <summary> Invoked when the back button is pressed </summary>
+        public void OnBackPressed()
+        {
+            _Scene.AlphaButton.DeregisterListener(this);
+            _Scene.BetaButton.DeregisterListener(this);
+            _Scene.GammaButton.DeregisterListener(this);
+            _Scene.Active = false;
+            _Returning = true;
+            _IsComplete = true;
+        }
+
+        #endregion
+
         /// <inheritdoc />
         public override Boolean IsComplete()
         {
-            if (_IsComplete && !_EnteringSecretMenu)
+            if (_IsComplete && !_EnteringSecretMenu && !_Returning)
             {
+                _Music.Stop();
                 ChangeState(new PlayingState(_Selection));
             }
 
             if (_IsComplete && _EnteringSecretMenu)
             {
-                ChangeState(new SecretShipSelectState());
+                ChangeState(new SecretShipSelectState(_Music));
+            }
+
+            if (_IsComplete && _Returning)
+            {
+                ChangeState(new MainMenuState(_Music));
             }
 
             return _IsComplete;
@@ -98,7 +124,9 @@ namespace Type.States
         public override void Dispose()
         {
             base.Dispose();
+            _Music = null;
             _Scene.Dispose();
+            _Scene = null;
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Type.Android.Services
         /// <summary>
         /// Whether an ad is loaded
         /// </summary>
-        public Boolean IsLoaded { get; }
+        public Boolean IsLoaded => _MInterstitialAd.IsLoaded;
 
         /// <summary>
         /// Invoked when an ad is closed by the user

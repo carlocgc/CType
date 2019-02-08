@@ -1,5 +1,6 @@
 ﻿using AmosShared.State;
 using System;
+using AmosShared.Audio;
 using Type.Data;
 using Type.Scenes;
 
@@ -9,6 +10,22 @@ namespace Type.States
     {
         private MainMenuScene _Scene;
 
+        /// <summary> Background music </summary>
+        private AudioPlayer _Music;
+
+        public MainMenuState(AudioPlayer music = null)
+        {
+            if (music == null)
+            {
+                _Music = new AudioPlayer("Content/Audio/mainMenuBgm.wav", true, AudioManager.Category.MUSIC, 1);
+            }
+            else
+            {
+                _Music = music;
+            }
+
+        }
+
         protected override void OnEnter()
         {
             _Scene = new MainMenuScene { Visible = true };
@@ -17,7 +34,7 @@ namespace Type.States
 
         public override Boolean IsComplete()
         {
-            if (_Scene.IsComplete) ChangeState(new ShipSelectState());
+            if (_Scene.IsComplete) ChangeState(new ShipSelectState(_Music));
             return _Scene.IsComplete;
         }
 
@@ -29,6 +46,7 @@ namespace Type.States
         public override void Dispose()
         {
             base.Dispose();
+            _Music = null;
             _Scene.Dispose();
             _Scene = null;
         }
