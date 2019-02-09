@@ -1,9 +1,10 @@
-﻿using AmosShared.Base;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using AmosShared.Base;
 using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
 using OpenTK;
-using System;
-using System.Collections.Generic;
 using Type.Base;
 using Type.Controllers;
 using Type.Interfaces;
@@ -13,38 +14,42 @@ using static Type.Constants.Global;
 namespace Type.Objects.Bosses
 {
     /// <summary>
-    /// Boss that has three destroyable cannons
+    /// Boss that has destroyable cannons
     /// </summary>
-    public sealed class BossFighter : GameObject, IEnemy, IEnemyListener
+    public sealed class BossStationStrong : GameObject, IEnemy, IEnemyListener
     {
         /// <summary> List of <see cref="IEnemyListener"/>'s </summary>
         private readonly List<IEnemyListener> _Listeners;
+
         /// <summary> List of the destroyable cannons on the boss </summary>
         private readonly List<BossCannon> _Cannons;
+
         /// <summary> Movement speed </summary>
         private readonly Single _Speed;
+
         /// <summary> Move direction </summary>
         private readonly Vector2 _MoveDirection;
+
         /// <summary> Sprite for the boss body </summary>
         private readonly Sprite _Body;
 
         /// <summary> Whether the boss is autofiring </summary>
         private Boolean _AutoFire;
+
         /// <summary> Whether the boss is moving onto screen </summary>
         private Boolean _IsAdvancing;
+
         /// <summary> Whether the boss is moving off the screen </summary>
         private Boolean _IsRetreating;
+
         /// <summary> Where the boss should stop when moving onto screen</summary>
         private Vector2 _StopPosition;
+
         /// <summary> The players current position </summary>
         private Vector2 _PlayerPosition;
 
         /// <summary> Whether the enemy is on screen </summary>
-        public Boolean OnScreen =>
-            Position.X - _Sprite.Offset.X >= ScreenLeft &&
-            Position.X + _Sprite.Offset.X <= ScreenRight &&
-            Position.Y - _Sprite.Offset.Y >= ScreenBottom &&
-            Position.Y + _Sprite.Offset.Y <= ScreenTop;
+        public Boolean OnScreen => Position.X - _Sprite.Offset.X >= ScreenLeft && Position.X + _Sprite.Offset.X <= ScreenRight && Position.Y - _Sprite.Offset.Y >= ScreenBottom && Position.Y + _Sprite.Offset.Y <= ScreenTop;
 
         /// <summary> The position of the object </summary>
         public override Vector2 Position
@@ -101,23 +106,22 @@ namespace Type.Objects.Bosses
         /// <summary> Amount of points this object is worth </summary>
         public Int32 Points { get; }
 
-        public BossFighter()
+        public BossStationStrong()
         {
             _Listeners = new List<IEnemyListener>();
             _Cannons = new List<BossCannon>();
 
-            _Body = new Sprite(Game.MainCanvas, Constants.ZOrders.BOSS_BASE, Texture.GetTexture("Content/Graphics/Bosses/boss01.png"))
-            {
-                Visible = true,
-            };
+            _Body = new Sprite(Game.MainCanvas, Constants.ZOrders.BOSS_BASE, Texture.GetTexture("Content/Graphics/Bosses/boss04.png")) { Visible = true, };
             Position = new Vector2(Renderer.Instance.TargetDimensions.X / 2 + _Body.Width / 2, 0);
             _Body.Offset = _Body.Size / 2;
 
-            _Cannons.Add(new BossCannon(50, TimeSpan.FromMilliseconds(1500)) { Offset = new Vector2(113, -200) });
-            _Cannons.Add(new BossCannon(75, TimeSpan.FromMilliseconds(1200)) { Offset = new Vector2(102, -130) });
-            _Cannons.Add(new BossCannon(100, TimeSpan.FromMilliseconds(1000)) { Offset = new Vector2(-149, 0) });
-            _Cannons.Add(new BossCannon(75, TimeSpan.FromMilliseconds(1200)) { Offset = new Vector2(102, 130) });
-            _Cannons.Add(new BossCannon(50, TimeSpan.FromMilliseconds(1500)) { Offset = new Vector2(113, 200) });
+            _Cannons.Add(new BossCannon(75, TimeSpan.FromMilliseconds(1400)) { Offset = new Vector2(250, 195) });
+            _Cannons.Add(new BossCannon(75, TimeSpan.FromMilliseconds(1400)) { Offset = new Vector2(-205, 195) });
+            _Cannons.Add(new BossCannon(100, TimeSpan.FromMilliseconds(1100)) { Offset = new Vector2(10, 195) });
+            _Cannons.Add(new BossCannon(125, TimeSpan.FromMilliseconds(1000)) { Offset = new Vector2(8, 60) });
+            _Cannons.Add(new BossCannon(100, TimeSpan.FromMilliseconds(1100)) { Offset = new Vector2(10, -110) });
+            _Cannons.Add(new BossCannon(75, TimeSpan.FromMilliseconds(1400)) { Offset = new Vector2(250, -110) });
+            _Cannons.Add(new BossCannon(75, TimeSpan.FromMilliseconds(1400)) { Offset = new Vector2(-205, -110) });
 
             foreach (BossCannon cannon in _Cannons)
             {
@@ -178,6 +182,7 @@ namespace Type.Objects.Bosses
                     }
                 }
             }
+
             if (_IsRetreating)
             {
                 Position -= _MoveDirection * _Speed * (Single)timeTilUpdate.TotalSeconds;
@@ -190,6 +195,7 @@ namespace Type.Objects.Bosses
                         IEnemyListener listener = _Listeners[i];
                         listener.OnEnemyDestroyed(this);
                     }
+
                     Dispose();
                 }
             }

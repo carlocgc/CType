@@ -1,6 +1,7 @@
 ﻿using AmosShared.State;
 using System;
 using AmosShared.Audio;
+using AmosShared.Competitive;
 using Type.Data;
 using Type.Scenes;
 
@@ -15,21 +16,14 @@ namespace Type.States
 
         public MainMenuState(AudioPlayer music = null)
         {
-            if (music == null)
-            {
-                _Music = new AudioPlayer("Content/Audio/mainMenuBgm.wav", true, AudioManager.Category.MUSIC, 1);
-            }
-            else
-            {
-                _Music = music;
-            }
-
+            _Music = music ?? new AudioPlayer("Content/Audio/mainMenuBgm.wav", true, AudioManager.Category.MUSIC, 1);
         }
 
         protected override void OnEnter()
         {
             _Scene = new MainMenuScene { Visible = true };
             _Scene.Show();
+            CompetitiveManager.Instance.Connect();
         }
 
         public override Boolean IsComplete()

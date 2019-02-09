@@ -15,7 +15,7 @@ namespace Type.Objects.Bosses
     /// <summary>
     /// Boss that has three destroyable cannons
     /// </summary>
-    public sealed class BossFighter : GameObject, IEnemy, IEnemyListener
+    public sealed class BossFighterStrong : GameObject, IEnemy, IEnemyListener
     {
         /// <summary> List of <see cref="IEnemyListener"/>'s </summary>
         private readonly List<IEnemyListener> _Listeners;
@@ -101,23 +101,23 @@ namespace Type.Objects.Bosses
         /// <summary> Amount of points this object is worth </summary>
         public Int32 Points { get; }
 
-        public BossFighter()
+        public BossFighterStrong()
         {
             _Listeners = new List<IEnemyListener>();
             _Cannons = new List<BossCannon>();
 
-            _Body = new Sprite(Game.MainCanvas, Constants.ZOrders.BOSS_BASE, Texture.GetTexture("Content/Graphics/Bosses/boss01.png"))
+            _Body = new Sprite(Game.MainCanvas, Constants.ZOrders.BOSS_BASE, Texture.GetTexture("Content/Graphics/Bosses/boss03.png"))
             {
                 Visible = true,
             };
             Position = new Vector2(Renderer.Instance.TargetDimensions.X / 2 + _Body.Width / 2, 0);
             _Body.Offset = _Body.Size / 2;
 
-            _Cannons.Add(new BossCannon(50, TimeSpan.FromMilliseconds(1500)) { Offset = new Vector2(113, -200) });
-            _Cannons.Add(new BossCannon(75, TimeSpan.FromMilliseconds(1200)) { Offset = new Vector2(102, -130) });
-            _Cannons.Add(new BossCannon(100, TimeSpan.FromMilliseconds(1000)) { Offset = new Vector2(-149, 0) });
-            _Cannons.Add(new BossCannon(75, TimeSpan.FromMilliseconds(1200)) { Offset = new Vector2(102, 130) });
-            _Cannons.Add(new BossCannon(50, TimeSpan.FromMilliseconds(1500)) { Offset = new Vector2(113, 200) });
+            _Cannons.Add(new BossCannon(75, TimeSpan.FromMilliseconds(1400)) { Offset = new Vector2(113, -200) });
+            _Cannons.Add(new BossCannon(100, TimeSpan.FromMilliseconds(1100)) { Offset = new Vector2(102, -130) });
+            _Cannons.Add(new BossCannon(125, TimeSpan.FromMilliseconds(1000)) { Offset = new Vector2(-149, 0) });
+            _Cannons.Add(new BossCannon(100, TimeSpan.FromMilliseconds(1100)) { Offset = new Vector2(102, 130) });
+            _Cannons.Add(new BossCannon(75, TimeSpan.FromMilliseconds(1400)) { Offset = new Vector2(113, 200) });
 
             foreach (BossCannon cannon in _Cannons)
             {

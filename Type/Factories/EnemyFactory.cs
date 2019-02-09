@@ -166,6 +166,16 @@ namespace Type.Factories
                         enemy = new BossStation();
                         break;
                     }
+                case 22:
+                    {
+                        enemy = new BossFighterStrong();
+                        break;
+                    }
+                case 23:
+                    {
+                        enemy = new BossStationStrong();
+                        break;
+                    }
                 default:
                     {
                         throw new ArgumentOutOfRangeException();

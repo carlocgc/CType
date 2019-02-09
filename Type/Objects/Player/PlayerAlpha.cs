@@ -108,8 +108,6 @@ namespace Type.Objects.Player
             HitPoints = 1;
 
             _ProbeController = new ProbeController();
-            _ProbeController.AddProbe(0);
-            _ProbeController.AddProbe(0);
             _Shield = new Shield();
             _Shield.UpdatePosition(Position);
         }

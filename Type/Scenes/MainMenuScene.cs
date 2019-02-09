@@ -76,8 +76,6 @@ namespace Type.Scenes
             };
             _StartText.Offset = new Vector2(_StartText.Size.X * _StartText.Scale.X, _StartText.Size.Y * _StartText.Scale.Y) / 2;
             AddDrawable(_StartText);
-
-            CompetitiveManager.Instance.Connect();
         }
 
         public void Show()
