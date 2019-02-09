@@ -13,22 +13,6 @@ namespace Type.Android
 
         #region Overrides of Activity
 
-        protected override void OnStart()
-        {
-            base.OnStart();
-            OnResume();
-        }
-
-        #region Overrides of GameActivity
-
-        protected override void OnStop()
-        {
-            base.OnStop();
-            OnPause();
-        }
-
-        #endregion
-
         /// <summary>
         /// Invoked when the user presses the back button, do not call base as no functionality is required from the press
         /// </summary>
