@@ -2,6 +2,9 @@
 using AmosShared.State;
 using System;
 using Type.Scenes;
+#if __ANDROID__
+using Type.Android.States;
+#endif
 
 namespace Type.States
 {
@@ -58,7 +61,11 @@ namespace Type.States
         /// <inheritdoc />
         public override Boolean IsComplete()
         {
+#if __ANDROID__
+            if (_Complete) ChangeState(new GooglePlayConnectState());
+#elif __DESKTOP__
             if (_Complete) ChangeState(new MainMenuState());
+#endif
             return _Complete;
         }
 
