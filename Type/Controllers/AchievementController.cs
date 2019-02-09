@@ -29,6 +29,11 @@ namespace Type.Controllers
 
             switch (level)
             {
+                case 2:
+                    {
+                        if (GameStats.Instance.BulletsFired == 0) Reflexes();
+                        break;
+                    }
                 case 3:
                     {
                         if (CompetitiveManager.Instance.GetAchievement(0).PercentageComplete < 1)
@@ -37,11 +42,6 @@ namespace Type.Controllers
                             CompetitiveManager.Instance.SetAchievementProgress(0, 1);
                         }
 
-                        break;
-                    }
-                case 4:
-                    {
-                        if (GameStats.Instance.BulletsFired == 0) Reflexes();
                         break;
                     }
                 case 5:
