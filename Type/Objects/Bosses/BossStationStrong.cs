@@ -115,21 +115,13 @@ namespace Type.Objects.Bosses
             Position = new Vector2(Renderer.Instance.TargetDimensions.X / 2 + _Body.Width / 2, 0);
             _Body.Offset = _Body.Size / 2;
 
-            BossCannon rightTopMostCannon = new BossCannon(75, TimeSpan.FromMilliseconds(1400)) {Offset = new Vector2(250, 195)};
-            BossCannon leftTopMostCannon = new BossCannon(75, TimeSpan.FromMilliseconds(1400)) {Offset = new Vector2(-205, 195)};
-            BossCannon topCannon = new BossCannon(100, TimeSpan.FromMilliseconds(1100)) {Offset = new Vector2(10, 195)};
-            BossCannon middleCannon = new BossCannon(125, TimeSpan.FromMilliseconds(1000)) {Offset = new Vector2(8, 60)};
-            BossCannon bottomCannon = new BossCannon(100, TimeSpan.FromMilliseconds(1100)) {Offset = new Vector2(10, -110)};
-            BossCannon rightBottomMostCannon = new BossCannon(75, TimeSpan.FromMilliseconds(1400)) {Offset = new Vector2(250, -110)};
-            BossCannon leftBottomMostCannon = new BossCannon(75, TimeSpan.FromMilliseconds(1400)) {Offset = new Vector2(-205, -110)};
-
-            _Cannons.Add(rightTopMostCannon);
-            _Cannons.Add(leftTopMostCannon);
-            _Cannons.Add(topCannon);
-            _Cannons.Add(middleCannon);
-            _Cannons.Add(bottomCannon);
-            _Cannons.Add(rightBottomMostCannon);
-            _Cannons.Add(leftBottomMostCannon);
+            _Cannons.Add(new BossCannon(75, TimeSpan.FromMilliseconds(1400)) { Offset = new Vector2(250, 195) });
+            _Cannons.Add(new BossCannon(75, TimeSpan.FromMilliseconds(1400)) { Offset = new Vector2(-205, 195) });
+            _Cannons.Add(new BossCannon(100, TimeSpan.FromMilliseconds(1100)) { Offset = new Vector2(10, 195) });
+            _Cannons.Add(new BossCannon(125, TimeSpan.FromMilliseconds(1000)) { Offset = new Vector2(8, 60) });
+            _Cannons.Add(new BossCannon(100, TimeSpan.FromMilliseconds(1100)) { Offset = new Vector2(10, -110) });
+            _Cannons.Add(new BossCannon(75, TimeSpan.FromMilliseconds(1400)) { Offset = new Vector2(250, -110) });
+            _Cannons.Add(new BossCannon(75, TimeSpan.FromMilliseconds(1400)) { Offset = new Vector2(-205, -110) });
 
             foreach (BossCannon cannon in _Cannons)
             {
