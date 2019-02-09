@@ -287,6 +287,14 @@
       <Link>Content\Graphics\Bosses\boss02.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\Assets\Graphics\Bosses\boss03.png">
+      <Link>Content\Graphics\Bosses\boss03.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Bosses\boss04.png">
+      <Link>Content\Graphics\Bosses\boss04.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\Assets\Graphics\Buttons\analog_base.png">
       <Link>Content\Graphics\Buttons\analog_base.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
