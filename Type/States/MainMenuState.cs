@@ -23,7 +23,6 @@ namespace Type.States
         {
             _Scene = new MainMenuScene { Visible = true };
             _Scene.Show();
-            CompetitiveManager.Instance.Connect();
         }
 
         public override Boolean IsComplete()
