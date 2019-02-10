@@ -331,6 +331,10 @@
       <Link>Content\Graphics\Buttons\leaderboard.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\Assets\Graphics\Buttons\nuke_button.png">
+      <Link>Content\Graphics\Buttons\nuke_button.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\Assets\Graphics\Buttons\pausebutton.png">
       <Link>Content\Graphics\Buttons\pausebutton.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
