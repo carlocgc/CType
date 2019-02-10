@@ -83,6 +83,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Objects\World\ScrollingBackground.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\World\ScrollingObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Powerups\ExtraLifePowerup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Powerups\NukePickup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Powerups\PointsPickup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Powerups\ProbePowerup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Powerups\ShieldPowerup.cs" />

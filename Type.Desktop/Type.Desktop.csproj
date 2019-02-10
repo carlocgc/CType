@@ -127,6 +127,10 @@
       <Link>Content\Audio\mainMenuBgm.wav</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\Assets\Audio\nuke.wav">
+      <Link>Content\Audio\nuke.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\Assets\Audio\points_instead.wav">
       <Link>Content\Audio\points_instead.wav</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -461,6 +465,10 @@
     </Content>
     <Content Include="..\Assets\Graphics\Powerups\extralife_powerup.png">
       <Link>Content\Graphics\Powerups\extralife_powerup.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Assets\Graphics\Powerups\nuke_powerup.png">
+      <Link>Content\Graphics\Powerups\nuke_powerup.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\Assets\Graphics\Powerups\points_powerup.png">
