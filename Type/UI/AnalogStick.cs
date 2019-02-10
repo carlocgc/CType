@@ -50,7 +50,7 @@ namespace Type.UI
             {
                 _Visible = value;
                 _Base.Visible = _Visible;
-                _Top
+                if (_Top.Visible) _Top.Visible = false;
             }
         }
 
@@ -90,7 +90,6 @@ namespace Type.UI
 
             TouchManager.Instance.AddTouchListener(this);
         }
-
 
         public Boolean IsTouched(Vector2 position)
         {
