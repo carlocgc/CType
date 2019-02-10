@@ -327,10 +327,6 @@
       <Link>Content\Graphics\Buttons\gameovercontinue.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Assets\Graphics\Buttons\leaderboard-red.png">
-      <Link>Content\Graphics\Buttons\leaderboard-red.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="..\Assets\Graphics\Buttons\leaderboard.png">
       <Link>Content\Graphics\Buttons\leaderboard.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -353,10 +349,6 @@
     </Content>
     <Content Include="..\Assets\Graphics\Buttons\ship_select_button.png">
       <Link>Content\Graphics\Buttons\ship_select_button.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Assets\Graphics\Buttons\trophy-red.png">
-      <Link>Content\Graphics\Buttons\trophy-red.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\Assets\Graphics\Buttons\trophy.png">
