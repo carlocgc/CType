@@ -32,8 +32,7 @@ namespace Type.Factories
                         {
                             case Int32 n when n >= 0 && n < 85:
                                 {
-                                    //powerup = new PointsPickup(position, currentLevel);
-                                    powerup = new NukePickup(position);
+                                    powerup = new PointsPickup(position, currentLevel);
                                     break;
                                 }
                             case Int32 n when n >= 85 && n < 91:
@@ -46,7 +45,6 @@ namespace Type.Factories
                                     powerup = new ProbePowerup(position);
                                     break;
                                 }
-
                             case Int32 n when n >= 94 && n < 99:
                                 {
                                     powerup = new NukePickup(position);

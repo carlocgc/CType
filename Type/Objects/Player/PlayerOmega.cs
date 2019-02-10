@@ -334,6 +334,14 @@ namespace Type.Objects.Player
             new AudioPlayer("Content/Audio/points_pickup.wav", false, AudioManager.Category.EFFECT, 1);
         }
 
+        private void AddNuke(Int32 points)
+        {
+            foreach (IPlayerListener listener in _Listeners)
+            {
+                listener.OnNukeAdded(points);
+            }
+        }
+
         /// <inheritdoc />
         public void ApplyPowerup(IPowerup powerup)
         {
@@ -359,6 +367,12 @@ namespace Type.Objects.Player
                         AddPoints(powerup.PointValue);
                         break;
                     }
+                case 4:
+                    {
+                        AddNuke(powerup.PointValue);
+                        break;
+                    }
+
                 default:
                     throw new ArgumentOutOfRangeException("Powerup does not exist");
             }
