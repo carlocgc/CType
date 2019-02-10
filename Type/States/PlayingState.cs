@@ -1,6 +1,7 @@
 ﻿using AmosShared.Graphics.Drawables;
 using AmosShared.State;
 using System;
+using System.Linq;
 using AmosShared.Audio;
 using AmosShared.Base;
 using AmosShared.Interfaces;
@@ -126,6 +127,20 @@ namespace Type.States
         public void OnPointPickup(Int32 value)
         {
             UpdateScore(value);
+        }
+
+        /// <summary>
+        /// Invoked when a nuke pickup is collected, detonates the nuke
+        /// </summary>
+        public void OnNukeDetonated()
+        {
+            CollisionController.Instance.ClearProjectiles();
+            foreach (IEnemy enemy in _GameScene.Enemies.Where(e => e.CanBeRoadKilled))
+            {
+                enemy.Destroy();
+            }
+
+            new AudioPlayer("Content/Audio/nuke.wav", false, AudioManager.Category.EFFECT, 1);
         }
 
         /// <inheritdoc />

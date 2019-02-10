@@ -305,6 +305,15 @@ namespace Type.Objects.Player
             _ProbeController.Shoot = AutoFire;
         }
 
+
+        private void DetonateNuke()
+        {
+            foreach (IPlayerListener listener in _Listeners)
+            {
+                listener.OnNukeDetonated();
+            }
+        }
+
         /// <summary>
         /// Adds a life to the player
         /// </summary>
@@ -352,6 +361,11 @@ namespace Type.Objects.Player
                 case 3:
                     {
                         AddPoints(powerup.PointValue);
+                        break;
+                    }
+                case 4:
+                    {
+                        DetonateNuke();
                         break;
                     }
                 default:

@@ -28,6 +28,7 @@ namespace Type.Scenes
         /// <summary> Scrolling object </summary>
         private readonly ScrollingObject _Clusters;
 
+        /// <summary> Main game background music </summary>
         public readonly AudioPlayer _Music;
 
         /// <summary> List of all enemies </summary>

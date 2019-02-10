@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using AmosShared.Graphics;
+﻿using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
 using OpenTK;
+using System;
+using System.Collections.Generic;
 using Type.Base;
 using Type.Controllers;
-using Type.Interfaces;
-using Type.Interfaces.Collisions;
 using Type.Interfaces.Player;
 using Type.Interfaces.Powerups;
 using static Type.Constants.Global;
@@ -43,7 +40,7 @@ namespace Type.Powerups
         /// <inheritdoc />
         public Int32 HitPoints { get; }
 
-        public NukePickup(Vector2 position, Int32 level)
+        public NukePickup(Vector2 position)
         {
             ID = 4;
             _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.POWERUPS, Texture.GetTexture("Content/Graphics/Powerups/nuke_powerup.png"))
@@ -54,7 +51,7 @@ namespace Type.Powerups
             AddSprite(_Sprite);
             Position = position;
             HitBox = GetRect();
-            PointValue = 100 * level;
+            PointValue = 0;
 
             _Direction = new Vector2((Single)Math.Sin(_Rnd.Next(0, 360)), (Single)Math.Sin(_Rnd.Next(0, 360)));
         }

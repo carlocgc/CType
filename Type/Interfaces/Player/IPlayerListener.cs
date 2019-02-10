@@ -21,6 +21,11 @@ namespace Type.Interfaces.Player
         void OnPointPickup(Int32 value);
 
         /// <summary>
+        /// Invoked when a nuke pickup is collected, detonates the nuke
+        /// </summary>
+        void OnNukeDetonated();
+
+        /// <summary>
         /// Invoked when the player is hit
         /// </summary>
         void OnPlayerHit(IPlayer player);
