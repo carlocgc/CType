@@ -204,6 +204,7 @@ namespace Type.States
         /// <inheritdoc />
         public void OnEnemyDestroyed(IEnemy enemy)
         {
+            if (_GameScene.Enemies.Contains(enemy)) _GameScene.Enemies.Remove(enemy);
             _EnemiesDestroyedThisLevel++;
             UpdateScore(enemy.Points);
             _PowerupFactory.Create(0, enemy.Position, _CurrentLevel);
@@ -366,9 +367,9 @@ namespace Type.States
             _CurrentNukes--;
             _UIScene.NukeButton.NukeCount = _CurrentNukes;
             CollisionController.Instance.ClearProjectiles();
-            foreach (IEnemy enemy in _GameScene.Enemies.Where(e => e.CanBeRoadKilled))
+            foreach (IEnemy enemy in _GameScene.Enemies.Where(e => e.CanBeRoadKilled).ToList())
             {
-                enemy.Destroy();
+                if (!enemy.IsDisposed) enemy.Destroy();
             }
             new AudioPlayer("Content/Audio/nuke.wav", false, AudioManager.Category.EFFECT, 1);
         }
