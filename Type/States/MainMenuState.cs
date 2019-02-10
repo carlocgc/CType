@@ -24,10 +24,9 @@ namespace Type.States
             _Scene = new MainMenuScene { Visible = true };
             _Scene.Show();
 
-            if (GameStats.Instance.CanShowAds && AdService.Instance.IsLoaded)
-            {
-                AdService.Instance.ShowInterstitial();
-            }
+            if (!GameStats.Instance.CanShowAds || !AdService.Instance.IsLoaded) return;
+            AdService.Instance.OnAddClosed = () => { GameStats.Instance.CanShowAds = false; };
+            AdService.Instance.ShowInterstitial();
         }
 
         public override Boolean IsComplete()

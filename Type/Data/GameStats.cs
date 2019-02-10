@@ -32,7 +32,7 @@ namespace Type.Data
         /// <summary> Enemies killed over all play thorughs </summary>
         private Int32 _AllTimeKills;
 
-        public Boolean CanShowAds { get; private set; }
+        public Boolean CanShowAds { get; set; }
         /// <summary> Whether the current score is a new highscore </summary>
         public Boolean IsNewHighScore { get; private set; }
         /// <summary> How many shots the player fired </summary>

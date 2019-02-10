@@ -24,10 +24,6 @@ namespace Type.Scenes
         private readonly Sprite _Background;
         /// <summary> Confirm button that ends the game over state </summary>
         private readonly Button _ConfirmButton;
-        /// <summary> Button that will show the obtained achievements </summary>
-        private readonly Button _AchievementsButton;
-        /// <summary> Button that will show the leaderboards </summary>
-        private readonly Button _LeaderboardButton;
         /// <summary> Displays the current game data via text displays </summary>
         private readonly StatsDisplay _StatsDisplay;
         /// <summary> Text on the confirm button </summary>
@@ -79,20 +75,6 @@ namespace Type.Scenes
             _ScoreText.Offset = new Vector2(_ScoreText.Size.X * _ScoreText.Scale.X, _ScoreText.Size.Y * _ScoreText.Scale.Y) / 2;
             AddDrawable(_ScoreText);
 
-            Sprite achievementsButton = new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/trophy-red.png"))
-            {
-                Position = new Vector2(-900, 350),
-            };
-            _AchievementsButton = new Button(Constants.ZOrders.UI, achievementsButton);
-            _AchievementsButton.OnButtonPress += AchievementsButtonOnPress;
-
-            Sprite leaderboardButton = new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/leaderboard-red.png"))
-            {
-                Position = new Vector2(770, 350),
-            };
-            _LeaderboardButton = new Button(Constants.ZOrders.UI, leaderboardButton);
-            _LeaderboardButton.OnButtonPress += LeaderboardButtonOnPress;
-
             Sprite confirmButton = new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/gameovercontinue.png"))
             {
                 Position = new Vector2(-200, -450),
@@ -123,10 +105,6 @@ namespace Type.Scenes
 
             _ConfirmButton.TouchEnabled = true;
             _ConfirmButton.Visible = true;
-            _AchievementsButton.TouchEnabled = true;
-            _AchievementsButton.Visible = true;
-            _LeaderboardButton.TouchEnabled = true;
-            _LeaderboardButton.Visible = true;
             _ConfirmText.Visible = true;
             _Background.Visible = true;
 
@@ -136,16 +114,6 @@ namespace Type.Scenes
         private void ConfirmPress(Button button)
         {
             IsComplete = true;
-        }
-
-        private void AchievementsButtonOnPress(Button button)
-        {
-            CompetitiveManager.Instance.ViewAchievements();
-        }
-
-        private void LeaderboardButtonOnPress(Button button)
-        {
-            CompetitiveManager.Instance.ViewLeaderboards();
         }
 
         public override void Update(TimeSpan timeSinceUpdate)
@@ -161,8 +129,6 @@ namespace Type.Scenes
             _ScoreText.Dispose();
             _ConfirmButton.Dispose();
             _ConfirmText.Dispose();
-            _AchievementsButton.Dispose();
-            _LeaderboardButton.Dispose();
             _Background.Dispose();
             _StatsDisplay.Dispose();
             _HighScoreText.Dispose();

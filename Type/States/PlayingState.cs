@@ -369,15 +369,18 @@ namespace Type.States
         public void OnNukeButtonPressed()
         {
             if (_CurrentNukes <= 0) return;
+
             _CurrentNukes--;
             _UIScene.NukeButton.NukeCount = _CurrentNukes;
             CollisionController.Instance.ClearProjectiles();
+
+            _GameScene.ShowNukeEffect();
+            new AudioPlayer("Content/Audio/nuke.wav", false, AudioManager.Category.EFFECT, 1);
+
             foreach (IEnemy enemy in _GameScene.Enemies.Where(e => e.CanBeRoadKilled))
             {
                 if (!enemy.IsDisposed && !enemy.IsDestroyed) enemy.Destroy();
             }
-            _GameScene.ShowNukeEffect();
-            new AudioPlayer("Content/Audio/nuke.wav", false, AudioManager.Category.EFFECT, 1);
         }
 
         #endregion

@@ -15,10 +15,6 @@ namespace Type.Scenes
     {
         /// <summary> Button used to return to main menu </summary>
         private readonly Button _ConfirmButton;
-        /// <summary> Button that will show the obtained achievements </summary>
-        private readonly Button _AchievementsButton;
-        /// <summary> Button that will show the leaderboards </summary>
-        private readonly Button _LeaderboardButton;
         /// <summary> Sprite for the background </summary>
         private readonly Sprite _Background;
         /// <summary> Text displaying the word congratulations </summary>
@@ -74,20 +70,6 @@ namespace Type.Scenes
             };
             AddDrawable(_Background);
 
-            Sprite achievementsButton = new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/trophy.png"))
-            {
-                Position = new Vector2(-900, 350),
-            };
-            _AchievementsButton = new Button(Constants.ZOrders.UI, achievementsButton);
-            _AchievementsButton.OnButtonPress += AchievementsButtonOnPress;
-
-            Sprite leaderboardButton = new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/leaderboard.png"))
-            {
-                Position = new Vector2(770, 350),
-            };
-            _LeaderboardButton = new Button(Constants.ZOrders.UI, leaderboardButton);
-            _LeaderboardButton.OnButtonPress += LeaderboardButtonOnPress;
-
             Sprite confirmButton = new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/completecontinue.png"))
             {
                 Position = new Vector2(-200, -450),
@@ -138,10 +120,6 @@ namespace Type.Scenes
             _Background.Visible = true;
             _ConfirmButton.TouchEnabled = true;
             _ConfirmButton.Visible = true;
-            _AchievementsButton.TouchEnabled = true;
-            _AchievementsButton.Visible = true;
-            _LeaderboardButton.TouchEnabled = true;
-            _LeaderboardButton.Visible = true;
             _ConfirmText.Visible = true;
 
             _HighScoreText.Visible = GameStats.Instance.IsNewHighScore;
@@ -156,8 +134,6 @@ namespace Type.Scenes
             _ConfirmText.Dispose();
             _CongratsText.Dispose();
             _ScoreText.Dispose();
-            _AchievementsButton.Dispose();
-            _LeaderboardButton.Dispose();
             _ConfirmButton.Dispose();
             _StatsDisplay.Dispose();
             _HighScoreText.Dispose();
