@@ -24,7 +24,7 @@ namespace Type.States
     public class PlayingState : State, IPlayerListener, IEnemyListener, IEnemyFactoryListener, IPowerupListener, INukeButtonListener, IPowerupFactoryListener, IUpdatable
     {
         /// <summary> Max level of the game </summary>
-        private readonly Int32 _MaxLevel = 20;
+        private readonly Int32 _MaxLevel = 1;
         /// <summary> Maximum amount of nukes the player can hold </summary>
         private readonly Int32 _MaxNukes = 3;
         /// <summary> THe type of player craft </summary>

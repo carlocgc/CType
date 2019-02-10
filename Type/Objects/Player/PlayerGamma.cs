@@ -36,6 +36,7 @@ namespace Type.Objects.Player
         /// <summary> How long the player is invincible when spawned </summary>
         private readonly TimeSpan _InvincibilityDuration = TimeSpan.FromSeconds(5);
 
+        private TimedCallback _InvincibleCallback;
         /// <summary> Time since the last bullet was fired </summary>
         private TimeSpan _TimeSinceLastFired;
         /// <summary> The direction to be applied to the position of the player </summary>
@@ -127,7 +128,8 @@ namespace Type.Objects.Player
         {
             _Invincible = true;
             FlashSprite();
-            new TimedCallback(_InvincibilityDuration, () =>
+            _InvincibleCallback?.Dispose();
+            _InvincibleCallback = new TimedCallback(_InvincibilityDuration, () =>
             {
                 _Invincible = false;
                 _InvincibleColourCallback?.Dispose();
@@ -406,7 +408,8 @@ namespace Type.Objects.Player
         public override void Dispose()
         {
             base.Dispose();
-            _InvincibleColourCallback.Dispose();
+            _InvincibleCallback?.Dispose();
+            _InvincibleColourCallback?.Dispose();
             foreach (Sprite effect in _EngineEffects) effect.Dispose();
             _Shield.Dispose();
             _ProbeController.Dispose();
