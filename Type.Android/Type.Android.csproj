@@ -584,12 +584,6 @@
     <AndroidAsset Include="Assets\Content\Graphics\Buttons\trophy.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\Content\Graphics\Buttons\leaderboard-red.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\Content\Graphics\Buttons\trophy-red.png" />
-  </ItemGroup>
-  <ItemGroup>
     <AndroidAsset Include="Assets\Content\Level\level-11.txt" />
   </ItemGroup>
   <ItemGroup>

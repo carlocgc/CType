@@ -1,7 +1,7 @@
-﻿using AmosShared.State;
+﻿using AmosShared.Audio;
+using AmosShared.State;
 using System;
-using AmosShared.Audio;
-using AmosShared.Competitive;
+using Type.Ads;
 using Type.Data;
 using Type.Scenes;
 
@@ -23,6 +23,10 @@ namespace Type.States
         {
             _Scene = new MainMenuScene { Visible = true };
             _Scene.Show();
+
+            if (!GameStats.Instance.CanShowAds || !AdService.Instance.IsLoaded) return;
+            AdService.Instance.OnAddClosed = () => { GameStats.Instance.CanShowAds = false; };
+            AdService.Instance.ShowInterstitial();
         }
 
         public override Boolean IsComplete()
