@@ -1,14 +1,15 @@
-﻿using AmosShared.Graphics.Drawables;
+﻿using AmosShared.Audio;
+using AmosShared.Base;
+using AmosShared.Graphics.Drawables;
+using AmosShared.Interfaces;
 using AmosShared.State;
+using OpenTK;
 using System;
 using System.Linq;
-using AmosShared.Audio;
-using AmosShared.Base;
-using AmosShared.Interfaces;
-using OpenTK;
 using Type.Controllers;
 using Type.Data;
 using Type.Factories;
+using Type.Interfaces.Control;
 using Type.Interfaces.Enemies;
 using Type.Interfaces.Player;
 using Type.Interfaces.Powerups;
@@ -20,10 +21,12 @@ namespace Type.States
     /// <summary>
     /// Game play state
     /// </summary>
-    public class PlayingState : State, IPlayerListener, IEnemyListener, IEnemyFactoryListener, IPowerupListener, IPowerupFactoryListener, IUpdatable
+    public class PlayingState : State, IPlayerListener, IEnemyListener, IEnemyFactoryListener, IPowerupListener, INukeButtonListener, IPowerupFactoryListener, IUpdatable
     {
         /// <summary> Max level of the game </summary>
         private readonly Int32 _MaxLevel = 20;
+        /// <summary> Maximum amount of nukes the player can hold </summary>
+        private readonly Int32 _MaxNukes = 3;
         /// <summary> THe type of player craft </summary>
         private readonly Int32 _PlayerType;
 
@@ -55,6 +58,11 @@ namespace Type.States
         private Int32 _EnemiesInLevel;
         /// <summary> Total enemies destroyed this level </summary>
         private Int32 _EnemiesDestroyedThisLevel;
+        /// <summary> amount of nukes the player has </summary>
+        private Int32 _CurrentNukes;
+
+        /// <summary> Whether or not the updatable is disposed </summary>
+        public Boolean IsDisposed { get; set; }
 
         public PlayingState(Int32 type)
         {
@@ -81,6 +89,7 @@ namespace Type.States
             _UIScene = new UIScene(_PlayerType);
             _UIScene.RegisterListener(_Player);
             _UIScene.AnalogStick.RegisterListener(_Player);
+            _UIScene.NukeButton.RegisterListener(this);
             _ScoreDisplay = _UIScene.ScoreDisplay;
             _LifeMeter = _UIScene.LifeMeter;
             _LevelDisplay = _UIScene.LevelDisplay;
@@ -129,20 +138,6 @@ namespace Type.States
             UpdateScore(value);
         }
 
-        /// <summary>
-        /// Invoked when a nuke pickup is collected, detonates the nuke
-        /// </summary>
-        public void OnNukeDetonated()
-        {
-            CollisionController.Instance.ClearProjectiles();
-            foreach (IEnemy enemy in _GameScene.Enemies.Where(e => e.CanBeRoadKilled))
-            {
-                enemy.Destroy();
-            }
-
-            new AudioPlayer("Content/Audio/nuke.wav", false, AudioManager.Category.EFFECT, 1);
-        }
-
         /// <inheritdoc />
         public void OnPlayerHit(IPlayer player)
         {
@@ -166,6 +161,16 @@ namespace Type.States
             {
                 GameOver();
             }
+        }
+
+        /// <summary>
+        /// Invoked when a nuke is collected by the player
+        /// </summary>
+        public void OnNukeAdded()
+        {
+            if (_CurrentNukes >= _MaxNukes) return;
+            _CurrentNukes++;
+            _UIScene.NukeButton.NukeCount = _CurrentNukes;
         }
 
         #endregion
@@ -326,8 +331,6 @@ namespace Type.States
             return true;
         }
 
-        /// <summary> Whether or not the updatable is disposed </summary>
-        public Boolean IsDisposed { get; set; }
 
         /// <inheritdoc />
         public override void Dispose()
@@ -353,5 +356,23 @@ namespace Type.States
             _UIScene.Dispose();
             _UIScene = null;
         }
+
+        #region Implementation of INukeButtonListener
+
+        /// <summary> Invoked when the nuke button is pressed </summary>
+        public void OnNukeButtonPressed()
+        {
+            if (_CurrentNukes <= 0) return;
+            _CurrentNukes--;
+            _UIScene.NukeButton.NukeCount = _CurrentNukes;
+            CollisionController.Instance.ClearProjectiles();
+            foreach (IEnemy enemy in _GameScene.Enemies.Where(e => e.CanBeRoadKilled))
+            {
+                enemy.Destroy();
+            }
+            new AudioPlayer("Content/Audio/nuke.wav", false, AudioManager.Category.EFFECT, 1);
+        }
+
+        #endregion
     }
 }
