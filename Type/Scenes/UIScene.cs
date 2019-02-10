@@ -198,15 +198,15 @@ namespace Type.Scenes
         {
             base.Dispose();
             _Listeners.Clear();
-            AnalogStick.Dispose();
+            _Help.Dispose();
             _FireButton.Dispose();
             _PauseButton.Dispose();
             _ResumeButton.Dispose();
-            LevelDisplay.Dispose();
             _FrameCounter.Dispose();
+            LevelDisplay.Dispose();
+            AnalogStick.Dispose();
             LifeMeter.Dispose();
             ScoreDisplay.Dispose();
-
         }
     }
 }
