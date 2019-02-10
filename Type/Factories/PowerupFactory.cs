@@ -35,27 +35,27 @@ namespace Type.Factories
                                     powerup = new PointsPickup(position, currentLevel);
                                     break;
                                 }
-                            case Int32 n when n >= 85 && n < 90:
+                            case Int32 n when n >= 85 && n < 91:
                                 {
                                     powerup = new ShieldPowerup(position);
                                     break;
                                 }
-                            case Int32 n when n >= 90 && n < 95:
+                            case Int32 n when n >= 91 && n < 94:
                                 {
                                     powerup = new ProbePowerup(position);
                                     break;
                                 }
 
-                            case Int32 n when n >= 95 && n < 98:
+                            case Int32 n when n >= 94 && n < 99:
                                 {
                                     powerup = new NukePickup(position);
                                     break;
                                 }
-                            case Int32 n when n >= 98:
-                            {
-                                powerup = new ExtraLifePowerup(position);
-                                break;
-                            }
+                            case Int32 n when n >= 99:
+                                {
+                                    powerup = new ExtraLifePowerup(position);
+                                    break;
+                                }
                             default:
                                 {
                                     throw new ArgumentOutOfRangeException("Powerup type does not exist");
