@@ -84,7 +84,7 @@ namespace Type.Android.Services
         {
             _MInterstitialAd = new InterstitialAd(MainActivity.Instance)
             {
-                AdUnitId = "ca-app-pub-3940256099942544/1033173712" // TODO FIX TEST AD Replace with ad unit id from AdMob
+                AdUnitId = "ca-app-pub-4204969324853965/8810416639" // TODO FIX TEST AD Replace with ad unit id from AdMob
             };
 
             LoadInterstitial();
@@ -95,7 +95,7 @@ namespace Type.Android.Services
         /// </summary>
         public void LoadInterstitial()
         {
-            AdRequest request = new AdRequest.Builder().AddTestDevice("7DBD856302197638").Build(); // TODO FIX TEST AD Remove '.AddTestDevice(XXXXXXX)'
+            AdRequest request = new AdRequest.Builder().Build(); // TODO FIX TEST AD Remove '.AddTestDevice(XXXXXXX)'
             _MInterstitialAd.LoadAd(request);
         }
 
