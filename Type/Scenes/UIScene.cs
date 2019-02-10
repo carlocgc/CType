@@ -28,6 +28,8 @@ namespace Type.Scenes
         private readonly Sprite _PauseIndicator;
         /// <summary> Callback to flash the paused indicator while paused </summary>
         private TimedCallback _IndicatorCallback;
+        /// <summary> Displays info about powerups in the pause menu </summary>
+        private PowerUpHelp _Help;
 
         /// <summary> Floating analog stick </summary>
         public AnalogStick AnalogStick { get; private set; }
@@ -96,6 +98,7 @@ namespace Type.Scenes
             };
             _PauseIndicator.Offset = _PauseIndicator.Size / 2;
 
+            _Help = new PowerUpHelp();
             _FrameCounter = new FpsCounter();
             LifeMeter = new LifeMeter(playertype);
             NukeButton = new NukeButton();
@@ -142,6 +145,7 @@ namespace Type.Scenes
         {
             Game.GameTime.Multiplier = 0;
             SetState(false);
+            _Help.Show();
             AudioManager.Instance.MusicVolume = 0;
             AudioManager.Instance.EffectVolume = 0;
             _PauseIndicator.Visible = true;
@@ -153,6 +157,7 @@ namespace Type.Scenes
         {
             Game.GameTime.Multiplier = 1;
             SetState(true);
+            _Help.Hide();
             AudioManager.Instance.MusicVolume = 1;
             AudioManager.Instance.EffectVolume = 1;
             _PauseIndicator.Visible = false;

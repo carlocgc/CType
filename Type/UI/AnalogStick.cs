@@ -50,6 +50,7 @@ namespace Type.UI
             {
                 _Visible = value;
                 _Base.Visible = _Visible;
+                _Top
             }
         }
 
