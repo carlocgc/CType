@@ -111,15 +111,7 @@ namespace Type.Scenes
 
         private void OnButtonPress(Button obj)
         {
-            if (AdService.Instance.IsLoaded)
-            {
-                AdService.Instance.OnAddClosed = () => IsComplete = true;
-                AdService.Instance.ShowInterstitial();
-            }
-            else
-            {
-                IsComplete = true;
-            }
+            IsComplete = true;
         }
 
         private void AchievementsButtonOnPress(Button button)

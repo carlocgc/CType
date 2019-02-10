@@ -135,15 +135,7 @@ namespace Type.Scenes
 
         private void ConfirmPress(Button button)
         {
-            if (AdService.Instance.IsLoaded)
-            {
-                AdService.Instance.OnAddClosed = () => IsComplete = true;
-                AdService.Instance.ShowInterstitial();
-            }
-            else
-            {
-                IsComplete = true;
-            }
+            IsComplete = true;
         }
 
         private void AchievementsButtonOnPress(Button button)

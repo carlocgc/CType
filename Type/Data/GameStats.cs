@@ -32,6 +32,7 @@ namespace Type.Data
         /// <summary> Enemies killed over all play thorughs </summary>
         private Int32 _AllTimeKills;
 
+        public Boolean CanShowAds { get; private set; }
         /// <summary> Whether the current score is a new highscore </summary>
         public Boolean IsNewHighScore { get; private set; }
         /// <summary> How many shots the player fired </summary>
@@ -66,6 +67,7 @@ namespace Type.Data
         /// </summary>
         public void GameEnd()
         {
+            CanShowAds = true;
             _EndTime = DateTime.Now;
 
             _AllTimeKills += EnemiesKilled;
