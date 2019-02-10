@@ -33,6 +33,6 @@ namespace Type.Interfaces.Player
         /// <summary>
         /// Invoked when a nuke is collected by the player
         /// </summary>
-        void OnNukeAdded();
+        void OnNukeAdded(Int32 value);
     }
 }

@@ -74,9 +74,15 @@ namespace Type.Powerups
         {
         }
 
+        /// <summary>
+        /// Whether the enemy is destroyed
+        /// </summary>
+        public Boolean IsDestroyed { get; set; }
+
         /// <inheritdoc />
         public void Destroy()
         {
+            IsDestroyed = true;
             CollisionController.Instance.DeregisterPowerup(this);
             foreach (IPowerupListener listener in _Listeners)
             {

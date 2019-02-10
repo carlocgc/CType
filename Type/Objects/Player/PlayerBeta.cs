@@ -235,9 +235,15 @@ namespace Type.Objects.Player
             }
         }
 
+        /// <summary>
+        /// Whether the enemy is destroyed
+        /// </summary>
+        public Boolean IsDestroyed { get; set; }
+
         /// <inheritdoc />
         public void Destroy()
         {
+            IsDestroyed = true;
             Int32 probeCount = _ProbeController.CurrentProbes;
 
             HitPoints = 0;

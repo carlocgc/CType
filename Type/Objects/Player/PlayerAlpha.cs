@@ -233,9 +233,15 @@ namespace Type.Objects.Player
             }
         }
 
+        /// <summary>
+        /// Whether the enemy is destroyed
+        /// </summary>
+        public Boolean IsDestroyed { get; set; }
+
         /// <inheritdoc />
         public void Destroy()
         {
+            IsDestroyed = true;
             Int32 probeCount = _ProbeController.CurrentProbes;
 
             HitPoints = 0;
@@ -305,15 +311,6 @@ namespace Type.Objects.Player
             _ProbeController.Shoot = AutoFire;
         }
 
-
-        private void DetonateNuke()
-        {
-            foreach (IPlayerListener listener in _Listeners)
-            {
-                listener.OnNukeDetonated();
-            }
-        }
-
         /// <summary>
         /// Adds a life to the player
         /// </summary>
@@ -336,6 +333,14 @@ namespace Type.Objects.Player
             }
 
             new AudioPlayer("Content/Audio/points_pickup.wav", false, AudioManager.Category.EFFECT, 1);
+        }
+
+        private void AddNuke(Int32 points)
+        {
+            foreach (IPlayerListener listener in _Listeners)
+            {
+                listener.OnNukeAdded(points);
+            }
         }
 
         /// <inheritdoc />
@@ -365,7 +370,7 @@ namespace Type.Objects.Player
                     }
                 case 4:
                     {
-                        DetonateNuke();
+                        AddNuke(powerup.PointValue);
                         break;
                     }
                 default:

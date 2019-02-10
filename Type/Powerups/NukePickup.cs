@@ -40,6 +40,11 @@ namespace Type.Powerups
         /// <inheritdoc />
         public Int32 HitPoints { get; }
 
+        /// <summary>
+        /// Whether the enemy is destroyed
+        /// </summary>
+        public Boolean IsDestroyed { get; set; }
+
         public NukePickup(Vector2 position)
         {
             ID = 4;
@@ -51,7 +56,7 @@ namespace Type.Powerups
             AddSprite(_Sprite);
             Position = position;
             HitBox = GetRect();
-            PointValue = 0;
+            PointValue = 500;
 
             _Direction = new Vector2((Single)Math.Sin(_Rnd.Next(0, 360)), (Single)Math.Sin(_Rnd.Next(0, 360)));
         }

@@ -74,9 +74,15 @@ namespace Type.Powerups
         {
         }
 
+        /// <summary>
+        /// Whether the enemy is destroyed
+        /// </summary>
+        public Boolean IsDestroyed { get; set; }
+
         /// <inheritdoc />
         public void Destroy()
         {
+            IsDestroyed = true;
             CollisionController.Instance.DeregisterPowerup(this);
             foreach (IPowerupListener listener in _Listeners)
             {
@@ -91,7 +97,7 @@ namespace Type.Powerups
             base.Update(timeTilUpdate);
 
             Position += _Direction * _Speed * (Single)timeTilUpdate.TotalSeconds;
-            
+
             if (_Direction.X > 0 && Position.X >= ScreenRight - _Sprite.Offset.X)
             {
                 _Direction = new Vector2((Single)Math.Sin(_Rnd.Next(190, 350)), _Direction.Y);

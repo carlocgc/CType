@@ -166,11 +166,17 @@ namespace Type.States
         /// <summary>
         /// Invoked when a nuke is collected by the player
         /// </summary>
-        public void OnNukeAdded()
+        public void OnNukeAdded(Int32 points)
         {
-            if (_CurrentNukes >= _MaxNukes) return;
+            if (_CurrentNukes >= _MaxNukes)
+            {
+                UpdateScore(points);
+                new AudioPlayer("Content/Audio/points_instead.wav", false, AudioManager.Category.EFFECT, 1);
+                return;
+            }
             _CurrentNukes++;
             _UIScene.NukeButton.NukeCount = _CurrentNukes;
+            new AudioPlayer("Content/Audio/nuke_pickup.wav", false, AudioManager.Category.EFFECT, 1);
         }
 
         #endregion
@@ -204,7 +210,6 @@ namespace Type.States
         /// <inheritdoc />
         public void OnEnemyDestroyed(IEnemy enemy)
         {
-            if (_GameScene.Enemies.Contains(enemy)) _GameScene.Enemies.Remove(enemy);
             _EnemiesDestroyedThisLevel++;
             UpdateScore(enemy.Points);
             _PowerupFactory.Create(0, enemy.Position, _CurrentLevel);
@@ -367,9 +372,9 @@ namespace Type.States
             _CurrentNukes--;
             _UIScene.NukeButton.NukeCount = _CurrentNukes;
             CollisionController.Instance.ClearProjectiles();
-            foreach (IEnemy enemy in _GameScene.Enemies.Where(e => e.CanBeRoadKilled).ToList())
+            foreach (IEnemy enemy in _GameScene.Enemies.Where(e => e.CanBeRoadKilled))
             {
-                if (!enemy.IsDisposed) enemy.Destroy();
+                if (!enemy.IsDisposed && !enemy.IsDestroyed) enemy.Destroy();
             }
             new AudioPlayer("Content/Audio/nuke.wav", false, AudioManager.Category.EFFECT, 1);
         }
