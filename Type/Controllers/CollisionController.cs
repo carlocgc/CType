@@ -254,7 +254,7 @@ namespace Type.Controllers
         /// <summary>
         /// Disposes all alive projectiles
         /// </summary>
-        private void ClearProjectiles()
+        public void ClearProjectiles()
         {
             foreach (IProjectile projectile in _EnemyProjectiles.ToList())
             {

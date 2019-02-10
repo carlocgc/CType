@@ -36,72 +36,44 @@ namespace Type.Controllers
                     }
                 case 3:
                     {
-                        if (CompetitiveManager.Instance.GetAchievement(0).PercentageComplete < 1)
-                        {
-                            // ACHIEVEMENT : Level 3 complete
-                            CompetitiveManager.Instance.SetAchievementProgress(0, 1);
-                        }
-
+                        // ACHIEVEMENT : Level 3 complete
+                        CompetitiveManager.Instance.SetAchievementProgress(0, 1);
                         break;
                     }
                 case 5:
                     {
-                        if (CompetitiveManager.Instance.GetAchievement(1).PercentageComplete < 1)
-                        {
-                            // ACHIEVEMENT : Level 5 complete
-                            CompetitiveManager.Instance.SetAchievementProgress(1, 1);
-                        }
-
+                        // ACHIEVEMENT : Level 5 complete
+                        CompetitiveManager.Instance.SetAchievementProgress(1, 1);
                         break;
                     }
                 case 7:
                     {
-                        if (CompetitiveManager.Instance.GetAchievement(2).PercentageComplete < 1)
-                        {
-                            // ACHIEVEMENT : Level 7 complete
-                            CompetitiveManager.Instance.SetAchievementProgress(2, 1);
-                        }
-
+                        // ACHIEVEMENT : Level 7 complete
+                        CompetitiveManager.Instance.SetAchievementProgress(2, 1);
                         break;
                     }
                 case 10:
                     {
-                        if (CompetitiveManager.Instance.GetAchievement(3).PercentageComplete < 1)
-                        {
-                            // ACHIEVEMENT : Level 10 complete
-                            CompetitiveManager.Instance.SetAchievementProgress(3, 1);
-                        }
-
+                        // ACHIEVEMENT : Level 10 complete
+                        CompetitiveManager.Instance.SetAchievementProgress(3, 1);
                         break;
                     }
                 case 13:
                     {
-                        if (CompetitiveManager.Instance.GetAchievement(4).PercentageComplete < 1)
-                        {
-                            // ACHIEVEMENT : Level 13 complete
-                            CompetitiveManager.Instance.SetAchievementProgress(4, 1);
-                        }
-
+                        // ACHIEVEMENT : Level 13 complete
+                        CompetitiveManager.Instance.SetAchievementProgress(4, 1);
                         break;
                     }
                 case 15:
                     {
-                        if (CompetitiveManager.Instance.GetAchievement(5).PercentageComplete < 1)
-                        {
-                            // ACHIEVEMENT : Level 15 complete
-                            CompetitiveManager.Instance.SetAchievementProgress(5, 1);
-                        }
-
+                        // ACHIEVEMENT : Level 15 complete
+                        CompetitiveManager.Instance.SetAchievementProgress(5, 1);
                         break;
                     }
                 case 17:
                     {
-                        if (CompetitiveManager.Instance.GetAchievement(6).PercentageComplete < 1)
-                        {
-                            // ACHIEVEMENT : Level 17 complete
-                            CompetitiveManager.Instance.SetAchievementProgress(6, 1);
-                        }
-
+                        // ACHIEVEMENT : Level 17 complete
+                        CompetitiveManager.Instance.SetAchievementProgress(6, 1);
                         break;
                     }
             }
@@ -119,32 +91,20 @@ namespace Type.Controllers
             {
                 case 0:
                     {
-                        if (CompetitiveManager.Instance.GetAchievement(7).PercentageComplete < 1)
-                        {
-                            // ACHIEVEMENT : Alpha victor
-                            CompetitiveManager.Instance.SetAchievementProgress(7, 1);
-                        }
-
+                        // ACHIEVEMENT : Alpha victor
+                        CompetitiveManager.Instance.SetAchievementProgress(7, 1);
                         break;
                     }
                 case 1:
                     {
-                        if (CompetitiveManager.Instance.GetAchievement(8).PercentageComplete < 1)
-                        {
-                            // ACHIEVEMENT : Beta victor
-                            CompetitiveManager.Instance.SetAchievementProgress(8, 1);
-                        }
-
+                        // ACHIEVEMENT : Beta victor
+                        CompetitiveManager.Instance.SetAchievementProgress(8, 1);
                         break;
                     }
                 case 2:
                     {
-                        if (CompetitiveManager.Instance.GetAchievement(9).PercentageComplete < 1)
-                        {
-                            // ACHIEVEMENT : Gamma victor
-                            CompetitiveManager.Instance.SetAchievementProgress(9, 1);
-                        }
-
+                        // ACHIEVEMENT : Gamma victor
+                        CompetitiveManager.Instance.SetAchievementProgress(9, 1);
                         break;
                     }
             }
@@ -157,25 +117,18 @@ namespace Type.Controllers
         {
             if (!CompetitiveManager.Instance.Loaded) return;
 
-            if (CompetitiveManager.Instance.GetAchievement(10).PercentageComplete < 1)
-            {
-                // ACHIEVEMENT :  Prototype
-                CompetitiveManager.Instance.SetAchievementProgress(10, 1);
-            }
+            // ACHIEVEMENT :  Prototype
+            CompetitiveManager.Instance.SetAchievementProgress(10, 1);
         }
 
         /// <summary>
         /// Updates the reflexes achievement
         /// </summary>
-        public void Reflexes()
+        private void Reflexes()
         {
             if (!CompetitiveManager.Instance.Loaded) return;
-
-            if (CompetitiveManager.Instance.GetAchievement(11).PercentageComplete < 1)
-            {
-                // ACHIEVEMENT :  Reflexes
-                CompetitiveManager.Instance.SetAchievementProgress(11, 1);
-            }
+            // ACHIEVEMENT :  Reflexes
+            CompetitiveManager.Instance.SetAchievementProgress(11, 1);
         }
 
         /// <summary>
@@ -192,7 +145,7 @@ namespace Type.Controllers
             if (allTimeScore >= mil) percentage = 1;
             else percentage = (Single)allTimeScore / mil;
 
-            if (CompetitiveManager.Instance.GetAchievement(12).PercentageComplete < 1 && percentage >= 1)
+            if (percentage >= 1)
             {
                 // ACHIEVEMENT :  Score one million
                 CompetitiveManager.Instance.SetAchievementProgress(12, 1);

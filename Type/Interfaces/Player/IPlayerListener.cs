@@ -29,5 +29,10 @@ namespace Type.Interfaces.Player
         /// Invoked when the player has died
         /// </summary>
         void OnPlayerDeath(IPlayer player, Int32 probeCount, Vector2 position);
+
+        /// <summary>
+        /// Invoked when a nuke is collected by the player
+        /// </summary>
+        void OnNukeAdded(Int32 value);
     }
 }

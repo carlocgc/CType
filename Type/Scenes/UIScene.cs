@@ -37,6 +37,8 @@ namespace Type.Scenes
         public LifeMeter LifeMeter { get; private set; }
         /// <summary> Object that shows the current level text </summary>
         public LevelDisplay LevelDisplay { get; private set; }
+        /// <summary> Nuke button element of the UI, displays nuke count and informs listeners a nuke should be detonated </summary>
+        public NukeButton NukeButton { get; set; }
 
         /// <summary>
         /// Whether the UI is Active
@@ -94,8 +96,9 @@ namespace Type.Scenes
             };
             _PauseIndicator.Offset = _PauseIndicator.Size / 2;
 
-            LifeMeter = new LifeMeter(playertype);
             _FrameCounter = new FpsCounter();
+            LifeMeter = new LifeMeter(playertype);
+            NukeButton = new NukeButton();
             LevelDisplay = new LevelDisplay();
             AnalogStick = new AnalogStick(new Vector2(-620, -220), 110);
         }
@@ -110,9 +113,11 @@ namespace Type.Scenes
             _FireButton.Visible = state;
             _PauseButton.TouchEnabled = state;
             _PauseButton.Visible = state;
+            NukeButton.Visible = state;
             AnalogStick.TouchEnabled = state;
             AnalogStick.Visible = state;
             AnalogStick.ListeningForMove = state;
+
         }
 
         #region Inputs
@@ -196,6 +201,7 @@ namespace Type.Scenes
             _FrameCounter.Dispose();
             LifeMeter.Dispose();
             ScoreDisplay.Dispose();
+
         }
     }
 }

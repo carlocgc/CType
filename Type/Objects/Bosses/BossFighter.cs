@@ -224,10 +224,16 @@ namespace Type.Objects.Bosses
         }
 
         /// <summary>
+        /// Whether the enemy is destroyed
+        /// </summary>
+        public Boolean IsDestroyed { get; set; }
+
+        /// <summary>
         /// Destroy the object
         /// </summary>
         public void Destroy()
         {
+            IsDestroyed = true;
         }
 
         /// <summary>

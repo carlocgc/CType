@@ -100,9 +100,15 @@ namespace Type.Objects.Probes
         {
         }
 
+        /// <summary>
+        /// Whether the enemy is destroyed
+        /// </summary>
+        public Boolean IsDestroyed { get; set; }
+
         /// <inheritdoc />
         public void Destroy()
         {
+            IsDestroyed = true;
         }
     }
 }

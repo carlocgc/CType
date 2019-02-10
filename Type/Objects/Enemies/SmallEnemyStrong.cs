@@ -51,7 +51,7 @@ namespace Type.Objects.Enemies
         private Boolean InPlay;
 
         /// <summary> Whether the enemy has been destroyed  </summary>
-        public Boolean IsDestroyed { get; private set; }
+        public Boolean IsDestroyed { get; set; }
 
         /// <inheritdoc />
         public Int32 HitPoints { get; private set; }

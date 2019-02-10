@@ -14,7 +14,7 @@ namespace Type.Powerups
     /// <summary>
     /// Pickup that gives points
     /// </summary>
-    public class PointsPickup : GameObject, IPowerup
+    public class NukePickup : GameObject, IPowerup
     {
         private readonly Random _Rnd = new Random(Environment.TickCount);
         /// <summary> Sprite for the powerup </summary>
@@ -40,10 +40,15 @@ namespace Type.Powerups
         /// <inheritdoc />
         public Int32 HitPoints { get; }
 
-        public PointsPickup(Vector2 position, Int32 level)
+        /// <summary>
+        /// Whether the enemy is destroyed
+        /// </summary>
+        public Boolean IsDestroyed { get; set; }
+
+        public NukePickup(Vector2 position)
         {
-            ID = 3;
-            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.POWERUPS, Texture.GetTexture("Content/Graphics/Powerups/points_powerup.png"))
+            ID = 4;
+            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.POWERUPS, Texture.GetTexture("Content/Graphics/Powerups/nuke_powerup.png"))
             {
                 Visible = true,
             };
@@ -51,7 +56,7 @@ namespace Type.Powerups
             AddSprite(_Sprite);
             Position = position;
             HitBox = GetRect();
-            PointValue = 100 * level;
+            PointValue = 500;
 
             _Direction = new Vector2((Single)Math.Sin(_Rnd.Next(0, 360)), (Single)Math.Sin(_Rnd.Next(0, 360)));
         }
@@ -74,15 +79,9 @@ namespace Type.Powerups
         {
         }
 
-        /// <summary>
-        /// Whether the enemy is destroyed
-        /// </summary>
-        public Boolean IsDestroyed { get; set; }
-
         /// <inheritdoc />
         public void Destroy()
         {
-            IsDestroyed = true;
             CollisionController.Instance.DeregisterPowerup(this);
             foreach (IPowerupListener listener in _Listeners)
             {
