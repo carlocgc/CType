@@ -1,13 +1,15 @@
-﻿using AmosShared.Graphics.Drawables;
-using AmosShared.State;
-using System;
-using AmosShared.Audio;
+﻿using AmosShared.Audio;
 using AmosShared.Base;
+using AmosShared.Graphics.Drawables;
 using AmosShared.Interfaces;
+using AmosShared.State;
 using OpenTK;
+using System;
+using System.Linq;
 using Type.Controllers;
 using Type.Data;
 using Type.Factories;
+using Type.Interfaces.Control;
 using Type.Interfaces.Enemies;
 using Type.Interfaces.Player;
 using Type.Interfaces.Powerups;
@@ -19,10 +21,12 @@ namespace Type.States
     /// <summary>
     /// Game play state
     /// </summary>
-    public class PlayingState : State, IPlayerListener, IEnemyListener, IEnemyFactoryListener, IPowerupListener, IPowerupFactoryListener, IUpdatable
+    public class PlayingState : State, IPlayerListener, IEnemyListener, IEnemyFactoryListener, IPowerupListener, INukeButtonListener, IPowerupFactoryListener, IUpdatable
     {
         /// <summary> Max level of the game </summary>
-        private readonly Int32 _MaxLevel = 20;
+        private readonly Int32 _MaxLevel = 1;
+        /// <summary> Maximum amount of nukes the player can hold </summary>
+        private readonly Int32 _MaxNukes = 3;
         /// <summary> THe type of player craft </summary>
         private readonly Int32 _PlayerType;
 
@@ -54,6 +58,11 @@ namespace Type.States
         private Int32 _EnemiesInLevel;
         /// <summary> Total enemies destroyed this level </summary>
         private Int32 _EnemiesDestroyedThisLevel;
+        /// <summary> amount of nukes the player has </summary>
+        private Int32 _CurrentNukes;
+
+        /// <summary> Whether or not the updatable is disposed </summary>
+        public Boolean IsDisposed { get; set; }
 
         public PlayingState(Int32 type)
         {
@@ -80,6 +89,7 @@ namespace Type.States
             _UIScene = new UIScene(_PlayerType);
             _UIScene.RegisterListener(_Player);
             _UIScene.AnalogStick.RegisterListener(_Player);
+            _UIScene.NukeButton.RegisterListener(this);
             _ScoreDisplay = _UIScene.ScoreDisplay;
             _LifeMeter = _UIScene.LifeMeter;
             _LevelDisplay = _UIScene.LevelDisplay;
@@ -151,6 +161,22 @@ namespace Type.States
             {
                 GameOver();
             }
+        }
+
+        /// <summary>
+        /// Invoked when a nuke is collected by the player
+        /// </summary>
+        public void OnNukeAdded(Int32 points)
+        {
+            if (_CurrentNukes >= _MaxNukes)
+            {
+                UpdateScore(points);
+                new AudioPlayer("Content/Audio/points_instead.wav", false, AudioManager.Category.EFFECT, 1);
+                return;
+            }
+            _CurrentNukes++;
+            _UIScene.NukeButton.NukeCount = _CurrentNukes;
+            new AudioPlayer("Content/Audio/nuke_pickup.wav", false, AudioManager.Category.EFFECT, 1);
         }
 
         #endregion
@@ -311,8 +337,6 @@ namespace Type.States
             return true;
         }
 
-        /// <summary> Whether or not the updatable is disposed </summary>
-        public Boolean IsDisposed { get; set; }
 
         /// <inheritdoc />
         public override void Dispose()
@@ -338,5 +362,24 @@ namespace Type.States
             _UIScene.Dispose();
             _UIScene = null;
         }
+
+        #region Implementation of INukeButtonListener
+
+        /// <summary> Invoked when the nuke button is pressed </summary>
+        public void OnNukeButtonPressed()
+        {
+            if (_CurrentNukes <= 0) return;
+            _CurrentNukes--;
+            _UIScene.NukeButton.NukeCount = _CurrentNukes;
+            CollisionController.Instance.ClearProjectiles();
+            foreach (IEnemy enemy in _GameScene.Enemies.Where(e => e.CanBeRoadKilled))
+            {
+                if (!enemy.IsDisposed && !enemy.IsDestroyed) enemy.Destroy();
+            }
+            _GameScene.ShowNukeEffect();
+            new AudioPlayer("Content/Audio/nuke.wav", false, AudioManager.Category.EFFECT, 1);
+        }
+
+        #endregion
     }
 }

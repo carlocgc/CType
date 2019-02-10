@@ -36,6 +36,7 @@ namespace Type.Objects.Player
         /// <summary> How long the player is invincible when spawned </summary>
         private readonly TimeSpan _InvincibilityDuration = TimeSpan.FromSeconds(2);
 
+        private TimedCallback _InvincibleCallback;
         /// <summary> Time since the last bullet was fired </summary>
         private TimeSpan _TimeSinceLastFired;
         /// <summary> The direction to be applied to the position of the player </summary>
@@ -125,7 +126,7 @@ namespace Type.Objects.Player
         {
             _Invincible = true;
             FlashSprite();
-            new TimedCallback(_InvincibilityDuration, () =>
+            _InvincibleCallback = new TimedCallback(_InvincibilityDuration, () =>
             {
                 _Invincible = false;
                 _InvincibleColourCallback?.Dispose();
@@ -230,9 +231,15 @@ namespace Type.Objects.Player
             }
         }
 
+        /// <summary>
+        /// Whether the enemy is destroyed
+        /// </summary>
+        public Boolean IsDestroyed { get; set; }
+
         /// <inheritdoc />
         public void Destroy()
         {
+            IsDestroyed = true;
             Int32 probeCount = _ProbeController.CurrentProbes;
 
             HitPoints = 0;
@@ -328,6 +335,14 @@ namespace Type.Objects.Player
             new AudioPlayer("Content/Audio/points_pickup.wav", false, AudioManager.Category.EFFECT, 1);
         }
 
+        private void AddNuke(Int32 points)
+        {
+            foreach (IPlayerListener listener in _Listeners)
+            {
+                listener.OnNukeAdded(points);
+            }
+        }
+
         /// <inheritdoc />
         public void ApplyPowerup(IPowerup powerup)
         {
@@ -353,6 +368,12 @@ namespace Type.Objects.Player
                         AddPoints(powerup.PointValue);
                         break;
                     }
+                case 4:
+                    {
+                        AddNuke(powerup.PointValue);
+                        break;
+                    }
+
                 default:
                     throw new ArgumentOutOfRangeException("Powerup does not exist");
             }
@@ -383,7 +404,8 @@ namespace Type.Objects.Player
         public override void Dispose()
         {
             base.Dispose();
-            _InvincibleColourCallback.Dispose();
+            _InvincibleCallback?.Dispose();
+            _InvincibleColourCallback?.Dispose();
             foreach (Sprite effect in _EngineEffects) effect.Dispose();
             _Shield.Dispose();
             _ProbeController.Dispose();

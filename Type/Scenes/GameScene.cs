@@ -1,8 +1,11 @@
 ﻿using AmosShared.Audio;
 using AmosShared.Graphics;
+using AmosShared.Graphics.Drawables;
+using OpenTK;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Type.Glide;
 using Type.Interfaces.Enemies;
 using Type.Interfaces.Player;
 using Type.Interfaces.Powerups;
@@ -13,6 +16,8 @@ namespace Type.Scenes
 {
     public class GameScene : Scene
     {
+        private Tweener _Tweener = new Tweener();
+
         /// <summary> Scrolling background </summary>
         private readonly ScrollingBackground _BackgroundFar;
 
@@ -28,6 +33,12 @@ namespace Type.Scenes
         /// <summary> Scrolling object </summary>
         private readonly ScrollingObject _Clusters;
 
+        /// <summary> Screen sized sprite that will be shown when a nuke is detonated </summary>
+        private readonly Sprite _NukeEffect;
+
+        private Single _NukeEffectAlpha;
+
+        /// <summary> Main game background music </summary>
         public readonly AudioPlayer _Music;
 
         /// <summary> List of all enemies </summary>
@@ -46,6 +57,12 @@ namespace Type.Scenes
             _Clusters = new ScrollingObject(100, 200, "Content/Graphics/Background/Clusters/cluster-", 7, 20, 40, Constants.ZOrders.CLUSTERS);
             _PlanetsFar = new ScrollingObject(200, 250, "Content/Graphics/Background/Planets/planet-far-", 9, 10, 20, Constants.ZOrders.PLANETS_FAR);
             _PlanetsNear = new ScrollingObject(250, 350, "Content/Graphics/Background/Planets/planet-near-", 9, 10, 30, Constants.ZOrders.PLANETS_NEAR);
+
+            _NukeEffect = new Sprite(Game.MainCanvas, Constants.ZOrders.NUKE_EFFECT, Texture.GetTexture("Content/Graphics/Engine/engine_background.png"))
+            {
+                Position = new Vector2(0, 0),
+            };
+            _NukeEffect.Offset = _NukeEffect.Size / 2;
 
             switch (playertype)
             {
@@ -113,8 +130,29 @@ namespace Type.Scenes
             }
         }
 
+        /// <summary>
+        /// Show the nuke effect
+        /// </summary>
+        public void ShowNukeEffect()
+        {
+            _Tweener.CancelAndComplete();
+            _NukeEffect.Colour = new Vector4(1, 1, 1, 1);
+            _NukeEffect.Visible = true;
+            _NukeEffectAlpha = 1;
+            _Tweener.Tween(this, new {_NukeEffectAlpha = 0}, 0.5f).OnUpdate(() =>
+            {
+                _NukeEffect.Colour = new Vector4(1, 1, 1, _NukeEffectAlpha);
+            }).OnComplete(() =>
+            {
+                _NukeEffect.Visible = false;
+                _NukeEffect.Colour = new Vector4(1, 1, 1, 1);
+            });
+        }
+
         public override void Update(TimeSpan timeSinceUpdate)
         {
+            _Tweener.Update((Single)timeSinceUpdate.TotalSeconds);
+
             foreach (IEnemy enemy in Enemies.Where(e => e.IsDisposed).ToList())
             {
                 Enemies.Remove(enemy);
@@ -124,7 +162,8 @@ namespace Type.Scenes
         public override void Dispose()
         {
             base.Dispose();
-
+            _Tweener.CancelAndComplete();
+            _Tweener = null;
             _Music.Stop();
 
             foreach (IPowerup powerup in Powerups)
@@ -139,7 +178,7 @@ namespace Type.Scenes
             Enemies.Clear();
 
             Player.Dispose();
-
+            _NukeEffect.Dispose();
             _BackgroundNear.Dispose();
             _BackgroundFar.Dispose();
             _PlanetsNear.Dispose();

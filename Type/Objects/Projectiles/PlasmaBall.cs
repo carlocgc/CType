@@ -69,9 +69,15 @@ namespace Type.Objects.Projectiles
         {
         }
 
+        /// <summary>
+        /// Whether the enemy is destroyed
+        /// </summary>
+        public Boolean IsDestroyed { get; set; }
+
         /// <inheritdoc />
         public void Destroy()
         {
+            IsDestroyed = true;
             Dispose();
         }
 

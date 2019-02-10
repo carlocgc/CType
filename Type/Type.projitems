@@ -32,6 +32,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IAnalogListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IBackButtonListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IFireButtonListener.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\INukeButtonListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IPositionRecipient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IShipSelectListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IUIListener.cs" />
@@ -83,6 +84,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Objects\World\ScrollingBackground.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\World\ScrollingObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Powerups\ExtraLifePowerup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Powerups\NukePickup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Powerups\PointsPickup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Powerups\ProbePowerup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Powerups\ShieldPowerup.cs" />
@@ -105,6 +107,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)UI\FpsCounter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\LevelDisplay.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\LifeMeter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\NukeButton.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\ShipSelectButton.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\StatsDisplay.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Base\TimedCallback.cs" />
