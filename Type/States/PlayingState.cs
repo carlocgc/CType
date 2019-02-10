@@ -376,6 +376,7 @@ namespace Type.States
             {
                 if (!enemy.IsDisposed && !enemy.IsDestroyed) enemy.Destroy();
             }
+            _GameScene.ShowNukeEffect();
             new AudioPlayer("Content/Audio/nuke.wav", false, AudioManager.Category.EFFECT, 1);
         }
 

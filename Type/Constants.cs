@@ -107,6 +107,8 @@ namespace Type
 
             public const Int32 PLANETS_NEAR = 56;
 
+            public const Int32 NUKE_EFFECT = 57;
+
             public const Int32 BOSS_BASE = 59;
 
             public const Int32 BOSS_LOWER = 60;
