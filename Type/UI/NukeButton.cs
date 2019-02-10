@@ -24,6 +24,28 @@ namespace Type.UI
         /// <summary> The number of nukes to display on the button </summary>
         private Int32 _NukeCount;
 
+        private Boolean _Visible;
+
+        public Boolean Visible
+        {
+            get => _Visible;
+            set
+            {
+                _Visible = value;
+                if (_Visible == false)
+                {
+                    _Button.Visible = false;
+                    _NukeCountDisplay.Visible = false;
+                    _Button.TouchEnabled = false;
+                }
+                else
+                {
+                    _Button.Visible = true;
+                    NukeCount = _NukeCount;
+                }
+            }
+        }
+
         /// <summary> The number of nukes to display on the button </summary>
         public Int32 NukeCount
         {

@@ -113,9 +113,11 @@ namespace Type.Scenes
             _FireButton.Visible = state;
             _PauseButton.TouchEnabled = state;
             _PauseButton.Visible = state;
+            NukeButton.Visible = state;
             AnalogStick.TouchEnabled = state;
             AnalogStick.Visible = state;
             AnalogStick.ListeningForMove = state;
+
         }
 
         #region Inputs
@@ -199,7 +201,7 @@ namespace Type.Scenes
             _FrameCounter.Dispose();
             LifeMeter.Dispose();
             ScoreDisplay.Dispose();
-            
+
         }
     }
 }
