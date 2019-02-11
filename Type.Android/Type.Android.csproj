@@ -575,7 +575,7 @@
     <AndroidAsset Include="Assets\Content\Audio\explode.wav" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\values\ids.xml" />
+    <AndroidResource Include="Resources\values\games-ids.xml" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\Content\Graphics\Buttons\leaderboard.png" />
