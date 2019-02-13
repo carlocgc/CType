@@ -76,11 +76,7 @@ namespace Type.Objects.Enemies
             Position.Y + _Sprite.Offset.Y <= ScreenTop;
 
         /// <summary> Whether the enemy is completely offscreen, used to destroy the object </summary>
-        private Boolean OffScreen =>
-            Position.X + _Sprite.Offset.X <= ScreenLeft ||
-            Position.X - _Sprite.Offset.X >= ScreenRight ||
-            Position.Y + _Sprite.Offset.Y <= ScreenBottom ||
-            Position.Y - _Sprite.Offset.Y >= ScreenTop;
+        private Boolean OffScreen => Position.X + _Sprite.Offset.X <= ScreenLeft || Position.X - _Sprite.Offset.X >= ScreenRight;
 
         public LargeEnemyStrong(Single yPos, IAccelerationProvider moveController)
         {
@@ -125,7 +121,7 @@ namespace Type.Objects.Enemies
             _Explosion.Scale = new Vector2(2.25f, 2.25f);
             _Explosion.Offset = new Vector2(_Explosion.Size.X / 2 * _Explosion.Scale.X, _Explosion.Size.Y / 2 * _Explosion.Scale.Y);
 
-            Position = new Vector2(Renderer.Instance.TargetDimensions.X / 2 + _Sprite.Offset.X, yPos);
+            Position = new Vector2(Renderer.Instance.TargetDimensions.X / 2 + _Sprite.Offset.X / 2 - 1, yPos);
             _Explosion.Position = Position;
 
             _MovementController = moveController;
@@ -244,12 +240,11 @@ namespace Type.Objects.Enemies
                 }
             }
 
-            if (OnScreen && !InPlay) // If first time on screen
+            if (OnScreen && !CollisionController.Instance.Enemies.Contains(this))
             {
-                InPlay = true;
                 CollisionController.Instance.RegisterEnemy(this);
             }
-            else if (OffScreen && InPlay) // If alive and offscreen
+            if (OffScreen)
             {
                 for (Int32 i = _Listeners.Count - 1; i >= 0; i--)
                 {
