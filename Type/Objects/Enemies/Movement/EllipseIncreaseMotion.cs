@@ -28,7 +28,7 @@ namespace Type.Objects.Enemies.Movement
         public Vector2 ApplyAcceleration(Vector2 baseVector, TimeSpan timeTilUpdate)
         {
             baseVector.Y += _Speed * (Single) timeTilUpdate.TotalSeconds;
-            baseVector.X = 1f/200f * (baseVector.Y * baseVector.Y);
+            baseVector.X = 0.75f/200f * (baseVector.Y * baseVector.Y);
 
             return baseVector;
         }

@@ -25,26 +25,23 @@ namespace Type.Controllers
         private readonly List<IProjectile> _PlayerProjectiles;
         /// <summary> List of all active enemy projectiles </summary>
         private readonly List<IProjectile> _EnemyProjectiles;
-        /// <summary> List of all active enemies </summary>
-        private readonly List<IEnemy> _Enemies;
         /// <summary> List of all the uncollected powerups </summary>
         private readonly List<IPowerup> _Powerups;
         /// <summary> The players ship </summary>
         private IPlayer _Player;
 
+        /// <summary> List of all active enemies </summary>
+        public List<IEnemy> Enemies { get; private set; }
         /// <summary> Whether the collision controller is disposed </summary>
         public Boolean IsDisposed { get; set; }
         /// <summary> Whether the collision controller is active </summary>
         public Boolean IsActive { get; set; }
 
-        /// <summary> How many enemies are currently registered </summary>
-        public Int32 Enemies => _Enemies.Count;
-
         private CollisionController()
         {
             _PlayerProjectiles = new List<IProjectile>();
             _EnemyProjectiles = new List<IProjectile>();
-            _Enemies = new List<IEnemy>();
+            Enemies = new List<IEnemy>();
             _Powerups = new List<IPowerup>();
             UpdateManager.Instance.AddUpdatable(this);
         }
@@ -57,7 +54,7 @@ namespace Type.Controllers
         /// <param name="enemy"></param>
         public void RegisterEnemy(IEnemy enemy)
         {
-            _Enemies.Add(enemy);
+            Enemies.Add(enemy);
         }
 
         /// <summary>
@@ -132,7 +129,7 @@ namespace Type.Controllers
         {
             foreach (IProjectile projectile in _PlayerProjectiles.Where(p => !p.IsDisposed).ToList())
             {
-                foreach (IEnemy enemy in _Enemies.ToList())
+                foreach (IEnemy enemy in Enemies.ToList())
                 {
                     if (Intersects(projectile.HitBox, enemy.HitBox))
                     {
@@ -149,7 +146,7 @@ namespace Type.Controllers
         {
             if (_Player == null) return;
 
-            foreach (IEnemy enemy in _Enemies.Where(p => !p.IsDisposed).ToList())
+            foreach (IEnemy enemy in Enemies.Where(p => !p.IsDisposed).ToList())
             {
                 if (Intersects(_Player.HitBox, enemy.HitBox))
                 {
@@ -243,11 +240,11 @@ namespace Type.Controllers
         /// </summary>
         public void ClearObjects()
         {
-            foreach (IEnemy enemy in _Enemies.ToList())
+            foreach (IEnemy enemy in Enemies.ToList())
             {
                 enemy.Dispose();
             }
-            _Enemies.Clear();
+            Enemies.Clear();
             ClearProjectiles();
         }
 
@@ -274,7 +271,7 @@ namespace Type.Controllers
         /// <param name="enemy"></param>
         public void DeregisterEnemy(IEnemy enemy)
         {
-            if (_Enemies.Contains(enemy)) _Enemies.Remove(enemy);
+            if (Enemies.Contains(enemy)) Enemies.Remove(enemy);
         }
 
         /// <summary>
@@ -326,11 +323,11 @@ namespace Type.Controllers
             IsDisposed = true;
             UpdateManager.Instance.RemoveUpdatable(this);
             ClearProjectiles();
-            foreach (IEnemy enemy in _Enemies)
+            foreach (IEnemy enemy in Enemies)
             {
                 enemy.Dispose();
             }
-            _Enemies.Clear();
+            Enemies.Clear();
             _Player.Dispose();
         }
     }
