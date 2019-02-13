@@ -46,12 +46,12 @@ namespace Type.States
         private LifeMeter _LifeMeter;
         /// <summary> The player </summary>
         private IPlayer _Player;
+        /// <summary> Whether the level has started </summary>
+        private Boolean _LevelStarted;
         /// <summary> Whether the game is over </summary>
         private Boolean _GameOver;
         /// <summary> Whether the game is complete </summary>
         private Boolean _GameComplete;
-        /// <summary> Whether the level can be completed </summary>
-        private Boolean _LevelCanEnd;
         /// <summary> The current level </summary>
         private Int32 _CurrentLevel;
         /// <summary> Total enemies in this level </summary>
@@ -71,7 +71,7 @@ namespace Type.States
 
         protected override void OnEnter()
         {
-            _CurrentLevel = 1;
+            _CurrentLevel = 5;
 
             _EnemyFactory = new EnemyFactory();
             _EnemyFactory.RegisterListener(this);
@@ -191,6 +191,7 @@ namespace Type.States
         {
             _EnemiesDestroyedThisLevel = 0;
             _EnemiesInLevel = levelTotal;
+            _LevelStarted = true;
         }
 
         /// <inheritdoc />
@@ -204,7 +205,6 @@ namespace Type.States
         /// </summary>
         public void OnLevelFinishedSpawning()
         {
-            _LevelCanEnd = true;
         }
 
         /// <inheritdoc />
@@ -266,8 +266,6 @@ namespace Type.States
         {
             if (_GameOver) return;
 
-            _LevelCanEnd = false;
-
             AchievementController.Instance.LevelCompleted(_CurrentLevel);
 
             if (_CurrentLevel >= _MaxLevel) GameCompleted();
@@ -278,6 +276,7 @@ namespace Type.States
                 _LevelDisplay.ShowLevel(_CurrentLevel, TimeSpan.FromSeconds(2), () =>
                 {
                     _EnemyFactory.Start(LevelLoader.GetWaveData(_CurrentLevel));
+                    _LevelStarted = true;
                 });
             }
         }
@@ -321,9 +320,7 @@ namespace Type.States
         public override void Update(TimeSpan timeSinceUpdate)
         {
             base.Update(timeSinceUpdate);
-
-            if (!_LevelCanEnd) return;
-
+            if (!_LevelStarted) return;
             if (_EnemiesDestroyedThisLevel >= _EnemiesInLevel)
             {
                 LevelComplete();
