@@ -12,7 +12,7 @@ using Type.UI;
 
 namespace Type.Scenes
 {
-    public class UIScene : Scene, INotifier<IUIListener>
+    public class UIScene : Scene, INotifier<IInputListener>
     {
         private Boolean _Active;
 
@@ -127,7 +127,7 @@ namespace Type.Scenes
 
         private void FireButtonRelease(Button obj)
         {
-            foreach (IUIListener listener in _Listeners)
+            foreach (IInputListener listener in _Listeners)
             {
                 listener.FireButtonReleased();
             }
@@ -135,7 +135,7 @@ namespace Type.Scenes
 
         private void FireButtonPress(Button obj)
         {
-            foreach (IUIListener listener in _Listeners)
+            foreach (IInputListener listener in _Listeners)
             {
                 listener.FireButtonPressed();
             }
@@ -169,17 +169,17 @@ namespace Type.Scenes
 
         #region Listener
 
-        private readonly List<IUIListener> _Listeners = new List<IUIListener>();
+        private readonly List<IInputListener> _Listeners = new List<IInputListener>();
 
         /// <inheritdoc />
-        public void RegisterListener(IUIListener listener)
+        public void RegisterListener(IInputListener listener)
         {
             if (_Listeners.Contains(listener)) return;
             _Listeners.Add(listener);
         }
 
         /// <inheritdoc />
-        public void DeregisterListener(IUIListener listener)
+        public void DeregisterListener(IInputListener listener)
         {
             if (!_Listeners.Contains(listener)) return;
             _Listeners.Remove(listener);

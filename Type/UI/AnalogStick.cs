@@ -13,7 +13,7 @@ namespace Type.UI
 {
     public class AnalogStick : GameObject, ITouchListener
     {
-        private readonly List<IAnalogListener> _Listeners;
+        private readonly List<IDirectionalInputListener> _Listeners;
 
         private readonly Sprite _Base;
 
@@ -66,7 +66,7 @@ namespace Type.UI
 
         public AnalogStick(Vector2 startPosition, Single radius)
         {
-            _Listeners = new List<IAnalogListener>();
+            _Listeners = new List<IDirectionalInputListener>();
 
             _Top = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/analog_top.png"))
             {
@@ -183,12 +183,12 @@ namespace Type.UI
             return new Vector2(position.X - Renderer.Instance.TargetDimensions.X / 2, (position.Y - Renderer.Instance.TargetDimensions.Y / 2) * -1);
         }
 
-        public void RegisterListener(IAnalogListener listener)
+        public void RegisterListener(IDirectionalInputListener listener)
         {
             _Listeners.Add(listener);
         }
 
-        public void DeRegisterListener(IAnalogListener listener)
+        public void DeRegisterListener(IDirectionalInputListener listener)
         {
             _Listeners.Remove(listener);
         }
@@ -197,10 +197,10 @@ namespace Type.UI
         {
             base.Update(timeTilUpdate);
 
-            foreach (IAnalogListener listener in _Listeners)
-            {
-                listener.UpdateAnalogData(_DirectionNorm, _PushDistance);
-            }
+            //foreach (IDirectionalInputListener listener in _Listeners)
+            //{
+            //    listener.UpdateDirectionData(_DirectionNorm, _PushDistance);
+            //}
         }
 
         public override void Dispose()

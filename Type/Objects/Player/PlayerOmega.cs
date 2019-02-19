@@ -109,6 +109,8 @@ namespace Type.Objects.Player
             _ProbeController = new ProbeController();
             _Shield = new Shield();
             _Shield.UpdatePosition(Position);
+
+            InputManager.Instance.RegisterListener(this);
         }
 
         /// <inheritdoc />
@@ -256,7 +258,7 @@ namespace Type.Objects.Player
         #region  UI_Listener
 
         /// <inheritdoc />
-        public void UpdateAnalogData(Vector2 direction, Single strength)
+        public void UpdateDirectionData(Vector2 direction, Single strength)
         {
             _Direction = direction;
             _MoveStrength = strength;
@@ -404,11 +406,21 @@ namespace Type.Objects.Player
         public override void Dispose()
         {
             base.Dispose();
+            InputManager.Instance.RegisterListener(this);
             _InvincibleCallback?.Dispose();
             _InvincibleColourCallback?.Dispose();
             foreach (Sprite effect in _EngineEffects) effect.Dispose();
             _Shield.Dispose();
             _ProbeController.Dispose();
         }
+
+        #region Implementation of INukeButtonListener
+
+        /// <summary> Invoked when the nuke button is pressed </summary>
+        public void OnNukeButtonPressed()
+        {
+        }
+
+        #endregion
     }
 }

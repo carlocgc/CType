@@ -21,7 +21,7 @@ namespace Type.States
     /// <summary>
     /// Game play state
     /// </summary>
-    public class PlayingState : State, IPlayerListener, IEnemyListener, IEnemyFactoryListener, IPowerupListener, INukeButtonListener, IPowerupFactoryListener, IUpdatable
+    public class PlayingState : State, IPlayerListener, IEnemyListener, IEnemyFactoryListener, IPowerupListener, IPowerupFactoryListener, IUpdatable, IInputListener
     {
         /// <summary> Max level of the game </summary>
         private readonly Int32 _MaxLevel = 20;
@@ -105,6 +105,8 @@ namespace Type.States
 
             _Player.Spawn();
             GameStats.Instance.GameStart();
+
+            InputManager.Instance.RegisterListener(this);
 
             UpdateManager.Instance.AddUpdatable(this);
         }
@@ -341,6 +343,7 @@ namespace Type.States
             if (IsDisposed) return;
             base.Dispose();
 
+            InputManager.Instance.DeregisterListener(this);
             UpdateManager.Instance.RemoveUpdatable(this);
             CollisionController.Instance.IsActive = false;
             CollisionController.Instance.ClearObjects();
@@ -378,6 +381,31 @@ namespace Type.States
             {
                 if (!enemy.IsDisposed && !enemy.IsDestroyed) enemy.Destroy();
             }
+        }
+
+        #endregion
+
+        #region Implementation of IDirectionalInputListener
+
+        /// <summary>
+        /// Update data from the analog stic
+        /// </summary>
+        /// <param name="direction"> The direction the stick is pushed </param>
+        /// <param name="strength"> The distance the stick is pushed </param>
+        public void UpdateDirectionData(Vector2 direction, Single strength)
+        {
+        }
+
+        #endregion
+
+        #region Implementation of IFireButtonListener
+
+        public void FireButtonPressed()
+        {
+        }
+
+        public void FireButtonReleased()
+        {
         }
 
         #endregion

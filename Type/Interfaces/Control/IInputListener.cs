@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Type.Interfaces.Control
 {
-    public interface IUIListener : IAnalogListener, IFireButtonListener
+    public interface IInputListener : IDirectionalInputListener, IFireButtonListener, INukeButtonListener
     {
     }
 }

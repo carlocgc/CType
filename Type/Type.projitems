@@ -14,6 +14,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\AchievementController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\CollisionController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controllers\InputManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\LeaderboardController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\PositionRelayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\ProbeController.cs" />
@@ -29,13 +30,14 @@
     <Compile Include="$(MSBuildThisFileDirectory)Glide\Tween.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Glide\Tweener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Collisions\ICollidable.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IAnalogListener.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IDirectionalInputListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IBackButtonListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IFireButtonListener.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IInputProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\INukeButtonListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IPositionRecipient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IShipSelectListener.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IUIListener.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IInputListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Enemies\IEnemy.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Enemies\IEnemyFactoryListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Enemies\IEnemyListener.cs" />
