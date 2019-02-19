@@ -191,6 +191,7 @@
     <None Include="app.config" />
     <AndroidAsset Include="lib\x86\libopenal32.so" />
     <AndroidAsset Include="Assets\Content\Graphics\KenPixel\KenPixel.json" />
+    <AndroidAsset Include="Assets\Content\Graphics\Background\Planets\planets.json" />
     <None Include="packages.config" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Properties\AndroidManifest.xml">
@@ -378,60 +379,6 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\Content\Graphics\Background\stars-2.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\Content\Graphics\Background\Planets\planet-far-1.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\Content\Graphics\Background\Planets\planet-far-2.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\Content\Graphics\Background\Planets\planet-far-3.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\Content\Graphics\Background\Planets\planet-far-4.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\Content\Graphics\Background\Planets\planet-far-5.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\Content\Graphics\Background\Planets\planet-far-6.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\Content\Graphics\Background\Planets\planet-far-7.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\Content\Graphics\Background\Planets\planet-far-8.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\Content\Graphics\Background\Planets\planet-far-9.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\Content\Graphics\Background\Planets\planet-near-1.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\Content\Graphics\Background\Planets\planet-near-2.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\Content\Graphics\Background\Planets\planet-near-3.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\Content\Graphics\Background\Planets\planet-near-4.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\Content\Graphics\Background\Planets\planet-near-5.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\Content\Graphics\Background\Planets\planet-near-6.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\Content\Graphics\Background\Planets\planet-near-7.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\Content\Graphics\Background\Planets\planet-near-8.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\Content\Graphics\Background\Planets\planet-near-9.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\Content\Graphics\Background\Clusters\cluster-1.png" />
@@ -645,6 +592,12 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\Content\Audio\nuke_pickup.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\Content\Graphics\Background\Planets\planets.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\Content\Graphics\Background\Planets\planet-near-9.png" />
   </ItemGroup>
   <Import Project="..\Type\Type.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
