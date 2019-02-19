@@ -19,9 +19,11 @@ namespace Type.Desktop.Source.Controllers
 
         private Single _VelocityMagnitude;
 
-        private Single _PositiveDeadZone = 0.1f;
+        private Single _PositiveDeadZone = 0.2f;
 
-        private Single _NegativeDeadZone = -0.1f;
+        private Single _NegativeDeadZone = -0.2f;
+
+        private Boolean _NukePressed;
 
         public DesktopInputProvider()
         {
@@ -44,6 +46,10 @@ namespace Type.Desktop.Source.Controllers
                 _VelocityMagnitude = GamePad.GetState(0).ThumbSticks.Left.Length;
                 _DirectionDetected = true;
             }
+            else
+            {
+                _Velocity = Vector2.Zero;
+            }
 
             if (OpenTK.Input.GamePad.GetState(0).Buttons.A == ButtonState.Pressed)
             {
@@ -59,22 +65,24 @@ namespace Type.Desktop.Source.Controllers
                     listener.FireButtonReleased();
                 }
             }
-            if (OpenTK.Input.GamePad.GetState(0).Buttons.B == ButtonState.Pressed)
+            if (OpenTK.Input.GamePad.GetState(0).Buttons.B == ButtonState.Pressed && !_NukePressed)
             {
                 foreach (IInputListener listener in _Listeners)
                 {
                     listener.OnNukeButtonPressed();
                 }
+
+                _NukePressed = true;
+            }
+            if (OpenTK.Input.GamePad.GetState(0).Buttons.B == ButtonState.Released)
+            {
+                _NukePressed = false;
             }
 
-            if (_DirectionDetected)
+            foreach (IInputListener listener in _Listeners)
             {
-                foreach (IInputListener listener in _Listeners)
-                {
-                    listener.UpdateDirectionData(_Velocity, _VelocityMagnitude);
-                }
+                listener.UpdateDirectionData(_Velocity, _VelocityMagnitude);
             }
-            _DirectionDetected = false;
         }
 
         /// <summary> Whether or not the object can be updated </summary>
