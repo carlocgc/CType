@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using Type.Interfaces;
 using Type.Interfaces.Control;
 
-namespace Type.UI
+namespace Type.Buttons
 {
     public class ShipSelectButton : IPositionable, IUpdatable, INotifier<IShipSelectListener>
     {

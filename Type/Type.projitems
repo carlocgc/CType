@@ -20,6 +20,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\ProbeController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\GameStats.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\LevelLoader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\VirtualButtonState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\WaveData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Factories\EnemyFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Factories\PowerupFactory.cs" />
@@ -38,6 +39,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IPositionRecipient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IShipSelectListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IInputListener.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IVirtualButton.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Enemies\IEnemy.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Enemies\IEnemyFactoryListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Enemies\IEnemyListener.cs" />
@@ -105,14 +107,20 @@
     <Compile Include="$(MSBuildThisFileDirectory)States\PlayingState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)States\SecretShipSelectState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)States\ShipSelectState.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)UI\AnalogStick.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Buttons\FireButton.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Buttons\PauseButton.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Buttons\ResumeButton.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Buttons\VirtualAnalogStick.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\FpsCounter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\LevelDisplay.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\LifeMeter.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)UI\NukeButton.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Buttons\NukeButton.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\PowerUpHelp.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)UI\ShipSelectButton.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Buttons\ShipSelectButton.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\StatsDisplay.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Base\TimedCallback.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Buttons\" />
   </ItemGroup>
 </Project>

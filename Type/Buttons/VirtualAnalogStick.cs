@@ -5,44 +5,47 @@ using AmosShared.Interfaces;
 using AmosShared.Touch;
 using OpenTK;
 using System;
-using System.Collections.Generic;
 using Type.Base;
-using Type.Interfaces.Control;
 
-namespace Type.UI
+namespace Type.Buttons
 {
-    public class AnalogStick : GameObject, ITouchListener
+    /// <summary>
+    /// Onscreen analog stick
+    /// </summary>
+    public class VirtualAnalogStick : GameObject, ITouchListener
     {
-        private readonly List<IDirectionalInputListener> _Listeners;
-
+        /// <summary> Sprite of the analog base </summary>
         private readonly Sprite _Base;
-
+        /// <summary> SPrite of the analog top </summary>
         private readonly Sprite _Top;
-
+        /// <summary> Tops max distance form base </summary>
         private readonly Single _Radius;
-
+        /// <summary> The touch hitbox of the analog stick </summary>
         private readonly Vector4 _HitBox;
-
+        /// <summary> Whether the stick is visible </summary>
         private Boolean _Visible;
-
+        /// <summary> Touch press id, used to check the which press is engaging the stick </summary>
         private Int32 _PressId;
-
-        private Vector2 _DirectionNorm;
-
-        private Single _PushDistance;
-
-        private Vector2 _TouchBase;
-
-        private Vector2 _TouchCurrent;
-
+        /// <summary> Position of the initial press that engaged the stick </summary>
+        private Vector2 _InitialPressPosition;
+        /// <summary> The current position of the press that has engaged the stick </summary>
+        private Vector2 _CurrentPressPosition;
+        /// <summary> Whether or not the listener is enabled </summary>
         public Boolean TouchEnabled { get; set; }
-
+        /// <summary> The priority of the touch </summary>
         public Int32 TouchOrder { get; set; }
-
+        /// <summary> Whether or not the touch order has changed </summary>
         public Boolean TouchOrderChanged { get; set; }
-
+        /// <summary> Whether or not the listener is listening for a touch moving event </summary>
         public Boolean ListeningForMove { get; set; }
+        /// <summary> The current X output position of the stick </summary>
+        public Single X { get; set; }
+        /// <summary> The current Y output position of the stick </summary>
+        public Single Y { get; set; }
+        /// <summary> The strength of the stick push </summary>
+        public Single Magnitude { get; set; }
 
+        /// <summary> Whether the stick is visible </summary>
         public Boolean Visible
         {
             get => _Visible;
@@ -54,6 +57,7 @@ namespace Type.UI
             }
         }
 
+        /// <summary> The sticks position on the screen </summary>
         public override Vector2 Position
         {
             get => base.Position;
@@ -64,10 +68,8 @@ namespace Type.UI
             }
         }
 
-        public AnalogStick(Vector2 startPosition, Single radius)
+        public VirtualAnalogStick(Vector2 startPosition, Single radius)
         {
-            _Listeners = new List<IDirectionalInputListener>();
-
             _Top = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/analog_top.png"))
             {
                 Offset = new Vector2(105, 105),
@@ -91,6 +93,9 @@ namespace Type.UI
             TouchManager.Instance.AddTouchListener(this);
         }
 
+        /// <summary> Check to see if the listener has been touched </summary>
+        /// <param name="position"></param>
+        /// <returns></returns>
         public Boolean IsTouched(Vector2 position)
         {
             if (_PressId > -1) return false;
@@ -98,6 +103,12 @@ namespace Type.UI
             return Contains(_HitBox, ConvertToCenterAligned(position));
         }
 
+        /// <summary>
+        /// Bounds check to see if a press engages the stick
+        /// </summary>
+        /// <param name="rect"></param>
+        /// <param name="position"></param>
+        /// <returns></returns>
         private Boolean Contains(Vector4 rect, Vector2 position)
         {
             Boolean within = position.X > rect.X
@@ -107,6 +118,9 @@ namespace Type.UI
             return within;
         }
 
+        /// <summary> Function that is called when the touch listener is pressed </summary>
+        /// <param name="id"></param>
+        /// <param name="position"></param>
         public Boolean OnPress(Int32 id, Vector2 position)
         {
             if (_PressId > -1) return false;
@@ -115,20 +129,23 @@ namespace Type.UI
             _Top.Visible = true;
             _Top.Position = _Base.Position;
 
-            _TouchBase = ConvertToCenterAligned(position);
+            _InitialPressPosition = ConvertToCenterAligned(position);
 
             return true;
         }
 
+        /// <summary> Function that is called when the mouse moves </summary>
+        /// <param name="id"></param>
+        /// <param name="position"></param>
         public Boolean OnMove(Int32 id, Vector2 position)
         {
             if (_PressId != id) return false;
 
             // Amos was ere
 
-            _TouchCurrent = ConvertToCenterAligned(position);
+            _CurrentPressPosition = ConvertToCenterAligned(position);
 
-            Vector2 direction = _TouchCurrent - _TouchBase;
+            Vector2 direction = _CurrentPressPosition - _InitialPressPosition;
 
             Single length = Math.Min(_Radius, direction.Length);
 
@@ -143,21 +160,31 @@ namespace Type.UI
             return false;
         }
 
+        /// <summary>
+        /// Prepares the sticks position data to be consumed by a listener
+        /// </summary>
+        /// <param name="length"></param>
         private void PrepareListenerData(Single length)
         {
-            _DirectionNorm = _Top.Position - _Base.Position;
+            Vector2 direction = _Top.Position - _Base.Position;
 
             // Prevent _DirectionNorm evaluating to NaN
-            if (_DirectionNorm != Vector2.Zero) _DirectionNorm.Normalize();
-            _PushDistance = length / _Radius;
+            if (direction != Vector2.Zero) direction.Normalize();
+
+            X = direction.X;
+            Y = direction.Y;
+            Magnitude = length / _Radius;
         }
 
+        /// <summary> Function that is called when the mouse is released </summary>
+        /// <param name="id"></param>
+        /// <param name="position"></param>
         public void OnRelease(Int32 id, Vector2 position)
         {
             if (_PressId != id) return;
 
-            _TouchBase = Vector2.Zero;
-            _TouchCurrent = Vector2.Zero;
+            _InitialPressPosition = Vector2.Zero;
+            _CurrentPressPosition = Vector2.Zero;
 
             _Top.Position = Position;
             _Top.Visible = false;
@@ -167,40 +194,30 @@ namespace Type.UI
             _PressId = -1;
         }
 
+        /// <summary>
+        /// Resets the stick public data
+        /// </summary>
         private void ResetListenerData()
         {
-            _DirectionNorm = Vector2.Zero;
-            _PushDistance = 0;
+            X = 0;
+            Y = 0;
+            Magnitude = 0;
         }
 
+        /// <summary> Called when the touch has been cancelled </summary>
         public void OnCancel()
         {
 
         }
 
+        /// <summary>
+        /// Converts a given position to be center aligned in relation to the screen
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns></returns>
         private Vector2 ConvertToCenterAligned(Vector2 position)
         {
             return new Vector2(position.X - Renderer.Instance.TargetDimensions.X / 2, (position.Y - Renderer.Instance.TargetDimensions.Y / 2) * -1);
-        }
-
-        public void RegisterListener(IDirectionalInputListener listener)
-        {
-            _Listeners.Add(listener);
-        }
-
-        public void DeRegisterListener(IDirectionalInputListener listener)
-        {
-            _Listeners.Remove(listener);
-        }
-
-        public override void Update(TimeSpan timeTilUpdate)
-        {
-            base.Update(timeTilUpdate);
-
-            //foreach (IDirectionalInputListener listener in _Listeners)
-            //{
-            //    listener.UpdateDirectionData(_DirectionNorm, _PushDistance);
-            //}
         }
 
         public override void Dispose()
@@ -208,7 +225,6 @@ namespace Type.UI
             base.Dispose();
             _Base.Dispose();
             _Top.Dispose();
-            _Listeners.Clear();
             TouchManager.Instance.RemoveTouchListener(this);
         }
     }

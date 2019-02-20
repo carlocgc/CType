@@ -1,6 +1,10 @@
-﻿using AmosShared.Interfaces;
+﻿using AmosShared.Base;
+using AmosShared.Interfaces;
+using OpenTK;
 using System;
 using System.Collections.Generic;
+using Type.Buttons;
+using Type.Data;
 using Type.Interfaces;
 using Type.Interfaces.Control;
 
@@ -10,20 +14,75 @@ namespace Type.Android.Source.Controllers
     {
         private readonly List<IInputListener> _Listeners = new List<IInputListener>();
 
+        private Vector2 _Velocity;
+
+        private Single _VelocityMagnitude;
+
+        private Boolean _NukePressed;
+
+        public AndroidInputProvider()
+        {
+            UpdateManager.Instance.AddUpdatable(this);
+        }
+
         #region Implementation of IUpdatable
 
         /// <summary> Called to update the object </summary>
         /// <param name="timeTilUpdate"></param>
         public void Update(TimeSpan timeTilUpdate)
         {
+            // Analog input
+            if (VirtualAnalogStick?.Y > 0 ||
+                VirtualAnalogStick?.Y < 0 ||
+                VirtualAnalogStick?.X > 0 ||
+                VirtualAnalogStick?.X < 0)
+            {
+                _Velocity = new Vector2(VirtualAnalogStick.X, VirtualAnalogStick.Y);
+                _VelocityMagnitude = VirtualAnalogStick.Magnitude;
+            }
+            else
+            {
+                _Velocity = Vector2.Zero;
+            }
 
+            if (FireButton?.State == VirtualButtonData.State.PRESSED)
+            {
+                foreach (IInputListener listener in _Listeners)
+                {
+                    listener.FireButtonPressed();
+                }
+            }
+            else if (FireButton?.State == VirtualButtonData.State.RELEASED)
+            {
+                foreach (IInputListener listener in _Listeners)
+                {
+                    listener.FireButtonReleased();
+                }
+            }
+            if (NukeButton?.State == VirtualButtonData.State.PRESSED && !_NukePressed)
+            {
+                foreach (IInputListener listener in _Listeners)
+                {
+                    listener.OnNukeButtonPressed();
+                }
+                _NukePressed = true;
+            }
+            if (NukeButton?.State == VirtualButtonData.State.RELEASED)
+            {
+                _NukePressed = false;
+            }
+
+            foreach (IInputListener listener in _Listeners)
+            {
+                listener.UpdateDirectionData(_Velocity, _VelocityMagnitude);
+            }
         }
 
         /// <summary> Whether or not the object can be updated </summary>
         /// <returns></returns>
         public Boolean CanUpdate()
         {
-            return false;
+            return true;
         }
 
         /// <summary> Whether or not the updatable is disposed </summary>
@@ -32,6 +91,21 @@ namespace Type.Android.Source.Controllers
         #endregion
 
         #region Implementation of INotifier<in IInputListener>
+
+        /// <summary> Virtual analog stick </summary>
+        public VirtualAnalogStick VirtualAnalogStick { get; set; }
+
+        /// <summary> Virtual nuke button </summary>
+        public NukeButton NukeButton { get; set; }
+
+        /// <summary> Virtual firebutton </summary>
+        public FireButton FireButton { get; set; }
+
+        /// <summary> Virtual pausebutton </summary>
+        public PauseButton PauseButton { get; set; }
+
+        /// <summary> Virtual resumebutton </summary>
+        public ResumeButton ResumeButton { get; set; }
 
         /// <summary>
         /// Add a listener
@@ -56,6 +130,8 @@ namespace Type.Android.Source.Controllers
         /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
         public void Dispose()
         {
+            _Listeners.Clear();
+            UpdateManager.Instance.RemoveUpdatable(this);
         }
 
         #endregion

@@ -87,9 +87,6 @@ namespace Type.States
             CollisionController.Instance.RegisterPlayer(_Player);
 
             _UIScene = new UIScene(_PlayerType);
-            _UIScene.RegisterListener(_Player);
-            _UIScene.AnalogStick.RegisterListener(_Player);
-            _UIScene.NukeButton.RegisterListener(this);
             _ScoreDisplay = _UIScene.ScoreDisplay;
             _LifeMeter = _UIScene.LifeMeter;
             _LevelDisplay = _UIScene.LevelDisplay;

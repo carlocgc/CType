@@ -3,28 +3,34 @@ using AmosShared.Graphics.Drawables;
 using AmosShared.Touch;
 using OpenTK;
 using System;
-using System.Collections.Generic;
 using Type.Base;
-using Type.Interfaces;
+using Type.Data;
 using Type.Interfaces.Control;
 
-namespace Type.UI
+namespace Type.Buttons
 {
     /// <summary>
     /// Button that can detonate a nuke, displays the current nuke count
     /// </summary>
-    public class NukeButton : GameObject, INotifier<INukeButtonListener>
+    public class NukeButton : GameObject, IVirtualButton
     {
-        /// <summary> All the objects listening to this objects </summary>
-        private readonly List<INukeButtonListener> _Listeners = new List<INukeButtonListener>();
         /// <summary> Text showing how many nukes the player has </summary>
         private readonly TextDisplay _NukeCountDisplay;
         /// <summary> Button that will inform the listeners </summary>
         private readonly Button _Button;
         /// <summary> The number of nukes to display on the button </summary>
         private Int32 _NukeCount;
-
+        /// <summary> WHether the button is visible </summary>
         private Boolean _Visible;
+
+        private Boolean _Active;
+
+        #region Implementation of IVirtualButton
+
+        /// <summary> The current press state of the button </summary>
+        public VirtualButtonData.State State { get; set; }
+
+        #endregion
 
         public Boolean Visible
         {
@@ -37,11 +43,13 @@ namespace Type.UI
                     _Button.Visible = false;
                     _NukeCountDisplay.Visible = false;
                     _Button.TouchEnabled = false;
+                    State = VirtualButtonData.State.RELEASED;
                 }
                 else
                 {
                     _Button.Visible = true;
                     NukeCount = _NukeCount;
+                    State = VirtualButtonData.State.RELEASED;
                 }
             }
         }
@@ -58,12 +66,14 @@ namespace Type.UI
                     _Button.Sprite.Colour = new Vector4(1, 1, 1, 0.4f);
                     _Button.TouchEnabled = true;
                     _NukeCountDisplay.Visible = true;
+                    State = VirtualButtonData.State.RELEASED;
                 }
                 else
                 {
                     _Button.Sprite.Colour = new Vector4(0.4f, 0.4f, 0.4f, 0.4f);
                     _Button.TouchEnabled = false;
                     _NukeCountDisplay.Visible = false;
+                    State = VirtualButtonData.State.RELEASED;
                 }
                 _NukeCountDisplay.Text = $"{_NukeCount}";
             }
@@ -76,7 +86,7 @@ namespace Type.UI
                 Position = new Vector2(425, -450),
                 Visible = true,
             };
-            _Button = new Button(Int32.MaxValue, buttonSprite) { OnButtonPress = OnPressed };
+            _Button = new Button(Int32.MaxValue, buttonSprite) { OnButtonPress = OnPressed, OnButtonRelease = OnReleased };
 
             _NukeCountDisplay = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI_OVERLAY, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
@@ -89,36 +99,22 @@ namespace Type.UI
         }
 
         /// <summary>
-        /// Invoked when the nuke button is pressed, informs the listeners a press has occurred
+        /// Sets the button state to pressed
         /// </summary>
         /// <param name="obj"></param>
         private void OnPressed(Button obj)
         {
-            foreach (INukeButtonListener listener in _Listeners)
-            {
-                listener.OnNukeButtonPressed();
-            }
-        }
-
-        #region Implementation of INotifier<in INukeButtonListener>
-
-        /// <summary>
-        /// Add a listener
-        /// </summary>
-        public void RegisterListener(INukeButtonListener listener)
-        {
-            if (!_Listeners.Contains(listener)) _Listeners.Add(listener);
+            State = VirtualButtonData.State.PRESSED;
         }
 
         /// <summary>
-        /// Remove a listener
+        /// Sets the button state to released
         /// </summary>
-        public void DeregisterListener(INukeButtonListener listener)
+        /// <param name="obj"></param>
+        private void OnReleased(Button obj)
         {
-            if (_Listeners.Contains(listener)) _Listeners.Remove(listener);
+            State = VirtualButtonData.State.RELEASED;
         }
-
-        #endregion
 
         #region Overrides of GameObject
 
@@ -128,7 +124,6 @@ namespace Type.UI
             base.Dispose();
             _Button.Dispose();
             _NukeCountDisplay.Dispose();
-            _Listeners.Clear();
         }
 
         #endregion

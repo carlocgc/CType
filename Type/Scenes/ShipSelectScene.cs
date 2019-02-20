@@ -4,6 +4,7 @@ using AmosShared.Touch;
 using OpenTK;
 using System;
 using System.Collections.Generic;
+using Type.Buttons;
 using Type.Interfaces;
 using Type.Interfaces.Control;
 using Type.UI;

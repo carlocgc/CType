@@ -4,6 +4,7 @@ using OpenTK;
 using OpenTK.Input;
 using System;
 using System.Collections.Generic;
+using Type.Buttons;
 using Type.Interfaces;
 using Type.Interfaces.Control;
 
@@ -12,8 +13,6 @@ namespace Type.Desktop.Source.Controllers
     public class DesktopInputProvider : IInputProvider, INotifier<IInputListener>, IUpdatable
     {
         private readonly List<IInputListener> _Listeners = new List<IInputListener>();
-
-        private Boolean _DirectionDetected;
 
         private Vector2 _Velocity;
 
@@ -44,7 +43,6 @@ namespace Type.Desktop.Source.Controllers
             {
                 _Velocity = GamePad.GetState(0).ThumbSticks.Left;
                 _VelocityMagnitude = GamePad.GetState(0).ThumbSticks.Left.Length;
-                _DirectionDetected = true;
             }
             else
             {
@@ -98,7 +96,22 @@ namespace Type.Desktop.Source.Controllers
         #endregion
 
 
-        #region Implementation of INotifier<in IInputListener>
+        #region Implementation of INotifier<IInputListener>
+
+        /// <summary> Virtual analog stick </summary>
+        public VirtualAnalogStick VirtualAnalogStick { get; set; }
+
+        /// <summary> Virtual nuke button </summary>
+        public NukeButton NukeButton { get; set; }
+
+        /// <summary> Virtual firebutton </summary>
+        public FireButton FireButton { get; set; }
+
+        /// <summary> Virtual pausebutton </summary>
+        public PauseButton PauseButton { get; set; }
+
+        /// <summary> Virtual resumebutton </summary>
+        public ResumeButton ResumeButton { get; set; }
 
         /// <summary>
         /// Add a listener
