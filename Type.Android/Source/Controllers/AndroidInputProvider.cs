@@ -4,6 +4,7 @@ using OpenTK;
 using System;
 using System.Collections.Generic;
 using Type.Buttons;
+using Type.Data;
 using Type.Interfaces;
 using Type.Interfaces.Control;
 
@@ -30,11 +31,7 @@ namespace Type.Android.Source.Controllers
         /// <param name="timeTilUpdate"></param>
         public void Update(TimeSpan timeTilUpdate)
         {
-            // Analog input
-            if (VirtualAnalogStick?.Y > 0 ||
-                VirtualAnalogStick?.Y < 0 ||
-                VirtualAnalogStick?.X > 0 ||
-                VirtualAnalogStick?.X < 0)
+            if (VirtualAnalogStick?.Y > 0 || VirtualAnalogStick?.Y < 0 || VirtualAnalogStick?.X > 0 || VirtualAnalogStick?.X < 0)
             {
                 _Velocity = new Vector2(VirtualAnalogStick.X, VirtualAnalogStick.Y);
                 _VelocityMagnitude = VirtualAnalogStick.Magnitude;
@@ -47,6 +44,11 @@ namespace Type.Android.Source.Controllers
             foreach (IInputListener listener in _Listeners)
             {
                 listener.UpdateDirectionData(_Velocity, _VelocityMagnitude);
+
+                foreach (IVirtualButton button in _Buttons)
+                {
+                    listener.UpdateInputData(new ButtonEventData(button.ID, button.State));
+                }
             }
         }
 

@@ -7,7 +7,7 @@ using Type.Interfaces.Control;
 namespace Type.Base.Input
 {
     /// <summary>
-    /// Base class for a virtual button
+    /// Button extension that adds public facing data about its state
     /// </summary>
     public class VirtualButton : Button, IVirtualButton, IDisposable
     {

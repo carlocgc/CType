@@ -52,5 +52,21 @@ namespace Type.Services
         {
             _InputProvider.DeregisterListener(listener);
         }
+
+        /// <summary>
+        /// Add a <see cref="IVirtualButton"/> to the <see cref="InputService"/>
+        /// </summary>
+        public void RegisterButton(IVirtualButton button)
+        {
+            _InputProvider.RegisterButton(button);
+        }
+
+        /// <summary>
+        /// Remove a <see cref="IVirtualButton"/> from the <see cref="InputService"/>
+        /// </summary>
+        public void DeregisterButton(IVirtualButton button)
+        {
+            _InputProvider.DeregisterButton(button);
+        }
     }
 }
