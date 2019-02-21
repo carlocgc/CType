@@ -28,10 +28,6 @@ namespace Type.Desktop.Services
         /// </summary>
         public Action OnLeaveApplication { get; set; }
 
-        public DesktopAdService()
-        {
-        }
-
         /// <summary>
         /// Initialises the service by setting the service unique id
         /// </summary>

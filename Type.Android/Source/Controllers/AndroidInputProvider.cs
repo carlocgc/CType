@@ -4,7 +4,6 @@ using OpenTK;
 using System;
 using System.Collections.Generic;
 using Type.Buttons;
-using Type.Data;
 using Type.Interfaces;
 using Type.Interfaces.Control;
 
@@ -14,11 +13,11 @@ namespace Type.Android.Source.Controllers
     {
         private readonly List<IInputListener> _Listeners = new List<IInputListener>();
 
+        private readonly List<IVirtualButton> _Buttons = new List<IVirtualButton>();
+
         private Vector2 _Velocity;
 
         private Single _VelocityMagnitude;
-
-        private Boolean _NukePressed;
 
         public AndroidInputProvider()
         {
@@ -45,33 +44,6 @@ namespace Type.Android.Source.Controllers
                 _Velocity = Vector2.Zero;
             }
 
-            if (FireButton?.State == VirtualButtonData.State.PRESSED)
-            {
-                foreach (IInputListener listener in _Listeners)
-                {
-                    listener.FireButtonPressed();
-                }
-            }
-            else if (FireButton?.State == VirtualButtonData.State.RELEASED)
-            {
-                foreach (IInputListener listener in _Listeners)
-                {
-                    listener.FireButtonReleased();
-                }
-            }
-            if (NukeButton?.State == VirtualButtonData.State.PRESSED && !_NukePressed)
-            {
-                foreach (IInputListener listener in _Listeners)
-                {
-                    listener.OnNukeButtonPressed();
-                }
-                _NukePressed = true;
-            }
-            if (NukeButton?.State == VirtualButtonData.State.RELEASED)
-            {
-                _NukePressed = false;
-            }
-
             foreach (IInputListener listener in _Listeners)
             {
                 listener.UpdateDirectionData(_Velocity, _VelocityMagnitude);
@@ -95,18 +67,6 @@ namespace Type.Android.Source.Controllers
         /// <summary> Virtual analog stick </summary>
         public VirtualAnalogStick VirtualAnalogStick { get; set; }
 
-        /// <summary> Virtual nuke button </summary>
-        public NukeButton NukeButton { get; set; }
-
-        /// <summary> Virtual firebutton </summary>
-        public FireButton FireButton { get; set; }
-
-        /// <summary> Virtual pausebutton </summary>
-        public PauseButton PauseButton { get; set; }
-
-        /// <summary> Virtual resumebutton </summary>
-        public ResumeButton ResumeButton { get; set; }
-
         /// <summary>
         /// Add a listener
         /// </summary>
@@ -123,6 +83,24 @@ namespace Type.Android.Source.Controllers
             if (_Listeners.Contains(listener)) _Listeners.Remove(listener);
         }
 
+        /// <summary>
+        /// Registers a <see cref="IVirtualButton"/> with the Input provider
+        /// </summary>
+        /// <param name="button"></param>
+        public void RegisterButton(IVirtualButton button)
+        {
+            if (!_Buttons.Contains(button)) _Buttons.Add(button);
+        }
+
+        /// <summary>
+        /// Deregisters a <see cref="IVirtualButton"/> from the Input provider
+        /// </summary>
+        /// <param name="button"></param>
+        public void DeregisterButton(IVirtualButton button)
+        {
+            if (_Buttons.Contains(button)) _Buttons.Remove(button);
+        }
+
         #endregion
 
         #region Implementation of IDisposable
@@ -131,6 +109,7 @@ namespace Type.Android.Source.Controllers
         public void Dispose()
         {
             _Listeners.Clear();
+            _Buttons.Clear();
             UpdateManager.Instance.RemoveUpdatable(this);
         }
 

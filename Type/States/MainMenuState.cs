@@ -1,9 +1,9 @@
 ﻿using AmosShared.Audio;
 using AmosShared.State;
 using System;
-using Type.Ads;
 using Type.Data;
 using Type.Scenes;
+using Type.Services;
 
 namespace Type.States
 {

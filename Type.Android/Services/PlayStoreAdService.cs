@@ -30,10 +30,6 @@ namespace Type.Android.Services
         /// </summary>
         public Action OnLeaveApplication { get; set; }
 
-        public PlayStoreAdService()
-        {
-        }
-
         /// <summary>
         /// Initialises the service by setting the service unique id
         /// </summary>

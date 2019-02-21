@@ -9,14 +9,6 @@ namespace Type.Interfaces.Control
     {
         /// <summary> Virtual analog stick </summary>
         VirtualAnalogStick VirtualAnalogStick { get; set; }
-        /// <summary> Virtual nuke button </summary>
-        NukeButton NukeButton { get; set; }
-        /// <summary> Virtual firebutton </summary>
-        FireButton FireButton { get; set; }
-        /// <summary> Virtual pausebutton </summary>
-        PauseButton PauseButton { get; set; }
-        /// <summary> Virtual resumebutton </summary>
-        ResumeButton ResumeButton { get; set; }
 
         /// <summary>
         /// Add a listener
@@ -27,5 +19,17 @@ namespace Type.Interfaces.Control
         /// Remove a listener
         /// </summary>
         void DeregisterListener(IInputListener listener);
+
+        /// <summary>
+        /// Registers a <see cref="IVirtualButton"/> with the Input provider
+        /// </summary>
+        /// <param name="button"></param>
+        void RegisterButton(IVirtualButton button);
+
+        /// <summary>
+        /// Deregisters a <see cref="IVirtualButton"/> from the Input provider
+        /// </summary>
+        /// <param name="button"></param>
+        void DeregisterButton(IVirtualButton button);
     }
 }

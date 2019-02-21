@@ -36,10 +36,10 @@ namespace Type.Desktop.Source.Controllers
         public void Update(TimeSpan timeTilUpdate)
         {
             // Analog input
-            if (OpenTK.Input.GamePad.GetState(0).ThumbSticks.Left.Y > _PositiveDeadZone ||
-                OpenTK.Input.GamePad.GetState(0).ThumbSticks.Left.Y < _NegativeDeadZone ||
-                OpenTK.Input.GamePad.GetState(0).ThumbSticks.Left.X > _PositiveDeadZone ||
-                OpenTK.Input.GamePad.GetState(0).ThumbSticks.Left.X < _NegativeDeadZone)
+            if (GamePad.GetState(0).ThumbSticks.Left.Y > _PositiveDeadZone ||
+                GamePad.GetState(0).ThumbSticks.Left.Y < _NegativeDeadZone ||
+                GamePad.GetState(0).ThumbSticks.Left.X > _PositiveDeadZone ||
+                GamePad.GetState(0).ThumbSticks.Left.X < _NegativeDeadZone)
             {
                 _Velocity = GamePad.GetState(0).ThumbSticks.Left;
                 _VelocityMagnitude = GamePad.GetState(0).ThumbSticks.Left.Length;
@@ -49,30 +49,30 @@ namespace Type.Desktop.Source.Controllers
                 _Velocity = Vector2.Zero;
             }
 
-            if (OpenTK.Input.GamePad.GetState(0).Buttons.A == ButtonState.Pressed)
+            if (GamePad.GetState(0).Buttons.A == ButtonState.Pressed)
             {
                 foreach (IInputListener listener in _Listeners)
                 {
-                    listener.FireButtonPressed();
+
                 }
             }
-            else if (OpenTK.Input.GamePad.GetState(0).Buttons.A == ButtonState.Released)
+            else if (GamePad.GetState(0).Buttons.A == ButtonState.Released)
             {
                 foreach (IInputListener listener in _Listeners)
                 {
-                    listener.FireButtonReleased();
+
                 }
             }
-            if (OpenTK.Input.GamePad.GetState(0).Buttons.B == ButtonState.Pressed && !_NukePressed)
+            if (GamePad.GetState(0).Buttons.B == ButtonState.Pressed && !_NukePressed)
             {
                 foreach (IInputListener listener in _Listeners)
                 {
-                    listener.OnNukeButtonPressed();
+
                 }
 
                 _NukePressed = true;
             }
-            if (OpenTK.Input.GamePad.GetState(0).Buttons.B == ButtonState.Released)
+            if (GamePad.GetState(0).Buttons.B == ButtonState.Released)
             {
                 _NukePressed = false;
             }
@@ -104,15 +104,6 @@ namespace Type.Desktop.Source.Controllers
         /// <summary> Virtual nuke button </summary>
         public NukeButton NukeButton { get; set; }
 
-        /// <summary> Virtual firebutton </summary>
-        public FireButton FireButton { get; set; }
-
-        /// <summary> Virtual pausebutton </summary>
-        public PauseButton PauseButton { get; set; }
-
-        /// <summary> Virtual resumebutton </summary>
-        public ResumeButton ResumeButton { get; set; }
-
         /// <summary>
         /// Add a listener
         /// </summary>
@@ -129,8 +120,23 @@ namespace Type.Desktop.Source.Controllers
             if (_Listeners.Contains(listener)) _Listeners.Remove(listener);
         }
 
-        #endregion
+        /// <summary>
+        /// Registers a <see cref="IVirtualButton"/> with the Input provider
+        /// </summary>
+        /// <param name="button"></param>
+        public void RegisterButton(IVirtualButton button)
+        {
+        }
 
+        /// <summary>
+        /// Deregisters a <see cref="IVirtualButton"/> from the Input provider
+        /// </summary>
+        /// <param name="button"></param>
+        public void DeregisterButton(IVirtualButton button)
+        {
+        }
+
+        #endregion
 
         #region Implementation of IDisposable
 

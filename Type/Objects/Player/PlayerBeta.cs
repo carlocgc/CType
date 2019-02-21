@@ -12,6 +12,7 @@ using Type.Interfaces.Player;
 using Type.Interfaces.Powerups;
 using Type.Interfaces.Probe;
 using Type.Objects.Projectiles;
+using Type.Services;
 using static Type.Constants.Global;
 
 namespace Type.Objects.Player
@@ -112,7 +113,7 @@ namespace Type.Objects.Player
             _Shield = new Shield();
             _Shield.UpdatePosition(Position);
 
-            InputManager.Instance.RegisterListener(this);
+            InputService.Instance.RegisterListener(this);
         }
 
         /// <inheritdoc />
@@ -261,7 +262,7 @@ namespace Type.Objects.Player
             }
         }
 
-        #region  UI_Listener
+        #region Implementation of IInputListener
 
         /// <inheritdoc />
         public void UpdateDirectionData(Vector2 direction, Single strength)
@@ -272,17 +273,21 @@ namespace Type.Objects.Player
             foreach (Sprite effect in _EngineEffects) effect.Visible = direction.X > 0;
         }
 
-        /// <inheritdoc />
-        public void FireButtonPressed()
+        /// <summary> Informs the listener of input events </summary>
+        /// <param name="data"> Data packet from the <see cref="InputManager"/> </param>
+        public void UpdateInputData(ButtonEventData data)
         {
-            AutoFire = true;
+            switch (data.ID)
+            {
+                case ButtonData.Type.FIRE:
+                    {
+                        AutoFire = data.State == ButtonData.State.PRESSED || data.State == ButtonData.State.HELD;
+                        break;
+                    }
+            }
         }
 
-        /// <inheritdoc />
-        public void FireButtonReleased()
-        {
-            AutoFire = false;
-        }
+        #endregion
 
         /// <inheritdoc />
         private void AddShield(Int32 points)
@@ -349,7 +354,6 @@ namespace Type.Objects.Player
             }
         }
 
-
         /// <inheritdoc />
         public void ApplyPowerup(IPowerup powerup)
         {
@@ -386,8 +390,6 @@ namespace Type.Objects.Player
             }
         }
 
-        #endregion
-
         #region Listener
 
         /// <summary> List of listeners </summary>
@@ -411,21 +413,12 @@ namespace Type.Objects.Player
         public override void Dispose()
         {
             base.Dispose();
-            InputManager.Instance.DeregisterListener(this);
+            InputService.Instance.DeregisterListener(this);
             _InvincibleCallback?.Dispose();
             _InvincibleColourCallback?.Dispose();
             foreach (Sprite effect in _EngineEffects) effect.Dispose();
             _Shield.Dispose();
             _ProbeController.Dispose();
         }
-
-        #region Implementation of INukeButtonListener
-
-        /// <summary> Invoked when the nuke button is pressed </summary>
-        public void OnNukeButtonPressed()
-        {
-        }
-
-        #endregion
     }
 }

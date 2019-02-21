@@ -4,7 +4,7 @@ using AmosShared.Graphics;
 using AmosShared.State;
 using Engine.Shared.Graphics.Textures;
 using OpenTK;
-using Type.Ads;
+using Type.Services;
 using Type.States;
 
 namespace Type

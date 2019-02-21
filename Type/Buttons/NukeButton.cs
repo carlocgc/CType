@@ -27,8 +27,10 @@ namespace Type.Buttons
 
         #region Implementation of IVirtualButton
 
+        public ButtonData.Type ID => ButtonData.Type.NUKE;
+
         /// <summary> The current press state of the button </summary>
-        public VirtualButtonData.State State { get; set; }
+        public ButtonData.State State { get; set; }
 
         #endregion
 
@@ -43,13 +45,13 @@ namespace Type.Buttons
                     _Button.Visible = false;
                     _NukeCountDisplay.Visible = false;
                     _Button.TouchEnabled = false;
-                    State = VirtualButtonData.State.RELEASED;
+                    State = ButtonData.State.RELEASED;
                 }
                 else
                 {
                     _Button.Visible = true;
                     NukeCount = _NukeCount;
-                    State = VirtualButtonData.State.RELEASED;
+                    State = ButtonData.State.RELEASED;
                 }
             }
         }
@@ -66,18 +68,19 @@ namespace Type.Buttons
                     _Button.Sprite.Colour = new Vector4(1, 1, 1, 0.4f);
                     _Button.TouchEnabled = true;
                     _NukeCountDisplay.Visible = true;
-                    State = VirtualButtonData.State.RELEASED;
+                    State = ButtonData.State.RELEASED;
                 }
                 else
                 {
                     _Button.Sprite.Colour = new Vector4(0.4f, 0.4f, 0.4f, 0.4f);
                     _Button.TouchEnabled = false;
                     _NukeCountDisplay.Visible = false;
-                    State = VirtualButtonData.State.RELEASED;
+                    State = ButtonData.State.RELEASED;
                 }
                 _NukeCountDisplay.Text = $"{_NukeCount}";
             }
         }
+
 
         public NukeButton()
         {
@@ -104,7 +107,7 @@ namespace Type.Buttons
         /// <param name="obj"></param>
         private void OnPressed(Button obj)
         {
-            State = VirtualButtonData.State.PRESSED;
+            State = ButtonData.State.PRESSED;
         }
 
         /// <summary>
@@ -113,7 +116,7 @@ namespace Type.Buttons
         /// <param name="obj"></param>
         private void OnReleased(Button obj)
         {
-            State = VirtualButtonData.State.RELEASED;
+            State = ButtonData.State.RELEASED;
         }
 
         #region Overrides of GameObject

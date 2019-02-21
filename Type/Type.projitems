@@ -9,18 +9,20 @@
     <Import_RootNamespace>Type</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)Ads\AdService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\AdService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Base\GameObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Base\Input\VirtualButton.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\AchievementController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\CollisionController.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Controllers\InputManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\InputService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\LeaderboardController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\PositionRelayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\ProbeController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\ButtonEventData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\GameStats.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\LevelLoader.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\VirtualButtonState.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\ButtonData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\WaveData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Factories\EnemyFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Factories\PowerupFactory.cs" />
@@ -31,11 +33,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Glide\Tween.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Glide\Tweener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Collisions\ICollidable.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IDirectionalInputListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IBackButtonListener.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IFireButtonListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IInputProvider.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\INukeButtonListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IPositionRecipient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IShipSelectListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IInputListener.cs" />
@@ -107,9 +106,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)States\PlayingState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)States\SecretShipSelectState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)States\ShipSelectState.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Buttons\FireButton.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Buttons\PauseButton.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Buttons\ResumeButton.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Buttons\VirtualAnalogStick.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\FpsCounter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\LevelDisplay.cs" />

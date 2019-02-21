@@ -2,16 +2,16 @@
 using AmosShared.Graphics.Drawables;
 using OpenTK;
 using System;
-using Type.Base;
+using Type.Base.Input;
 using Type.Buttons;
-using Type.Controllers;
+using Type.Data;
+using Type.Services;
 using Type.UI;
 
 namespace Type.Scenes
 {
     public class UIScene : Scene
     {
-
         /// <summary> UI element that displays the current FPS </summary>
         private readonly FpsCounter _FrameCounter;
         /// <summary> Shows that the game is paused </summary>
@@ -21,12 +21,12 @@ namespace Type.Scenes
         /// <summary> Virtual analog stick </summary>
         private readonly VirtualAnalogStick _VirtualAnalogStick;
         /// <summary> Virtual fire button </summary>
-        private readonly FireButton _FireButton;
+        private readonly VirtualButton _FireButton;
         /// <summary> Virtual pause button </summary>
-        private readonly PauseButton _PauseButton;
+        private readonly VirtualButton _PauseButton;
         /// <summary> Virtual resume button</summary>
-        private readonly ResumeButton _ResumeButton;
-
+        private readonly VirtualButton _ResumeButton;
+        /// <summary> Whether the buttons in the scene are active </summary>
         private Boolean _Active;
 
         /// <summary> Text printer that displays the score </summary>
@@ -74,16 +74,33 @@ namespace Type.Scenes
             NukeButton = new NukeButton();
 
 #if __ANDROID__
-            _FireButton = new FireButton();
-            _PauseButton = new PauseButton();
-            _ResumeButton = new ResumeButton();
+            Sprite fireButton = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/fire.png"))
+            {
+                Position = new Vector2(625, -450),
+                Visible = false,
+                Colour = new Vector4(1, 1, 1, 0.4f)
+            };
+            _FireButton = new VirtualButton(fireButton.ZOrder, fireButton, ButtonData.Type.FIRE);
+
+            Sprite pauseButton = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/pausebutton.png"))
+            {
+                Position = new Vector2(770, 350),
+                Visible = false,
+                Colour = new Vector4(1, 1, 1, 0.4f)
+            };
+            _PauseButton = new VirtualButton(Int32.MaxValue, pauseButton, ButtonData.Type.PAUSE);
+
+            Sprite resumeButton = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/playbutton.png"))
+            {
+                Position = new Vector2(770, 350),
+                Visible = false,
+                Colour = new Vector4(1, 1, 1, 0.4f)
+            };
+            _ResumeButton = new VirtualButton(Int32.MaxValue, resumeButton, ButtonData.Type.RESUME);
+
             _VirtualAnalogStick = new VirtualAnalogStick(new Vector2(-620, -220), 110);
 
-            InputManager.Instance.NukeButton = NukeButton;
-            InputManager.Instance.FireButton = _FireButton;
-            InputManager.Instance.PauseButton = _PauseButton;
-            InputManager.Instance.ResumeButton = _ResumeButton;
-            InputManager.Instance.VirtualAnalogStick = _VirtualAnalogStick;
+            InputService.Instance.VirtualAnalogStick = _VirtualAnalogStick;
 #endif
         }
 
@@ -94,9 +111,9 @@ namespace Type.Scenes
         private void SetState(Boolean state)
         {
 #if __ANDROID__
-            _FireButton.Active = state;
+            _FireButton.TouchEnabled = state;
             _FireButton.Visible = state;
-            _PauseButton.Active = state;
+            _PauseButton.TouchEnabled = state;
             _PauseButton.Visible = state;
             _VirtualAnalogStick.TouchEnabled = state;
             _VirtualAnalogStick.Visible = state;
@@ -104,7 +121,7 @@ namespace Type.Scenes
 
             if (!state)
             {
-                _ResumeButton.Active = false;
+                _ResumeButton.TouchEnabled = false;
                 _ResumeButton.Visible = false;
             }
 #endif
@@ -122,17 +139,12 @@ namespace Type.Scenes
         {
             base.Dispose();
 
-            InputManager.Instance.NukeButton = null;
-            InputManager.Instance.FireButton = null;
-            InputManager.Instance.PauseButton = null;
-            InputManager.Instance.ResumeButton = null;
-            InputManager.Instance.VirtualAnalogStick = null;
+            InputService.Instance.VirtualAnalogStick = null;
 
             NukeButton?.Dispose();
             _VirtualAnalogStick.Dispose();
             _PauseButton?.Dispose();
             _ResumeButton?.Dispose();
-            _FireButton?.Dispose();
 
             _Help.Dispose();
             _FrameCounter.Dispose();

@@ -2,7 +2,6 @@
 using AmosShared.Base;
 using AmosShared.Graphics.Drawables;
 using AmosShared.Interfaces;
-using AmosShared.State;
 using OpenTK;
 using System;
 using System.Linq;
@@ -14,7 +13,9 @@ using Type.Interfaces.Enemies;
 using Type.Interfaces.Player;
 using Type.Interfaces.Powerups;
 using Type.Scenes;
+using Type.Services;
 using Type.UI;
+using State = AmosShared.State.State;
 
 namespace Type.States
 {
@@ -103,7 +104,7 @@ namespace Type.States
             _Player.Spawn();
             GameStats.Instance.GameStart();
 
-            InputManager.Instance.RegisterListener(this);
+            InputService.Instance.RegisterListener(this);
 
             UpdateManager.Instance.AddUpdatable(this);
         }
@@ -334,13 +335,53 @@ namespace Type.States
         }
 
 
+        #region Implementation of IInputListener
+
+        /// <summary>
+        /// Update data from the analog stic
+        /// </summary>
+        /// <param name="direction"> The direction the stick is pushed </param>
+        /// <param name="strength"> The distance the stick is pushed </param>
+        public void UpdateDirectionData(Vector2 direction, Single strength)
+        {
+        }
+
+        /// <summary> Informs the listener of input events </summary>
+        /// <param name="data"> Data packet from the <see cref="InputManager"/> </param>
+        public void UpdateInputData(ButtonEventData data)
+        {
+            switch (data.ID)
+            {
+                case ButtonData.Type.NUKE:
+                    {
+                        if (data.State != ButtonData.State.PRESSED || _CurrentNukes <= 0) return;
+
+                        _CurrentNukes--;
+                        _UIScene.NukeButton.NukeCount = _CurrentNukes;
+                        CollisionController.Instance.ClearProjectiles();
+
+                        _GameScene.ShowNukeEffect();
+                        new AudioPlayer("Content/Audio/nuke.wav", false, AudioManager.Category.EFFECT, 1);
+
+                        foreach (IEnemy enemy in _GameScene.Enemies.Where(e => e.CanBeRoadKilled))
+                        {
+                            if (!enemy.IsDisposed && !enemy.IsDestroyed) enemy.Destroy();
+                        }
+
+                        break;
+                    }
+            }
+        }
+
+        #endregion
+
         /// <inheritdoc />
         public override void Dispose()
         {
             if (IsDisposed) return;
             base.Dispose();
 
-            InputManager.Instance.DeregisterListener(this);
+            InputService.Instance.DeregisterListener(this);
             UpdateManager.Instance.RemoveUpdatable(this);
             CollisionController.Instance.IsActive = false;
             CollisionController.Instance.ClearObjects();
@@ -360,51 +401,5 @@ namespace Type.States
             _UIScene = null;
         }
 
-        #region Implementation of INukeButtonListener
-
-        /// <summary> Invoked when the nuke button is pressed </summary>
-        public void OnNukeButtonPressed()
-        {
-            if (_CurrentNukes <= 0) return;
-
-            _CurrentNukes--;
-            _UIScene.NukeButton.NukeCount = _CurrentNukes;
-            CollisionController.Instance.ClearProjectiles();
-
-            _GameScene.ShowNukeEffect();
-            new AudioPlayer("Content/Audio/nuke.wav", false, AudioManager.Category.EFFECT, 1);
-
-            foreach (IEnemy enemy in _GameScene.Enemies.Where(e => e.CanBeRoadKilled))
-            {
-                if (!enemy.IsDisposed && !enemy.IsDestroyed) enemy.Destroy();
-            }
-        }
-
-        #endregion
-
-        #region Implementation of IDirectionalInputListener
-
-        /// <summary>
-        /// Update data from the analog stic
-        /// </summary>
-        /// <param name="direction"> The direction the stick is pushed </param>
-        /// <param name="strength"> The distance the stick is pushed </param>
-        public void UpdateDirectionData(Vector2 direction, Single strength)
-        {
-        }
-
-        #endregion
-
-        #region Implementation of IFireButtonListener
-
-        public void FireButtonPressed()
-        {
-        }
-
-        public void FireButtonReleased()
-        {
-        }
-
-        #endregion
     }
 }
