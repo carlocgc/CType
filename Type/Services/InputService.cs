@@ -6,14 +6,17 @@ using Type.Android.Source.Controllers;
 using Type.Desktop.Source.Controllers;
 #endif
 
-namespace Type.Controllers
+namespace Type.Services
 {
-    public class InputManager
+    /// <summary>
+    /// Service that provides data to listeners about input devices that have been registered
+    /// </summary>
+    public sealed class InputService
     {
         /// <summary> The instance of the Input manager </summary>
-        private static InputManager _Instance;
+        private static InputService _Instance;
         /// <summary> The instance of the Input manager </summary>
-        public static InputManager Instance => _Instance ?? (_Instance = new InputManager());
+        public static InputService Instance => _Instance ?? (_Instance = new InputService());
 
         /// <summary> Virtual analog stick </summary>
         public VirtualAnalogStick VirtualAnalogStick
@@ -22,38 +25,10 @@ namespace Type.Controllers
             set => _InputProvider.VirtualAnalogStick = value;
         }
 
-        /// <summary> Virtual nuke button </summary>
-        public NukeButton NukeButton
-        {
-            get => _InputProvider.NukeButton;
-            set => _InputProvider.NukeButton = value;
-        }
-
-        /// <summary> Virtual firebutton </summary>
-        public FireButton FireButton
-        {
-            get => _InputProvider.FireButton;
-            set => _InputProvider.FireButton = value;
-        }
-
-        /// <summary> Virtual pausebutton </summary>
-        public PauseButton PauseButton
-        {
-            get => _InputProvider.PauseButton;
-            set => _InputProvider.PauseButton = value;
-        }
-
-        /// <summary> Virtual resumebutton</summary>
-        public ResumeButton ResumeButton
-        {
-            get => _InputProvider.ResumeButton;
-            set => _InputProvider.ResumeButton = value;
-        }
-
         /// <summary> Platform specific input provider </summary>
         private readonly IInputProvider _InputProvider;
 
-        public InputManager()
+        private InputService()
         {
 #if __ANDROID__
             _InputProvider = new AndroidInputProvider();

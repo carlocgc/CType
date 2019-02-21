@@ -6,7 +6,7 @@ using Type.Desktop.Services;
 using System;
 using Type.Interfaces.Service;
 
-namespace Type.Ads
+namespace Type.Services
 {
     /// <summary>
     /// Advertisement Service
