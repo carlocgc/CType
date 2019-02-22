@@ -4,25 +4,34 @@ using OpenTK;
 using OpenTK.Input;
 using System;
 using System.Collections.Generic;
+using Type.Base;
 using Type.Buttons;
+using Type.Data;
 using Type.Interfaces;
 using Type.Interfaces.Control;
+using Type.Services;
 
 namespace Type.Desktop.Source.Controllers
 {
+    /// <summary>
+    /// Input provider for the <see cref="InputService"/> when in Desktop configuration
+    /// </summary>
     public class DesktopInputProvider : IInputProvider, INotifier<IInputListener>, IUpdatable
     {
+        /// <summary> List of all the <see cref="IInputListener"/>'s listening to the <see cref="InputService"/></summary>
         private readonly List<IInputListener> _Listeners = new List<IInputListener>();
-
+        /// <summary> Direction the analog stick is pushed </summary>
         private Vector2 _Velocity;
-
+        /// <summary> Distance the analog stick is pushed </summary>
         private Single _VelocityMagnitude;
-
+        /// <summary> Deadzone for positive axis on the analog stick </summary>
         private Single _PositiveDeadZone = 0.2f;
-
+        /// <summary> Deadzone for negative axis on the analog stick </summary>
         private Single _NegativeDeadZone = -0.2f;
-
+        /// <summary> Whether the nuke button was pressed last update </summary>
         private Boolean _NukePressed;
+        /// <summary> Call back to end controller vibration </summary>
+        private TimedCallback _VibrationCallback;
 
         public DesktopInputProvider()
         {
@@ -35,7 +44,6 @@ namespace Type.Desktop.Source.Controllers
         /// <param name="timeTilUpdate"></param>
         public void Update(TimeSpan timeTilUpdate)
         {
-            // Analog input
             if (GamePad.GetState(0).ThumbSticks.Left.Y > _PositiveDeadZone ||
                 GamePad.GetState(0).ThumbSticks.Left.Y < _NegativeDeadZone ||
                 GamePad.GetState(0).ThumbSticks.Left.X > _PositiveDeadZone ||
@@ -53,28 +61,40 @@ namespace Type.Desktop.Source.Controllers
             {
                 foreach (IInputListener listener in _Listeners)
                 {
-
+                    listener.UpdateInputData(new ButtonEventData(ButtonData.Type.FIRE, ButtonData.State.PRESSED));
                 }
             }
             else if (GamePad.GetState(0).Buttons.A == ButtonState.Released)
             {
                 foreach (IInputListener listener in _Listeners)
                 {
-
+                    listener.UpdateInputData(new ButtonEventData(ButtonData.Type.FIRE, ButtonData.State.RELEASED));
                 }
             }
-            if (GamePad.GetState(0).Buttons.B == ButtonState.Pressed && !_NukePressed)
+            if (GamePad.GetState(0).Buttons.B == ButtonState.Pressed)
+            {
+                ButtonData.State state = _NukePressed ? ButtonData.State.HELD : ButtonData.State.PRESSED;
+
+                foreach (IInputListener listener in _Listeners)
+                {
+                    listener.UpdateInputData(new ButtonEventData(ButtonData.Type.NUKE, state));
+                }
+                _NukePressed = true;
+            }
+            else if (GamePad.GetState(0).Buttons.B == ButtonState.Released)
             {
                 foreach (IInputListener listener in _Listeners)
                 {
-
+                    listener.UpdateInputData(new ButtonEventData(ButtonData.Type.NUKE, ButtonData.State.RELEASED));
                 }
-
-                _NukePressed = true;
-            }
-            if (GamePad.GetState(0).Buttons.B == ButtonState.Released)
-            {
                 _NukePressed = false;
+            }
+            if (GamePad.GetState(0).Buttons.Start == ButtonState.Pressed)
+            {
+                foreach (IInputListener listener in _Listeners)
+                {
+                    listener.UpdateInputData(new ButtonEventData(ButtonData.Type.START, ButtonData.State.PRESSED));
+                }
             }
 
             foreach (IInputListener listener in _Listeners)
@@ -101,8 +121,20 @@ namespace Type.Desktop.Source.Controllers
         /// <summary> Virtual analog stick </summary>
         public VirtualAnalogStick VirtualAnalogStick { get; set; }
 
-        /// <summary> Virtual nuke button </summary>
-        public NukeButton NukeButton { get; set; }
+        /// <summary>
+        /// Vibrates a controller
+        /// </summary>
+        /// <param name="index"> Index of the controller to vibrate </param>
+        /// <param name="strong"> Whether to use strong vibration </param>
+        /// <param name="duration"> How long the vbration should last </param>
+        public void Vibrate(Int32 index, Boolean strong, TimeSpan duration)
+        {
+            Single left = strong ? 1f : 0.5f;
+            Single right = strong ? 1f : 0.2f;
+            Boolean result = GamePad.SetVibration(index, left, right);
+            if (result) return;
+            _VibrationCallback = new TimedCallback(duration, () => GamePad.SetVibration(index, 0, 0));
+        }
 
         /// <summary>
         /// Add a listener
@@ -144,6 +176,8 @@ namespace Type.Desktop.Source.Controllers
         public void Dispose()
         {
             UpdateManager.Instance.RemoveUpdatable(this);
+            _VibrationCallback.CancelAndComplete();
+            _VibrationCallback.Dispose();
         }
 
         #endregion

@@ -70,6 +70,17 @@ namespace Type.Android.Source.Controllers
         public VirtualAnalogStick VirtualAnalogStick { get; set; }
 
         /// <summary>
+        /// Vibrates a controller
+        /// </summary>
+        /// <param name="index"> Index of the controller to vibrate </param>
+        /// <param name="strong"> Whether to use strong vibration </param>
+        /// <param name="duration"> How long the vbration should last </param>
+        public void Vibrate(Int32 index, Boolean strong, TimeSpan duration)
+        {
+
+        }
+
+        /// <summary>
         /// Add a listener
         /// </summary>
         public void RegisterListener(IInputListener listener)

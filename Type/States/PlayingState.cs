@@ -5,6 +5,7 @@ using AmosShared.Interfaces;
 using OpenTK;
 using System;
 using System.Linq;
+using AmosShared.State;
 using Type.Controllers;
 using Type.Data;
 using Type.Factories;
@@ -47,6 +48,8 @@ namespace Type.States
         private LifeMeter _LifeMeter;
         /// <summary> The player </summary>
         private IPlayer _Player;
+        /// <summary> Whether the game is paused </summary>
+        private Boolean _Paused;
         /// <summary> Whether the level has started </summary>
         private Boolean _LevelStarted;
         /// <summary> Whether the game is over </summary>
@@ -91,7 +94,8 @@ namespace Type.States
             _ScoreDisplay = _UIScene.ScoreDisplay;
             _LifeMeter = _UIScene.LifeMeter;
             _LevelDisplay = _UIScene.LevelDisplay;
-            _UIScene.Active = true;
+            _UIScene.ShowOnScreenControls(true);
+            _UIScene.Visible = true;
 
             _GameScene.StartBackgroundScroll();
 
@@ -103,12 +107,12 @@ namespace Type.States
 
             _Player.Spawn();
             GameStats.Instance.GameStart();
-
             InputService.Instance.RegisterListener(this);
-
             UpdateManager.Instance.AddUpdatable(this);
         }
 
+        /// <summary>If true then this state is considered complete and control will be passed over to <see cref="State.NextState"/></summary>
+        /// <returns></returns>
         public override Boolean IsComplete()
         {
             if (_GameOver) ChangeState(new GameOverState());
@@ -120,7 +124,11 @@ namespace Type.States
 
         #region Player
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Invoked when a life is added
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="points"></param>
         public void OnLifeAdded(IPlayer player, Int32 points)
         {
             if (_LifeMeter.PlayerLives == 5)
@@ -148,6 +156,7 @@ namespace Type.States
         {
             _LifeMeter.LoseLife();
             _GameScene.RemovePowerUps();
+            InputService.Instance.Vibrate(0, true, TimeSpan.FromMilliseconds(200));
 
             if (_LifeMeter.PlayerLives > 0)
             {
@@ -175,7 +184,7 @@ namespace Type.States
                 return;
             }
             _CurrentNukes++;
-            _UIScene.NukeButton.NukeCount = _CurrentNukes;
+            _UIScene.NukeDisplay.NukeCount = _CurrentNukes;
             new AudioPlayer("Content/Audio/nuke_pickup.wav", false, AudioManager.Category.EFFECT, 1);
         }
 
@@ -290,7 +299,8 @@ namespace Type.States
             CollisionController.Instance.IsActive = false;
             CollisionController.Instance.ClearObjects();
             _EnemyFactory.Stop();
-            _UIScene.Active = false;
+            _UIScene.ShowOnScreenControls(false);
+            _UIScene.Visible = false;
             _GameComplete = true;
         }
 
@@ -304,7 +314,8 @@ namespace Type.States
             CollisionController.Instance.ClearObjects();
             _LevelDisplay.Dispose();
             _EnemyFactory.Dispose();
-            _UIScene.Active = false;
+            _UIScene.ShowOnScreenControls(false);
+            _UIScene.Visible = false;
             _GameOver = true;
         }
 
@@ -347,7 +358,7 @@ namespace Type.States
         }
 
         /// <summary> Informs the listener of input events </summary>
-        /// <param name="data"> Data packet from the <see cref="InputManager"/> </param>
+        /// <param name="data"> Data packet from the <see cref="InputService"/> </param>
         public void UpdateInputData(ButtonEventData data)
         {
             switch (data.ID)
@@ -357,17 +368,32 @@ namespace Type.States
                         if (data.State != ButtonData.State.PRESSED || _CurrentNukes <= 0) return;
 
                         _CurrentNukes--;
-                        _UIScene.NukeButton.NukeCount = _CurrentNukes;
+                        _UIScene.NukeDisplay.NukeCount = _CurrentNukes;
                         CollisionController.Instance.ClearProjectiles();
-
-                        _GameScene.ShowNukeEffect();
-                        new AudioPlayer("Content/Audio/nuke.wav", false, AudioManager.Category.EFFECT, 1);
 
                         foreach (IEnemy enemy in _GameScene.Enemies.Where(e => e.CanBeRoadKilled))
                         {
                             if (!enemy.IsDisposed && !enemy.IsDestroyed) enemy.Destroy();
                         }
 
+                        _GameScene.ShowNukeEffect();
+                        new AudioPlayer("Content/Audio/nuke.wav", false, AudioManager.Category.EFFECT, 1);
+                        InputService.Instance.Vibrate(0, true, TimeSpan.FromMilliseconds(500));
+
+                        break;
+                    }
+                case ButtonData.Type.PAUSE:
+                    {
+                        if (_Paused)
+                        {
+                            Game.GameTime.Pause();
+                            _Paused = true;
+                        }
+                        else
+                        {
+                            Game.GameTime.Resume();
+                            _Paused = false;
+                        }
                         break;
                     }
             }

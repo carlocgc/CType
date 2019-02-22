@@ -1,4 +1,5 @@
-﻿using Type.Buttons;
+﻿using System;
+using Type.Buttons;
 using Type.Interfaces.Control;
 #if __ANDROID__
 using Type.Android.Source.Controllers;
@@ -35,6 +36,17 @@ namespace Type.Services
 #elif __DESKTOP__
             _InputProvider = new DesktopInputProvider();
 #endif
+        }
+
+        /// <summary>
+        /// Vibrates a controller
+        /// </summary>
+        /// <param name="index"> Index of the controller to vibrate </param>
+        /// <param name="strong"> Whether to use strong vibration </param>
+        /// <param name="duration"> How long the vbration should last </param>
+        public void Vibrate(Int32 index, Boolean strong, TimeSpan duration)
+        {
+            _InputProvider.Vibrate(index, strong, duration);
         }
 
         /// <summary>

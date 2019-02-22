@@ -4,7 +4,7 @@ using System;
 using Type.Data;
 using Type.Interfaces.Control;
 
-namespace Type.Base.Input
+namespace Type.Buttons
 {
     /// <summary>
     /// Button extension that adds public facing data about its state

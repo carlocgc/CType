@@ -11,7 +11,7 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Services\AdService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Base\GameObject.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Base\Input\VirtualButton.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Buttons\VirtualButton.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\AchievementController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\CollisionController.cs" />
@@ -110,7 +110,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)UI\FpsCounter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\LevelDisplay.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\LifeMeter.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Buttons\NukeButton.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\NukeDisplay.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\PowerUpHelp.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Buttons\ShipSelectButton.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\StatsDisplay.cs" />
