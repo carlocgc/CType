@@ -13,8 +13,6 @@ namespace Type.Scenes
     {
         /// <summary> UI element that displays the current FPS </summary>
         private readonly FpsCounter _FrameCounter;
-        /// <summary> Displays info about powerups in the pause menu </summary>
-        private readonly PowerUpHelp _Help;
         /// <summary> Virtual analog stick </summary>
         private readonly VirtualAnalogStick _VirtualAnalogStick;
         /// <summary> Virtual fire button </summary>
@@ -30,6 +28,9 @@ namespace Type.Scenes
 
         /// <summary> Shows that the game is paused </summary>
         public Sprite PauseIndicator { get; }
+
+        /// <summary> Displays info about powerups in the pause menu </summary>
+        public PowerUpHelp Help { get; }
 
         /// <summary> Text printer that displays the score </summary>
         public TextDisplay ScoreDisplay { get; }
@@ -54,11 +55,11 @@ namespace Type.Scenes
             };
             AddDrawable(ScoreDisplay);
 
-            _Help = new PowerUpHelp();
             _FrameCounter = new FpsCounter();
             LifeMeter = new LifeMeter(playertype);
             LevelDisplay = new LevelDisplay();
             NukeDisplay = new NukeDisplay();
+            Help = new PowerUpHelp();
             PauseIndicator = new Sprite(Game.MainCanvas, Constants.ZOrders.ABOVE_GAME, Texture.GetTexture("Content/Graphics/Buttons/paused.png"))
             {
                 Position = new Vector2(0, 0),
@@ -91,7 +92,7 @@ namespace Type.Scenes
                 Visible = false,
                 Colour = new Vector4(1, 1, 1, 0.4f)
             };
-            _PauseButton = new VirtualButton(Int32.MaxValue, pauseButton, ButtonData.Type.PAUSE);
+            _PauseButton = new VirtualButton(Int32.MaxValue, pauseButton, ButtonData.Type.START);
             InputService.Instance.RegisterButton(_PauseButton);
 
             Sprite resumeButton = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/playbutton.png"))
@@ -100,7 +101,7 @@ namespace Type.Scenes
                 Visible = false,
                 Colour = new Vector4(1, 1, 1, 0.4f)
             };
-            _ResumeButton = new VirtualButton(Int32.MaxValue, resumeButton, ButtonData.Type.RESUME);
+            _ResumeButton = new VirtualButton(Int32.MaxValue, resumeButton, ButtonData.Type.START);
             InputService.Instance.RegisterButton(_ResumeButton);
 
             _VirtualAnalogStick = new VirtualAnalogStick(new Vector2(-620, -220), 110);
@@ -117,19 +118,56 @@ namespace Type.Scenes
 #if __ANDROID__
             _FireButton.TouchEnabled = state;
             _FireButton.Visible = state;
+            _FireButton.CancelPress();
             _NukeButton.TouchEnabled = state;
             _NukeButton.Visible = state;
+            _NukeButton.CancelPress();
             _PauseButton.TouchEnabled = state;
             _PauseButton.Visible = state;
-
+            _PauseButton.CancelPress();
             _VirtualAnalogStick.TouchEnabled = state;
             _VirtualAnalogStick.Visible = state;
             _VirtualAnalogStick.ListeningForMove = state;
-
-            if (state) return;
-            _ResumeButton.TouchEnabled = false;
-            _ResumeButton.Visible = false;
 #endif
+        }
+
+        /// <summary>
+        /// Sets the UI scene to a paused state
+        /// </summary>
+        /// <param name="paused"></param>
+        public void SetPaused(Boolean paused)
+        {
+            if (paused)
+            {
+                Help.Show();
+                PauseIndicator.Visible = true;
+#if __ANDROID__
+                _PauseButton.Visible = false;
+                _PauseButton.TouchEnabled = false;
+                _PauseButton.CancelPress();
+
+                ShowOnScreenControls(false);
+                _ResumeButton.Visible = true;
+                _ResumeButton.TouchEnabled = true;
+#endif
+            }
+            else
+            {
+                Help.Hide();
+                PauseIndicator.Visible = false;
+#if __ANDROID__
+                _PauseButton.Visible = true;
+                _PauseButton.TouchEnabled = true;
+
+                _ResumeButton.Visible = false;
+                _ResumeButton.TouchEnabled = false;
+                _ResumeButton.CancelPress();
+
+                ShowOnScreenControls(true);
+                _ResumeButton.Visible = false;
+                _ResumeButton.TouchEnabled = false;
+#endif
+            }
         }
 
         /// <inheritdoc />
@@ -141,7 +179,7 @@ namespace Type.Scenes
         public override void Dispose()
         {
             base.Dispose();
-            _Help.Dispose();
+            Help.Dispose();
             _FrameCounter.Dispose();
             NukeDisplay.Dispose();
             LevelDisplay.Dispose();

@@ -1,7 +1,7 @@
 ﻿using System;
 using Type.Interfaces.Service;
 
-namespace Type.Desktop.Services
+namespace Type.Desktop.Source.Services
 {
     /// <summary>
     /// AdService for Desktop build

@@ -39,6 +39,15 @@ namespace Type.Services
         }
 
         /// <summary>
+        /// Whether the input system is paused
+        /// </summary>
+        /// <param name="paused"></param>
+        public void SetPaused(Boolean paused)
+        {
+            _InputProvider.Paused = paused;
+        }
+
+        /// <summary>
         /// Vibrates a controller
         /// </summary>
         /// <param name="index"> Index of the controller to vibrate </param>

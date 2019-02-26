@@ -1,10 +1,10 @@
-﻿#if __ANDROID__
-using Type.Android.Services;
-#elif __DESKTOP__
-using Type.Desktop.Services;
-#endif
-using System;
+﻿using System;
 using Type.Interfaces.Service;
+#if __ANDROID__
+using Type.Android.Source.Services;
+#elif __DESKTOP__
+using Type.Desktop.Source.Services;
+#endif
 
 namespace Type.Services
 {

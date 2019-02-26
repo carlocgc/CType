@@ -30,8 +30,13 @@ namespace Type.Desktop.Source.Controllers
         private Single _NegativeDeadZone = -0.2f;
         /// <summary> Whether the nuke button was pressed last update </summary>
         private Boolean _NukePressed;
+        /// <summary> Whether start was pressed last update </summary>
+        private Boolean _StartPressed;
         /// <summary> Call back to end controller vibration </summary>
         private TimedCallback _VibrationCallback;
+
+        /// <summary> Whether the provider is in pause mode </summary>
+        public Boolean Paused { get; set; }
 
         public DesktopInputProvider()
         {
@@ -44,6 +49,33 @@ namespace Type.Desktop.Source.Controllers
         /// <param name="timeTilUpdate"></param>
         public void Update(TimeSpan timeTilUpdate)
         {
+            // ---------------- START BUTTON
+
+            if (GamePad.GetState(0).Buttons.Start == ButtonState.Pressed)
+            {
+                ButtonData.State state = _StartPressed ? ButtonData.State.HELD : ButtonData.State.PRESSED;
+
+                foreach (IInputListener listener in _Listeners)
+                {
+                    listener.UpdateInputData(new ButtonEventData(ButtonData.Type.START, state));
+                }
+                _StartPressed = true;
+            }
+            else if (GamePad.GetState(0).Buttons.Start == ButtonState.Released)
+            {
+                foreach (IInputListener listener in _Listeners)
+                {
+                    listener.UpdateInputData(new ButtonEventData(ButtonData.Type.START, ButtonData.State.RELEASED));
+                }
+                _StartPressed = false;
+            }
+
+            // ---------------- Dont update anything else if game is paused
+
+            if (Paused) return;
+
+            // ---------------- ANALOG STICK
+
             if (GamePad.GetState(0).ThumbSticks.Left.Y > _PositiveDeadZone ||
                 GamePad.GetState(0).ThumbSticks.Left.Y < _NegativeDeadZone ||
                 GamePad.GetState(0).ThumbSticks.Left.X > _PositiveDeadZone ||
@@ -56,6 +88,8 @@ namespace Type.Desktop.Source.Controllers
             {
                 _Velocity = Vector2.Zero;
             }
+
+            // ---------------- A BUTTON
 
             if (GamePad.GetState(0).Buttons.A == ButtonState.Pressed)
             {
@@ -71,6 +105,9 @@ namespace Type.Desktop.Source.Controllers
                     listener.UpdateInputData(new ButtonEventData(ButtonData.Type.FIRE, ButtonData.State.RELEASED));
                 }
             }
+
+            // ---------------- B BUTTON
+
             if (GamePad.GetState(0).Buttons.B == ButtonState.Pressed)
             {
                 ButtonData.State state = _NukePressed ? ButtonData.State.HELD : ButtonData.State.PRESSED;
@@ -89,13 +126,8 @@ namespace Type.Desktop.Source.Controllers
                 }
                 _NukePressed = false;
             }
-            if (GamePad.GetState(0).Buttons.Start == ButtonState.Pressed)
-            {
-                foreach (IInputListener listener in _Listeners)
-                {
-                    listener.UpdateInputData(new ButtonEventData(ButtonData.Type.START, ButtonData.State.PRESSED));
-                }
-            }
+
+            // ---------------- SEND ANALOG DATA TO LISTENERS
 
             foreach (IInputListener listener in _Listeners)
             {

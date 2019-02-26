@@ -8,6 +8,9 @@ namespace Type.Interfaces.Control
     /// </summary>
     public interface IInputProvider
     {
+        /// <summary> Whether the input provider is paused</summary>
+        Boolean Paused { get; set; }
+
         /// <summary> Virtual analog stick </summary>
         VirtualAnalogStick VirtualAnalogStick { get; set; }
 

@@ -16,8 +16,6 @@
         {
             FIRE,
             NUKE,
-            PAUSE,
-            RESUME,
             START,
             BACK,
             ALPHA_SELECT,

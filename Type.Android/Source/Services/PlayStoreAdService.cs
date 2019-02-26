@@ -3,7 +3,7 @@ using System;
 using Type.Ads;
 using Type.Interfaces.Service;
 
-namespace Type.Android.Services
+namespace Type.Android.Source.Services
 {
     /// <summary>
     /// Adsevice for Google Play Store platform

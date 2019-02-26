@@ -38,5 +38,11 @@ namespace Type.Buttons
         {
             State = ButtonData.State.RELEASED;
         }
+
+        public void CancelPress()
+        {
+            State = ButtonData.State.RELEASED;
+            OnCancel();
+        }
     }
 }

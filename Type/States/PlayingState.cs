@@ -382,17 +382,23 @@ namespace Type.States
 
                         break;
                     }
-                case ButtonData.Type.PAUSE:
+                case ButtonData.Type.START:
                     {
+                        if (data.State != ButtonData.State.PRESSED) return;
+                        if (!_Paused)
+                        {
+                            _Paused = true;
+                            Game.GameTime.Multiplier = 0;
+                            _UIScene.SetPaused(true);
+                            InputService.Instance.SetPaused(true);
+                            return;
+                        }
                         if (_Paused)
                         {
-                            Game.GameTime.Pause();
-                            _Paused = true;
-                        }
-                        else
-                        {
-                            Game.GameTime.Resume();
                             _Paused = false;
+                            Game.GameTime.Multiplier = 1;
+                            _UIScene.SetPaused(false);
+                            InputService.Instance.SetPaused(false);
                         }
                         break;
                     }

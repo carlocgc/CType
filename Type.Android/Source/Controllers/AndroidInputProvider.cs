@@ -20,6 +20,9 @@ namespace Type.Android.Source.Controllers
 
         private Single _VelocityMagnitude;
 
+        /// <summary> Whether the provider is in pause mode </summary>
+        public Boolean Paused { get; set; }
+
         public AndroidInputProvider()
         {
             UpdateManager.Instance.AddUpdatable(this);
@@ -77,7 +80,6 @@ namespace Type.Android.Source.Controllers
         /// <param name="duration"> How long the vbration should last </param>
         public void Vibrate(Int32 index, Boolean strong, TimeSpan duration)
         {
-
         }
 
         /// <summary>
