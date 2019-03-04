@@ -9,7 +9,7 @@ namespace Type.Interfaces.Player
     /// <summary>
     /// Interface for the player ship
     /// </summary>
-    public interface IPlayer : ISpawnable, ICollidable, IProjectileShooter, IUIListener, INotifier<IPlayerListener>
+    public interface IPlayer : ISpawnable, ICollidable, IProjectileShooter, IInputListener, INotifier<IPlayerListener>
     {
         /// <summary>
         /// Current amount of probes the player has

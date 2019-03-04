@@ -12,6 +12,7 @@ using Type.Interfaces.Player;
 using Type.Interfaces.Powerups;
 using Type.Interfaces.Probe;
 using Type.Objects.Projectiles;
+using Type.Services;
 using static Type.Constants.Global;
 
 namespace Type.Objects.Player
@@ -109,6 +110,8 @@ namespace Type.Objects.Player
             _ProbeController = new ProbeController();
             _Shield = new Shield();
             _Shield.UpdatePosition(Position);
+
+            InputService.Instance.RegisterListener(this);
         }
 
         /// <inheritdoc />
@@ -253,10 +256,10 @@ namespace Type.Objects.Player
             }
         }
 
-        #region  UI_Listener
+        #region Implementation of IInputListener
 
         /// <inheritdoc />
-        public void UpdateAnalogData(Vector2 direction, Single strength)
+        public void UpdateDirectionData(Vector2 direction, Single strength)
         {
             _Direction = direction;
             _MoveStrength = strength;
@@ -264,17 +267,21 @@ namespace Type.Objects.Player
             foreach (Sprite effect in _EngineEffects) effect.Visible = direction.X > 0;
         }
 
-        /// <inheritdoc />
-        public void FireButtonPressed()
+        /// <summary> Informs the listener of input events </summary>
+        /// <param name="data"> Data packet from the <see cref="InputManager"/> </param>
+        public void UpdateInputData(ButtonEventData data)
         {
-            AutoFire = true;
+            switch (data.ID)
+            {
+                case ButtonData.Type.FIRE:
+                    {
+                        AutoFire = data.State == ButtonData.State.PRESSED || data.State == ButtonData.State.HELD;
+                        break;
+                    }
+            }
         }
 
-        /// <inheritdoc />
-        public void FireButtonReleased()
-        {
-            AutoFire = false;
-        }
+        #endregion
 
         /// <inheritdoc />
         private void AddShield(Int32 points)
@@ -379,8 +386,6 @@ namespace Type.Objects.Player
             }
         }
 
-        #endregion
-
         #region Listener
 
         /// <summary> List of listeners </summary>
@@ -404,6 +409,7 @@ namespace Type.Objects.Player
         public override void Dispose()
         {
             base.Dispose();
+            InputService.Instance.RegisterListener(this);
             _InvincibleCallback?.Dispose();
             _InvincibleColourCallback?.Dispose();
             foreach (Sprite effect in _EngineEffects) effect.Dispose();

@@ -38,7 +38,7 @@ namespace Type.Scenes
             _TitleText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
                 Text = "C:TYPE",
-                Position =  new Vector2(0, 0),
+                Position = new Vector2(0, 0),
                 Visible = true,
                 Scale = new Vector2(5, 5),
                 Colour = new Vector4(1, 1, 1, 1)
@@ -89,6 +89,11 @@ namespace Type.Scenes
         }
 
         private void StartButtonPress(Button button)
+        {
+            StartGame();
+        }
+
+        public void StartGame()
         {
             Visible = false;
             _StartButton.TouchEnabled = false;

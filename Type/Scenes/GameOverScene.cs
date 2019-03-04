@@ -1,11 +1,9 @@
 ﻿using AmosShared.Audio;
-using AmosShared.Competitive;
 using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
 using AmosShared.Touch;
 using OpenTK;
 using System;
-using Type.Ads;
 using Type.Data;
 using Type.UI;
 
@@ -34,7 +32,7 @@ namespace Type.Scenes
         private readonly AudioPlayer _Music;
 
         /// <summary> Whether the confirm button has been pressed </summary>
-        public Boolean IsComplete { get; private set; }
+        public Boolean IsComplete { get; set; }
 
         public GameOverScene()
         {

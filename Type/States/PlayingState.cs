@@ -1,11 +1,11 @@
 ﻿using AmosShared.Audio;
-using AmosShared.Base;
 using AmosShared.Graphics.Drawables;
 using AmosShared.Interfaces;
-using AmosShared.State;
 using OpenTK;
 using System;
 using System.Linq;
+using AmosShared.Base;
+using AmosShared.State;
 using Type.Controllers;
 using Type.Data;
 using Type.Factories;
@@ -14,6 +14,7 @@ using Type.Interfaces.Enemies;
 using Type.Interfaces.Player;
 using Type.Interfaces.Powerups;
 using Type.Scenes;
+using Type.Services;
 using Type.UI;
 
 namespace Type.States
@@ -21,7 +22,7 @@ namespace Type.States
     /// <summary>
     /// Game play state
     /// </summary>
-    public class PlayingState : State, IPlayerListener, IEnemyListener, IEnemyFactoryListener, IPowerupListener, INukeButtonListener, IPowerupFactoryListener, IUpdatable
+    public class PlayingState : State, IPlayerListener, IEnemyListener, IEnemyFactoryListener, IPowerupListener, IPowerupFactoryListener, IUpdatable, IInputListener
     {
         /// <summary> Max level of the game </summary>
         private readonly Int32 _MaxLevel = 20;
@@ -46,6 +47,8 @@ namespace Type.States
         private LifeMeter _LifeMeter;
         /// <summary> The player </summary>
         private IPlayer _Player;
+        /// <summary> Whether the game is paused </summary>
+        private Boolean _Paused;
         /// <summary> Whether the level has started </summary>
         private Boolean _LevelStarted;
         /// <summary> Whether the game is over </summary>
@@ -87,13 +90,11 @@ namespace Type.States
             CollisionController.Instance.RegisterPlayer(_Player);
 
             _UIScene = new UIScene(_PlayerType);
-            _UIScene.RegisterListener(_Player);
-            _UIScene.AnalogStick.RegisterListener(_Player);
-            _UIScene.NukeButton.RegisterListener(this);
             _ScoreDisplay = _UIScene.ScoreDisplay;
             _LifeMeter = _UIScene.LifeMeter;
             _LevelDisplay = _UIScene.LevelDisplay;
-            _UIScene.Active = true;
+            _UIScene.ShowOnScreenControls(true);
+            _UIScene.Visible = true;
 
             _GameScene.StartBackgroundScroll();
 
@@ -105,10 +106,12 @@ namespace Type.States
 
             _Player.Spawn();
             GameStats.Instance.GameStart();
-
+            InputService.Instance.RegisterListener(this);
             UpdateManager.Instance.AddUpdatable(this);
         }
 
+        /// <summary>If true then this state is considered complete and control will be passed over to <see cref="State.NextState"/></summary>
+        /// <returns></returns>
         public override Boolean IsComplete()
         {
             if (_GameOver) ChangeState(new GameOverState());
@@ -120,7 +123,11 @@ namespace Type.States
 
         #region Player
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Invoked when a life is added
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="points"></param>
         public void OnLifeAdded(IPlayer player, Int32 points)
         {
             if (_LifeMeter.PlayerLives == 5)
@@ -148,6 +155,7 @@ namespace Type.States
         {
             _LifeMeter.LoseLife();
             _GameScene.RemovePowerUps();
+            InputService.Instance.Vibrate(0, true, TimeSpan.FromMilliseconds(200));
 
             if (_LifeMeter.PlayerLives > 0)
             {
@@ -175,7 +183,7 @@ namespace Type.States
                 return;
             }
             _CurrentNukes++;
-            _UIScene.NukeButton.NukeCount = _CurrentNukes;
+            _UIScene.NukeDisplay.NukeCount = _CurrentNukes;
             new AudioPlayer("Content/Audio/nuke_pickup.wav", false, AudioManager.Category.EFFECT, 1);
         }
 
@@ -290,7 +298,8 @@ namespace Type.States
             CollisionController.Instance.IsActive = false;
             CollisionController.Instance.ClearObjects();
             _EnemyFactory.Stop();
-            _UIScene.Active = false;
+            _UIScene.ShowOnScreenControls(false);
+            _UIScene.Visible = false;
             _GameComplete = true;
         }
 
@@ -304,7 +313,8 @@ namespace Type.States
             CollisionController.Instance.ClearObjects();
             _LevelDisplay.Dispose();
             _EnemyFactory.Dispose();
-            _UIScene.Active = false;
+            _UIScene.ShowOnScreenControls(false);
+            _UIScene.Visible = false;
             _GameOver = true;
         }
 
@@ -335,12 +345,74 @@ namespace Type.States
         }
 
 
+        #region Implementation of IInputListener
+
+        /// <summary>
+        /// Update data from the analog stic
+        /// </summary>
+        /// <param name="direction"> The direction the stick is pushed </param>
+        /// <param name="strength"> The distance the stick is pushed </param>
+        public void UpdateDirectionData(Vector2 direction, Single strength)
+        {
+        }
+
+        /// <summary> Informs the listener of input events </summary>
+        /// <param name="data"> Data packet from the <see cref="InputService"/> </param>
+        public void UpdateInputData(ButtonEventData data)
+        {
+            switch (data.ID)
+            {
+                case ButtonData.Type.NUKE:
+                    {
+                        if (data.State != ButtonData.State.PRESSED || _CurrentNukes <= 0) return;
+
+                        _CurrentNukes--;
+                        _UIScene.NukeDisplay.NukeCount = _CurrentNukes;
+                        CollisionController.Instance.ClearProjectiles();
+
+                        foreach (IEnemy enemy in _GameScene.Enemies.Where(e => e.CanBeRoadKilled))
+                        {
+                            if (!enemy.IsDisposed && !enemy.IsDestroyed) enemy.Destroy();
+                        }
+
+                        _GameScene.ShowNukeEffect();
+                        new AudioPlayer("Content/Audio/nuke.wav", false, AudioManager.Category.EFFECT, 1);
+                        InputService.Instance.Vibrate(0, true, TimeSpan.FromMilliseconds(500));
+
+                        break;
+                    }
+                case ButtonData.Type.START:
+                    {
+                        if (data.State != ButtonData.State.PRESSED) return;
+                        if (!_Paused)
+                        {
+                            _Paused = true;
+                            Game.GameTime.Multiplier = 0;
+                            _UIScene.SetPaused(true);
+                            InputService.Instance.SetPaused(true);
+                            return;
+                        }
+                        if (_Paused)
+                        {
+                            _Paused = false;
+                            Game.GameTime.Multiplier = 1;
+                            _UIScene.SetPaused(false);
+                            InputService.Instance.SetPaused(false);
+                        }
+                        break;
+                    }
+            }
+        }
+
+        #endregion
+
         /// <inheritdoc />
         public override void Dispose()
         {
             if (IsDisposed) return;
             base.Dispose();
 
+            InputService.Instance.DeregisterListener(this);
             UpdateManager.Instance.RemoveUpdatable(this);
             CollisionController.Instance.IsActive = false;
             CollisionController.Instance.ClearObjects();
@@ -360,26 +432,5 @@ namespace Type.States
             _UIScene = null;
         }
 
-        #region Implementation of INukeButtonListener
-
-        /// <summary> Invoked when the nuke button is pressed </summary>
-        public void OnNukeButtonPressed()
-        {
-            if (_CurrentNukes <= 0) return;
-
-            _CurrentNukes--;
-            _UIScene.NukeButton.NukeCount = _CurrentNukes;
-            CollisionController.Instance.ClearProjectiles();
-
-            _GameScene.ShowNukeEffect();
-            new AudioPlayer("Content/Audio/nuke.wav", false, AudioManager.Category.EFFECT, 1);
-
-            foreach (IEnemy enemy in _GameScene.Enemies.Where(e => e.CanBeRoadKilled))
-            {
-                if (!enemy.IsDisposed && !enemy.IsDestroyed) enemy.Destroy();
-            }
-        }
-
-        #endregion
     }
 }
