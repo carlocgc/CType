@@ -35,6 +35,9 @@ namespace Type.Desktop.Source.Controllers
         /// <summary> Call back to end controller vibration </summary>
         private TimedCallback _VibrationCallback;
 
+        private Boolean _YPressed;
+        private Boolean _BackPressed;
+
         /// <summary> Whether the provider is in pause mode </summary>
         public Boolean Paused { get; set; }
 
@@ -125,6 +128,48 @@ namespace Type.Desktop.Source.Controllers
                     listener.UpdateInputData(new ButtonEventData(ButtonData.Type.NUKE, ButtonData.State.RELEASED));
                 }
                 _NukePressed = false;
+            }
+
+            // ---------------- Y BUTTON
+
+            if (GamePad.GetState(0).Buttons.Y == ButtonState.Pressed)
+            {
+                ButtonData.State state = _YPressed ? ButtonData.State.HELD : ButtonData.State.PRESSED;
+
+                foreach (IInputListener listener in _Listeners)
+                {
+                    listener.UpdateInputData(new ButtonEventData(ButtonData.Type.GAMMA_SELECT, state));
+                }
+                _YPressed = true;
+            }
+            else if (GamePad.GetState(0).Buttons.Y == ButtonState.Released)
+            {
+                foreach (IInputListener listener in _Listeners)
+                {
+                    listener.UpdateInputData(new ButtonEventData(ButtonData.Type.GAMMA_SELECT, ButtonData.State.RELEASED));
+                }
+                _YPressed = false;
+            }
+
+            // ---------------- BACK BUTTON
+
+            if (GamePad.GetState(0).Buttons.Back == ButtonState.Pressed)
+            {
+                ButtonData.State state = _BackPressed ? ButtonData.State.HELD : ButtonData.State.PRESSED;
+
+                foreach (IInputListener listener in _Listeners)
+                {
+                    listener.UpdateInputData(new ButtonEventData(ButtonData.Type.BACK, state));
+                }
+                _BackPressed = true;
+            }
+            else if (GamePad.GetState(0).Buttons.X == ButtonState.Released)
+            {
+                foreach (IInputListener listener in _Listeners)
+                {
+                    listener.UpdateInputData(new ButtonEventData(ButtonData.Type.BACK, ButtonData.State.RELEASED));
+                }
+                _BackPressed = false;
             }
 
             // ---------------- SEND ANALOG DATA TO LISTENERS

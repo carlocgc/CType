@@ -26,12 +26,12 @@ namespace Type.Scenes
         /// <summary> Text on the confirm button </summary>
         private readonly TextDisplay _ConfirmText;
         /// <summary> Text to display when a new highscore is achieved </summary>
-        private TextDisplay _HighScoreText;
+        private readonly TextDisplay _HighScoreText;
         /// <summary> Background music for the scene </summary>
         private readonly AudioPlayer _Music;
 
         /// <summary> Whether the complete can end </summary>
-        public Boolean IsComplete { get; private set; }
+        public Boolean IsComplete { get; set; }
 
         public GameCompleteScene()
         {

@@ -1,10 +1,11 @@
 ﻿using AmosShared.Audio;
-using AmosShared.Base;
+
 using AmosShared.Graphics.Drawables;
 using AmosShared.Interfaces;
 using OpenTK;
 using System;
 using System.Linq;
+using AmosShared.Base;
 using AmosShared.State;
 using Type.Controllers;
 using Type.Data;
@@ -16,7 +17,6 @@ using Type.Interfaces.Powerups;
 using Type.Scenes;
 using Type.Services;
 using Type.UI;
-using State = AmosShared.State.State;
 
 namespace Type.States
 {
@@ -26,7 +26,7 @@ namespace Type.States
     public class PlayingState : State, IPlayerListener, IEnemyListener, IEnemyFactoryListener, IPowerupListener, IPowerupFactoryListener, IUpdatable, IInputListener
     {
         /// <summary> Max level of the game </summary>
-        private readonly Int32 _MaxLevel = 20;
+        private readonly Int32 _MaxLevel = 1;
         /// <summary> Maximum amount of nukes the player can hold </summary>
         private readonly Int32 _MaxNukes = 3;
         /// <summary> THe type of player craft </summary>

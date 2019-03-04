@@ -76,6 +76,11 @@ namespace Type.Scenes
 
         private void BackButtonOnPress(Button obj)
         {
+            BackPressed();
+        }
+
+        public void BackPressed()
+        {
             foreach (IBackButtonListener listener in _BackButtonListeners)
             {
                 listener.OnBackPressed();
