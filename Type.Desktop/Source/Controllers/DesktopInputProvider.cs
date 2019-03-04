@@ -54,7 +54,7 @@ namespace Type.Desktop.Source.Controllers
         {
             // ---------------- START BUTTON
 
-            if (GamePad.GetState(0).Buttons.Start == ButtonState.Pressed)
+            if (GamePad.GetState(0).Buttons.Start == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Key.C))
             {
                 ButtonData.State state = _StartPressed ? ButtonData.State.HELD : ButtonData.State.PRESSED;
 
@@ -64,7 +64,7 @@ namespace Type.Desktop.Source.Controllers
                 }
                 _StartPressed = true;
             }
-            else if (GamePad.GetState(0).Buttons.Start == ButtonState.Released)
+            else if (GamePad.GetState(0).Buttons.Start == ButtonState.Released || Keyboard.GetState().IsKeyUp(Key.C))
             {
                 foreach (IInputListener listener in _Listeners)
                 {
@@ -92,16 +92,39 @@ namespace Type.Desktop.Source.Controllers
                 _Velocity = Vector2.Zero;
             }
 
+            // ---------------- KEYBOARD DIRECTIONS
+
+            if (Keyboard.GetState().IsKeyDown(Key.Up))
+            {
+                _Velocity += new Vector2(0, 1);
+                _VelocityMagnitude = 1;
+            }
+            if (Keyboard.GetState().IsKeyDown(Key.Left))
+            {
+                _Velocity += new Vector2(-1, 0);
+                _VelocityMagnitude = 1;
+            }
+            if (Keyboard.GetState().IsKeyDown(Key.Down))
+            {
+                _Velocity += new Vector2(0, -1);
+                _VelocityMagnitude = 1;
+            }
+            if (Keyboard.GetState().IsKeyDown(Key.Right))
+            {
+                _Velocity += new Vector2(1, 0);
+                _VelocityMagnitude = 1;
+            }
+
             // ---------------- A BUTTON
 
-            if (GamePad.GetState(0).Buttons.A == ButtonState.Pressed)
+            if (GamePad.GetState(0).Buttons.A == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Key.Space))
             {
                 foreach (IInputListener listener in _Listeners)
                 {
                     listener.UpdateInputData(new ButtonEventData(ButtonData.Type.FIRE, ButtonData.State.PRESSED));
                 }
             }
-            else if (GamePad.GetState(0).Buttons.A == ButtonState.Released)
+            else if (GamePad.GetState(0).Buttons.A == ButtonState.Released || Keyboard.GetState().IsKeyUp(Key.Space))
             {
                 foreach (IInputListener listener in _Listeners)
                 {
@@ -111,7 +134,7 @@ namespace Type.Desktop.Source.Controllers
 
             // ---------------- B BUTTON
 
-            if (GamePad.GetState(0).Buttons.B == ButtonState.Pressed)
+            if (GamePad.GetState(0).Buttons.B == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Key.F))
             {
                 ButtonData.State state = _NukePressed ? ButtonData.State.HELD : ButtonData.State.PRESSED;
 
@@ -121,7 +144,7 @@ namespace Type.Desktop.Source.Controllers
                 }
                 _NukePressed = true;
             }
-            else if (GamePad.GetState(0).Buttons.B == ButtonState.Released)
+            else if (GamePad.GetState(0).Buttons.B == ButtonState.Released || Keyboard.GetState().IsKeyUp(Key.F))
             {
                 foreach (IInputListener listener in _Listeners)
                 {
@@ -132,7 +155,7 @@ namespace Type.Desktop.Source.Controllers
 
             // ---------------- Y BUTTON
 
-            if (GamePad.GetState(0).Buttons.Y == ButtonState.Pressed)
+            if (GamePad.GetState(0).Buttons.Y == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Key.V))
             {
                 ButtonData.State state = _YPressed ? ButtonData.State.HELD : ButtonData.State.PRESSED;
 
@@ -142,7 +165,7 @@ namespace Type.Desktop.Source.Controllers
                 }
                 _YPressed = true;
             }
-            else if (GamePad.GetState(0).Buttons.Y == ButtonState.Released)
+            else if (GamePad.GetState(0).Buttons.Y == ButtonState.Released || Keyboard.GetState().IsKeyUp(Key.V))
             {
                 foreach (IInputListener listener in _Listeners)
                 {
@@ -153,7 +176,7 @@ namespace Type.Desktop.Source.Controllers
 
             // ---------------- BACK BUTTON
 
-            if (GamePad.GetState(0).Buttons.Back == ButtonState.Pressed)
+            if (GamePad.GetState(0).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Key.BackSpace))
             {
                 ButtonData.State state = _BackPressed ? ButtonData.State.HELD : ButtonData.State.PRESSED;
 
@@ -163,7 +186,7 @@ namespace Type.Desktop.Source.Controllers
                 }
                 _BackPressed = true;
             }
-            else if (GamePad.GetState(0).Buttons.X == ButtonState.Released)
+            else if (GamePad.GetState(0).Buttons.X == ButtonState.Released || Keyboard.GetState().IsKeyUp(Key.BackSpace))
             {
                 foreach (IInputListener listener in _Listeners)
                 {

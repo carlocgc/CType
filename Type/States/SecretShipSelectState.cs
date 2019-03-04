@@ -39,7 +39,6 @@ namespace Type.States
         /// <inheritdoc />
         public void OnButtonPressed(Int32 id)
         {
-
         }
 
         /// <inheritdoc />

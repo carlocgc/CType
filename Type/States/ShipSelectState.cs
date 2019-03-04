@@ -151,6 +151,7 @@ namespace Type.States
                     {
                         if (data.State != ButtonData.State.PRESSED) return;
                         _FirstButtonHeld = true;
+                        _Selection = 0;
                         OnSelection();
                         break;
                     }
@@ -158,6 +159,7 @@ namespace Type.States
                     {
                         if (data.State != ButtonData.State.PRESSED) return;
                         _SecondButtonHeld = true;
+                        _Selection = 1;
                         OnSelection();
                         break;
                     }
@@ -165,6 +167,7 @@ namespace Type.States
                     {
                         if (data.State != ButtonData.State.PRESSED) return;
                         _ThirdButtonHeld = true;
+                        _Selection = 2;
                         OnSelection();
                         break;
                     }

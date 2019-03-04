@@ -1,5 +1,4 @@
 ﻿using AmosShared.Audio;
-
 using AmosShared.Graphics.Drawables;
 using AmosShared.Interfaces;
 using OpenTK;
@@ -26,7 +25,7 @@ namespace Type.States
     public class PlayingState : State, IPlayerListener, IEnemyListener, IEnemyFactoryListener, IPowerupListener, IPowerupFactoryListener, IUpdatable, IInputListener
     {
         /// <summary> Max level of the game </summary>
-        private readonly Int32 _MaxLevel = 1;
+        private readonly Int32 _MaxLevel = 20;
         /// <summary> Maximum amount of nukes the player can hold </summary>
         private readonly Int32 _MaxNukes = 3;
         /// <summary> THe type of player craft </summary>
