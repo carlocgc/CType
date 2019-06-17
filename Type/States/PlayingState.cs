@@ -55,6 +55,8 @@ namespace Type.States
         private Boolean _GameOver;
         /// <summary> Whether the game is complete </summary>
         private Boolean _GameComplete;
+        /// <summary> Whether the nuke button was pressed last update, used to prevent multiple triggers of nukes </summary>
+        private Boolean _NukePressed;
         /// <summary> The current level </summary>
         private Int32 _CurrentLevel;
         /// <summary> Total enemies in this level </summary>
@@ -364,7 +366,11 @@ namespace Type.States
             {
                 case ButtonData.Type.NUKE:
                     {
+                        if (data.State == ButtonData.State.RELEASED) _NukePressed = false;
+
                         if (data.State != ButtonData.State.PRESSED || _CurrentNukes <= 0) return;
+
+                        if (_NukePressed) return;
 
                         _CurrentNukes--;
                         _UIScene.NukeDisplay.NukeCount = _CurrentNukes;
@@ -378,6 +384,8 @@ namespace Type.States
                         _GameScene.ShowNukeEffect();
                         new AudioPlayer("Content/Audio/nuke.wav", false, AudioManager.Category.EFFECT, 1);
                         InputService.Instance.Vibrate(0, true, TimeSpan.FromMilliseconds(500));
+
+                        _NukePressed = true;
 
                         break;
                     }
