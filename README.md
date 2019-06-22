@@ -8,7 +8,7 @@ You control a space ship that is flying through space shooting enemies, collecti
 ## Store
 [Google PlayStore](https://play.google.com/store/apps/details?id=com.ctype)
 
-## Demo
+## Video
 [Gameplay Trailer HD](https://www.youtube.com/watch?v=kixFrAAmXPs)
 
 ## Testing
