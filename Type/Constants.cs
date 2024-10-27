@@ -22,6 +22,8 @@ namespace Type
             /// <summary> Draws white pixels over the game objects </summary>
             public const Boolean SHOW_SPRITE_AREAS = false;
 
+            public const String VERSION = "1.2.1";
+
 #if DEBUG
             public const Boolean INVINCIBLE = true;
             public const int START_LEVEL = 11;

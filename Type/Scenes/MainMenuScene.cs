@@ -26,6 +26,8 @@ namespace Type.Scenes
         private readonly TextDisplay _TitleText;
         /// <summary> Text that promts game start </summary>
         private readonly TextDisplay _StartText;
+        
+        private readonly TextDisplay _VersionText;
 
         /// <summary> Whether the  player has pressed space and started the game </summary>
         public Boolean IsComplete { get; private set; }
@@ -80,6 +82,17 @@ namespace Type.Scenes
             };
             _StartText.Offset = new Vector2(_StartText.Size.X * _StartText.Scale.X, _StartText.Size.Y * _StartText.Scale.Y) / 2;
             AddDrawable(_StartText);
+
+
+            _VersionText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI_OVERLAY, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
+            {
+                Text = Constants.Global.VERSION,
+                Position = new Vector2(Constants.Global.ScreenRight - 100, Constants.Global.ScreenBottom + 50),
+                Visible = true,
+                Scale = new Vector2(1.5f, 1.5f),
+            };
+            _VersionText.Offset = new Vector2(_VersionText.Size.X * _VersionText.Scale.X, _VersionText.Size.Y * _VersionText.Scale.Y) / 2;
+            AddDrawable(_VersionText);
         }
 
         public void Show()
@@ -143,6 +156,7 @@ namespace Type.Scenes
             }            
             _Background.Dispose();
             _StartButton.Dispose();
+            _VersionText.Dispose();
         }
 
         public void UpdateInputData(ButtonEventData data)
