@@ -10,19 +10,13 @@ Released on Android 2019 and delisted in 2023.
 
 ## Features
 
-* GooglePlay account integration
-* Achievements
-* Multiple player ships + 1 secret ship
-* Boss battles
+* 3 Controllable ships + 1 secret ship
+* 4 Boss battles
+* 20 Levels
 * Powerups
-* In-app advertisments
-
-## Store
-
-
-
-## Testing
-[Become a tester](https://play.google.com/apps/testing/com.ctype)  
+* (Android) GooglePlay account integration 
+* (Android) Achievements 
+* (Android) In-app advertisments 
 
 ## Credit
 
