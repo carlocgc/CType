@@ -17,7 +17,7 @@ namespace Type
         /// </summary>
         public static class Global
         {                      
-            public const String VERSION = "1.2.1";
+            public const String VERSION = "1.2.2";
 #if DEBUG
             /// <summary> Show FPS on screen </summary>
             public const Boolean SHOW_FPS = true;
