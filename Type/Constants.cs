@@ -22,7 +22,7 @@ namespace Type
             /// <summary> Show FPS on screen </summary>
             public const Boolean SHOW_FPS = true;
             /// <summary> Draws white pixels over the game objects </summary>
-            public const Boolean SHOW_SPRITE_AREAS = true;
+            public const Boolean SHOW_SPRITE_AREAS = false;
             /// <summary> Player will not take damage when set to true </summary>
             public const Boolean INVINCIBLE = true;
             /// <summary> The level the game will start on </summary>
