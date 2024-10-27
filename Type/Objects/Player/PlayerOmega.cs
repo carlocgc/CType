@@ -219,7 +219,7 @@ namespace Type.Objects.Player
                 return;
             }
 
-            if (_Invincible) return;
+            if (_Invincible || Constants.Global.INVINCIBLE) return;
 
             HitPoints -= damage;
 

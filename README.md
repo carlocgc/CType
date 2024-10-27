@@ -1,6 +1,6 @@
 # C-Type
 
-An side scrolling space shooter game targeting Android, iOS and Windows.  
+A side scrolling space shooter game targeting Android, iOS and Windows.  
 Released on Android 2019 and delisted in 2023.  
 
 ## Demo - Youtube  
@@ -19,10 +19,9 @@ Released on Android 2019 and delisted in 2023.
 
 ## Store
 
-[Google PlayStore](https://play.google.com/store/apps/details?id=com.ctype)  
+
 
 ## Testing
-
 [Become a tester](https://play.google.com/apps/testing/com.ctype)  
 
 ## Credit

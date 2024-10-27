@@ -16,11 +16,27 @@ namespace Type
         /// Global values
         /// </summary>
         public static class Global
-        {
+        {                      
+            public const String VERSION = "1.2.2";
+#if DEBUG
             /// <summary> Show FPS on screen </summary>
-            public const Boolean SHOW_FPS = false;
+            public const Boolean SHOW_FPS = true;
             /// <summary> Draws white pixels over the game objects </summary>
             public const Boolean SHOW_SPRITE_AREAS = false;
+            /// <summary> Player will not take damage when set to true </summary>
+            public const Boolean INVINCIBLE = true;
+            /// <summary> The level the game will start on </summary>
+            public const int START_LEVEL = 11;
+#else // #if DEBUG
+            /// <summary> Show FPS on screen </summary>
+            public const Boolean SHOW_FPS = false;            
+            /// <summary> Draws white pixels over the game objects </summary>
+            public const Boolean SHOW_SPRITE_AREAS = false;
+            /// <summary> Player will not take damage when set to true </summary>
+            public const Boolean INVINCIBLE = false;
+            /// <summary> The level the game will start on </summary>
+            public const int START_LEVEL = 1;
+#endif // #if DEBUG
 
             /// <summary> The top of the screen </summary>
             public static readonly Single ScreenTop = Renderer.Instance.TargetDimensions.Y / 2;

@@ -223,7 +223,7 @@ namespace Type.Objects.Player
                 return;
             }
 
-            if (_Invincible) return;
+            if (_Invincible || Constants.Global.INVINCIBLE) return;
 
             HitPoints -= damage;
             new AudioPlayer("Content/Audio/hurt3.wav", false, AudioManager.Category.EFFECT, 1);
