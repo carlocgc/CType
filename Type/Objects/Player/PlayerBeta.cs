@@ -133,7 +133,7 @@ namespace Type.Objects.Player
             FlashSprite();
             _InvincibleCallback?.Dispose();
             _InvincibleCallback = new TimedCallback(_InvincibilityDuration, () =>
-            {
+            {                
                 _Invincible = false;
                 _InvincibleColourCallback?.Dispose();
                 _Sprite.Colour = new Vector4(1, 1, 1, 1);
@@ -224,7 +224,7 @@ namespace Type.Objects.Player
                 return;
             }
 
-            if (_Invincible) return;
+            if (_Invincible || Constants.Global.INVINCIBLE ) return;
 
             HitPoints -= damage;
             new AudioPlayer("Content/Audio/hurt3.wav", false, AudioManager.Category.EFFECT, 1);

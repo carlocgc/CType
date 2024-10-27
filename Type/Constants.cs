@@ -22,6 +22,14 @@ namespace Type
             /// <summary> Draws white pixels over the game objects </summary>
             public const Boolean SHOW_SPRITE_AREAS = false;
 
+#if DEBUG
+            public const Boolean INVINCIBLE = true;
+            public const int START_LEVEL = 11;
+#else
+            public const Boolean INVINCIBLE = false;
+            public const int START_LEVEL = 1;
+#endif
+
             /// <summary> The top of the screen </summary>
             public static readonly Single ScreenTop = Renderer.Instance.TargetDimensions.Y / 2;
             /// <summary> The right of the screen </summary>
