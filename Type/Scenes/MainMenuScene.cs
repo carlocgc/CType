@@ -4,13 +4,15 @@ using AmosShared.Graphics.Drawables;
 using AmosShared.Touch;
 using OpenTK;
 using System;
+using Type.Data;
+using Type.Interfaces.Control;
 
 namespace Type.Scenes
 {
     /// <summary>
     /// The main menu scene
     /// </summary>
-    public class MainMenuScene : Scene
+    public class MainMenuScene : Scene, IInputListener
     {
         /// <summary> Button that starts the game </summary>
         private readonly Button _StartButton;
@@ -46,6 +48,7 @@ namespace Type.Scenes
             _TitleText.Offset = new Vector2(_TitleText.Size.X * _TitleText.Scale.X, _TitleText.Size.Y * _TitleText.Scale.Y) / 2;
             AddDrawable(_TitleText);
 
+#if __ANDROID__
             Sprite achievementsButton = new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/trophy.png"))
             {
                 Position = new Vector2(-900, 375),
@@ -59,6 +62,7 @@ namespace Type.Scenes
             };
             _LeaderboardButton = new Button(Constants.ZOrders.UI, leaderboardButton);
             _LeaderboardButton.OnButtonPress += LeaderboardButtonOnPress;
+#endif // #if __ANDROID__
 
             Sprite startButton = new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/completecontinue.png"))
             {
@@ -82,10 +86,18 @@ namespace Type.Scenes
         {
             _StartButton.TouchEnabled = true;
             _StartButton.Visible = true;
-            _AchievementsButton.TouchEnabled = true;
-            _AchievementsButton.Visible = true;
-            _LeaderboardButton.TouchEnabled = true;
-            _LeaderboardButton.Visible = true;
+
+            if (_AchievementsButton != null)
+            { 
+                _AchievementsButton.TouchEnabled = true;
+                _AchievementsButton.Visible = true;
+            }
+
+            if (_LeaderboardButton != null)
+            { 
+                _LeaderboardButton.TouchEnabled = true;
+                _LeaderboardButton.Visible = true;
+            }
         }
 
         private void StartButtonPress(Button button)
@@ -113,6 +125,7 @@ namespace Type.Scenes
 
         public override void Update(TimeSpan timeSinceUpdate)
         {
+            // Intentionally empty
         }
 
         public override void Dispose()
@@ -120,10 +133,36 @@ namespace Type.Scenes
             base.Dispose();
             _TitleText.Dispose();
             _StartText.Dispose();
-            _AchievementsButton.Dispose();
-            _LeaderboardButton.Dispose();
+            if (_AchievementsButton != null)
+            {
+                _AchievementsButton.Dispose();
+            }
+            if (_LeaderboardButton != null)
+            {
+                _LeaderboardButton.Dispose();
+            }            
             _Background.Dispose();
             _StartButton.Dispose();
+        }
+
+        public void UpdateInputData(ButtonEventData data)
+        {
+            switch (data.ID)
+            {
+                case ButtonData.Type.START:
+                case ButtonData.Type.FIRE:
+                    {
+                        StartGame();
+                        break;
+                    }
+                default:
+                    break;
+            }
+        }
+
+        public void UpdateDirectionData(Vector2 direction, float strength)
+        {
+            // Intentionally empty
         }
     }
 }
