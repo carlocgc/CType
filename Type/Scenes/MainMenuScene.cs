@@ -4,15 +4,13 @@ using AmosShared.Graphics.Drawables;
 using AmosShared.Touch;
 using OpenTK;
 using System;
-using Type.Data;
-using Type.Interfaces.Control;
 
 namespace Type.Scenes
 {
     /// <summary>
     /// The main menu scene
     /// </summary>
-    public class MainMenuScene : Scene, IInputListener
+    public class MainMenuScene : Scene
     {
         /// <summary> Button that starts the game </summary>
         private readonly Button _StartButton;
@@ -157,26 +155,6 @@ namespace Type.Scenes
             _Background.Dispose();
             _StartButton.Dispose();
             _VersionText.Dispose();
-        }
-
-        public void UpdateInputData(ButtonEventData data)
-        {
-            switch (data.ID)
-            {
-                case ButtonData.Type.START:
-                case ButtonData.Type.FIRE:
-                    {
-                        StartGame();
-                        break;
-                    }
-                default:
-                    break;
-            }
-        }
-
-        public void UpdateDirectionData(Vector2 direction, float strength)
-        {
-            // Intentionally empty
         }
     }
 }
