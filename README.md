@@ -1,7 +1,7 @@
 # C-Type
 
-Side scrolling shooter using Amos engine, originally conceived as an R-Type clone hence the name.  
-You control a space ship that is flying through space shooting enemies, collecting powerups and fighting bosses.  
+An side scrolling space shooter game targeting Android.  
+Released in 2019 and delisted in 2023.  
 
 ## Demo - Youtube  
 
