@@ -30,14 +30,14 @@ namespace Type
                 new Shader());
             UiCanvas = new Canvas(new Camera(Vector2.Zero, new Vector2(1920, 1080)), 1,
                 new Shader());
-
+#if __ANDROID__
             AdService.Instance.Initialise("ca-app-pub-4204969324853965~4341189590");
-
+#endif
             SpritesheetLoader.LoadSheet("Content/Graphics/KenPixel/", "KenPixel.png", "KenPixel.json");
             SpritesheetLoader.LoadSheet("Content/Graphics/Background/Planets/", "planets.png", "planets.json");
-
+#if __ANDROID__
             CompetitiveManager.Instance.LoadData(Constants.GameAchievements.GetAll(), Constants.Leaderboards.GetAll());
-
+#endif
             StateManager.Instance.StartState(new EngineSplashState());
         }
 
