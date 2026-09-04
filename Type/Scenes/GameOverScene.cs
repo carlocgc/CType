@@ -22,6 +22,9 @@ namespace Type.Scenes
         private readonly Sprite _Background;
         /// <summary> Confirm button that ends the game over state </summary>
         private readonly Button _ConfirmButton;
+
+        /// <summary> The confirm button, exposed so a menu navigator can focus it </summary>
+        public Button ConfirmButton => _ConfirmButton;
         /// <summary> Displays the current game data via text displays </summary>
         private readonly StatsDisplay _StatsDisplay;
         /// <summary> Text on the confirm button </summary>

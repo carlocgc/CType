@@ -11,7 +11,7 @@ using Type.Interfaces.Control;
 
 namespace Type.Buttons
 {
-    public class ShipSelectButton : IPositionable, IUpdatable, INotifier<IShipSelectListener>
+    public class ShipSelectButton : IPositionable, IUpdatable, INotifier<IShipSelectListener>, IFocusable
     {
         private readonly Button _Button;
 
@@ -137,6 +137,46 @@ namespace Type.Buttons
 
         }
 
+
+        #region Implementation of IFocusable
+
+        /// <inheritdoc />
+        public Boolean CanFocus => Active;
+
+        /// <inheritdoc />
+        /// <remarks>
+        /// The whole card dims rather than only the button, so the focused craft reads as the
+        /// selected one at a glance from a desktop viewing distance.
+        /// </remarks>
+        public void SetFocused(Boolean focused)
+        {
+            Vector4 tint = focused ? new Vector4(1, 1, 1, 1) : new Vector4(0.5f, 0.5f, 0.5f, 1);
+
+            _Button.Sprite.Colour = tint;
+            _Ship.Colour = tint;
+            _ShipName.Colour = tint;
+            _HitpointsLabel.Colour = tint;
+            _HitpointsValue.Colour = tint;
+            _FirerateLabel.Colour = tint;
+            _FirerateValue.Colour = tint;
+            _EngineSpeedLabel.Colour = tint;
+            _EngineSpeedValue.Colour = tint;
+        }
+
+        /// <inheritdoc />
+        /// <remarks>
+        /// Reports a release rather than a press because that is what selects a craft; the
+        /// press only records which cards are held, for the secret menu gesture.
+        /// </remarks>
+        public void Activate()
+        {
+            for (Int32 index = _Listeners.Count - 1; index >= 0; index--)
+            {
+                _Listeners[index].OnButtonReleased(_ID);
+            }
+        }
+
+        #endregion
 
         private void OnButtonPress(Button button)
         {

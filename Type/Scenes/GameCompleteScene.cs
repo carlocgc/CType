@@ -14,6 +14,9 @@ namespace Type.Scenes
     {
         /// <summary> Button used to return to main menu </summary>
         private readonly Button _ConfirmButton;
+
+        /// <summary> The confirm button, exposed so a menu navigator can focus it </summary>
+        public Button ConfirmButton => _ConfirmButton;
         /// <summary> Sprite for the background </summary>
         private readonly Sprite _Background;
         /// <summary> Text displaying the word congratulations </summary>

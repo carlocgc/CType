@@ -42,6 +42,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IInputProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IPositionRecipient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IShipSelectListener.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IFocusable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IInputListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IVirtualButton.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Enemies\IEnemy.cs" />
@@ -112,6 +113,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)States\SecretShipSelectState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)States\ShipSelectState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Buttons\VirtualAnalogStick.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\Navigation\FocusableButton.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\Navigation\FocusRing.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\Navigation\MenuNavigator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\FpsCounter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\LevelDisplay.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\LifeMeter.cs" />

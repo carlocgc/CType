@@ -34,12 +34,9 @@ namespace Type.Input
         /// Creates the default bindings.
         /// </summary>
         /// <remarks>
-        /// Two deliberate omissions, both because <see cref="ButtonData.Type"/> still mixes
-        /// input identity with game meaning:
-        /// the B button is not bound to BACK or CANCEL, because ship select currently uses
-        /// NUKE to choose a craft and B would both select and cancel; and GAMMA_SELECT remains
-        /// a button type rather than a menu action. Both are resolved by the menu navigation
-        /// work, at which point CANCEL should also pick up B. See ROADMAP items I1 and I5.
+        /// B is bound to both NUKE and CANCEL. That is safe because no menu binds NUKE any
+        /// more: ship select uses a focus cursor rather than one face button per craft, so the
+        /// two actions can never both be listened for on the same screen.
         /// </remarks>
         public static InputBindings CreateDefaults()
         {
@@ -66,7 +63,7 @@ namespace Type.Input
                     new[] { "Enter", "Space" }),
 
                 new ActionBinding(ButtonData.Type.CANCEL,
-                    new[] { GamepadButton.BACK },
+                    new[] { GamepadButton.B, GamepadButton.BACK },
                     new[] { "Escape", "BackSpace" }),
 
                 new ActionBinding(ButtonData.Type.MENU_UP,
@@ -85,8 +82,12 @@ namespace Type.Input
                     new[] { GamepadButton.DPAD_RIGHT },
                     new[] { "Right", "D" }),
 
-                new ActionBinding(ButtonData.Type.GAMMA_SELECT,
-                    new[] { GamepadButton.Y },
+                // The secret craft was reached on touch by holding all three ship cards at
+                // once, a gesture with no cursor equivalent. Left stick click and V stand in
+                // for it: both are deliberate enough not to be hit by accident, which is the
+                // property the original gesture had.
+                new ActionBinding(ButtonData.Type.SECRET,
+                    new[] { GamepadButton.LEFT_STICK },
                     new[] { "V" }),
             });
         }

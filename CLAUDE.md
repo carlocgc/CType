@@ -130,6 +130,17 @@ not a normal csproj. Two consequences:
 - **A new `.cs` file must be added to `Type/Type.projitems`** as
   `<Compile Include="$(MSBuildThisFileDirectory)Path\To\File.cs" />` or it will not compile.
   Visual Studio does this automatically; editing files directly does not.
+- **After editing `Type.projitems` outside the IDE, close and reopen the solution filter.**
+  A shared project's item list is read at project-evaluation time, and Visual Studio does not
+  reliably re-evaluate it when the file changes on disk behind its back. Until it is reloaded
+  VS compiles the old list, and the new files appear to not exist:
+  `CS0234 The type or namespace name 'X' does not exist in the namespace 'Type.Y'`, or
+  `CS0246 ... could not be found`, on code that builds cleanly from the command line.
+  A build that fails in under a second is the tell. Shared projects usually cannot be
+  reloaded individually from Solution Explorer, so reopen the filter.
+  Cross-check with
+  `MSBuild.exe Type.Desktop.slnf /t:Rebuild /p:Configuration=Debug` before assuming the
+  code is at fault — if that is clean, it is the IDE's cache.
 - **A new asset must be added to BOTH `Type.Desktop.csproj` and `Type.Android.csproj`**
   as a `<Content Include="..\Assets\...">` with a `<Link>Content\...</Link>` and
   `<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>`. All 122 assets are

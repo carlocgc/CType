@@ -20,6 +20,9 @@ namespace Type.Scenes
 
         private readonly Button _BackButton;
 
+        /// <summary> The back button, exposed so a menu navigator can focus it </summary>
+        public Button BackButton => _BackButton;
+
         private Boolean _Active;
 
         public ShipSelectButton OmegaButton { get; }
@@ -63,6 +66,15 @@ namespace Type.Scenes
             _BackButton.Visible = true;
 
             OmegaButton = new ShipSelectButton(3, new Vector2(658, 50), "Content/Graphics/Player/player_omega.png", "OMEGA", 1, 200, 120);
+        }
+
+        /// <summary>
+        /// Notifies listeners that the player wants to leave the screen. Lets a menu navigator
+        /// trigger the same path the on screen back button does.
+        /// </summary>
+        public void BackPressed()
+        {
+            BackButtonOnPress(null);
         }
 
         private void BackButtonOnPress(Button obj)
