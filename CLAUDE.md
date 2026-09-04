@@ -84,55 +84,38 @@ platform will fail to compile. (This exact mistake currently exists — see ROAD
 
 ## Building
 
-MSBuild (not `dotnet build` — these are legacy .NET Framework 4.8 projects). **Restore
-first on a fresh checkout**, then build:
-
-```bash
-"C:/Program Files/Microsoft Visual Studio/18/Community/MSBuild/Current/Bin/MSBuild.exe" Type.Desktop/Type.Desktop.csproj /t:Restore /v:minimal
-```
-
-```bash
-"C:/Program Files/Microsoft Visual Studio/18/Community/MSBuild/Current/Bin/MSBuild.exe" Type.Desktop/Type.Desktop.csproj /p:Configuration=Debug /v:minimal
-```
-
-Run: `Type.Desktop/bin/Debug/Type.Desktop.exe`
-
-`Type.Desktop` itself has **no NuGet packages**. The only package dependencies are
-`AmosDesktop`'s (`Newtonsoft.Json`, `Plugin.InAppBilling`), declared as `PackageReference`
-so `/t:Restore` handles them with no `nuget.exe` installed; they flow transitively into the
-game's output. `OpenTK` and `FarseerPhysics` are plain `HintPath` references into the
-engine's committed `Libraries/Desktop`, so they need no restore. If you skip restore the
-build fails with `CS0246` on `Newtonsoft`/`Plugin` — that means restore, not a code problem.
-
-**The v4.8 retarget is uncommitted and load-bearing.** The committed projects target
-.NET Framework **v4.6.1**; the working build depends on local uncommitted retargets to v4.8
-in `Type.Desktop/Type.Desktop.csproj`, `Type.Desktop/App.config`, and — critically —
-`SupportingFiles/AmosDesktop/AmosDesktop.csproj`, which is inside the submodule and cannot
-be committed here. A clean checkout fails with `MSB3644` unless the 4.6.1 targeting pack is
-installed. Do not discard these local changes. See ROADMAP item D6.
-
 **Open `Type.Desktop.slnf`, not `Type.sln`.** It is a solution filter over the same
 `Type.sln` that loads only the four desktop projects — `Type.Desktop`, `AmosDesktop`, and
-the `Type.Shared` and `AmosShared` shared projects that hold most of the code. `Type.sln`
-itself still fails to build, because it pulls in `Type.Android`, `AmosAndroid` and `AmosiOS`,
-which need the Xamarin workload and an Android SDK platform that are not installed.
+the `Type.Shared` and `AmosShared` shared projects that hold most of the code.
+`Type.sln` itself does **not** build: it pulls in `Type.Android`, `AmosAndroid` and
+`AmosiOS`, which need the Xamarin workload and an Android SDK platform that a desktop
+machine will not have. If you hit `MSB4226` (no Xamarin targets) or `XA5207` (Android SDK
+platform missing), you are building the solution instead of the filter.
+
 A filter rather than a second `.sln` deliberately: it references the real solution, so it
 cannot drift out of sync when a project is added. It also replaces the machine-local project
 unload state that used to live in the gitignored `.vs/Type/v17/.suo`.
 
-MSBuild builds it directly:
+MSBuild, not `dotnet build` — these are legacy .NET Framework 4.8 projects.
+**Restore first on a fresh checkout**, then build:
 
 ```bash
 "C:/Program Files/Microsoft Visual Studio/18/Community/MSBuild/Current/Bin/MSBuild.exe" Type.Desktop.slnf /t:Restore /v:minimal
 ```
 
-**Why a command-line build may fail where Visual Studio succeeds.** `Type.Desktop.csproj`
-has a spurious `ProjectReference` to `Type.Android.csproj`. In the IDE the Android projects
-(`Type.Android`, `AmosAndroid`, `AmosiOS`) are **unloaded**, so VS never walks that reference
-and the build succeeds. That unload state lives in `.vs/Type/v17/.suo`, which is gitignored —
-it does not survive a fresh clone, and MSBuild on the command line does not honour it. If you
-hit `MSB4226` (no Xamarin targets) or `XA5207` (Android SDK platform missing), this is why.
-See ROADMAP item D0; the reference is safe to delete and doing so does not affect Android.
+```bash
+"C:/Program Files/Microsoft Visual Studio/18/Community/MSBuild/Current/Bin/MSBuild.exe" Type.Desktop.slnf /p:Configuration=Debug /v:minimal
+```
+
+Run: `Type.Desktop/bin/Debug/Type.Desktop.exe`
+
+`Type.Desktop` itself has **no NuGet packages**. The only package dependency in the whole
+desktop build is `AmosDesktop`'s `Newtonsoft.Json`, declared as a `PackageReference` so
+`/t:Restore` handles it with no `nuget.exe` installed; it flows transitively into the game's
+output and is the only third-party assembly shipped. `OpenTK` and `FarseerPhysics` are plain
+`HintPath` references into the engine's committed `Libraries/Desktop`, so they need no
+restore. If you skip restore the build fails with `CS0246` on `Newtonsoft` — that means
+restore, not a code problem.
 
 Android is currently **dormant** — not being built, but intended to stay revivable. Do not
 delete `Type.Android/`, `Type/Buttons/`, or the touch input paths, and keep new shared logic
@@ -186,9 +169,12 @@ Match the surrounding code exactly. The conventions in use:
 
 ## Gotchas
 
-- `Constants.Global` has `#if DEBUG` overrides for `INVINCIBLE` and `START_LEVEL`.
-  These are committed as `INVINCIBLE = true` and `START_LEVEL = 11`. Check them before
-  testing anything gameplay-related, and never let a non-default value reach `Release`.
+- **Cheats are opt-in.** `Constants.Global.INVINCIBLE` and `START_LEVEL` default to `false`
+  and `1` in every configuration. To enable them while testing, add `CTYPE_CHEATS` to
+  `DefineConstants` for the Debug configuration, or build with
+  `/p:DefineConstants="TRACE;DEBUG;__DESKTOP__;CTYPE_CHEATS"`. Never commit that symbol to a
+  checked-in configuration — an `#error` guard fails the build if it reaches Release, but
+  nothing stops it reaching a Debug build you then forget about.
 - The engine's world origin is screen centre; `Constants.Global.ScreenTop/Bottom/Left/Right`
   are derived from a fixed 1920x1080 target. Backgrounds are positioned at `(-960, -540)`.
 - `new AudioPlayer(...)` is constructed per sound effect, per shot. Enemy classes carry a
