@@ -14,6 +14,9 @@ namespace Type.Scenes
     {
         /// <summary> Button that starts the game </summary>
         private readonly Button _StartButton;
+
+        /// <summary> The start button, exposed so a menu navigator can focus it </summary>
+        public Button StartButton => _StartButton;
         /// <summary> Button that will show the obtained achievements </summary>
         private readonly Button _AchievementsButton;
         /// <summary> Button that will show the leaderboards </summary>

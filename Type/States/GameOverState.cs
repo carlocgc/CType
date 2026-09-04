@@ -5,6 +5,7 @@ using Type.Data;
 using Type.Interfaces.Control;
 using Type.Scenes;
 using Type.Services;
+using Type.UI.Navigation;
 
 namespace Type.States
 {
@@ -12,10 +13,18 @@ namespace Type.States
     {
         private GameOverScene _Scene;
 
+        /// <summary> Focuses the confirm button so the screen works without a pointer </summary>
+        private MenuNavigator _Navigator;
+
         protected override void OnEnter()
         {
             _Scene = new GameOverScene { Visible = true };
             _Scene.Start();
+
+            _Navigator = new MenuNavigator();
+            _Navigator.Add(new FocusableButton(_Scene.ConfirmButton, () => _Scene.IsComplete = true));
+            _Navigator.FocusFirst();
+
             InputService.Instance.RegisterListener(this);
         }
 
@@ -35,6 +44,8 @@ namespace Type.States
         {
             base.Dispose();
             InputService.Instance.DeregisterListener(this);
+            _Navigator?.Dispose();
+            _Navigator = null;
             _Scene.Dispose();
             _Scene = null;
         }

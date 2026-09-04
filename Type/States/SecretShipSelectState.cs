@@ -4,12 +4,16 @@ using System;
 using Type.Controllers;
 using Type.Interfaces.Control;
 using Type.Scenes;
+using Type.UI.Navigation;
 
 namespace Type.States
 {
     public class SecretShipSelectState : State, IShipSelectListener, IBackButtonListener
     {
         private SecretShipSelectScene _Scene;
+
+        /// <summary> Focuses the hidden craft so the screen works without a pointer </summary>
+        private MenuNavigator _Navigator;
 
         private AudioPlayer _Music;
 
@@ -34,6 +38,10 @@ namespace Type.States
             _Scene.Active = true;
             _Scene.RegisterListener(this);
             AchievementController.Instance.PrototypeFound();
+
+            _Navigator = new MenuNavigator { OnCancel = () => _Scene.BackPressed() };
+            _Navigator.Add(_Scene.OmegaButton);
+            _Navigator.FocusFirst();
         }
 
         /// <inheritdoc />
@@ -89,6 +97,8 @@ namespace Type.States
         public override void Dispose()
         {
             base.Dispose();
+            _Navigator?.Dispose();
+            _Navigator = null;
             _Music = null;
             _Scene.Dispose();
             _Scene = null;

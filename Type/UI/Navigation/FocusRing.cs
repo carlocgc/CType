@@ -31,10 +31,16 @@ namespace Type.UI.Navigation
         /// Adds an item to the end of the navigation order, ignoring duplicates
         /// </summary>
         /// <param name="item"> The item focus can move to </param>
+        /// <remarks>
+        /// The item is put into the unfocused state as it joins. Without this an item that has
+        /// never been moved to keeps whatever appearance it was constructed with, so a freshly
+        /// built menu shows every item looking focused until the cursor has visited each one.
+        /// </remarks>
         public void Add(IFocusable item)
         {
             if (item == null || _Items.Contains(item)) return;
             _Items.Add(item);
+            item.SetFocused(false);
         }
 
         /// <summary>

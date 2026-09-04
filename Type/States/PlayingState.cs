@@ -419,6 +419,7 @@ namespace Type.States
         public override void Dispose()
         {
             if (IsDisposed) return;
+            IsDisposed = true;
             base.Dispose();
 
             InputService.Instance.DeregisterListener(this);

@@ -152,7 +152,7 @@ namespace Type.States
         {
             base.Dispose();
             InputService.Instance.DeregisterListener(this);
-            _Navigator.Dispose();
+            _Navigator?.Dispose();
             _Navigator = null;
             _Music = null;
             _Scene.Dispose();

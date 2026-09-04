@@ -6,12 +6,16 @@ using Type.Data;
 using Type.Interfaces.Control;
 using Type.Scenes;
 using Type.Services;
+using Type.UI.Navigation;
 
 namespace Type.States
 {
     public class MainMenuState : State, IInputListener
     {
         private MainMenuScene _Scene;
+
+        /// <summary> Focuses the start button so the menu works without a pointer </summary>
+        private MenuNavigator _Navigator;
 
         /// <summary> Background music </summary>
         private AudioPlayer _Music;
@@ -25,6 +29,11 @@ namespace Type.States
         {
             _Scene = new MainMenuScene { Visible = true };
             _Scene.Show();
+
+            _Navigator = new MenuNavigator();
+            _Navigator.Add(new FocusableButton(_Scene.StartButton, () => _Scene.StartGame()));
+            _Navigator.FocusFirst();
+
 
             InputService.Instance.RegisterListener(this);
 
@@ -50,6 +59,8 @@ namespace Type.States
         {
             base.Dispose();
             InputService.Instance.DeregisterListener(this);
+            _Navigator?.Dispose();
+            _Navigator = null;
             _Music = null;
             _Scene.Dispose();
             _Scene = null;
