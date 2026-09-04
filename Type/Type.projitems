@@ -32,6 +32,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)Glide\MemberLerper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Glide\Tween.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Glide\Tweener.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\ActionBinding.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\ActionStateTracker.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\AnalogProcessor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\GamepadButton.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\InputBindings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Collisions\ICollidable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IBackButtonListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IInputProvider.cs" />

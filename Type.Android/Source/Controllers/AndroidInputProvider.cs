@@ -72,6 +72,10 @@ namespace Type.Android.Source.Controllers
         /// <summary> Virtual analog stick </summary>
         public VirtualAnalogStick VirtualAnalogStick { get; set; }
 
+        /// <inheritdoc />
+        /// <remarks> Touch input cannot be disconnected, so this is never invoked. </remarks>
+        public Action OnInputDeviceLost { get; set; }
+
         /// <summary>
         /// Vibrates a controller
         /// </summary>
@@ -130,4 +134,4 @@ namespace Type.Android.Source.Controllers
 
         #endregion
     }
-}
+}

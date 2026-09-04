@@ -26,6 +26,17 @@ namespace Type.Services
             set => _InputProvider.VirtualAnalogStick = value;
         }
 
+        /// <summary>
+        /// Invoked when the input device driving the game becomes unavailable, for example a
+        /// gamepad being unplugged mid game. Platforms with no detachable input device never
+        /// invoke it.
+        /// </summary>
+        public Action OnInputDeviceLost
+        {
+            get => _InputProvider.OnInputDeviceLost;
+            set => _InputProvider.OnInputDeviceLost = value;
+        }
+
         /// <summary> Platform specific input provider </summary>
         private readonly IInputProvider _InputProvider;
 
