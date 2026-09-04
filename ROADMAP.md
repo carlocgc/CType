@@ -111,9 +111,49 @@ Small, mechanical, and everything else depends on it.
   Until this is settled the local uncommitted retarget is **load-bearing** — do not discard
   it, and note that it will not survive a fresh clone.
 
-**Gate:** `Type.Desktop.exe` builds and runs from a **clean checkout** — no `.vs` directory,
-no Android workload, MSBuild from the command line — on a machine with only Visual Studio's
-.NET desktop workload installed. **Not yet met:** D0–D5 are done and verified, D6 is open.
+- **D7. Make a clean checkout produce a working binary, not just a compiling one.**
+  With D0–D6 done, a fresh clone of this repo now **compiles with zero errors and zero
+  warnings and then crashes on startup**:
+  `FileNotFoundException: Could not load file or assembly 'Newtonsoft.Json'`, thrown from
+  `AmosShared.Base.DataLoader.Initialise`.
+
+  Cause: `packages/` is gitignored (`**/packages/*`) and untracked, so it is absent from a
+  fresh clone. These are **packages.config**-style projects, which MSBuild does not restore
+  automatically — `/t:Restore` only handles `PackageReference`, and `nuget.exe` is not
+  installed on the dev machine. The reference simply resolves to nothing, silently.
+  *Verified: supplying `packages/` to an otherwise untouched fresh clone makes the same
+  binary build and run.* This is the worst failure mode available — the build says success
+  and hands you a broken executable.
+
+  A second problem sits underneath it: **the Newtonsoft.Json reference is split across two
+  versions.** `AmosDesktop` (engine) references `11.0.0.0` from
+  `packages\Newtonsoft.Json.11.0.1`; `Type.Desktop` references `12.0.0.0` from
+  `packages\Newtonsoft.Json.12.0.1`. It only works locally because
+  `AutoGenerateBindingRedirects` writes an 11→12 redirect into `Type.Desktop.exe.config`.
+  The inner exception naming `Version=11.0.0.0` confirms the engine's reference is the one
+  that fails first.
+
+  Options, cheapest first:
+  1. **Document `nuget restore Type.sln` as a build prerequisite.** Zero code change, but
+     the silent-failure mode remains for anyone who forgets, and `nuget.exe` still has to be
+     installed.
+  2. **Commit a restore script** (`build.ps1`) that bootstraps `nuget.exe` and restores
+     before building, and make it the documented entry point. No submodule change. Keeps
+     packages.config and the version split.
+  3. **Migrate to `PackageReference`.** Restore becomes automatic, `packages/` disappears,
+     and the version split can be resolved properly. The real fix, and the point at which
+     the Newtonsoft versions should be aligned. Needs a second AmosEngine merge request for
+     `AmosDesktop.csproj`, the same route D6 took.
+
+  Independently of which is chosen, **add an MSBuild target that fails the build when the
+  referenced package assemblies are missing.** Converting a silent runtime crash into an
+  immediate build error is cheap and worth doing on its own.
+
+**Gate:** `Type.Desktop.exe` builds *and runs* from a **clean checkout** — no `.vs`
+directory, no Android workload, MSBuild from the command line — on a machine with only
+Visual Studio's .NET desktop workload installed. **Not yet met:** D0–D6 are done and
+verified; D7 is open, and it is what currently stands between a clean clone and a playable
+build.
 
 ### Phase 1 — Input (your stated first priority)
 
