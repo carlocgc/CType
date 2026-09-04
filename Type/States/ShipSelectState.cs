@@ -6,6 +6,7 @@ using Type.Data;
 using Type.Interfaces.Control;
 using Type.Scenes;
 using Type.Services;
+using Type.UI.Navigation;
 
 namespace Type.States
 {
@@ -27,7 +28,17 @@ namespace Type.States
 
         private Boolean _Returning;
 
-        private Boolean _EnteringSecretMenu => _FirstButtonHeld && _SecondButtonHeld && _ThirdButtonHeld;
+        /// <summary> Moves focus between the craft and confirms a choice </summary>
+        private MenuNavigator _Navigator;
+
+        /// <summary> Whether the hidden craft has been requested this visit </summary>
+        private Boolean _SecretRequested;
+
+        /// <summary>
+        /// Whether to open the secret menu. Touch still reaches it by holding all three cards
+        /// at once; a pointerless input reaches it through the SECRET action.
+        /// </summary>
+        private Boolean _EnteringSecretMenu => _SecretRequested || (_FirstButtonHeld && _SecondButtonHeld && _ThirdButtonHeld);
 
         public ShipSelectState(AudioPlayer music)
         {
@@ -43,6 +54,13 @@ namespace Type.States
             _Scene.GammaButton.RegisterListener(this);
             _Scene.RegisterListener(this);
             _Scene.Active = true;
+
+            _Navigator = new MenuNavigator { OnCancel = () => _Scene.BackPressed() };
+            _Navigator.Add(_Scene.AlphaButton);
+            _Navigator.Add(_Scene.BetaButton);
+            _Navigator.Add(_Scene.GammaButton);
+            _Navigator.FocusFirst();
+
             InputService.Instance.RegisterListener(this);
         }
 
@@ -134,6 +152,8 @@ namespace Type.States
         {
             base.Dispose();
             InputService.Instance.DeregisterListener(this);
+            _Navigator.Dispose();
+            _Navigator = null;
             _Music = null;
             _Scene.Dispose();
             _Scene = null;
@@ -147,27 +167,12 @@ namespace Type.States
         {
             switch (data.ID)
             {
-                case ButtonData.Type.FIRE:
+                case ButtonData.Type.SECRET:
                     {
+                        // Stands in for the touch gesture of holding all three cards at once,
+                        // which a focus cursor cannot express.
                         if (data.State != ButtonData.State.PRESSED) return;
-                        _FirstButtonHeld = true;
-                        _Selection = 0;
-                        OnSelection();
-                        break;
-                    }
-                case ButtonData.Type.NUKE:
-                    {
-                        if (data.State != ButtonData.State.PRESSED) return;
-                        _SecondButtonHeld = true;
-                        _Selection = 1;
-                        OnSelection();
-                        break;
-                    }
-                case ButtonData.Type.GAMMA_SELECT:
-                    {
-                        if (data.State != ButtonData.State.PRESSED) return;
-                        _ThirdButtonHeld = true;
-                        _Selection = 2;
+                        _SecretRequested = true;
                         OnSelection();
                         break;
                     }

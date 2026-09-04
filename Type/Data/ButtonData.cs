@@ -15,9 +15,9 @@
         /// The type of button, used as the action identifier throughout the input system
         /// </summary>
         /// <remarks>
-        /// The *_SELECT members mix game meaning into input identity, which is why ship select
-        /// reads as "A chooses Alpha" rather than as a cursor. They are kept until menu
-        /// navigation replaces face button selection; see ROADMAP item I5.
+        /// These are input actions only. Members that carried game meaning — one per selectable
+        /// craft, which is why ship select used to read as "A chooses Alpha" — were removed once
+        /// menu navigation replaced face button selection.
         /// </remarks>
         public enum Type
         {
@@ -25,10 +25,6 @@
             NUKE,
             START,
             BACK,
-            ALPHA_SELECT,
-            BETA_SELECT,
-            GAMMA_SELECT,
-            OMEGA_SELECT,
 
             /// <summary> Accept the focused menu item </summary>
             CONFIRM,
@@ -42,6 +38,9 @@
             MENU_LEFT,
             /// <summary> Move menu focus right </summary>
             MENU_RIGHT,
+
+            /// <summary> Reveals the hidden craft on the ship select screen </summary>
+            SECRET,
         }
     }
 }
