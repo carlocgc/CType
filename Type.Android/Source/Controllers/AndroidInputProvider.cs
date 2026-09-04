@@ -73,6 +73,14 @@ namespace Type.Android.Source.Controllers
         public VirtualAnalogStick VirtualAnalogStick { get; set; }
 
         /// <inheritdoc />
+        /// <remarks> Touch controls are not driven by an action mapping. </remarks>
+        public InputBindings Bindings => null;
+
+        /// <inheritdoc />
+        /// <remarks> Touch only, so no gamepad is ever driving input. </remarks>
+        public Boolean GamepadActive => false;
+
+        /// <inheritdoc />
         /// <remarks> Touch input cannot be disconnected, so this is never invoked. </remarks>
         public Action OnInputDeviceLost { get; set; }
 

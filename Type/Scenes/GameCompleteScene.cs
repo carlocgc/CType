@@ -13,6 +13,9 @@ namespace Type.Scenes
     public class GameCompleteScene : Scene
     {
         /// <summary> Button used to return to main menu </summary>
+        /// <summary> Tells the player how to continue </summary>
+        private readonly InputPrompt _ContinuePrompt;
+
         private readonly Button _ConfirmButton;
 
         /// <summary> The confirm button, exposed so a menu navigator can focus it </summary>
@@ -79,6 +82,8 @@ namespace Type.Scenes
             _ConfirmButton = new Button(Constants.ZOrders.UI, confirmButton);
             _ConfirmButton.OnButtonPress += OnButtonPress;
 
+            _ContinuePrompt = new InputPrompt(ButtonData.Type.CONFIRM, "CONTINUE", new Vector2(-880, -480));
+
             _ConfirmText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI_OVERLAY, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
                 Text = @"CONFIRM",
@@ -136,6 +141,7 @@ namespace Type.Scenes
             _ConfirmText.Dispose();
             _CongratsText.Dispose();
             _ScoreText.Dispose();
+            _ContinuePrompt.Dispose();
             _ConfirmButton.Dispose();
             _StatsDisplay.Dispose();
             _HighScoreText.Dispose();

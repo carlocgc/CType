@@ -211,8 +211,16 @@ alone, and Steam's controller-support checkbox is honest.
   three face-button shortcuts.
 - **I6. Rebinding UI and persistence.** Store bindings via the engine's `DataLoader`
   key/value store, already used for high scores. Steam users expect this.
-- **I7. Contextual button prompts.** Gamepad glyphs when a pad is connected, keyboard keys
-  otherwise. Cheap, and it is the clearest single signal that a game is not a phone port.
+  **Blocked on S3.** There is no options or settings scene for a rebinding screen to live in,
+  so the UI half cannot start until Phase 2 provides one. This is an inverted dependency in
+  the ordering below — do S3 first, or split I6 and land the load/save half on its own, which
+  needs no screen. The binding table already holds keys as names partly for this.
+- **I7. Contextual button prompts.** Show the player what to press: gamepad labels when a pad
+  is connected, keyboard keys otherwise. **Larger than "make the prompts contextual"** — the
+  menus contain no prompts at all today, only titles, so a pad player gets no indication of
+  what any button does. The prompts have to be added before they can be made contextual.
+  Text prompts using the existing bitmap font avoid new art; glyph sprites would need assets
+  adding to both csprojs and are a later polish step.
 - **I8. Rumble.** `InputService.Vibrate` exists and is already wired to death and nuke. Add
   hit, shield break, and boss impacts, plus an intensity slider in options.
 
@@ -251,6 +259,15 @@ Not glamorous, but these are store-page and refund-request items.
   those symbols come from the Xamarin targets rather than any `DefineConstants`. With nothing
   left referencing the package, its `PackageReference` was removed from `AmosDesktop`.
   *Verified: `Newtonsoft.Json` is now the only package assembly in the game's output.*
+
+- **S9. Find the leaked drawable.** Quitting after visiting the menus used to crash in
+  `Canvas.Dispose`, which AmosEngine `!25` fixed by making teardown tolerant of a drawable
+  the game never disposed. The engine no longer crashes, but the leak that exposed it is
+  still there: something on the menu or play path registers a drawable with a canvas and
+  never disposes it. *Verified that the condition is real — deliberately leaking one
+  drawable reproduced the original crash exactly.* Harmless now, but it is a resource leak
+  and the next one may not be. The quickest route is a Call Stack from the pre-`!25` build,
+  or a debug tally of registered versus disposed drawables at shutdown.
 
 ### Phase 3 — Graphics
 
