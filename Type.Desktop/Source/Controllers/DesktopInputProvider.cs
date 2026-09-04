@@ -1,4 +1,4 @@
-﻿using AmosShared.Base;
+using AmosShared.Base;
 using AmosShared.Interfaces;
 using OpenTK;
 using OpenTK.Input;
@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using Type.Base;
 using Type.Buttons;
 using Type.Data;
+using Type.Input;
 using Type.Interfaces;
 using Type.Interfaces.Control;
 using Type.Services;
@@ -14,36 +15,71 @@ using Type.Services;
 namespace Type.Desktop.Source.Controllers
 {
     /// <summary>
-    /// Input provider for the <see cref="InputService"/> when in Desktop configuration
+    /// Input provider for the <see cref="InputService"/> when in Desktop configuration.
+    /// Polls the keyboard and every connected gamepad, resolves them through
+    /// <see cref="InputBindings"/>, and reports edge triggered action changes to listeners.
     /// </summary>
     public class DesktopInputProvider : IInputProvider, INotifier<IInputListener>, IUpdatable
     {
+        /// <summary> Number of gamepad slots the platform exposes </summary>
+        private const Int32 PadSlots = 4;
+
         /// <summary> List of all the <see cref="IInputListener"/>'s listening to the <see cref="InputService"/></summary>
         private readonly List<IInputListener> _Listeners = new List<IInputListener>();
-        /// <summary> Direction the analog stick is pushed </summary>
-        private Vector2 _Velocity;
-        /// <summary> Distance the analog stick is pushed </summary>
-        private Single _VelocityMagnitude;
-        /// <summary> Deadzone for positive axis on the analog stick </summary>
-        private Single _PositiveDeadZone = 0.2f;
-        /// <summary> Deadzone for negative axis on the analog stick </summary>
-        private Single _NegativeDeadZone = -0.2f;
-        /// <summary> Whether the nuke button was pressed last update </summary>
-        private Boolean _NukePressed;
-        /// <summary> Whether start was pressed last update </summary>
-        private Boolean _StartPressed;
+        /// <summary> Action to input mapping </summary>
+        private readonly InputBindings _Bindings;
+        /// <summary> Turns per update readings into edge triggered state changes </summary>
+        private readonly ActionStateTracker _Tracker;
+        /// <summary> Applies the radial deadzone and response curve to stick readings </summary>
+        private readonly AnalogProcessor _Analog;
+        /// <summary> Keyboard keys bound to each action, resolved once from the binding names </summary>
+        private readonly Dictionary<ButtonData.Type, List<Key>> _ResolvedKeys;
+
+        /// <summary> Index of the gamepad currently driving input, negative when none is connected </summary>
+        private Int32 _ActivePad = -1;
         /// <summary> Call back to end controller vibration </summary>
         private TimedCallback _VibrationCallback;
-
-        private Boolean _YPressed;
-        private Boolean _BackPressed;
 
         /// <summary> Whether the provider is in pause mode </summary>
         public Boolean Paused { get; set; }
 
+        /// <summary>
+        /// Invoked when the active gamepad is disconnected while in use, so the game can pause
+        /// rather than carry on with no way to control it
+        /// </summary>
+        public Action OnActivePadDisconnected { get; set; }
+
         public DesktopInputProvider()
         {
+            _Bindings = InputBindings.CreateDefaults();
+            _Tracker = new ActionStateTracker();
+            _Analog = new AnalogProcessor();
+            _ResolvedKeys = ResolveKeys(_Bindings);
+
             UpdateManager.Instance.AddUpdatable(this);
+        }
+
+        /// <summary>
+        /// Resolves the platform independent key names in the bindings to OpenTK keys once, so
+        /// that polling does not parse strings every update. Unrecognised names are skipped.
+        /// </summary>
+        private static Dictionary<ButtonData.Type, List<Key>> ResolveKeys(InputBindings bindings)
+        {
+            Dictionary<ButtonData.Type, List<Key>> resolved = new Dictionary<ButtonData.Type, List<Key>>();
+
+            foreach (ActionBinding binding in bindings.All)
+            {
+                List<Key> keys = new List<Key>();
+
+                foreach (String name in binding.Keys)
+                {
+                    if (Enum.TryParse(name, true, out Key key)) keys.Add(key);
+                }
+
+                resolved[binding.Action] = keys;
+            }
+
+            return resolved;
         }
 
         #region Implementation of IUpdatable
@@ -52,155 +88,160 @@ namespace Type.Desktop.Source.Controllers
         /// <param name="timeTilUpdate"></param>
         public void Update(TimeSpan timeTilUpdate)
         {
-            // ---------------- START BUTTON
+            KeyboardState keyboard = Keyboard.GetState();
+            GamePadState pad = GetActivePad();
 
-            if (GamePad.GetState(0).Buttons.Start == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Key.C))
+            // Pause and unpause must work while paused; everything else is reported as released
+            // so that an action held at the moment of pausing does not resume when play does.
+            DispatchAction(ButtonData.Type.START, IsActionDown(ButtonData.Type.START, keyboard, pad));
+
+            foreach (ActionBinding binding in _Bindings.All)
             {
-                ButtonData.State state = _StartPressed ? ButtonData.State.HELD : ButtonData.State.PRESSED;
+                if (binding.Action == ButtonData.Type.START) continue;
 
-                foreach (IInputListener listener in _Listeners)
+                Boolean isDown = !Paused && IsActionDown(binding.Action, keyboard, pad);
+                DispatchAction(binding.Action, isDown);
+            }
+
+            DispatchDirection(Paused ? default(GamePadState) : pad, keyboard);
+        }
+
+        /// <summary>
+        /// Returns the state of the gamepad driving input, selecting a newly connected pad and
+        /// reporting a disconnection of the one in use
+        /// </summary>
+        private GamePadState GetActivePad()
+        {
+            if (_ActivePad >= 0)
+            {
+                GamePadState current = GamePad.GetState(_ActivePad);
+                if (current.IsConnected) return current;
+
+                _ActivePad = -1;
+                _Tracker.Reset();
+                OnActivePadDisconnected?.Invoke();
+            }
+
+            for (Int32 i = 0; i < PadSlots; i++)
+            {
+                GamePadState state = GamePad.GetState(i);
+                if (!state.IsConnected) continue;
+
+                _ActivePad = i;
+                return state;
+            }
+
+            return default(GamePadState);
+        }
+
+        /// <summary>
+        /// Whether any input bound to the action is currently down
+        /// </summary>
+        private Boolean IsActionDown(ButtonData.Type action, KeyboardState keyboard, GamePadState pad)
+        {
+            ActionBinding binding = _Bindings[action];
+            if (binding == null) return false;
+
+            if (_ResolvedKeys.TryGetValue(action, out List<Key> keys))
+            {
+                foreach (Key key in keys)
                 {
-                    listener.UpdateInputData(new ButtonEventData(ButtonData.Type.START, state));
-                }
-                _StartPressed = true;
-            }
-            else if (GamePad.GetState(0).Buttons.Start == ButtonState.Released || Keyboard.GetState().IsKeyUp(Key.C))
-            {
-                foreach (IInputListener listener in _Listeners)
-                {
-                    listener.UpdateInputData(new ButtonEventData(ButtonData.Type.START, ButtonData.State.RELEASED));
-                }
-                _StartPressed = false;
-            }
-
-            // ---------------- Dont update anything else if game is paused
-
-            if (Paused) return;
-
-            // ---------------- ANALOG STICK
-
-            if (GamePad.GetState(0).ThumbSticks.Left.Y > _PositiveDeadZone ||
-                GamePad.GetState(0).ThumbSticks.Left.Y < _NegativeDeadZone ||
-                GamePad.GetState(0).ThumbSticks.Left.X > _PositiveDeadZone ||
-                GamePad.GetState(0).ThumbSticks.Left.X < _NegativeDeadZone)
-            {
-                _Velocity = GamePad.GetState(0).ThumbSticks.Left;
-                _VelocityMagnitude = GamePad.GetState(0).ThumbSticks.Left.Length;
-            }
-            else
-            {
-                _Velocity = Vector2.Zero;
-            }
-
-            // ---------------- KEYBOARD DIRECTIONS
-
-            if (Keyboard.GetState().IsKeyDown(Key.Up))
-            {
-                _Velocity += new Vector2(0, 1);
-                _VelocityMagnitude = 1;
-            }
-            if (Keyboard.GetState().IsKeyDown(Key.Left))
-            {
-                _Velocity += new Vector2(-1, 0);
-                _VelocityMagnitude = 1;
-            }
-            if (Keyboard.GetState().IsKeyDown(Key.Down))
-            {
-                _Velocity += new Vector2(0, -1);
-                _VelocityMagnitude = 1;
-            }
-            if (Keyboard.GetState().IsKeyDown(Key.Right))
-            {
-                _Velocity += new Vector2(1, 0);
-                _VelocityMagnitude = 1;
-            }
-
-            // ---------------- A BUTTON
-
-            if (GamePad.GetState(0).Buttons.A == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Key.Space))
-            {
-                foreach (IInputListener listener in _Listeners)
-                {
-                    listener.UpdateInputData(new ButtonEventData(ButtonData.Type.FIRE, ButtonData.State.PRESSED));
-                }
-            }
-            else if (GamePad.GetState(0).Buttons.A == ButtonState.Released || Keyboard.GetState().IsKeyUp(Key.Space))
-            {
-                foreach (IInputListener listener in _Listeners)
-                {
-                    listener.UpdateInputData(new ButtonEventData(ButtonData.Type.FIRE, ButtonData.State.RELEASED));
+                    if (keyboard.IsKeyDown(key)) return true;
                 }
             }
 
-            // ---------------- B BUTTON
+            if (!pad.IsConnected) return false;
 
-            if (GamePad.GetState(0).Buttons.B == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Key.F))
+            foreach (GamepadButton button in binding.PadButtons)
             {
-                ButtonData.State state = _NukePressed ? ButtonData.State.HELD : ButtonData.State.PRESSED;
+                if (IsPadButtonDown(button, pad)) return true;
+            }
 
-                foreach (IInputListener listener in _Listeners)
+            return false;
+        }
+
+        /// <summary>
+        /// Maps a platform independent gamepad button onto the OpenTK pad state
+        /// </summary>
+        private static Boolean IsPadButtonDown(GamepadButton button, GamePadState pad)
+        {
+            switch (button)
+            {
+                case GamepadButton.A: return pad.Buttons.A == ButtonState.Pressed;
+                case GamepadButton.B: return pad.Buttons.B == ButtonState.Pressed;
+                case GamepadButton.X: return pad.Buttons.X == ButtonState.Pressed;
+                case GamepadButton.Y: return pad.Buttons.Y == ButtonState.Pressed;
+                case GamepadButton.LEFT_SHOULDER: return pad.Buttons.LeftShoulder == ButtonState.Pressed;
+                case GamepadButton.RIGHT_SHOULDER: return pad.Buttons.RightShoulder == ButtonState.Pressed;
+                case GamepadButton.LEFT_TRIGGER: return pad.Triggers.Left > 0.5f;
+                case GamepadButton.RIGHT_TRIGGER: return pad.Triggers.Right > 0.5f;
+                case GamepadButton.LEFT_STICK: return pad.Buttons.LeftStick == ButtonState.Pressed;
+                case GamepadButton.RIGHT_STICK: return pad.Buttons.RightStick == ButtonState.Pressed;
+                case GamepadButton.START: return pad.Buttons.Start == ButtonState.Pressed;
+                case GamepadButton.BACK: return pad.Buttons.Back == ButtonState.Pressed;
+                case GamepadButton.DPAD_UP: return pad.DPad.IsUp;
+                case GamepadButton.DPAD_DOWN: return pad.DPad.IsDown;
+                case GamepadButton.DPAD_LEFT: return pad.DPad.IsLeft;
+                case GamepadButton.DPAD_RIGHT: return pad.DPad.IsRight;
+                default: return false;
+            }
+        }
+
+        /// <summary>
+        /// Reports an action to listeners if its state changed or it is being held
+        /// </summary>
+        private void DispatchAction(ButtonData.Type action, Boolean isDown)
+        {
+            if (!_Tracker.TryGetState(action, isDown, out ButtonData.State state)) return;
+
+            for (Int32 i = _Listeners.Count - 1; i >= 0; i--)
+            {
+                _Listeners[i].UpdateInputData(new ButtonEventData(action, state));
+            }
+        }
+
+        /// <summary>
+        /// Works out the movement direction from the left stick, or from the digital inputs when
+        /// the stick is centred, and reports it to listeners
+        /// </summary>
+        private void DispatchDirection(GamePadState pad, KeyboardState keyboard)
+        {
+            Vector2 direction;
+            Single strength;
+
+            _Analog.Process(pad.IsConnected ? pad.ThumbSticks.Left : Vector2.Zero, out direction, out strength);
+
+            if (strength <= 0)
+            {
+                // Digital inputs are normalised so that a diagonal is not faster than a cardinal,
+                // which it was when the raw key vector was passed straight through.
+                Vector2 digital = Vector2.Zero;
+
+                if (IsDigitalDown(ButtonData.Type.MENU_UP, keyboard, pad)) digital += new Vector2(0, 1);
+                if (IsDigitalDown(ButtonData.Type.MENU_DOWN, keyboard, pad)) digital += new Vector2(0, -1);
+                if (IsDigitalDown(ButtonData.Type.MENU_LEFT, keyboard, pad)) digital += new Vector2(-1, 0);
+                if (IsDigitalDown(ButtonData.Type.MENU_RIGHT, keyboard, pad)) digital += new Vector2(1, 0);
+
+                if (digital != Vector2.Zero)
                 {
-                    listener.UpdateInputData(new ButtonEventData(ButtonData.Type.NUKE, state));
+                    digital.Normalize();
+                    direction = digital;
+                    strength = 1;
                 }
-                _NukePressed = true;
             }
-            else if (GamePad.GetState(0).Buttons.B == ButtonState.Released || Keyboard.GetState().IsKeyUp(Key.F))
+
+            for (Int32 i = _Listeners.Count - 1; i >= 0; i--)
             {
-                foreach (IInputListener listener in _Listeners)
-                {
-                    listener.UpdateInputData(new ButtonEventData(ButtonData.Type.NUKE, ButtonData.State.RELEASED));
-                }
-                _NukePressed = false;
+                _Listeners[i].UpdateDirectionData(direction, strength);
             }
+        }
 
-            // ---------------- Y BUTTON
-
-            if (GamePad.GetState(0).Buttons.Y == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Key.V))
-            {
-                ButtonData.State state = _YPressed ? ButtonData.State.HELD : ButtonData.State.PRESSED;
-
-                foreach (IInputListener listener in _Listeners)
-                {
-                    listener.UpdateInputData(new ButtonEventData(ButtonData.Type.GAMMA_SELECT, state));
-                }
-                _YPressed = true;
-            }
-            else if (GamePad.GetState(0).Buttons.Y == ButtonState.Released || Keyboard.GetState().IsKeyUp(Key.V))
-            {
-                foreach (IInputListener listener in _Listeners)
-                {
-                    listener.UpdateInputData(new ButtonEventData(ButtonData.Type.GAMMA_SELECT, ButtonData.State.RELEASED));
-                }
-                _YPressed = false;
-            }
-
-            // ---------------- BACK BUTTON
-
-            if (GamePad.GetState(0).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Key.BackSpace))
-            {
-                ButtonData.State state = _BackPressed ? ButtonData.State.HELD : ButtonData.State.PRESSED;
-
-                foreach (IInputListener listener in _Listeners)
-                {
-                    listener.UpdateInputData(new ButtonEventData(ButtonData.Type.BACK, state));
-                }
-                _BackPressed = true;
-            }
-            else if (GamePad.GetState(0).Buttons.Back == ButtonState.Released || Keyboard.GetState().IsKeyUp(Key.BackSpace))
-            {
-                foreach (IInputListener listener in _Listeners)
-                {
-                    listener.UpdateInputData(new ButtonEventData(ButtonData.Type.BACK, ButtonData.State.RELEASED));
-                }
-                _BackPressed = false;
-            }
-
-            // ---------------- SEND ANALOG DATA TO LISTENERS
-
-            foreach (IInputListener listener in _Listeners)
-            {
-                listener.UpdateDirectionData(_Velocity, _VelocityMagnitude);
-            }
+        /// <summary>
+        /// Whether a directional action is down, ignoring a disconnected pad
+        /// </summary>
+        private Boolean IsDigitalDown(ButtonData.Type action, KeyboardState keyboard, GamePadState pad)
+        {
+            return IsActionDown(action, keyboard, pad);
         }
 
         /// <summary> Whether or not the object can be updated </summary>
@@ -215,10 +256,9 @@ namespace Type.Desktop.Source.Controllers
 
         #endregion
 
-
         #region Implementation of INotifier<IInputListener>
 
-        /// <summary> Virtual analog stick </summary>
+        /// <summary> Virtual analog stick, unused on desktop </summary>
         public VirtualAnalogStick VirtualAnalogStick { get; set; }
 
         /// <summary>
@@ -231,8 +271,12 @@ namespace Type.Desktop.Source.Controllers
         {
             Single left = strong ? 1f : 0.5f;
             Single right = strong ? 1f : 0.2f;
-            Boolean result = GamePad.SetVibration(index, left, right);
-            if (result) return;
+
+            // Previously this returned early when SetVibration succeeded, so the callback that
+            // stops the motors was only ever scheduled when starting them had failed.
+            if (!GamePad.SetVibration(index, left, right)) return;
+
+            _VibrationCallback?.CancelAndComplete();
             _VibrationCallback = new TimedCallback(duration, () => GamePad.SetVibration(index, 0, 0));
         }
 
@@ -253,7 +297,8 @@ namespace Type.Desktop.Source.Controllers
         }
 
         /// <summary>
-        /// Registers a <see cref="IVirtualButton"/> with the Input provider
+        /// Registers a <see cref="IVirtualButton"/> with the Input provider. Desktop has no on
+        /// screen controls, so this does nothing.
         /// </summary>
         /// <param name="button"></param>
         public void RegisterButton(IVirtualButton button)
@@ -261,7 +306,8 @@ namespace Type.Desktop.Source.Controllers
         }
 
         /// <summary>
-        /// Deregisters a <see cref="IVirtualButton"/> from the Input provider
+        /// Deregisters a <see cref="IVirtualButton"/> from the Input provider. Desktop has no on
+        /// screen controls, so this does nothing.
         /// </summary>
         /// <param name="button"></param>
         public void DeregisterButton(IVirtualButton button)
@@ -278,6 +324,7 @@ namespace Type.Desktop.Source.Controllers
             UpdateManager.Instance.RemoveUpdatable(this);
             _VibrationCallback?.CancelAndComplete();
             _VibrationCallback?.Dispose();
+            _Listeners.Clear();
         }
 
         #endregion
