@@ -1,6 +1,7 @@
 ﻿using System;
 using Type.Buttons;
 using Type.Interfaces.Control;
+using Type.Input;
 #if __ANDROID__
 using Type.Android.Source.Controllers;
 #elif __DESKTOP__
@@ -25,6 +26,17 @@ namespace Type.Services
             get => _InputProvider.VirtualAnalogStick;
             set => _InputProvider.VirtualAnalogStick = value;
         }
+
+        /// <summary>
+        /// The active action to input mapping, used to label on screen prompts
+        /// </summary>
+        public InputBindings Bindings => _InputProvider.Bindings;
+
+        /// <summary>
+        /// Whether a gamepad is currently driving input, so the interface can show the right
+        /// prompts
+        /// </summary>
+        public Boolean GamepadActive => _InputProvider.GamepadActive;
 
         /// <summary>
         /// Invoked when the input device driving the game becomes unavailable, for example a

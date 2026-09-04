@@ -1,5 +1,6 @@
 ﻿using System;
 using Type.Buttons;
+using Type.Input;
 
 namespace Type.Interfaces.Control
 {
@@ -13,6 +14,18 @@ namespace Type.Interfaces.Control
 
         /// <summary> Virtual analog stick </summary>
         VirtualAnalogStick VirtualAnalogStick { get; set; }
+
+        /// <summary>
+        /// The active action to input mapping, used to label on screen prompts. Null on
+        /// platforms that do not map physical inputs to actions.
+        /// </summary>
+        InputBindings Bindings { get; }
+
+        /// <summary>
+        /// Whether a gamepad is currently driving input, so the interface can show the right
+        /// prompts. False on platforms with no gamepad support.
+        /// </summary>
+        Boolean GamepadActive { get; }
 
         /// <summary>
         /// Invoked when the input device currently driving the game becomes unavailable, so that

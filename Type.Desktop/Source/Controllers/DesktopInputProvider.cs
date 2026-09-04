@@ -44,6 +44,12 @@ namespace Type.Desktop.Source.Controllers
         public Boolean Paused { get; set; }
 
         /// <inheritdoc />
+        public InputBindings Bindings => _Bindings;
+
+        /// <inheritdoc />
+        public Boolean GamepadActive => _ActivePad >= 0;
+
+        /// <inheritdoc />
         public Action OnInputDeviceLost { get; set; }
 
         public DesktopInputProvider()

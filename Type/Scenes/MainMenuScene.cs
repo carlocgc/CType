@@ -4,6 +4,8 @@ using AmosShared.Graphics.Drawables;
 using AmosShared.Touch;
 using OpenTK;
 using System;
+using Type.Data;
+using Type.UI;
 
 namespace Type.Scenes
 {
@@ -28,6 +30,9 @@ namespace Type.Scenes
         /// <summary> Text that promts game start </summary>
         private readonly TextDisplay _StartText;
         
+        /// <summary> Tells the player how to begin </summary>
+        private readonly InputPrompt _StartPrompt;
+
         private readonly TextDisplay _VersionText;
 
         /// <summary> Whether the  player has pressed space and started the game </summary>
@@ -84,6 +89,8 @@ namespace Type.Scenes
             _StartText.Offset = new Vector2(_StartText.Size.X * _StartText.Scale.X, _StartText.Size.Y * _StartText.Scale.Y) / 2;
             AddDrawable(_StartText);
 
+
+            _StartPrompt = new InputPrompt(ButtonData.Type.CONFIRM, "START", new Vector2(-880, -480));
 
             _VersionText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI_OVERLAY, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
@@ -157,6 +164,7 @@ namespace Type.Scenes
             }            
             _Background.Dispose();
             _StartButton.Dispose();
+            _StartPrompt.Dispose();
             _VersionText.Dispose();
         }
     }

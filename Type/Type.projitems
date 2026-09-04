@@ -116,6 +116,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)UI\Navigation\FocusableButton.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\Navigation\FocusRing.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\Navigation\MenuNavigator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\InputPrompt.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\FpsCounter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\LevelDisplay.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\LifeMeter.cs" />

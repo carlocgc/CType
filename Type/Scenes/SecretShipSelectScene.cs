@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using Type.Buttons;
 using Type.Interfaces;
 using Type.Interfaces.Control;
+using Type.Data;
+using Type.UI;
 
 namespace Type.Scenes
 {
@@ -17,6 +19,11 @@ namespace Type.Scenes
         private readonly TextDisplay _Title;
 
         private readonly Sprite _Background;
+
+        /// <summary> Tells the player how to choose the craft </summary>
+        private readonly InputPrompt _SelectPrompt;
+        /// <summary> Tells the player how to leave the screen </summary>
+        private readonly InputPrompt _BackPrompt;
 
         private readonly Button _BackButton;
 
@@ -64,6 +71,9 @@ namespace Type.Scenes
             _BackButton = new Button(Int32.MaxValue, backButton) { OnButtonPress = BackButtonOnPress };
             _BackButton.TouchEnabled = true;
             _BackButton.Visible = true;
+
+            _SelectPrompt = new InputPrompt(ButtonData.Type.CONFIRM, "SELECT", new Vector2(-880, -480));
+            _BackPrompt = new InputPrompt(ButtonData.Type.CANCEL, "BACK", new Vector2(-880, -530));
 
             OmegaButton = new ShipSelectButton(3, new Vector2(658, 50), "Content/Graphics/Player/player_omega.png", "OMEGA", 1, 200, 120);
         }
@@ -118,6 +128,8 @@ namespace Type.Scenes
             _BackButtonListeners.Clear();
             _Title.Dispose();
             _Background.Dispose();
+            _SelectPrompt.Dispose();
+            _BackPrompt.Dispose();
             _BackButton.Dispose();
             OmegaButton.Dispose();
         }

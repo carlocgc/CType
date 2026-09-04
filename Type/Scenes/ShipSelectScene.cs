@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using Type.Buttons;
 using Type.Interfaces;
 using Type.Interfaces.Control;
+using Type.Data;
 using Type.UI;
 
 namespace Type.Scenes
@@ -20,6 +21,11 @@ namespace Type.Scenes
         private readonly TextDisplay _Title;
 
         private readonly Sprite _Background;
+
+        /// <summary> Tells the player how to choose a craft </summary>
+        private readonly InputPrompt _SelectPrompt;
+        /// <summary> Tells the player how to leave the screen </summary>
+        private readonly InputPrompt _BackPrompt;
 
         private readonly Button _BackButton;
 
@@ -57,6 +63,9 @@ namespace Type.Scenes
                 Visible = true,
             };
             _Background.Offset = _Background.Size / 2;
+
+            _SelectPrompt = new InputPrompt(ButtonData.Type.CONFIRM, "SELECT", new Vector2(-880, -480));
+            _BackPrompt = new InputPrompt(ButtonData.Type.CANCEL, "BACK", new Vector2(-880, -530));
 
             AlphaButton = new ShipSelectButton(0, new Vector2(45, 50), "Content/Graphics/Player/player-alpha.png", "ALPHA", 1, 100, 100);
             BetaButton = new ShipSelectButton(1, new Vector2(658, 50), "Content/Graphics/Player/player-beta.png", "BETA", 2, 80, 80);
@@ -120,6 +129,8 @@ namespace Type.Scenes
             _BackButtonListeners.Clear();
             _Title.Dispose();
             _Background.Dispose();
+            _SelectPrompt.Dispose();
+            _BackPrompt.Dispose();
             _BackButton.Dispose();
             AlphaButton.Dispose();
             BetaButton.Dispose();
