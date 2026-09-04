@@ -1,0 +1,11 @@
+{
+  "solution": {
+    "path": "Type.sln",
+    "projects": [
+      "SupportingFiles\\AmosDesktop\\AmosDesktop.csproj",
+      "SupportingFiles\\AmosShared\\AmosShared.shproj",
+      "Type.Desktop\\Type.Desktop.csproj",
+      "Type\\Type.Shared.shproj"
+    ]
+  }
+}

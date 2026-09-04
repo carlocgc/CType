@@ -111,6 +111,21 @@ in `Type.Desktop/Type.Desktop.csproj`, `Type.Desktop/App.config`, and — critic
 be committed here. A clean checkout fails with `MSB3644` unless the 4.6.1 targeting pack is
 installed. Do not discard these local changes. See ROADMAP item D6.
 
+**Open `Type.Desktop.slnf`, not `Type.sln`.** It is a solution filter over the same
+`Type.sln` that loads only the four desktop projects — `Type.Desktop`, `AmosDesktop`, and
+the `Type.Shared` and `AmosShared` shared projects that hold most of the code. `Type.sln`
+itself still fails to build, because it pulls in `Type.Android`, `AmosAndroid` and `AmosiOS`,
+which need the Xamarin workload and an Android SDK platform that are not installed.
+A filter rather than a second `.sln` deliberately: it references the real solution, so it
+cannot drift out of sync when a project is added. It also replaces the machine-local project
+unload state that used to live in the gitignored `.vs/Type/v17/.suo`.
+
+MSBuild builds it directly:
+
+```bash
+"C:/Program Files/Microsoft Visual Studio/18/Community/MSBuild/Current/Bin/MSBuild.exe" Type.Desktop.slnf /t:Restore /v:minimal
+```
+
 **Why a command-line build may fail where Visual Studio succeeds.** `Type.Desktop.csproj`
 has a spurious `ProjectReference` to `Type.Android.csproj`. In the IDE the Android projects
 (`Type.Android`, `AmosAndroid`, `AmosiOS`) are **unloaded**, so VS never walks that reference
