@@ -23,6 +23,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\GameStats.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\LevelLoader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\ButtonData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Settings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\WaveData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Factories\EnemyFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Factories\PowerupFactory.cs" />
@@ -42,6 +43,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IInputProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IPositionRecipient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IShipSelectListener.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IAdjustable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IFocusable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IInputListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IVirtualButton.cs" />
@@ -102,6 +104,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\GameOverScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\GameScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\MainMenuScene.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\OptionsScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\SecretShipSelectScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\ShipSelectScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\UIScene.cs" />
@@ -109,6 +112,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)States\GameCompleteState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)States\GameOverState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)States\MainMenuState.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)States\OptionsState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)States\PlayingState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)States\SecretShipSelectState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)States\ShipSelectState.cs" />
@@ -116,6 +120,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)UI\Navigation\FocusableButton.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\Navigation\FocusRing.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\Navigation\MenuNavigator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\Navigation\OptionRow.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\InputPrompt.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\FpsCounter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\LevelDisplay.cs" />

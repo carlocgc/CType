@@ -211,10 +211,10 @@ alone, and Steam's controller-support checkbox is honest.
   three face-button shortcuts.
 - **I6. Rebinding UI and persistence.** Store bindings via the engine's `DataLoader`
   key/value store, already used for high scores. Steam users expect this.
-  **Blocked on S3.** There is no options or settings scene for a rebinding screen to live in,
-  so the UI half cannot start until Phase 2 provides one. This is an inverted dependency in
-  the ordering below — do S3 first, or split I6 and land the load/save half on its own, which
-  needs no screen. The binding table already holds keys as names partly for this.
+  **Unblocked by S3**, which was brought forward for this reason. The options screen exists
+  and `Data/Settings.cs` establishes the load, clamp and save pattern to follow. Note that the
+  store round trips through JSON, so an integer returns as `Int64`; convert rather than cast.
+  The binding table already holds keys as names partly for this.
 - **I7. Contextual button prompts.** Show the player what to press: gamepad labels when a pad
   is connected, keyboard keys otherwise. **Larger than "make the prompts contextual"** — the
   menus contain no prompts at all today, only titles, so a pad player gets no indication of
@@ -238,8 +238,15 @@ Not glamorous, but these are store-page and refund-request items.
   elements at literal coordinates. Verify 16:10 and 21:9; letterbox if the alternative is a
   broken layout. **[ENGINE risk]** — `Renderer.UpdateSize` behaviour may constrain what is
   possible here, so measure before promising ultrawide support.
-- **S3. An options menu.** Master/music/effects volume (`AudioManager` already exposes all
-  three), display mode, rebinding, rumble. There is currently no settings screen at all.
+- **S3. An options menu.** *Screen built; two rows still to come.* Reached from the main
+  menu, navigable with the focus cursor, with master, music and effect volume adjustable in
+  ten point steps and saved to the engine's key value store. Settings load and apply during
+  content loading, before anything plays.
+  **Still to add, each gated on other work:** display mode needs S1 and S2, rebinding needs
+  I6, and rumble intensity needs I8. The screen and its `OptionRow` widget are built to take
+  them, so each is a row rather than a rewrite.
+  This also unblocks **I6** — a rebinding editor now has somewhere to live, and `Settings`
+  gives it a persistence pattern to follow.
 - **S4. A real pause menu.** Pause today freezes time and shows a powerup help overlay.
   It needs Resume / Options / Restart / Quit.
 - **S5. Settings persistence** through `DataLoader`.

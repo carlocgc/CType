@@ -31,6 +31,8 @@ namespace Type.UI.Navigation
 
         /// <summary> Direction currently being held, zero when none </summary>
         private Int32 _HeldDirection;
+        /// <summary> Whether the held direction came from a horizontal input </summary>
+        private Boolean _HeldHorizontal;
         /// <summary> How long the current direction has been held </summary>
         private TimeSpan _HeldFor;
         /// <summary> How long since the last repeat was emitted </summary>
@@ -78,16 +80,55 @@ namespace Type.UI.Navigation
         /// the direction stays held.
         /// </summary>
         /// <param name="direction"> -1 for previous, 1 for next, 0 to stop </param>
-        private void SetHeldDirection(Int32 direction)
+        /// <param name="horizontal"> Whether the input was left or right rather than up or down </param>
+        private void SetHeldDirection(Int32 direction, Boolean horizontal = false)
         {
-            if (_HeldDirection == direction) return;
+            if (_HeldDirection == direction && _HeldHorizontal == horizontal) return;
 
             _HeldDirection = direction;
+            _HeldHorizontal = horizontal;
             _HeldFor = TimeSpan.Zero;
             _SinceRepeat = TimeSpan.Zero;
             _Repeating = false;
 
-            if (direction != 0) _Ring.Move(direction);
+            if (direction != 0) Apply();
+        }
+
+        /// <summary>
+        /// Starts or stops holding a direction in response to one directional input
+        /// </summary>
+        /// <param name="state"> The state the input was reported in </param>
+        /// <param name="direction"> -1 for previous or decrease, 1 for next or increase </param>
+        /// <param name="horizontal"> Whether the input was left or right </param>
+        private void HandleDirection(ButtonData.State state, Int32 direction, Boolean horizontal)
+        {
+            if (state == ButtonData.State.PRESSED)
+            {
+                SetHeldDirection(direction, horizontal);
+                return;
+            }
+
+            // Only the input that started the hold may end it. Up and left share a direction, so
+            // releasing one must not cancel a hold begun by the other.
+            if (state != ButtonData.State.RELEASED) return;
+            if (_HeldDirection != direction || _HeldHorizontal != horizontal) return;
+
+            SetHeldDirection(0);
+        }
+
+        /// <summary>
+        /// Applies the held direction: left and right adjust the focused item when it holds a
+        /// value, and otherwise move focus along with up and down.
+        /// </summary>
+        private void Apply()
+        {
+            if (_HeldHorizontal && _Ring.Focused is IAdjustable adjustable)
+            {
+                adjustable.Adjust(_HeldDirection);
+                return;
+            }
+
+            _Ring.Move(_HeldDirection);
         }
 
         #region Implementation of IUpdatable
@@ -103,14 +144,14 @@ namespace Type.UI.Navigation
                 if (_HeldFor < RepeatDelay) return;
                 _Repeating = true;
                 _SinceRepeat = TimeSpan.Zero;
-                _Ring.Move(_HeldDirection);
+                Apply();
                 return;
             }
 
             _SinceRepeat += timeTilUpdate;
             if (_SinceRepeat < RepeatInterval) return;
             _SinceRepeat = TimeSpan.Zero;
-            _Ring.Move(_HeldDirection);
+            Apply();
         }
 
         /// <inheritdoc />
@@ -128,18 +169,24 @@ namespace Type.UI.Navigation
         {
             switch (data.ID)
             {
-                case ButtonData.Type.MENU_LEFT:
                 case ButtonData.Type.MENU_UP:
                     {
-                        if (data.State == ButtonData.State.PRESSED) SetHeldDirection(-1);
-                        else if (data.State == ButtonData.State.RELEASED && _HeldDirection == -1) SetHeldDirection(0);
+                        HandleDirection(data.State, -1, false);
+                        break;
+                    }
+                case ButtonData.Type.MENU_DOWN:
+                    {
+                        HandleDirection(data.State, 1, false);
+                        break;
+                    }
+                case ButtonData.Type.MENU_LEFT:
+                    {
+                        HandleDirection(data.State, -1, true);
                         break;
                     }
                 case ButtonData.Type.MENU_RIGHT:
-                case ButtonData.Type.MENU_DOWN:
                     {
-                        if (data.State == ButtonData.State.PRESSED) SetHeldDirection(1);
-                        else if (data.State == ButtonData.State.RELEASED && _HeldDirection == 1) SetHeldDirection(0);
+                        HandleDirection(data.State, 1, true);
                         break;
                     }
                 case ButtonData.Type.CONFIRM:
@@ -169,7 +216,7 @@ namespace Type.UI.Navigation
 
             // Only react to the stick crossing the threshold, so that a stick left resting off
             // centre does not fight the D-pad for the held direction.
-            if (pushed && !_StickPushed) SetHeldDirection(horizontal > 0 ? 1 : -1);
+            if (pushed && !_StickPushed) SetHeldDirection(horizontal > 0 ? 1 : -1, true);
             else if (!pushed && _StickPushed && _HeldDirection != 0) SetHeldDirection(0);
 
             _StickPushed = pushed;

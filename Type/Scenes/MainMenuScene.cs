@@ -19,6 +19,17 @@ namespace Type.Scenes
 
         /// <summary> The start button, exposed so a menu navigator can focus it </summary>
         public Button StartButton => _StartButton;
+
+        /// <summary> Button that opens the options screen </summary>
+        private readonly Button _OptionsButton;
+        /// <summary> Text shown over the options button </summary>
+        private readonly TextDisplay _OptionsText;
+
+        /// <summary> The options button, exposed so a menu navigator can focus it </summary>
+        public Button OptionsButton => _OptionsButton;
+
+        /// <summary> Whether the player chose options rather than start </summary>
+        public Boolean OptionsRequested { get; private set; }
         /// <summary> Button that will show the obtained achievements </summary>
         private readonly Button _AchievementsButton;
         /// <summary> Button that will show the leaderboards </summary>
@@ -74,7 +85,7 @@ namespace Type.Scenes
 
             Sprite startButton = new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/completecontinue.png"))
             {
-                Position = new Vector2(-200, -450),
+                Position = new Vector2(-200, -310),
             };
             _StartButton = new Button(Constants.ZOrders.UI, startButton);
             _StartButton.OnButtonPress += StartButtonPress;
@@ -88,6 +99,23 @@ namespace Type.Scenes
             };
             _StartText.Offset = new Vector2(_StartText.Size.X * _StartText.Scale.X, _StartText.Size.Y * _StartText.Scale.Y) / 2;
             AddDrawable(_StartText);
+
+            Sprite optionsButton = new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/completecontinue.png"))
+            {
+                Position = new Vector2(-200, -450),
+            };
+            _OptionsButton = new Button(Constants.ZOrders.UI, optionsButton);
+            _OptionsButton.OnButtonPress += OptionsButtonPress;
+
+            _OptionsText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI_OVERLAY, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
+            {
+                Text = @"OPTIONS",
+                Position = new Vector2(0, optionsButton.Position.Y + optionsButton.Height / 2),
+                Visible = true,
+                Scale = new Vector2(2.5f, 2.5f),
+            };
+            _OptionsText.Offset = new Vector2(_OptionsText.Size.X * _OptionsText.Scale.X, _OptionsText.Size.Y * _OptionsText.Scale.Y) / 2;
+            AddDrawable(_OptionsText);
 
 
             _StartPrompt = new InputPrompt(ButtonData.Type.CONFIRM, "START", new Vector2(-880, -480));
@@ -108,6 +136,9 @@ namespace Type.Scenes
             _StartButton.TouchEnabled = true;
             _StartButton.Visible = true;
 
+            _OptionsButton.TouchEnabled = true;
+            _OptionsButton.Visible = true;
+
             if (_AchievementsButton != null)
             { 
                 _AchievementsButton.TouchEnabled = true;
@@ -121,6 +152,23 @@ namespace Type.Scenes
             }
         }
 
+        /// <summary>
+        /// Opens the options screen
+        /// </summary>
+        public void ShowOptions()
+        {
+            Visible = false;
+            _StartButton.TouchEnabled = false;
+            _OptionsButton.TouchEnabled = false;
+            OptionsRequested = true;
+            IsComplete = true;
+        }
+
+        private void OptionsButtonPress(Button button)
+        {
+            ShowOptions();
+        }
+
         private void StartButtonPress(Button button)
         {
             StartGame();
@@ -131,6 +179,8 @@ namespace Type.Scenes
             Visible = false;
             _StartButton.TouchEnabled = false;
             _StartButton.Visible = false;
+            _OptionsButton.TouchEnabled = false;
+            _OptionsButton.Visible = false;
             IsComplete = true;
         }
 
@@ -164,6 +214,8 @@ namespace Type.Scenes
             }            
             _Background.Dispose();
             _StartButton.Dispose();
+            _OptionsButton.Dispose();
+            _OptionsText.Dispose();
             _StartPrompt.Dispose();
             _VersionText.Dispose();
         }
