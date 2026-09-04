@@ -14,10 +14,21 @@ desktop-native game.
 
 ## Hard rules
 
-1. **Never modify `SupportingFiles/`.** It is a git submodule pointing at
-   `https://gitlab.com/amerigo14/AmosEngine.git` and is owned by a third party.
-   If something appears to need an engine change, find a game-side workaround and
-   record the limitation in [ROADMAP.md](ROADMAP.md) instead.
+1. **Never commit directly to `SupportingFiles/`.** It is a git submodule pointing at
+   `https://gitlab.com/amerigo14/AmosEngine.git`, a separate project with its own author.
+   **Prefer a game-side solution**, and record any engine limitation you work around in
+   [ROADMAP.md](ROADMAP.md).
+   When an engine change is genuinely the better fix, it goes through a merge request
+   against the **`ctype_development`** branch — the C:Type-specific branch this repo's
+   submodule pointer tracks, which the maintainer can merge. Two have gone this route
+   (`!22` and the 4.8 retarget). The workflow:
+   - branch inside `SupportingFiles/` off `ctype_development`
+   - keep the commit **small, self-contained, and about one thing**, so it can be
+     cherry-picked onto the engine's mainline independently of C:Type history
+   - push with `-o merge_request.create -o merge_request.target=ctype_development`
+   - **wait for the merge** before bumping the parent's submodule pointer — source branches
+     are deleted on merge, so a pointer aimed at an unmerged branch commit gets orphaned
+   - then `git checkout ctype_development && git pull` in the submodule and commit the bump
 2. **Do not commit to `development`, `master`, or `firebase`.** Branch off
    `development` for every change.
 3. **Do not add third-party dependencies** without asking first.
