@@ -241,6 +241,14 @@ Not glamorous, but these are store-page and refund-request items.
   unavoidable — flag it and get approval before adding it.
 - **S7. Window title, icon, and app metadata.** The window is currently titled `"Test Game"`,
   and so is the `BaseGame` constructor argument.
+- **S8. Drop the mobile in-app billing dependency from the desktop build.**
+  `AmosShared/Base/PurchaseManager.cs` uses `Plugin.InAppBilling` with no platform guard, so
+  a mobile store-billing library is compiled into the desktop engine and
+  `Plugin.InAppBilling.dll` and `Plugin.InAppBilling.Abstractions.dll` are shipped in the
+  game's output. It is unreachable on desktop — nothing in the game calls `PurchaseManager`.
+  Guarding the class behind the mobile platform defines is an engine merge request and would
+  leave `Newtonsoft.Json` as the desktop build's only package dependency. Not urgent, but a
+  store-billing SDK in a Steam binary is the kind of thing that invites questions.
 
 ### Phase 3 — Graphics
 
@@ -379,6 +387,20 @@ the project:
 3. **The Android SDK platform for the target API is not installed on this machine** — the
    command-line build fails `XA5207` today.
 4. Play Services, AdMob and the in-app billing plugin are all on 2018-era versions.
+
+**The NuGet vulnerability banner in Visual Studio is entirely this debt.** The solution-wide
+warning aggregates every project, and the dormant mobile ones carry roughly 57 Xamarin
+packages from 2018 — Support Library 27/28, Play Services 60.1142.1, Firebase,
+`Plugin.CurrentActivity` 2.1.0.4 (marked deprecated), and `Newtonsoft.Json` at 11.0.2 and
+12.0.1, both affected by the advisory already patched on desktop. `Consolidate: 2` is the
+same story: Newtonsoft is installed at four different versions across the solution.
+
+**None of it ships.** *Verified against NuGet's live advisory database at audit level `low`
+in `all` mode, covering transitive dependencies: the desktop path — `Type.Desktop`, which has
+no packages, and `AmosDesktop`, which has `Newtonsoft.Json` 13.0.3 and
+`Plugin.InAppBilling` 1.2.4 — reports zero advisories.* Patching the mobile packages now
+would be wasted effort, because a revival replaces the entire Xamarin stack anyway. Leave
+them until then.
 
 Treat a revival as its own project with its own assessment, not as a Phase item.
 
