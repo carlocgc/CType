@@ -109,6 +109,7 @@ namespace Type.States
             _Player.Spawn();
             GameStats.Instance.GameStart();
             InputService.Instance.RegisterListener(this);
+            InputService.Instance.OnInputDeviceLost = () => SetPaused(true);
             UpdateManager.Instance.AddUpdatable(this);
         }
 
@@ -260,6 +261,20 @@ namespace Type.States
         #region Game_Logic
 
         /// <summary>
+        /// Pauses or resumes play
+        /// </summary>
+        /// <param name="paused"> Whether play should be paused </param>
+        private void SetPaused(Boolean paused)
+        {
+            if (_Paused == paused) return;
+
+            _Paused = paused;
+            Game.GameTime.Multiplier = paused ? 0 : 1;
+            _UIScene.SetPaused(paused);
+            InputService.Instance.SetPaused(paused);
+        }
+
+        /// <summary>
         /// Adds the value to the players current score
         /// </summary>
         /// <param name="amount"></param>
@@ -392,21 +407,7 @@ namespace Type.States
                 case ButtonData.Type.START:
                     {
                         if (data.State != ButtonData.State.PRESSED) return;
-                        if (!_Paused)
-                        {
-                            _Paused = true;
-                            Game.GameTime.Multiplier = 0;
-                            _UIScene.SetPaused(true);
-                            InputService.Instance.SetPaused(true);
-                            return;
-                        }
-                        if (_Paused)
-                        {
-                            _Paused = false;
-                            Game.GameTime.Multiplier = 1;
-                            _UIScene.SetPaused(false);
-                            InputService.Instance.SetPaused(false);
-                        }
+                        SetPaused(!_Paused);
                         break;
                     }
             }
@@ -421,6 +422,7 @@ namespace Type.States
             base.Dispose();
 
             InputService.Instance.DeregisterListener(this);
+            InputService.Instance.OnInputDeviceLost = null;
             UpdateManager.Instance.RemoveUpdatable(this);
             CollisionController.Instance.IsActive = false;
             CollisionController.Instance.ClearObjects();

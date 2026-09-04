@@ -43,11 +43,8 @@ namespace Type.Desktop.Source.Controllers
         /// <summary> Whether the provider is in pause mode </summary>
         public Boolean Paused { get; set; }
 
-        /// <summary>
-        /// Invoked when the active gamepad is disconnected while in use, so the game can pause
-        /// rather than carry on with no way to control it
-        /// </summary>
-        public Action OnActivePadDisconnected { get; set; }
+        /// <inheritdoc />
+        public Action OnInputDeviceLost { get; set; }
 
         public DesktopInputProvider()
         {
@@ -119,7 +116,7 @@ namespace Type.Desktop.Source.Controllers
 
                 _ActivePad = -1;
                 _Tracker.Reset();
-                OnActivePadDisconnected?.Invoke();
+                OnInputDeviceLost?.Invoke();
             }
 
             for (Int32 i = 0; i < PadSlots; i++)

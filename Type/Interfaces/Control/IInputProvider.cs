@@ -15,6 +15,13 @@ namespace Type.Interfaces.Control
         VirtualAnalogStick VirtualAnalogStick { get; set; }
 
         /// <summary>
+        /// Invoked when the input device currently driving the game becomes unavailable, so that
+        /// play can be suspended rather than continue with no way to control it. Platforms with
+        /// no detachable input device never invoke it.
+        /// </summary>
+        Action OnInputDeviceLost { get; set; }
+
+        /// <summary>
         /// Vibrates a controller
         /// </summary>
         /// <param name="index"> Index of the controller to vibrate </param>
