@@ -241,15 +241,16 @@ Not glamorous, but these are store-page and refund-request items.
   unavoidable — flag it and get approval before adding it.
 - **S7. Window title, icon, and app metadata.** The window is currently titled `"Test Game"`,
   and so is the `BaseGame` constructor argument.
-- **S8. Drop the mobile in-app billing dependency from the desktop build.** *Done, pending
-  AmosEngine merge request !24.*
-  `AmosShared/Base/PurchaseManager.cs` uses `Plugin.InAppBilling` with no platform guard, so
-  a mobile store-billing library is compiled into the desktop engine and
-  `Plugin.InAppBilling.dll` and `Plugin.InAppBilling.Abstractions.dll` are shipped in the
-  game's output. It is unreachable on desktop — nothing in the game calls `PurchaseManager`.
-  Guarding the class behind the mobile platform defines is an engine merge request and would
-  leave `Newtonsoft.Json` as the desktop build's only package dependency. Not urgent, but a
-  store-billing SDK in a Steam binary is the kind of thing that invites questions.
+- **S8. Drop the mobile in-app billing dependency from the desktop build.**
+  **Done** — AmosEngine merge request !24, merged as `0a1204a`.
+  `AmosShared/Base/PurchaseManager.cs` used `Plugin.InAppBilling` with no platform guard, so
+  a mobile store-billing library was compiled into the desktop engine and both
+  `Plugin.InAppBilling.dll` and `Plugin.InAppBilling.Abstractions.dll` were shipped in the
+  game's output, despite nothing on desktop calling `PurchaseManager`. The class is now
+  wrapped in `#if __ANDROID__ || __IOS__`, matching the convention in `Audio/AudioData.cs`;
+  those symbols come from the Xamarin targets rather than any `DefineConstants`. With nothing
+  left referencing the package, its `PackageReference` was removed from `AmosDesktop`.
+  *Verified: `Newtonsoft.Json` is now the only package assembly in the game's output.*
 
 ### Phase 3 — Graphics
 
