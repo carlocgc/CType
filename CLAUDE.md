@@ -81,6 +81,13 @@ MSBuild (not `dotnet build` — these are legacy .NET Framework 4.8 projects):
 
 Run: `Type.Desktop/bin/Debug/Type.Desktop.exe`
 
+**The v4.8 retarget is uncommitted and load-bearing.** The committed projects target
+.NET Framework **v4.6.1**; the working build depends on local uncommitted retargets to v4.8
+in `Type.Desktop/Type.Desktop.csproj`, `Type.Desktop/App.config`, and — critically —
+`SupportingFiles/AmosDesktop/AmosDesktop.csproj`, which is inside the submodule and cannot
+be committed here. A clean checkout fails with `MSB3644` unless the 4.6.1 targeting pack is
+installed. Do not discard these local changes. See ROADMAP item D6.
+
 **Why a command-line build may fail where Visual Studio succeeds.** `Type.Desktop.csproj`
 has a spurious `ProjectReference` to `Type.Android.csproj`. In the IDE the Android projects
 (`Type.Android`, `AmosAndroid`, `AmosiOS`) are **unloaded**, so VS never walks that reference

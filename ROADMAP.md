@@ -83,9 +83,37 @@ Small, mechanical, and everything else depends on it.
   through unrelated commits. Low urgency while this is a solo Windows project; do it before
   a second contributor or a Linux CI runner arrives.
 
+- **D6. Commit the .NET Framework 4.8 retarget — and resolve the submodule half.**
+  D0–D5 removed the Android dependency, but a clean checkout still does not build. It now
+  fails `MSB3644`: the committed projects target **v4.6.1**, whose targeting pack is not
+  installed on the dev machine. The working v4.8 retarget exists only as **uncommitted**
+  local changes in three places:
+  - `Type.Desktop/Type.Desktop.csproj` (`TargetFrameworkVersion`) — committable
+  - `Type.Desktop/App.config` (`supportedRuntime`) — committable
+  - `SupportingFiles/AmosDesktop/AmosDesktop.csproj` — **inside the submodule, so it cannot
+    be committed to this repository**
+
+  *Verified: retargeting all three to v4.8 makes a pristine export build Release cleanly;
+  retargeting only the two parent-repo files does not, because `AmosDesktop` still targets
+  4.6.1.* So committing the parent-repo half alone produces a tree that looks fixed but
+  still fails on any machine without the 4.6.1 targeting pack.
+
+  Three ways out, in order of preference:
+  1. **Ask the engine author to retarget `AmosDesktop` upstream** and bump the submodule
+     pointer. Correct fix, needs someone else.
+  2. **Install the .NET Framework 4.6.1 Developer Pack** on every dev/CI machine and revert
+     the retarget entirely. Cheapest, keeps the submodule pristine, but leaves the game on
+     an out-of-support framework target.
+  3. **Override the submodule's target framework from the parent build** (an MSBuild
+     `Directory.Build.props` at the repo root setting `TargetFrameworkVersion`). Avoids
+     editing submodule files, but is action-at-a-distance and may not survive an engine update.
+
+  Until this is settled the local uncommitted retarget is **load-bearing** — do not discard
+  it, and note that it will not survive a fresh clone.
+
 **Gate:** `Type.Desktop.exe` builds and runs from a **clean checkout** — no `.vs` directory,
 no Android workload, MSBuild from the command line — on a machine with only Visual Studio's
-.NET desktop workload installed.
+.NET desktop workload installed. **Not yet met:** D0–D5 are done and verified, D6 is open.
 
 ### Phase 1 — Input (your stated first priority)
 
