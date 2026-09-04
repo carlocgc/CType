@@ -241,7 +241,8 @@ Not glamorous, but these are store-page and refund-request items.
   unavoidable — flag it and get approval before adding it.
 - **S7. Window title, icon, and app metadata.** The window is currently titled `"Test Game"`,
   and so is the `BaseGame` constructor argument.
-- **S8. Drop the mobile in-app billing dependency from the desktop build.**
+- **S8. Drop the mobile in-app billing dependency from the desktop build.** *Done, pending
+  AmosEngine merge request !24.*
   `AmosShared/Base/PurchaseManager.cs` uses `Plugin.InAppBilling` with no platform guard, so
   a mobile store-billing library is compiled into the desktop engine and
   `Plugin.InAppBilling.dll` and `Plugin.InAppBilling.Abstractions.dll` are shipped in the
