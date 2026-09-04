@@ -404,7 +404,7 @@ namespace Type.Objects.Player
         /// <inheritdoc />
         public void DeregisterListener(IPlayerListener listener)
         {
-            _Listeners.Add(listener);
+            _Listeners.Remove(listener);
         }
 
         #endregion

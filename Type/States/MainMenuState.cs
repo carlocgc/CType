@@ -28,9 +28,11 @@ namespace Type.States
 
             InputService.Instance.RegisterListener(this);
 
+#if __ANDROID__
             if (!GameStats.Instance.CanShowAds || !AdService.Instance.IsLoaded) return;
             AdService.Instance.OnAddClosed = () => { GameStats.Instance.CanShowAds = false; };
             AdService.Instance.ShowInterstitial();
+#endif // #if __ANDROID__
         }
 
         public override Boolean IsComplete()

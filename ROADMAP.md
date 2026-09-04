@@ -1,0 +1,420 @@
+# C:Type — Roadmap to Steam
+
+Assessment and plan for taking C:Type from a delisted 2019 Android title to a Steam
+release. Written 2026-09-04 against `development` @ `5a7c47d`.
+
+**Constraint:** the AmosEngine submodule (`SupportingFiles/`) is out of scope. Everything
+below is achievable in game-side code unless flagged **[ENGINE]**.
+
+---
+
+## 1. Where the project stands
+
+**The good.** The architecture is better than most hobby projects of this age. State/Scene
+separation is clean, platform code sits behind interfaces selected by preprocessor symbol,
+enemy movement is already a strategy object (`IAccelerationProvider`), and levels are data
+files rather than code. Twenty levels, four bosses, four ships, five powerups and a full
+menu-to-game-over flow all exist and work. The bones are sound; this is a polish and
+extension job, not a rewrite.
+
+**The problem.** Every design decision assumes a phone. Controls, UI layout, session
+length, monetisation and the level pacing were all built for touch on a 5-inch screen.
+The desktop build is a straight port of the mobile build with a keyboard/gamepad reader
+bolted on, and it shows.
+
+**Verified findings** (I built and inspected the code; I did not play through the game):
+
+| Area | Finding |
+|---|---|
+| Build | `Type.Desktop.csproj` has a spurious `ProjectReference` to `Type.Android.csproj`. It builds today **only because `Type.Android` is unloaded in the local VS solution** — that state lives in `.vs/Type/v17/.suo`, which is gitignored, so a fresh clone loads the project and the desktop build breaks. Command-line builds already fail: VS 18's MSBuild has no Xamarin targets (`MSB4226`), and VS 2022's fails `XA5207` (Android SDK API 28 not installed). Removing the reference plus one stray `using Type.Ads;` in `GameCompleteScene.cs` makes the desktop project build standalone — verified, then reverted. |
+| Input | `DesktopInputProvider` is a hardcoded polling chain: fixed bindings, fixed 0.2 deadzone, controller 0 only, no D-pad, no hot-plug, no rebinding. |
+| Input | Menus are touch `Button` objects driven by the mouse. There is no keyboard or gamepad menu navigation anywhere. Ship select maps A/B/Y to three fixed ships with no cursor. |
+| Input | `DesktopInputProvider.cs:189` tests `Buttons.X == Released` in the release branch of the **Back** button — copy-paste bug. |
+| Window | Fixed windowed 1344x756 (`InitialResolution * 0.7f`). No fullscreen, no resolution choice, no options menu of any kind. |
+| Data | `LevelLoader.cs` never clears its `delays` list between waves, so from wave 2 onward spawn intervals are read from wave 1's data. Level pacing past the first wave is not what the level files say. |
+| Code | `DeregisterListener` calls `_Listeners.Add(...)` instead of `Remove(...)` in 5 places (`EnemyFactory` and all 4 player ships). Listener leak. |
+| Code | The 6 enemy classes are byte-identical apart from ~5 values (HP, points, fire rate, sprite). Same story for the 4 player ships (~55 differing lines out of 425). Roughly 2,400 lines of copy-paste. |
+| Content | Bosses have no attack patterns beyond fixed cannons; every regular enemy uses the same "rotate toward player, fire on a timer" logic. |
+| Content | Levels 5/10/15/20 are single-boss files. The other 16 use 6 enemy types across 4 movement patterns and nothing else — no formations, no scripted set pieces. |
+| Perf | Collision is O(projectiles × enemies) with a `.ToList()` allocation per check, per frame. Fine at current density, will not survive bullet-hell counts. |
+| Audio | 25 MB of uncompressed WAV. A new `AudioPlayer` is allocated per shot; enemies carry a `TODO FIXME` rate-limiter to work around the resulting sound spam. |
+| Ship | Debug constants are committed as `INVINCIBLE = true`, `START_LEVEL = 11`. The AdMob unit ID and Google Play achievement IDs are hardcoded in `Constants.cs`. |
+
+---
+
+## 2. Phases
+
+Each phase is a gate. Later work depends on earlier foundations — level design needs the
+level format, enemy behaviour needs the enemy consolidation — so the ordering is not
+arbitrary.
+
+### Phase 0 — Unblock the desktop build
+
+Small, mechanical, and everything else depends on it.
+
+- **D0. Sever the desktop→Android dependency.** Delete the `Type.Android` `ProjectReference`
+  from `Type.Desktop.csproj` and the unused `using Type.Ads;` from `GameCompleteScene.cs`.
+  All three `Type.Android` usages in shared code already sit inside `#if __ANDROID__`, so the
+  reference buys nothing. *Verified: the desktop project then builds cleanly with no Android
+  tooling installed.*
+  This is not urgent — the game builds and runs today with `Type.Android` unloaded in the
+  IDE — but that makes the desktop build depend on gitignored `.vs` state, which will not
+  survive a fresh clone, a CI runner, or anyone reloading the Android project. **It also does
+  not harm a future Android revival:** `Type.Android` stays a full project in the solution
+  and keeps its own reference to the shared `Type` code.
+- **D1. Strip ads from the desktop build.** `DesktopAdService` is already a no-op stub, but
+  `Game.LoadContent` still calls `AdService.Instance.Initialise` with a live AdMob unit ID.
+  Guard the whole ad path behind `#if __ANDROID__` and remove the ID from the desktop build.
+  Ads in a paid Steam game are a store-review problem, not just a code smell.
+- **D2. Reset the debug constants** to `INVINCIBLE = false`, `START_LEVEL = 1`, and add a
+  build-time guard so a non-default value cannot reach a Release build.
+- **D3. Fix the five `DeregisterListener` bugs** and the Back-button `Buttons.X` typo.
+- **D4. Fix `LevelLoader`'s uncleared `delays` list.** Do this before touching level design —
+  otherwise you will be tuning pacing against a parser that ignores your numbers.
+- **D5. Add a `.gitattributes`** pinning line endings, and confirm `bin/` and `obj/` are
+  fully ignored. *Partially done.* `bin/`/`obj/` were already correctly ignored with nothing
+  tracked. `.gitattributes` now declares the binary types (`*.png`, `*.wav`, `*.so`, `*.dll`,
+  fonts) so Git can never EOL-convert or line-merge them.
+  **Still outstanding:** the global `* text=auto` rule. This repo's history stores text files
+  with **CRLF in the index**, so enabling normalisation rewrites the line endings of every
+  tracked source file. That should be one dedicated `git add --renormalize .` commit on its
+  own branch — folding it into a bug-fix branch would bury the real changes under a
+  ~160-file diff, and adding the rule without renormalising just drip-feeds the same churn
+  through unrelated commits. Low urgency while this is a solo Windows project; do it before
+  a second contributor or a Linux CI runner arrives.
+
+- **D6. Commit the .NET Framework 4.8 retarget — and resolve the submodule half.**
+  D0–D5 removed the Android dependency, but a clean checkout still does not build. It now
+  fails `MSB3644`: the committed projects target **v4.6.1**, whose targeting pack is not
+  installed on the dev machine. The working v4.8 retarget exists only as **uncommitted**
+  local changes in three places:
+  - `Type.Desktop/Type.Desktop.csproj` (`TargetFrameworkVersion`) — committable
+  - `Type.Desktop/App.config` (`supportedRuntime`) — committable
+  - `SupportingFiles/AmosDesktop/AmosDesktop.csproj` — **inside the submodule, so it cannot
+    be committed to this repository**
+
+  *Verified: retargeting all three to v4.8 makes a pristine export build Release cleanly;
+  retargeting only the two parent-repo files does not, because `AmosDesktop` still targets
+  4.6.1.* So committing the parent-repo half alone produces a tree that looks fixed but
+  still fails on any machine without the 4.6.1 targeting pack.
+
+  Three ways out, in order of preference:
+  1. **Ask the engine author to retarget `AmosDesktop` upstream** and bump the submodule
+     pointer. Correct fix, needs someone else.
+  2. **Install the .NET Framework 4.6.1 Developer Pack** on every dev/CI machine and revert
+     the retarget entirely. Cheapest, keeps the submodule pristine, but leaves the game on
+     an out-of-support framework target.
+  3. **Override the submodule's target framework from the parent build** (an MSBuild
+     `Directory.Build.props` at the repo root setting `TargetFrameworkVersion`). Avoids
+     editing submodule files, but is action-at-a-distance and may not survive an engine update.
+
+  Until this is settled the local uncommitted retarget is **load-bearing** — do not discard
+  it, and note that it will not survive a fresh clone.
+
+- **D7. Make a clean checkout produce a working binary, not just a compiling one.**
+  With D0–D6 done, a fresh clone of this repo now **compiles with zero errors and zero
+  warnings and then crashes on startup**:
+  `FileNotFoundException: Could not load file or assembly 'Newtonsoft.Json'`, thrown from
+  `AmosShared.Base.DataLoader.Initialise`.
+
+  Cause: **`Type.Desktop`'s dead `Newtonsoft.Json 12.0.1` reference.** The parent repo's
+  `packages/` is gitignored (`**/packages/*`) and has never been tracked, so
+  `packages\Newtonsoft.Json.12.0.1\...` is absent from a fresh clone and the reference
+  resolves to nothing, silently — packages.config projects are not restored by
+  `/t:Restore`, which only handles `PackageReference`. Because
+  `AutoGenerateBindingRedirects` writes an 11→12 redirect into `Type.Desktop.exe.config`,
+  the engine's working 11.0.1 assembly was then forwarded to a 12.0.0.0 that did not exist.
+  Hence the exception's outer frame naming `Version=12.0.0.0`. This is the worst failure
+  mode available — the build reports success and hands you a broken executable.
+
+  **Correction to an earlier reading of this item:** the engine half was never broken. The
+  AmosEngine repository *commits* its `packages/` folder, so all three of `AmosDesktop`'s
+  old `HintPath` targets — `Newtonsoft.Json 11.0.1` and both `Plugin.InAppBilling 1.2.4`
+  assemblies — were present in a clean clone and needed no restore. *Verified against a
+  fresh `git clone --recurse-submodules`.* Removing the dead `Type.Desktop` reference alone
+  would have fixed the crash; the `PackageReference` migration below was **not required** to
+  close D7.
+
+  **Resolved by removing the dead references, plus an optional `PackageReference`
+  migration.** The first bullet below is the actual fix; the rest is a deliberate
+  improvement with one trade-off, noted at the end.
+
+  - **`Type.Desktop` now has zero NuGet packages.** Nothing in `Type/` or `Type.Desktop/`
+    referenced `Newtonsoft.Json`, `Plugin.InAppBilling`, or
+    `Xamarin.GooglePlayServices.Ads.Lite`. All four `Reference` entries and
+    `packages.config` were dead weight — the last of them a MonoAndroid assembly referenced
+    from the desktop project. Deleting them also removes the version split at its source.
+  - **`AmosDesktop` (engine) migrated to `PackageReference`** for its two genuinely used
+    packages, `Newtonsoft.Json` and `Plugin.InAppBilling` (the latter is used by
+    `AmosShared/Base/PurchaseManager.cs`). Restore is now automatic via
+    `msbuild /t:Restore` with **no `nuget.exe` required**.
+  - **`Newtonsoft.Json` bumped 11.0.1 → 13.0.3.** Migrating surfaced `NU1903`: 11.0.1 has a
+    known **high severity** vulnerability
+    ([GHSA-5crp-9r3c-p9vr](https://github.com/advisories/GHSA-5crp-9r3c-p9vr)) that
+    packages.config never reported. Engine usage is only `JsonConvert` and `JObject`
+    indexing, so the upgrade surface is trivial. The other engine projects
+    (`AmosAndroid`, `AmosiOS`, `TestProject`) still carry 11.0.2 via packages.config and
+    should be bumped when Android is next revived — see §4.
+
+  *Verified end to end: with no `packages/` folder anywhere, no `nuget.exe` and no `.vs`,
+  `/t:Restore` then `/t:Rebuild` produces a Release binary that launches and reaches the
+  main menu, with `Newtonsoft.Json` 13.0.3 flowing transitively into the game's output.*
+
+  **The silent-failure mode is gone and needs no extra guard.** A build without restore now
+  fails at compile time with `CS0246` on `Newtonsoft` and `Plugin`, rather than succeeding
+  and producing a binary that dies at startup. The remaining `HintPath` references
+  (`OpenTK`, `FarseerPhysics`) point at DLLs committed in the engine's `Libraries/Desktop`,
+  so they cannot go missing in a clean checkout.
+
+  **Trade-off the migration introduced.** Before it, every assembly the engine needed was
+  committed, so a clean checkout built **fully offline**. `AmosDesktop` now resolves
+  `Newtonsoft.Json 13.0.3` from NuGet, so a first build needs network access or a warm
+  package cache. That was accepted in exchange for patching a high-severity advisory and
+  stopping the engine from carrying binaries in source control — but it is a real cost, and
+  worth remembering if a CI runner or a machine ever builds air-gapped. Reverting is a
+  one-line change back to a `HintPath` on the committed 11.0.1, at the price of restoring
+  the vulnerability.
+
+**Gate:** `Type.Desktop.exe` builds *and runs* from a **clean checkout** — no `.vs`
+directory, no `packages/`, no Android workload, no `nuget.exe`, MSBuild from the command
+line — on a machine with only Visual Studio's .NET desktop workload installed.
+**Met**, once the D7 engine merge request lands and the submodule pointer is bumped.
+Build with `/t:Restore` then `/t:Rebuild`; see CLAUDE.md.
+
+### Phase 1 — Input (your stated first priority)
+
+The goal: the game is playable start to finish with a gamepad alone and with a keyboard
+alone, and Steam's controller-support checkbox is honest.
+
+- **I1. Rewrite `DesktopInputProvider` around a binding table.** Replace the hardcoded
+  polling chain with an action enum (`Move`, `Fire`, `Nuke`, `Confirm`, `Cancel`, `Pause`)
+  mapped to a list of physical sources. Everything else in this phase hangs off it, so do
+  it first and do it properly.
+  - Extend `ButtonData.Type` with `CONFIRM`, `CANCEL`, `UP`, `DOWN`, `LEFT`, `RIGHT`. The
+    current enum leaks game meaning into input identity (`GAMMA_SELECT` is a *button type*),
+    which is exactly why ship select reads as "A selects Alpha".
+  - Emit edge-triggered `PRESSED` / `HELD` / `RELEASED` from one place instead of the
+    per-button `_XPressed` booleans scattered through the provider.
+- **I2. Proper analog handling.** Radial deadzone (the current one is per-axis, so diagonals
+  reach full speed sooner than cardinals), configurable inner/outer deadzone, response curve.
+  Feed `strength` through to `_MoveStrength` so analog movement is actually analog — keyboard
+  reports 1.0, stick reports magnitude.
+- **I3. D-pad, both sticks, triggers, and hot-plug.** Poll all four `GamePad` slots, bind to
+  the first connected, and auto-pause on mid-game disconnect.
+- **I4. Full keyboard support.** WASD and arrows simultaneously, Escape to pause/back,
+  Enter/Space to confirm. Normalise diagonal keyboard vectors — `(1,1)` currently yields
+  ~1.41× speed diagonally.
+- **I5. Menu navigation without a mouse.** Every menu needs a focus cursor driven by
+  D-pad/stick/arrows with confirm and cancel. This means a small focusable-widget
+  abstraction layered over the existing touch `Button`s — keep mouse and touch working, add
+  focus on top. Ship select in particular should become a real cursor selection rather than
+  three face-button shortcuts.
+- **I6. Rebinding UI and persistence.** Store bindings via the engine's `DataLoader`
+  key/value store, already used for high scores. Steam users expect this.
+- **I7. Contextual button prompts.** Gamepad glyphs when a pad is connected, keyboard keys
+  otherwise. Cheap, and it is the clearest single signal that a game is not a phone port.
+- **I8. Rumble.** `InputService.Vibrate` exists and is already wired to death and nuke. Add
+  hit, shield break, and boss impacts, plus an intensity slider in options.
+
+**Gate:** complete a full 20-level run using only a gamepad, then again using only a
+keyboard, without touching the mouse.
+
+### Phase 2 — Desktop shell
+
+Not glamorous, but these are store-page and refund-request items.
+
+- **S1. Fullscreen and borderless windowed.** `AmosDesktop.GameWindow` derives from
+  `OpenTK.GameWindow`, so `WindowState` and `WindowBorder` are already reachable from
+  `Program.cs` — no engine change needed.
+- **S2. Resolution and aspect handling.** The game assumes 1920×1080 and positions HUD
+  elements at literal coordinates. Verify 16:10 and 21:9; letterbox if the alternative is a
+  broken layout. **[ENGINE risk]** — `Renderer.UpdateSize` behaviour may constrain what is
+  possible here, so measure before promising ultrawide support.
+- **S3. An options menu.** Master/music/effects volume (`AudioManager` already exposes all
+  three), display mode, rebinding, rumble. There is currently no settings screen at all.
+- **S4. A real pause menu.** Pause today freezes time and shows a powerup help overlay.
+  It needs Resume / Options / Restart / Quit.
+- **S5. Settings persistence** through `DataLoader`.
+- **S6. Replace Google Play achievements and leaderboards** with Steamworks equivalents,
+  behind the existing `AchievementController` / `LeaderboardController` facades. This is the
+  one place a new third-party dependency (Facepunch.Steamworks or Steamworks.NET) is
+  unavoidable — flag it and get approval before adding it.
+- **S7. Window title, icon, and app metadata.** The window is currently titled `"Test Game"`,
+  and so is the `BaseGame` constructor argument.
+- **S8. Drop the mobile in-app billing dependency from the desktop build.**
+  **Done** — AmosEngine merge request !24, merged as `0a1204a`.
+  `AmosShared/Base/PurchaseManager.cs` used `Plugin.InAppBilling` with no platform guard, so
+  a mobile store-billing library was compiled into the desktop engine and both
+  `Plugin.InAppBilling.dll` and `Plugin.InAppBilling.Abstractions.dll` were shipped in the
+  game's output, despite nothing on desktop calling `PurchaseManager`. The class is now
+  wrapped in `#if __ANDROID__ || __IOS__`, matching the convention in `Audio/AudioData.cs`;
+  those symbols come from the Xamarin targets rather than any `DefineConstants`. With nothing
+  left referencing the package, its `PackageReference` was removed from `AmosDesktop`.
+  *Verified: `Newtonsoft.Json` is now the only package assembly in the game's output.*
+
+### Phase 3 — Graphics
+
+Your second stated priority. Ordered cheapest-impact-first.
+
+- **G1. Audit asset resolution — do this before anything else in the phase.** The art was
+  authored for phone screens and is now drawn on a 1080p+ desktop display. Establish whether
+  it holds up at 1:1 on a 27" monitor. The answer decides whether Phase 3 is "add effects"
+  or "re-art the game", and those differ by an order of magnitude in cost.
+- **G2. A particle system.** There isn't one. Thrusters, muzzle flashes, impact sparks,
+  debris on death. The single biggest visual return per line of code in the project.
+- **G3. Screen shake, hit-stop, and flash.** Enemies already flash white on hit; extend to
+  brief time dilation on boss kills and camera shake on nukes and player death.
+- **G4. Fix the audio architecture.** Pool `AudioPlayer` instances instead of allocating per
+  shot, then delete the `TODO FIXME` rate-limit hacks in all six enemy classes. Convert the
+  WAVs to a compressed format if the engine supports it — 25 MB of uncompressed audio is
+  most of the download size.
+- **G5. Deepen the parallax.** Three scrolling layers exist (stars, clusters, planets). Add
+  a foreground layer and tie per-layer speed to player movement for a sense of depth.
+- **G6. Better explosions.** One shared 9-frame animation is used for every death from a
+  small fighter to a boss. Vary scale, tint and duration by enemy class at minimum.
+- **G7. Boss telegraphs.** Wind-up animations and warning indicators before attacks. As much
+  a fairness fix as a visual one, and a prerequisite for making bosses harder.
+- **G8. Menu and HUD pass.** The HUD is mobile-scaled with touch-sized targets. Rebalance
+  for desktop viewing distance.
+
+### Phase 4 — Enemy behaviour
+
+Your third stated priority. **E1 is a prerequisite for the rest** — do not add behaviours on
+top of six duplicated classes.
+
+- **E1. Collapse the enemy classes into one data-driven `Enemy` type.** The six variants
+  differ only in HP, points, fire rate and sprite. Replace them with a single class plus an
+  `EnemyDefinition` loaded from a data file. This deletes ~1,400 lines and turns every
+  subsequent item in this phase into a data edit instead of six code edits. Do the same for
+  the four player ships (~1,300 lines).
+- **E2. Split behaviour from movement.** `IAccelerationProvider` handles motion; add a
+  parallel `IWeaponBehaviour` so firing patterns compose with movement patterns. Right now
+  every enemy in the game shares one behaviour: rotate toward the player, fire a plasma ball
+  on a timer.
+- **E3. Build a behaviour library.** Aimed shot, spread, burst, sustained beam, mine-layer,
+  kamikaze charge, shielded (must be flanked), and a support type that buffs nearby enemies.
+- **E4. Add real movement patterns.** The four existing ones are linear, sine wave, and two
+  ellipses. Add strafe-and-retreat, hover-at-x-then-attack, swoop-in, and a pattern that
+  reacts to player position. Note `WaveMotion` increments its oscillation by a fixed amount
+  per *frame* rather than per second — it is framerate-dependent and should be fixed here.
+- **E5. Formations.** The level format spawns ships one at a time on a timer. Add a formation
+  concept (V, line, box, escorted) so groups arrive and manoeuvre coherently.
+- **E6. Rework the bosses.** Multi-phase fights with distinct attack patterns per phase,
+  destructible sub-components (`BossCannon` is already a separate object — build on that),
+  and phase transitions telegraphed per G7.
+- **E7. Difficulty curve.** HP and fire rate are per-class constants today. Introduce a
+  per-level scalar so one enemy definition can be tuned across the campaign.
+
+### Phase 5 — Level design
+
+Depends on D4 (parser fix) and E1–E5 (having things worth placing).
+
+- **L1. Replace the level format.** The current `type=0|ypos=-300|delay=0.8|...`
+  pipe-delimited text is unreadable and unvalidated — a typo throws
+  `ArgumentOutOfRangeException` at runtime, mid-level. Move to JSON (Newtonsoft is already
+  referenced) with a schema, and validate every level at startup in Debug builds.
+- **L2. Extend the format** to express what Phase 4 adds: formations, behaviours, scripted
+  events, mid-level checkpoints, per-level enemy stat scalars, background and music selection.
+- **L3. Build a level editor.** Twenty levels of hand-written pipe-delimited text is *why*
+  the levels are repetitive. Even a crude visual timeline tool changes the economics of
+  iteration more than any single design decision here. A small separate WinForms or Avalonia
+  tool reading and writing the L1 JSON would do.
+- **L4. Redesign the campaign.** With the above in place, rebuild all 20 levels around a
+  deliberate difficulty curve — introduce one new enemy or mechanic at a time, with pacing
+  that breathes between waves. The levels currently have no set pieces and no rhythm.
+- **L5. Extend length and variety.** Twenty levels is short for a paid desktop release.
+  Consider more levels, an endless/survival mode (leaderboard-friendly), and a boss rush.
+  Difficulty settings belong here too.
+
+### Phase 6 — Steam release
+
+- **R1. Steamworks integration**: achievements, leaderboards, Cloud saves, rich presence.
+- **R2. Store assets**: capsule art, trailer, screenshots, description. Note the existing
+  [gameplay trailer](https://www.youtube.com/watch?v=kixFrAAmXPs) is from the 2019 build and
+  will misrepresent the release.
+- **R3. Build and packaging**: a single-command Release build, no Android artefacts in the
+  output (`Type.Desktop/bin/` currently contains `Type.Android.dll.config`), Steam depot
+  configuration.
+- **R4. Steam Deck verification.** Given Phase 1, this should be close to free, and it is
+  worth real sales in this genre.
+- **R5. Localisation.** The custom `TextDisplay` bitmap font maps A–Z, 0–9 and four symbols
+  only. Anything beyond English needs a font and string-table pass — decide early whether it
+  is in scope, because retrofitting it is expensive.
+- **R6. Crash reporting and a public beta branch** before launch.
+
+---
+
+## 3. Sequencing
+
+```
+Phase 0 ──> Phase 1 ──> Phase 2 ──┐
+   │                              ├──> Phase 6
+   ├──> Phase 3 (G1 gates it) ────┤
+   └──> Phase 4 (E1 first) ──> Phase 5
+```
+
+Phases 3 and 4 can run in parallel with 1 and 2 once Phase 0 lands. Phase 5 cannot start
+until D4 and E1–E5 are done. Phase 6 needs everything.
+
+## 4. Android: dormant, not dead
+
+**Decision (2026-09-04): Android stays as-is for now, and reviving it later is on the table.**
+Desktop and Steam are the priority; nothing in the phases above should be blocked waiting on
+Android, but nothing should burn the bridge either.
+
+What that means in practice:
+
+- **Keep the platform abstraction.** `IInputProvider`, `IAdService` and the
+  `#if __ANDROID__` / `#elif __DESKTOP__` selection pattern stay. When Phase 1 rewrites
+  `DesktopInputProvider`, put the shared logic (binding table, action enum, deadzone maths)
+  in the `Type` shared project rather than in `Type.Desktop`, so a revived
+  `AndroidInputProvider` can reuse it instead of reimplementing it.
+- **Do not delete `Type.Android/`, the touch `Buttons/`, or the virtual analog stick.** They
+  cost nothing while unloaded.
+- **Do not let Android hold back desktop-first design.** Where mobile and desktop genuinely
+  conflict (HUD scale, touch-sized hit targets, session length, ads), optimise for desktop
+  and leave the Android path on its current behaviour behind the platform guard.
+- **Adding a shared asset still means editing both csprojs** (see CLAUDE.md). Keep the
+  Android asset list in sync even while the project is unloaded — it is a one-line copy at
+  the time, and a painful audit later.
+
+**Cost of an actual revival, so it is not a surprise later.** This is bigger than reloading
+the project:
+
+1. **Xamarin.Android is end-of-life** (support ended May 2024). A revival means migrating
+   `Type.Android` to .NET for Android, which also means the `AmosAndroid` engine project
+   migrating — and that is submodule territory, i.e. out of your hands.
+2. **The API 28 target is far below Google Play's current minimum** for new submissions, so
+   the manifest and SDK targets need raising regardless.
+3. **The Android SDK platform for the target API is not installed on this machine** — the
+   command-line build fails `XA5207` today.
+4. Play Services, AdMob and the in-app billing plugin are all on 2018-era versions.
+
+**The NuGet vulnerability banner in Visual Studio is entirely this debt.** The solution-wide
+warning aggregates every project, and the dormant mobile ones carry roughly 57 Xamarin
+packages from 2018 — Support Library 27/28, Play Services 60.1142.1, Firebase,
+`Plugin.CurrentActivity` 2.1.0.4 (marked deprecated), and `Newtonsoft.Json` at 11.0.2 and
+12.0.1, both affected by the advisory already patched on desktop. `Consolidate: 2` is the
+same story: Newtonsoft is installed at four different versions across the solution.
+
+**None of it ships.** *Verified against NuGet's live advisory database at audit level `low`
+in `all` mode, covering transitive dependencies: the desktop path — `Type.Desktop`, which has
+no packages, and `AmosDesktop`, which has `Newtonsoft.Json` 13.0.3 and
+`Plugin.InAppBilling` 1.2.4 — reports zero advisories.* Patching the mobile packages now
+would be wasted effort, because a revival replaces the entire Xamarin stack anyway. Leave
+them until then.
+
+Treat a revival as its own project with its own assessment, not as a Phase item.
+
+## 5. Open questions
+
+1. **Is the existing art the shipping art?** G1 answers this, and the answer changes the size
+   of Phase 3 by an order of magnitude.
+2. **Is .NET Framework 4.8 + OpenTK 1.x acceptable to ship on?** It works, and it is what the
+   engine targets. But it is Windows-only in practice, rules out a Linux-native build, and
+   complicates Steam Deck. Migrating means engine work, which is out of scope — so this is
+   really a question about the submodule's future rather than the game's. It is also the same
+   question that gates an Android revival, so it is worth raising with the engine's author
+   once rather than twice.
+3. **Target price and scope.** Twenty short levels reads as a £3–5 title. If the target is
+   higher, L5 stops being optional.
