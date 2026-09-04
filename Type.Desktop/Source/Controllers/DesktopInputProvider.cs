@@ -186,7 +186,7 @@ namespace Type.Desktop.Source.Controllers
                 }
                 _BackPressed = true;
             }
-            else if (GamePad.GetState(0).Buttons.X == ButtonState.Released || Keyboard.GetState().IsKeyUp(Key.BackSpace))
+            else if (GamePad.GetState(0).Buttons.Back == ButtonState.Released || Keyboard.GetState().IsKeyUp(Key.BackSpace))
             {
                 foreach (IInputListener listener in _Listeners)
                 {

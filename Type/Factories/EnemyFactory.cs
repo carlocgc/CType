@@ -261,7 +261,7 @@ namespace Type.Factories
         /// <inheritdoc />
         public void DeregisterListener(IEnemyFactoryListener listener)
         {
-            if (_Listeners.Contains(listener)) _Listeners.Add(listener);
+            if (_Listeners.Contains(listener)) _Listeners.Remove(listener);
         }
 
         #endregion

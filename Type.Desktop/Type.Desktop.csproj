@@ -564,10 +564,6 @@
       <Project>{b4b23ae1-df74-49d9-b85d-62033515baa5}</Project>
       <Name>AmosDesktop</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Type.Android\Type.Android.csproj">
-      <Project>{3DAE946F-A62D-4CCC-81EB-E8661F7AB186}</Project>
-      <Name>Type.Android</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="..\Type\Type.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

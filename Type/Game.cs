@@ -33,7 +33,9 @@ namespace Type
             UiCanvas = new Canvas(new Camera(Vector2.Zero, new Vector2(1920, 1080)), 1,
                 new Shader());
 
-            AdService.Instance.Initialise("ca-app-pub-4204969324853965~4341189590");
+#if __ANDROID__
+            AdService.Instance.Initialise(Constants.Global.ADMOB_APP_ID);
+#endif // #if __ANDROID__
 
             SpritesheetLoader.LoadSheet("Content/Graphics/KenPixel/", "KenPixel.png", "KenPixel.json");
             SpritesheetLoader.LoadSheet("Content/Graphics/Background/Planets/", "planets.png", "planets.json");

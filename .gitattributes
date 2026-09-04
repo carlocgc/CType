@@ -1,0 +1,33 @@
+# Line ending and diff policy for C:Type.
+#
+# NOTE ON TEXT FILES
+# ------------------
+# A global `* text=auto` rule is deliberately NOT set here. This repository's
+# history already stores text files with CRLF in the index, so enabling
+# normalisation would rewrite the line endings of every tracked source file the
+# next time it is touched. That is worth doing, but it must be a dedicated
+# `git add --renormalize .` commit of its own so the churn is reviewable in
+# isolation, rather than drip-feeding through unrelated changes.
+#
+# Until then, line endings in the working tree come from the local
+# `core.autocrlf` setting. This repo is developed on Windows with
+# `core.autocrlf=true`. See ROADMAP item D5.
+#
+# The declarations below are safe to add now: they only affect files that Git
+# must never EOL-convert or line-merge, and they cause no renormalisation.
+
+# Graphics
+*.png binary
+
+# Audio
+*.wav binary
+
+# Native and managed binaries
+*.so  binary
+*.dll binary
+*.exe binary
+*.pdb binary
+
+# Fonts
+*.ttf binary
+*.otf binary

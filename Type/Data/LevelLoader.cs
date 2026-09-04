@@ -32,17 +32,18 @@ namespace Type.Data
             // Split data into wave strings
             waveStrings = cleanData.Split('_').ToList();
 
-            // Temporary data store wave data object
-            List<Single> positions = new List<Single>();
-            List<Int32> types = new List<Int32>();
-            List<Single> delays = new List<Single>();
-            List<Int32> moveTypes = new List<Int32>();
-            List<Single> xDirections = new List<Single>();
-            List<Single> yDirections = new List<Single>();
-            List<Single> speeds = new List<Single>();
-
             foreach (String waveString in waveStrings)
             {
+                // Temporary data store for this wave only. These are scoped to the loop
+                // body so that data cannot leak from one wave into the next.
+                List<Single> positions = new List<Single>();
+                List<Int32> types = new List<Int32>();
+                List<Single> delays = new List<Single>();
+                List<Int32> moveTypes = new List<Int32>();
+                List<Single> xDirections = new List<Single>();
+                List<Single> yDirections = new List<Single>();
+                List<Single> speeds = new List<Single>();
+
                 String[] waveData = waveString.Split(':');
 
                 String[] enemyStrings = waveData[1].Split(';');
@@ -117,14 +118,6 @@ namespace Type.Data
 
                 // Create the wave data
                 _Waves.Add(new WaveData(delaySpans.ToArray(), types.ToArray(), positions.ToArray(), moveTypes.ToArray(), directions.ToArray(), speeds.ToArray()));
-
-                delaySpans.Clear();
-                types.Clear();
-                positions.Clear();
-                moveTypes.Clear();
-                xDirections.Clear();
-                yDirections.Clear();
-                speeds.Clear();
             }
 
             return _Waves;

@@ -18,25 +18,43 @@ namespace Type
         public static class Global
         {                      
             public const String VERSION = "1.2.2";
+
+#if __ANDROID__
+            /// <summary> AdMob application id, Android builds only </summary>
+            public const String ADMOB_APP_ID = "ca-app-pub-4204969324853965~4341189590";
+#endif // #if __ANDROID__
+
+#if !DEBUG && CTYPE_CHEATS
+#error CTYPE_CHEATS must never be defined in a Release build.
+#endif
+
 #if DEBUG
             /// <summary> Show FPS on screen </summary>
             public const Boolean SHOW_FPS = true;
             /// <summary> Draws white pixels over the game objects </summary>
             public const Boolean SHOW_SPRITE_AREAS = false;
+#else // #if DEBUG
+            /// <summary> Show FPS on screen </summary>
+            public const Boolean SHOW_FPS = false;
+            /// <summary> Draws white pixels over the game objects </summary>
+            public const Boolean SHOW_SPRITE_AREAS = false;
+#endif // #if DEBUG
+
+            // Cheats are opt-in and Debug-only. To enable them locally, add CTYPE_CHEATS to
+            // DefineConstants for the Debug configuration, or build with
+            // /p:DefineConstants="TRACE;DEBUG;__DESKTOP__;CTYPE_CHEATS".
+            // Never commit CTYPE_CHEATS to a checked-in configuration.
+#if DEBUG && CTYPE_CHEATS
             /// <summary> Player will not take damage when set to true </summary>
             public const Boolean INVINCIBLE = true;
             /// <summary> The level the game will start on </summary>
-            public const int START_LEVEL = 11;
-#else // #if DEBUG
-            /// <summary> Show FPS on screen </summary>
-            public const Boolean SHOW_FPS = false;            
-            /// <summary> Draws white pixels over the game objects </summary>
-            public const Boolean SHOW_SPRITE_AREAS = false;
+            public const Int32 START_LEVEL = 11;
+#else // #if DEBUG && CTYPE_CHEATS
             /// <summary> Player will not take damage when set to true </summary>
             public const Boolean INVINCIBLE = false;
             /// <summary> The level the game will start on </summary>
-            public const int START_LEVEL = 1;
-#endif // #if DEBUG
+            public const Int32 START_LEVEL = 1;
+#endif // #if DEBUG && CTYPE_CHEATS
 
             /// <summary> The top of the screen </summary>
             public static readonly Single ScreenTop = Renderer.Instance.TargetDimensions.Y / 2;
