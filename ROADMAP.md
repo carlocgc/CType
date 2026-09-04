@@ -117,24 +117,27 @@ Small, mechanical, and everything else depends on it.
   `FileNotFoundException: Could not load file or assembly 'Newtonsoft.Json'`, thrown from
   `AmosShared.Base.DataLoader.Initialise`.
 
-  Cause: `packages/` is gitignored (`**/packages/*`) and untracked, so it is absent from a
-  fresh clone. These are **packages.config**-style projects, which MSBuild does not restore
-  automatically — `/t:Restore` only handles `PackageReference`, and `nuget.exe` is not
-  installed on the dev machine. The reference simply resolves to nothing, silently.
-  *Verified: supplying `packages/` to an otherwise untouched fresh clone makes the same
-  binary build and run.* This is the worst failure mode available — the build says success
-  and hands you a broken executable.
+  Cause: **`Type.Desktop`'s dead `Newtonsoft.Json 12.0.1` reference.** The parent repo's
+  `packages/` is gitignored (`**/packages/*`) and has never been tracked, so
+  `packages\Newtonsoft.Json.12.0.1\...` is absent from a fresh clone and the reference
+  resolves to nothing, silently — packages.config projects are not restored by
+  `/t:Restore`, which only handles `PackageReference`. Because
+  `AutoGenerateBindingRedirects` writes an 11→12 redirect into `Type.Desktop.exe.config`,
+  the engine's working 11.0.1 assembly was then forwarded to a 12.0.0.0 that did not exist.
+  Hence the exception's outer frame naming `Version=12.0.0.0`. This is the worst failure
+  mode available — the build reports success and hands you a broken executable.
 
-  A second problem sits underneath it: **the Newtonsoft.Json reference is split across two
-  versions.** `AmosDesktop` (engine) references `11.0.0.0` from
-  `packages\Newtonsoft.Json.11.0.1`; `Type.Desktop` references `12.0.0.0` from
-  `packages\Newtonsoft.Json.12.0.1`. It only works locally because
-  `AutoGenerateBindingRedirects` writes an 11→12 redirect into `Type.Desktop.exe.config`.
-  The inner exception naming `Version=11.0.0.0` confirms the engine's reference is the one
-  that fails first.
+  **Correction to an earlier reading of this item:** the engine half was never broken. The
+  AmosEngine repository *commits* its `packages/` folder, so all three of `AmosDesktop`'s
+  old `HintPath` targets — `Newtonsoft.Json 11.0.1` and both `Plugin.InAppBilling 1.2.4`
+  assemblies — were present in a clean clone and needed no restore. *Verified against a
+  fresh `git clone --recurse-submodules`.* Removing the dead `Type.Desktop` reference alone
+  would have fixed the crash; the `PackageReference` migration below was **not required** to
+  close D7.
 
-  **Resolved by migrating to `PackageReference`**, which turned out to be a smaller change
-  than a restore script, because no game code used any of these packages:
+  **Resolved by removing the dead references, plus an optional `PackageReference`
+  migration.** The first bullet below is the actual fix; the rest is a deliberate
+  improvement with one trade-off, noted at the end.
 
   - **`Type.Desktop` now has zero NuGet packages.** Nothing in `Type/` or `Type.Desktop/`
     referenced `Newtonsoft.Json`, `Plugin.InAppBilling`, or
@@ -162,6 +165,15 @@ Small, mechanical, and everything else depends on it.
   and producing a binary that dies at startup. The remaining `HintPath` references
   (`OpenTK`, `FarseerPhysics`) point at DLLs committed in the engine's `Libraries/Desktop`,
   so they cannot go missing in a clean checkout.
+
+  **Trade-off the migration introduced.** Before it, every assembly the engine needed was
+  committed, so a clean checkout built **fully offline**. `AmosDesktop` now resolves
+  `Newtonsoft.Json 13.0.3` from NuGet, so a first build needs network access or a warm
+  package cache. That was accepted in exchange for patching a high-severity advisory and
+  stopping the engine from carrying binaries in source control — but it is a real cost, and
+  worth remembering if a CI runner or a machine ever builds air-gapped. Reverting is a
+  one-line change back to a `HintPath` on the committed 11.0.1, at the price of restoring
+  the vulnerability.
 
 **Gate:** `Type.Desktop.exe` builds *and runs* from a **clean checkout** — no `.vs`
 directory, no `packages/`, no Android workload, no `nuget.exe`, MSBuild from the command
