@@ -32,6 +32,7 @@ namespace Type.States
 
             _Navigator = new MenuNavigator();
             _Navigator.Add(new FocusableButton(_Scene.StartButton, () => _Scene.StartGame()));
+            _Navigator.Add(new FocusableButton(_Scene.OptionsButton, () => _Scene.ShowOptions()));
             _Navigator.FocusFirst();
 
 
@@ -46,7 +47,12 @@ namespace Type.States
 
         public override Boolean IsComplete()
         {
-            if (_Scene.IsComplete) ChangeState(new ShipSelectState(_Music));
+            if (_Scene.IsComplete)
+            {
+                if (_Scene.OptionsRequested) ChangeState(new OptionsState(_Music));
+                else ChangeState(new ShipSelectState(_Music));
+            }
+
             return _Scene.IsComplete;
         }
 

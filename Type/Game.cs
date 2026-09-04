@@ -6,6 +6,7 @@ using AmosShared.Graphics;
 using AmosShared.State;
 using Engine.Shared.Graphics.Textures;
 using OpenTK;
+using Type.Data;
 using Type.Services;
 using Type.States;
 
@@ -36,6 +37,8 @@ namespace Type
 #if __ANDROID__
             AdService.Instance.Initialise(Constants.Global.ADMOB_APP_ID);
 #endif // #if __ANDROID__
+
+            Settings.Load();
 
             SpritesheetLoader.LoadSheet("Content/Graphics/KenPixel/", "KenPixel.png", "KenPixel.json");
             SpritesheetLoader.LoadSheet("Content/Graphics/Background/Planets/", "planets.png", "planets.json");
