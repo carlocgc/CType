@@ -260,6 +260,15 @@ Not glamorous, but these are store-page and refund-request items.
   left referencing the package, its `PackageReference` was removed from `AmosDesktop`.
   *Verified: `Newtonsoft.Json` is now the only package assembly in the game's output.*
 
+- **S9. Find the leaked drawable.** Quitting after visiting the menus used to crash in
+  `Canvas.Dispose`, which AmosEngine `!25` fixed by making teardown tolerant of a drawable
+  the game never disposed. The engine no longer crashes, but the leak that exposed it is
+  still there: something on the menu or play path registers a drawable with a canvas and
+  never disposes it. *Verified that the condition is real — deliberately leaking one
+  drawable reproduced the original crash exactly.* Harmless now, but it is a resource leak
+  and the next one may not be. The quickest route is a Call Stack from the pre-`!25` build,
+  or a debug tally of registered versus disposed drawables at shutdown.
+
 ### Phase 3 — Graphics
 
 Your second stated priority. Ordered cheapest-impact-first.
