@@ -276,8 +276,8 @@ namespace Type.Desktop.Source.Controllers
         public void Dispose()
         {
             UpdateManager.Instance.RemoveUpdatable(this);
-            _VibrationCallback.CancelAndComplete();
-            _VibrationCallback.Dispose();
+            _VibrationCallback?.CancelAndComplete();
+            _VibrationCallback?.Dispose();
         }
 
         #endregion
