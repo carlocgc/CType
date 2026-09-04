@@ -133,27 +133,41 @@ Small, mechanical, and everything else depends on it.
   The inner exception naming `Version=11.0.0.0` confirms the engine's reference is the one
   that fails first.
 
-  Options, cheapest first:
-  1. **Document `nuget restore Type.sln` as a build prerequisite.** Zero code change, but
-     the silent-failure mode remains for anyone who forgets, and `nuget.exe` still has to be
-     installed.
-  2. **Commit a restore script** (`build.ps1`) that bootstraps `nuget.exe` and restores
-     before building, and make it the documented entry point. No submodule change. Keeps
-     packages.config and the version split.
-  3. **Migrate to `PackageReference`.** Restore becomes automatic, `packages/` disappears,
-     and the version split can be resolved properly. The real fix, and the point at which
-     the Newtonsoft versions should be aligned. Needs a second AmosEngine merge request for
-     `AmosDesktop.csproj`, the same route D6 took.
+  **Resolved by migrating to `PackageReference`**, which turned out to be a smaller change
+  than a restore script, because no game code used any of these packages:
 
-  Independently of which is chosen, **add an MSBuild target that fails the build when the
-  referenced package assemblies are missing.** Converting a silent runtime crash into an
-  immediate build error is cheap and worth doing on its own.
+  - **`Type.Desktop` now has zero NuGet packages.** Nothing in `Type/` or `Type.Desktop/`
+    referenced `Newtonsoft.Json`, `Plugin.InAppBilling`, or
+    `Xamarin.GooglePlayServices.Ads.Lite`. All four `Reference` entries and
+    `packages.config` were dead weight — the last of them a MonoAndroid assembly referenced
+    from the desktop project. Deleting them also removes the version split at its source.
+  - **`AmosDesktop` (engine) migrated to `PackageReference`** for its two genuinely used
+    packages, `Newtonsoft.Json` and `Plugin.InAppBilling` (the latter is used by
+    `AmosShared/Base/PurchaseManager.cs`). Restore is now automatic via
+    `msbuild /t:Restore` with **no `nuget.exe` required**.
+  - **`Newtonsoft.Json` bumped 11.0.1 → 13.0.3.** Migrating surfaced `NU1903`: 11.0.1 has a
+    known **high severity** vulnerability
+    ([GHSA-5crp-9r3c-p9vr](https://github.com/advisories/GHSA-5crp-9r3c-p9vr)) that
+    packages.config never reported. Engine usage is only `JsonConvert` and `JObject`
+    indexing, so the upgrade surface is trivial. The other engine projects
+    (`AmosAndroid`, `AmosiOS`, `TestProject`) still carry 11.0.2 via packages.config and
+    should be bumped when Android is next revived — see §4.
+
+  *Verified end to end: with no `packages/` folder anywhere, no `nuget.exe` and no `.vs`,
+  `/t:Restore` then `/t:Rebuild` produces a Release binary that launches and reaches the
+  main menu, with `Newtonsoft.Json` 13.0.3 flowing transitively into the game's output.*
+
+  **The silent-failure mode is gone and needs no extra guard.** A build without restore now
+  fails at compile time with `CS0246` on `Newtonsoft` and `Plugin`, rather than succeeding
+  and producing a binary that dies at startup. The remaining `HintPath` references
+  (`OpenTK`, `FarseerPhysics`) point at DLLs committed in the engine's `Libraries/Desktop`,
+  so they cannot go missing in a clean checkout.
 
 **Gate:** `Type.Desktop.exe` builds *and runs* from a **clean checkout** — no `.vs`
-directory, no Android workload, MSBuild from the command line — on a machine with only
-Visual Studio's .NET desktop workload installed. **Not yet met:** D0–D6 are done and
-verified; D7 is open, and it is what currently stands between a clean clone and a playable
-build.
+directory, no `packages/`, no Android workload, no `nuget.exe`, MSBuild from the command
+line — on a machine with only Visual Studio's .NET desktop workload installed.
+**Met**, once the D7 engine merge request lands and the submodule pointer is bumped.
+Build with `/t:Restore` then `/t:Rebuild`; see CLAUDE.md.
 
 ### Phase 1 — Input (your stated first priority)
 

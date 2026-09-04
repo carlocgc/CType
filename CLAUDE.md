@@ -73,13 +73,25 @@ platform will fail to compile. (This exact mistake currently exists — see ROAD
 
 ## Building
 
-MSBuild (not `dotnet build` — these are legacy .NET Framework 4.8 projects):
+MSBuild (not `dotnet build` — these are legacy .NET Framework 4.8 projects). **Restore
+first on a fresh checkout**, then build:
+
+```bash
+"C:/Program Files/Microsoft Visual Studio/18/Community/MSBuild/Current/Bin/MSBuild.exe" Type.Desktop/Type.Desktop.csproj /t:Restore /v:minimal
+```
 
 ```bash
 "C:/Program Files/Microsoft Visual Studio/18/Community/MSBuild/Current/Bin/MSBuild.exe" Type.Desktop/Type.Desktop.csproj /p:Configuration=Debug /v:minimal
 ```
 
 Run: `Type.Desktop/bin/Debug/Type.Desktop.exe`
+
+`Type.Desktop` itself has **no NuGet packages**. The only package dependencies are
+`AmosDesktop`'s (`Newtonsoft.Json`, `Plugin.InAppBilling`), declared as `PackageReference`
+so `/t:Restore` handles them with no `nuget.exe` installed; they flow transitively into the
+game's output. `OpenTK` and `FarseerPhysics` are plain `HintPath` references into the
+engine's committed `Libraries/Desktop`, so they need no restore. If you skip restore the
+build fails with `CS0246` on `Newtonsoft`/`Plugin` — that means restore, not a code problem.
 
 **The v4.8 retarget is uncommitted and load-bearing.** The committed projects target
 .NET Framework **v4.6.1**; the working build depends on local uncommitted retargets to v4.8
