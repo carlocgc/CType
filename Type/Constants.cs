@@ -143,6 +143,9 @@ namespace Type
 
             public const Int32 NUKE_EFFECT = 57;
 
+            /// <summary> Darkens the background behind menu text so it stays legible </summary>
+            public const Int32 MENU_SCRIM = 58;
+
             public const Int32 BOSS_BASE = 59;
 
             public const Int32 BOSS_LOWER = 60;

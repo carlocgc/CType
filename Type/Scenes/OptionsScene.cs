@@ -20,6 +20,8 @@ namespace Type.Scenes
 
         /// <summary> Sprite for the background </summary>
         private readonly Sprite _Background;
+        /// <summary> Darkens the background so the settings stay readable over it </summary>
+        private readonly Sprite _Scrim;
         /// <summary> The screen title </summary>
         private readonly TextDisplay _Title;
         /// <summary> Tells the player how to leave the screen </summary>
@@ -34,6 +36,17 @@ namespace Type.Scenes
                 Texture.GetTexture("Content/Graphics/Background/MainMenuBG-2.png"))
             {
                 Position = new Vector2(-960, -540),
+                Visible = true,
+            };
+
+            // The menu art has a bright star at the top centre, exactly where the title and
+            // the values sit. A flat dark wash over it keeps the text readable without
+            // needing new art or moving the layout off centre.
+            _Scrim = new Sprite(Game.MainCanvas, Constants.ZOrders.MENU_SCRIM,
+                Texture.GetTexture("Content/Graphics/Engine/engine_background.png"))
+            {
+                Position = new Vector2(-960, -600),
+                Colour = new Vector4(0, 0, 0, 0.65f),
                 Visible = true,
             };
 
@@ -78,6 +91,7 @@ namespace Type.Scenes
             foreach (OptionRow row in Rows) row.Dispose();
             Rows.Clear();
             _BackPrompt.Dispose();
+            _Scrim.Dispose();
             _Title.Dispose();
             _Background.Dispose();
         }

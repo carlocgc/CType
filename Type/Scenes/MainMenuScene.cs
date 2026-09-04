@@ -85,7 +85,7 @@ namespace Type.Scenes
 
             Sprite startButton = new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/completecontinue.png"))
             {
-                Position = new Vector2(-200, -450),
+                Position = new Vector2(-200, -310),
             };
             _StartButton = new Button(Constants.ZOrders.UI, startButton);
             _StartButton.OnButtonPress += StartButtonPress;
@@ -102,7 +102,7 @@ namespace Type.Scenes
 
             Sprite optionsButton = new Sprite(Game.MainCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/completecontinue.png"))
             {
-                Position = new Vector2(-200, -450 - startButton.Height - 20),
+                Position = new Vector2(-200, -450),
             };
             _OptionsButton = new Button(Constants.ZOrders.UI, optionsButton);
             _OptionsButton.OnButtonPress += OptionsButtonPress;

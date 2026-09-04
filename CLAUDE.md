@@ -198,6 +198,25 @@ Match the surrounding code exactly. The conventions in use:
 There is no test project. Verification is manual: build, run, play. When changing
 gameplay, say explicitly what you did and did not verify by playing.
 
+**Check the screen, not just the exit code.** A build that succeeds and a process that exits
+0 says nothing about whether anything is legible, on screen, or the right size. Capture the
+window and look at it:
+
+```powershell
+PrintWindow(hwnd, hdc, 2)   # flag 2 = PW_RENDERFULLCONTENT
+```
+
+That captures the window's own pixels, works on this OpenGL window, and does not care what
+is in front of it. **Do not use `Graphics.CopyFromScreen`** — it grabs whatever occupies
+those screen coordinates, so if anything overlaps the game you silently capture someone
+else's window instead of the game.
+
+To inspect a screen that needs input to reach, temporarily start the game on that state
+(`StateManager.Instance.StartState(new OptionsState(null))` in `Game.LoadContent`), capture,
+then put the boot path back. Input cannot be driven from outside: OpenTK reads raw device
+state, so `SendKeys` is invisible to it, and Windows blocks `SetForegroundWindow` from a
+background process.
+
 ## Where to start
 
 Read [ROADMAP.md](ROADMAP.md). Work items are numbered (D0, I1, ...) and ordered by
