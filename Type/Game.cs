@@ -39,6 +39,7 @@ namespace Type
 #endif // #if __ANDROID__
 
             Settings.Load();
+            Progress.Load();
 
             SpritesheetLoader.LoadSheet("Content/Graphics/KenPixel/", "KenPixel.png", "KenPixel.json");
             SpritesheetLoader.LoadSheet("Content/Graphics/Background/Planets/", "planets.png", "planets.json");

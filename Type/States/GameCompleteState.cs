@@ -34,6 +34,8 @@ namespace Type.States
             _Navigator.FocusFirst();
 
             AchievementController.Instance.GameComplete(_PlayerShipId);
+            // Unlocks the hidden craft on the ship select screen, for this run and every one after.
+            Progress.SetGameCompleted();
             InputService.Instance.RegisterListener(this);
         }
 

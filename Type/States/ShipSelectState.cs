@@ -2,6 +2,7 @@
 using System;
 using AmosShared.Audio;
 using OpenTK;
+using Type.Controllers;
 using Type.Data;
 using Type.Interfaces.Control;
 using Type.Scenes;
@@ -12,6 +13,9 @@ namespace Type.States
 {
     public class ShipSelectState : State, IShipSelectListener, IBackButtonListener, IInputListener
     {
+        /// <summary> Identifier of the hidden craft, which is also an achievement </summary>
+        private const Int32 OmegaId = 3;
+
         private ShipSelectScene _Scene;
 
         private AudioPlayer _Music;
@@ -20,25 +24,10 @@ namespace Type.States
 
         private Boolean _IsComplete;
 
-        private Boolean _FirstButtonHeld;
-
-        private Boolean _SecondButtonHeld;
-
-        private Boolean _ThirdButtonHeld;
-
         private Boolean _Returning;
 
         /// <summary> Moves focus between the craft and confirms a choice </summary>
         private MenuNavigator _Navigator;
-
-        /// <summary> Whether the hidden craft has been requested this visit </summary>
-        private Boolean _SecretRequested;
-
-        /// <summary>
-        /// Whether to open the secret menu. Touch still reaches it by holding all three cards
-        /// at once; a pointerless input reaches it through the SECRET action.
-        /// </summary>
-        private Boolean _EnteringSecretMenu => _SecretRequested || (_FirstButtonHeld && _SecondButtonHeld && _ThirdButtonHeld);
 
         public ShipSelectState(AudioPlayer music)
         {
@@ -52,6 +41,7 @@ namespace Type.States
             _Scene.AlphaButton.RegisterListener(this);
             _Scene.BetaButton.RegisterListener(this);
             _Scene.GammaButton.RegisterListener(this);
+            _Scene.OmegaButton.RegisterListener(this);
             _Scene.RegisterListener(this);
             _Scene.Active = true;
 
@@ -59,50 +49,35 @@ namespace Type.States
             _Navigator.Add(_Scene.AlphaButton);
             _Navigator.Add(_Scene.BetaButton);
             _Navigator.Add(_Scene.GammaButton);
+            _Navigator.Add(_Scene.OmegaButton);
             _Navigator.FocusFirst();
 
             InputService.Instance.RegisterListener(this);
         }
 
         /// <inheritdoc />
-        public void OnButtonPressed(Int32 id)
-        {
-            switch (id)
-            {
-                case 0:
-                    {
-                        _FirstButtonHeld = true;
-                        break;
-                    }
-                case 1:
-                    {
-                        _SecondButtonHeld = true;
-                        break;
-                    }
-                case 2:
-                    {
-                        _ThirdButtonHeld = true;
-                        break;
-                    }
-                default:
-                    throw new ArgumentOutOfRangeException("Ship select button does not exist");
-            }
-        }
-
-        /// <inheritdoc />
         public void OnButtonReleased(Int32 id)
         {
             _Selection = id;
-            OnSelection();
+
+            // Only reachable once the craft has been unlocked, so reaching it is the achievement.
+            if (id == OmegaId) AchievementController.Instance.PrototypeFound();
+
+            StopListening();
+            _IsComplete = true;
         }
 
-        public void OnSelection()
+        /// <summary>
+        /// Stops listening to the craft cards and shuts the screen down, so that nothing can be
+        /// chosen while the state is on its way out
+        /// </summary>
+        private void StopListening()
         {
             _Scene.AlphaButton.DeregisterListener(this);
             _Scene.BetaButton.DeregisterListener(this);
             _Scene.GammaButton.DeregisterListener(this);
+            _Scene.OmegaButton.DeregisterListener(this);
             _Scene.Active = false;
-            _IsComplete = true;
         }
 
         #region Implementation of IBackButtonListener
@@ -110,10 +85,7 @@ namespace Type.States
         /// <summary> Invoked when the back button is pressed </summary>
         public void OnBackPressed()
         {
-            _Scene.AlphaButton.DeregisterListener(this);
-            _Scene.BetaButton.DeregisterListener(this);
-            _Scene.GammaButton.DeregisterListener(this);
-            _Scene.Active = false;
+            StopListening();
             _Returning = true;
             _IsComplete = true;
         }
@@ -123,15 +95,10 @@ namespace Type.States
         /// <inheritdoc />
         public override Boolean IsComplete()
         {
-            if (_IsComplete && !_EnteringSecretMenu && !_Returning)
+            if (_IsComplete && !_Returning)
             {
                 _Music.Stop();
                 ChangeState(new PlayingState(_Selection));
-            }
-
-            if (_IsComplete && _EnteringSecretMenu)
-            {
-                ChangeState(new SecretShipSelectState(_Music));
             }
 
             if (_IsComplete && _Returning)
@@ -167,15 +134,6 @@ namespace Type.States
         {
             switch (data.ID)
             {
-                case ButtonData.Type.SECRET:
-                    {
-                        // Stands in for the touch gesture of holding all three cards at once,
-                        // which a focus cursor cannot express.
-                        if (data.State != ButtonData.State.PRESSED) return;
-                        _SecretRequested = true;
-                        OnSelection();
-                        break;
-                    }
                 case ButtonData.Type.BACK:
                     {
                         if (data.State != ButtonData.State.PRESSED) return;

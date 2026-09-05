@@ -14,6 +14,28 @@ namespace Type.Scenes
 {
     public class ShipSelectScene : Scene, INotifier<IBackButtonListener>
     {
+        /// <summary> Width of a card at its full size </summary>
+        private const Single CardSourceWidth = 600;
+        /// <summary> Width of the screen the layout is designed against </summary>
+        private const Single LayoutWidth = 1920;
+        /// <summary> How many craft are shown </summary>
+        private const Int32 CardCount = 4;
+
+        /// <summary>
+        /// How much each card is shrunk. Four cards at full size are wider than the screen, and
+        /// even three left no room above the input prompts.
+        /// </summary>
+        private const Single CardScale = 0.72f;
+
+        /// <summary> Width of a card once shrunk </summary>
+        private const Single CardWidth = CardSourceWidth * CardScale;
+        /// <summary> Gap between neighbouring cards, and between the row and each screen edge </summary>
+        private const Single CardGap = (LayoutWidth - CardCount * CardWidth) / (CardCount + 1);
+        /// <summary> Distance between the left edges of neighbouring cards </summary>
+        private const Single CardStride = CardWidth + CardGap;
+        /// <summary> Bottom edge of the row, high enough to clear the input prompts below it </summary>
+        private const Single CardBottom = 210;
+
         private readonly List<IBackButtonListener> _BackButtonListeners = new List<IBackButtonListener>();
 
         private Boolean _Active;
@@ -27,13 +49,20 @@ namespace Type.Scenes
         /// <summary> Tells the player how to leave the screen </summary>
         private readonly InputPrompt _BackPrompt;
 
+#if __ANDROID__
+        /// <summary> On screen back control. Touch only: a desktop leaves by CANCEL, which the
+        /// back prompt names, so the button would be an unexplained third way out </summary>
         private readonly Button _BackButton;
+#endif // #if __ANDROID__
 
         public ShipSelectButton AlphaButton { get; }
 
         public ShipSelectButton BetaButton { get; }
 
         public ShipSelectButton GammaButton { get; }
+
+        /// <summary> The hidden craft, shown locked until the game has been completed once </summary>
+        public ShipSelectButton OmegaButton { get; }
 
         public Boolean Active
         {
@@ -44,6 +73,7 @@ namespace Type.Scenes
                 AlphaButton.Active = _Active;
                 BetaButton.Active = _Active;
                 GammaButton.Active = _Active;
+                OmegaButton.Active = _Active;
             }
         }
 
@@ -67,10 +97,12 @@ namespace Type.Scenes
             _SelectPrompt = new InputPrompt(ButtonData.Type.CONFIRM, "SELECT", new Vector2(-880, -480));
             _BackPrompt = new InputPrompt(ButtonData.Type.CANCEL, "BACK", new Vector2(-880, -530));
 
-            AlphaButton = new ShipSelectButton(0, new Vector2(45, 50), "Content/Graphics/Player/player-alpha.png", "ALPHA", 1, 100, 100);
-            BetaButton = new ShipSelectButton(1, new Vector2(658, 50), "Content/Graphics/Player/player-beta.png", "BETA", 2, 80, 80);
-            GammaButton = new ShipSelectButton(2, new Vector2(1270, 50), "Content/Graphics/Player/player-gamma.png", "GAMMA", 3, 60, 60);
+            AlphaButton = new ShipSelectButton(0, CardPosition(0), CardScale, "Content/Graphics/Player/player-alpha.png", "ALPHA", 1, 100, 100, false);
+            BetaButton = new ShipSelectButton(1, CardPosition(1), CardScale, "Content/Graphics/Player/player-beta.png", "BETA", 2, 80, 80, false);
+            GammaButton = new ShipSelectButton(2, CardPosition(2), CardScale, "Content/Graphics/Player/player-gamma.png", "GAMMA", 3, 60, 60, false);
+            OmegaButton = new ShipSelectButton(3, CardPosition(3), CardScale, "Content/Graphics/Player/player_omega.png", "OMEGA", 1, 200, 120, !Progress.GameCompleted);
 
+#if __ANDROID__
             Sprite backButton = new Sprite(Game.MainCanvas, Constants.ZOrders.ABOVE_GAME, Texture.GetTexture("Content/Graphics/Buttons/exitbutton.png"))
             {
                 Position = new Vector2(770, 375),
@@ -81,12 +113,28 @@ namespace Type.Scenes
             _BackButton = new Button(Int32.MaxValue, backButton) { OnButtonPress = BackButtonOnPress };
             _BackButton.TouchEnabled = true;
             _BackButton.Visible = true;
+#endif // #if __ANDROID__
         }
 
+        /// <summary>
+        /// Bottom left of the card at the given place in the row
+        /// </summary>
+        /// <param name="index"> Place in the row, counted from the left </param>
+        private static Vector2 CardPosition(Int32 index)
+        {
+            return new Vector2(CardGap + index * CardStride, CardBottom);
+        }
+
+#if __ANDROID__
+        /// <summary>
+        /// Leaves the screen when the on screen back control is touched
+        /// </summary>
+        /// <param name="obj"> The control that was touched </param>
         private void BackButtonOnPress(Button obj)
         {
             BackPressed();
         }
+#endif // #if __ANDROID__
 
         public void BackPressed()
         {
@@ -131,10 +179,13 @@ namespace Type.Scenes
             _Background.Dispose();
             _SelectPrompt.Dispose();
             _BackPrompt.Dispose();
+#if __ANDROID__
             _BackButton.Dispose();
+#endif // #if __ANDROID__
             AlphaButton.Dispose();
             BetaButton.Dispose();
             GammaButton.Dispose();
+            OmegaButton.Dispose();
         }
 
     }

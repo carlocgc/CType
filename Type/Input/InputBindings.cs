@@ -154,14 +154,6 @@ namespace Type.Input
                 new ActionBinding(ButtonData.Type.MENU_RIGHT,
                     new[] { GamepadButton.DPAD_RIGHT },
                     new[] { "Right", "D" }),
-
-                // The secret craft was reached on touch by holding all three ship cards at
-                // once, a gesture with no cursor equivalent. Left stick click and V stand in
-                // for it: both are deliberate enough not to be hit by accident, which is the
-                // property the original gesture had.
-                new ActionBinding(ButtonData.Type.SECRET,
-                    new[] { GamepadButton.LEFT_STICK },
-                    new[] { "V" }),
             });
         }
     }
