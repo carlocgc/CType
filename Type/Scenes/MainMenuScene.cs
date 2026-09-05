@@ -58,7 +58,7 @@ namespace Type.Scenes
             };
             _TitleText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
-                Text = "C:TYPE",
+                Text = Constants.Global.TITLE_UPPERCASE,
                 Position = new Vector2(0, 0),
                 Visible = true,
                 Scale = new Vector2(5, 5),
