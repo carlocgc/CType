@@ -25,6 +25,8 @@ namespace Type.Scenes
         private readonly TextDisplay _Title;
         /// <summary> Tells the player how to resume without using the menu </summary>
         private readonly InputPrompt _ResumePrompt;
+        /// <summary> Tells the player how to leave a sub screen that has no prompt of its own </summary>
+        private readonly InputPrompt _BackPrompt;
 
         /// <summary> The commands shown, in the order they are navigated </summary>
         public List<MenuTextItem> Items { get; }
@@ -33,10 +35,11 @@ namespace Type.Scenes
         /// Builds the overlay
         /// </summary>
         /// <param name="onResume"> Invoked to continue the run </param>
+        /// <param name="onHelp"> Invoked to show what the pickups do </param>
         /// <param name="onOptions"> Invoked to open the settings over the paused game </param>
         /// <param name="onRestart"> Invoked to abandon the run and start again </param>
         /// <param name="onQuit"> Invoked to abandon the run and return to the menu </param>
-        public PauseScene(Action onResume, Action onOptions, Action onRestart, Action onQuit)
+        public PauseScene(Action onResume, Action onHelp, Action onOptions, Action onRestart, Action onQuit)
         {
             _Scrim = new Sprite(Game.MainCanvas, Constants.ZOrders.ABOVE_GAME,
                 Texture.GetTexture("Content/Graphics/Engine/engine_background.png"))
@@ -58,25 +61,41 @@ namespace Type.Scenes
 
             Items = new List<MenuTextItem>
             {
-                new MenuTextItem("RESUME", new Vector2(150, 200), onResume),
-                new MenuTextItem("OPTIONS", new Vector2(150, 100), onOptions),
-                new MenuTextItem("RESTART", new Vector2(150, 0), onRestart),
-                new MenuTextItem("QUIT", new Vector2(150, -100), onQuit),
+                new MenuTextItem("RESUME", new Vector2(150, 220), onResume),
+                new MenuTextItem("HELP", new Vector2(150, 120), onHelp),
+                new MenuTextItem("OPTIONS", new Vector2(150, 20), onOptions),
+                new MenuTextItem("RESTART", new Vector2(150, -80), onRestart),
+                new MenuTextItem("QUIT", new Vector2(150, -180), onQuit),
             };
 
             _ResumePrompt = new InputPrompt(ButtonData.Type.PAUSE, "RESUME", new Vector2(-880, -530));
+
+            _BackPrompt = new InputPrompt(ButtonData.Type.CANCEL, "BACK", new Vector2(-880, -530))
+            {
+                Visible = false,
+            };
         }
 
         /// <summary>
-        /// Hides or shows the overlay, used while the settings are open over the top of it
+        /// Hides or shows the menu itself while a sub screen is open over it. The dark wash
+        /// stays, so whatever opens on top does not need one of its own.
         /// </summary>
-        /// <param name="visible"> Whether the overlay is shown </param>
-        public void SetVisible(Boolean visible)
+        /// <param name="visible"> Whether the menu is shown </param>
+        public void SetMenuVisible(Boolean visible)
         {
-            _Scrim.Visible = visible;
             _Title.Visible = visible;
             _ResumePrompt.Visible = visible;
             foreach (MenuTextItem item in Items) item.SetVisible(visible);
+        }
+
+        /// <summary>
+        /// Shows a way out for a sub screen that does not carry its own prompt, such as the
+        /// pickup guide. The settings screen supplies its own, so it does not need this.
+        /// </summary>
+        /// <param name="visible"> Whether the prompt is shown </param>
+        public void SetBackPromptVisible(Boolean visible)
+        {
+            _BackPrompt.Visible = visible;
         }
 
         /// <inheritdoc />
@@ -91,6 +110,7 @@ namespace Type.Scenes
             foreach (MenuTextItem item in Items) item.Dispose();
             Items.Clear();
             _ResumePrompt.Dispose();
+            _BackPrompt.Dispose();
             _Title.Dispose();
             _Scrim.Dispose();
         }

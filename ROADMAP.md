@@ -270,7 +270,10 @@ Not glamorous, but these are store-page and refund-request items.
   navigable. Options opens the settings over the paused game rather than as its own screen,
   by giving `OptionsScene` an overlay mode that omits the menu art. Restart and Quit restore
   the clock before changing state, or whatever came next would start frozen.
-  Laid out to the right because the powerup help occupies the left edge and is worth keeping.
+  The powerup guide it used to show automatically is now a Help entry rather than something
+  permanently on top of the menu, where it collided with both the menu and the settings
+  opened from it. Sub screens keep the pause overlay's dark wash instead of adding their
+  own, and one that carries no prompt of its own borrows a BACK prompt from the overlay.
 - **S5. Settings persistence** through `DataLoader`.
 - **S6. Replace Google Play achievements and leaderboards** with Steamworks equivalents,
   behind the existing `AchievementController` / `LeaderboardController` facades. This is the

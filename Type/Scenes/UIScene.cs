@@ -139,7 +139,6 @@ namespace Type.Scenes
         {
             if (paused)
             {
-                Help.Show();
 #if __ANDROID__
                 _PauseButton.Visible = false;
                 _PauseButton.TouchEnabled = false;

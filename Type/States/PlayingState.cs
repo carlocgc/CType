@@ -75,6 +75,10 @@ namespace Type.States
         private OptionsScene _PauseOptionsScene;
         /// <summary> Moves focus between the settings shown over the paused game </summary>
         private MenuNavigator _PauseOptionsNavigator;
+        /// <summary> Receives the cancel that closes the pickup guide </summary>
+        private MenuNavigator _PauseHelpNavigator;
+        /// <summary> Whether the pickup guide is open over the pause menu </summary>
+        private Boolean _HelpOpen;
         /// <summary> Whether the player asked to start the run again </summary>
         private Boolean _Restarting;
         /// <summary> Whether the player asked to abandon the run </summary>
@@ -300,6 +304,7 @@ namespace Type.States
         {
             _PauseScene = new PauseScene(
                 onResume: () => SetPaused(false),
+                onHelp: ShowPauseHelp,
                 onOptions: ShowPauseOptions,
                 onRestart: () => LeaveRun(() => _Restarting = true),
                 onQuit: () => LeaveRun(() => _Quitting = true))
@@ -307,9 +312,29 @@ namespace Type.States
                 Visible = true,
             };
 
+            FocusPauseMenu();
+        }
+
+        /// <summary>
+        /// Gives the pause menu the focus cursor
+        /// </summary>
+        private void FocusPauseMenu()
+        {
+            _PauseScene.SetMenuVisible(true);
+
             _PauseNavigator = new MenuNavigator { OnCancel = () => SetPaused(false) };
             foreach (MenuTextItem item in _PauseScene.Items) _PauseNavigator.Add(item);
             _PauseNavigator.FocusFirst();
+        }
+
+        /// <summary>
+        /// Hides the pause menu so something can be shown over it, keeping the dark wash
+        /// </summary>
+        private void HidePauseMenu()
+        {
+            _PauseScene.SetMenuVisible(false);
+            _PauseNavigator?.Dispose();
+            _PauseNavigator = null;
         }
 
         /// <summary>
@@ -318,11 +343,58 @@ namespace Type.States
         private void ClosePauseMenu()
         {
             ClosePauseOptions();
+            ClosePauseHelp();
 
             _PauseNavigator?.Dispose();
             _PauseNavigator = null;
             _PauseScene?.Dispose();
             _PauseScene = null;
+        }
+
+        /// <summary>
+        /// Returns to the pause menu after a sub screen closes, unless the run is ending
+        /// </summary>
+        /// <remarks>
+        /// Quitting or restarting from inside a sub screen would otherwise put a menu back on
+        /// top of a state that is being torn down.
+        /// </remarks>
+        private void ReturnToPauseMenu()
+        {
+            if (!_Paused || _PauseScene == null) return;
+            FocusPauseMenu();
+        }
+
+        /// <summary>
+        /// Shows what the pickups do. This used to appear automatically on pause, where it
+        /// collided with the menu and with anything opened from it.
+        /// </summary>
+        private void ShowPauseHelp()
+        {
+            if (_HelpOpen) return;
+
+            HidePauseMenu();
+            _PauseScene.SetBackPromptVisible(true);
+            _HelpOpen = true;
+            _UIScene.Help.Show();
+
+            // No items: the screen is a page to read, so only backing out of it does anything.
+            _PauseHelpNavigator = new MenuNavigator { OnCancel = ClosePauseHelp };
+        }
+
+        /// <summary>
+        /// Hides the pickup guide and returns focus to the pause menu
+        /// </summary>
+        private void ClosePauseHelp()
+        {
+            if (!_HelpOpen) return;
+
+            _PauseHelpNavigator?.Dispose();
+            _PauseHelpNavigator = null;
+            _UIScene.Help.Hide();
+            _PauseScene?.SetBackPromptVisible(false);
+            _HelpOpen = false;
+
+            ReturnToPauseMenu();
         }
 
         /// <summary>
@@ -332,9 +404,7 @@ namespace Type.States
         {
             if (_PauseOptionsScene != null) return;
 
-            _PauseScene.SetVisible(false);
-            _PauseNavigator?.Dispose();
-            _PauseNavigator = null;
+            HidePauseMenu();
 
             _PauseOptionsScene = new OptionsScene(overlay: true) { Visible = true };
 
@@ -355,14 +425,7 @@ namespace Type.States
             _PauseOptionsScene.Dispose();
             _PauseOptionsScene = null;
 
-            // Only rebuild the pause menu if the game is still paused; quitting from the
-            // settings would otherwise put a menu back on top of a state that is ending.
-            if (!_Paused) return;
-
-            _PauseScene.SetVisible(true);
-            _PauseNavigator = new MenuNavigator { OnCancel = () => SetPaused(false) };
-            foreach (MenuTextItem item in _PauseScene.Items) _PauseNavigator.Add(item);
-            _PauseNavigator.FocusFirst();
+            ReturnToPauseMenu();
         }
 
         /// <summary>

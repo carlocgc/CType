@@ -53,13 +53,18 @@ namespace Type.Scenes
             // The menu art has a bright star at the top centre, exactly where the title and
             // the values sit. A flat dark wash over it keeps the text readable without
             // needing new art or moving the layout off centre.
-            _Scrim = new Sprite(Game.MainCanvas, overlay ? Constants.ZOrders.ABOVE_GAME : Constants.ZOrders.MENU_SCRIM,
-                Texture.GetTexture("Content/Graphics/Engine/engine_background.png"))
+            // As an overlay the caller already darkened the screen, so a second wash would
+            // only make the settings harder to read.
+            if (!overlay)
             {
-                Position = new Vector2(-960, -600),
-                Colour = new Vector4(0, 0, 0, 0.65f),
-                Visible = true,
-            };
+                _Scrim = new Sprite(Game.MainCanvas, Constants.ZOrders.MENU_SCRIM,
+                    Texture.GetTexture("Content/Graphics/Engine/engine_background.png"))
+                {
+                    Position = new Vector2(-960, -600),
+                    Colour = new Vector4(0, 0, 0, 0.65f),
+                    Visible = true,
+                };
+            }
 
             _Title = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI,
                 Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
@@ -124,7 +129,7 @@ namespace Type.Scenes
             foreach (OptionRow row in Rows) row.Dispose();
             Rows.Clear();
             _BackPrompt.Dispose();
-            _Scrim.Dispose();
+            _Scrim?.Dispose();
             _Title.Dispose();
             _Background?.Dispose();
         }
