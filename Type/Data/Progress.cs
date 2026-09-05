@@ -1,10 +1,10 @@
-using AmosShared.Base;
 using System;
+using Type.Services;
 
 namespace Type.Data
 {
     /// <summary>
-    /// Player progression that survives between sessions, held in the engine's key value store
+    /// Player progression that survives between sessions, held by <see cref="StorageService"/>
     /// alongside the high score and the settings.
     /// </summary>
     /// <remarks>
@@ -36,7 +36,7 @@ namespace Type.Data
             if (GameCompleted) return;
 
             GameCompleted = true;
-            DataLoader.SetValue(GameCompletedKey, true);
+            StorageService.Instance.SetValue(GameCompletedKey, true);
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace Type.Data
         /// <param name="key"> The store key to read </param>
         private static Boolean ReadFlag(String key)
         {
-            Object stored = DataLoader.GetValue(key);
+            Object stored = StorageService.Instance.GetValue(key);
             if (stored == null) return false;
 
             try

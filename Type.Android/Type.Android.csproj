@@ -182,6 +182,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Source\Services\PlayStoreAdService.cs" />
     <Compile Include="Source\Services\AndroidDisplayProvider.cs" />
+    <Compile Include="Source\Services\AndroidStorageProvider.cs" />
     <Compile Include="Source\Services\CustomAdListener.cs" />
     <Compile Include="Source\Controllers\AndroidInputProvider.cs" />
     <Compile Include="States\GooglePlayConnectState.cs" />

@@ -38,6 +38,8 @@ namespace Type
             AdService.Instance.Initialise(Constants.Global.ADMOB_APP_ID);
 #endif // #if __ANDROID__
 
+            // Must come first: both of the below read through it.
+            StorageService.Instance.Load();
             Settings.Load();
             Progress.Load();
 

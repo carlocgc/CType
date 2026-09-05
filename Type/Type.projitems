@@ -17,6 +17,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\CollisionController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DisplayService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\InputService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\StorageService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\LeaderboardController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\PositionRelayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\ProbeController.cs" />
@@ -70,6 +71,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Probe\IProbeController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Service\IAdService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Service\IDisplayProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Service\IStorageProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Weapons\IProjectile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Weapons\IProjectileShooter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Bosses\BossFighter.cs" />
