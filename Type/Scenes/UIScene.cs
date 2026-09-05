@@ -132,11 +132,27 @@ namespace Type.Scenes
         }
 
         /// <summary>
+        /// Hides or shows the in game readouts
+        /// </summary>
+        /// <param name="visible"> Whether the readouts are shown </param>
+        private void SetHudVisible(Boolean visible)
+        {
+            ScoreDisplay.Visible = visible;
+            LifeMeter.SetVisible(visible);
+            NukeDisplay.SetVisible(visible);
+            LevelDisplay.SetVisible(visible);
+        }
+
+        /// <summary>
         /// Sets the UI scene to a paused state
         /// </summary>
         /// <param name="paused"></param>
         public void SetPaused(Boolean paused)
         {
+            // The pause overlay is centred, so the score, lives, bomb count and level banner
+            // would read straight through it. They are not useful while a menu is up.
+            SetHudVisible(!paused);
+
             if (paused)
             {
 #if __ANDROID__

@@ -53,7 +53,7 @@ namespace Type.Scenes
                 Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
                 Text = "PAUSED",
-                Position = new Vector2(350, 400),
+                Position = new Vector2(0, 380),
                 Scale = new Vector2(4, 4),
                 Visible = true,
             };
@@ -61,11 +61,11 @@ namespace Type.Scenes
 
             Items = new List<MenuTextItem>
             {
-                new MenuTextItem("RESUME", new Vector2(150, 220), onResume),
-                new MenuTextItem("HELP", new Vector2(150, 120), onHelp),
-                new MenuTextItem("OPTIONS", new Vector2(150, 20), onOptions),
-                new MenuTextItem("RESTART", new Vector2(150, -80), onRestart),
-                new MenuTextItem("QUIT", new Vector2(150, -180), onQuit),
+                new MenuTextItem("RESUME", new Vector2(0, 180), onResume, centred: true),
+                new MenuTextItem("HELP", new Vector2(0, 90), onHelp, centred: true),
+                new MenuTextItem("OPTIONS", new Vector2(0, 0), onOptions, centred: true),
+                new MenuTextItem("RESTART", new Vector2(0, -90), onRestart, centred: true),
+                new MenuTextItem("QUIT", new Vector2(0, -180), onQuit, centred: true),
             };
 
             _ResumePrompt = new InputPrompt(ButtonData.Type.PAUSE, "RESUME", new Vector2(-880, -530));

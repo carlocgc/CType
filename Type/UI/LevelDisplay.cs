@@ -19,6 +19,10 @@ namespace Type.UI
         private TimedCallback _ShownCallback;
         /// <summary> Callback to invoke the complete action </summary>
         private TimedCallback _CompleteCallback;
+        /// <summary> Whether the banner is part way through being shown </summary>
+        private Boolean _Showing;
+        /// <summary> Whether something else is currently covering the game </summary>
+        private Boolean _Hidden;
 
         public LevelDisplay()
         {
@@ -31,6 +35,17 @@ namespace Type.UI
         }
 
         /// <summary>
+        /// Hides or shows the banner, used while a menu covers the game. Restoring does not
+        /// bring back a banner that had already finished on its own.
+        /// </summary>
+        /// <param name="visible"> Whether the banner may be shown </param>
+        public void SetVisible(Boolean visible)
+        {
+            _Hidden = !visible;
+            _Display.Visible = visible && _Showing;
+        }
+
+        /// <summary>
         /// Shows the current level as text on the screen, calls the on complete after the given time
         /// </summary>
         /// <param name="level"> Level to show </param>
@@ -40,7 +55,8 @@ namespace Type.UI
         {
             _Display.Text = $"LEVEL {level}";
             _Display.Offset = new Vector2(_Display.Size.X * _Display.Scale.X, _Display.Size.Y * _Display.Scale.Y) / 2;
-            _Display.Visible = true;
+            _Showing = true;
+            _Display.Visible = !_Hidden;
             _OnComplete = onComplete;
             _ShownCallback = new TimedCallback(TimeSpan.FromSeconds(2), Complete);
         }
@@ -50,6 +66,7 @@ namespace Type.UI
         /// </summary>
         private void Complete()
         {
+            _Showing = false;
             _Display.Visible = false;
             _CompleteCallback = new TimedCallback(TimeSpan.FromSeconds(1), _OnComplete.Invoke);
         }

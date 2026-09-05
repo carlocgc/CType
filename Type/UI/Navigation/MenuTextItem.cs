@@ -35,8 +35,9 @@ namespace Type.UI.Navigation
         /// <param name="label"> The entry text, in upper case </param>
         /// <param name="position"> Where to place the entry </param>
         /// <param name="onActivate"> Invoked when the entry is confirmed </param>
+        /// <param name="centred"> Whether the position is the centre of the entry rather than its left edge </param>
         /// <param name="scale"> Text scale </param>
-        public MenuTextItem(String label, Vector2 position, Action onActivate, Single scale = 2.5f)
+        public MenuTextItem(String label, Vector2 position, Action onActivate, Boolean centred = false, Single scale = 2.5f)
         {
             _OnActivate = onActivate;
 
@@ -49,6 +50,8 @@ namespace Type.UI.Navigation
                 Scale = new Vector2(scale, scale),
                 Colour = UnfocusedTint,
             };
+
+            if (centred) _Display.Offset = new Vector2(_Display.Size.X * _Display.Scale.X, _Display.Size.Y * _Display.Scale.Y) / 2;
         }
 
         /// <summary>
