@@ -24,6 +24,16 @@ namespace Type.Desktop.Source.Controllers
         /// <summary> Number of gamepad slots the platform exposes </summary>
         private const Int32 PadSlots = 4;
 
+        /// <summary>
+        /// How far a trigger must be pulled to count as pressed.
+        /// </summary>
+        /// <remarks>
+        /// Deliberately well clear of centre. An idle or phantom device on this platform reports
+        /// both triggers at 0.502, which a 0.5 threshold read as permanently held: fire and nuke
+        /// were stuck on before the player touched anything.
+        /// </remarks>
+        private const Single TriggerThreshold = 0.65f;
+
         /// <summary> List of all the <see cref="IInputListener"/>'s listening to the <see cref="InputService"/></summary>
         private readonly List<IInputListener> _Listeners = new List<IInputListener>();
         /// <summary> Action to input mapping </summary>
@@ -39,6 +49,8 @@ namespace Type.Desktop.Source.Controllers
         private Int32 _ActivePad = -1;
         /// <summary> Call back to end controller vibration </summary>
         private TimedCallback _VibrationCallback;
+        /// <summary> Whether the most recent real input came from a gamepad rather than the keyboard </summary>
+        private Boolean _LastInputWasGamepad;
 
         /// <summary> Whether the provider is in pause mode </summary>
         public Boolean Paused { get; set; }
@@ -47,7 +59,12 @@ namespace Type.Desktop.Source.Controllers
         public InputBindings Bindings => _Bindings;
 
         /// <inheritdoc />
-        public Boolean GamepadActive => _ActivePad >= 0;
+        /// <remarks>
+        /// Reports the device the player last actually used, not merely whether a pad is plugged
+        /// in. A machine can report a pad that nobody is holding, and prompting for buttons on a
+        /// controller that does not exist is worse than assuming the keyboard.
+        /// </remarks>
+        public Boolean GamepadActive => _LastInputWasGamepad;
 
         /// <inheritdoc />
         public Action OnInputDeviceLost { get; set; }
@@ -94,6 +111,8 @@ namespace Type.Desktop.Source.Controllers
             KeyboardState keyboard = Keyboard.GetState();
             GamePadState pad = GetActivePad();
 
+            TrackActiveDevice(keyboard, pad);
+
             // Pause and unpause must work while paused; everything else is reported as released
             // so that an action held at the moment of pausing does not resume when play does.
             DispatchAction(ButtonData.Type.START, IsActionDown(ButtonData.Type.START, keyboard, pad));
@@ -138,6 +157,55 @@ namespace Type.Desktop.Source.Controllers
         }
 
         /// <summary>
+        /// Notes which device the player is actually using, so prompts can name the right one
+        /// </summary>
+        /// <remarks>
+        /// Whichever device produced input most recently wins, and neither being touched changes
+        /// nothing. Presence is not enough: a machine can report a pad nobody is holding.
+        /// </remarks>
+        private void TrackActiveDevice(KeyboardState keyboard, GamePadState pad)
+        {
+            if (PadHasInput(pad))
+            {
+                _LastInputWasGamepad = true;
+                return;
+            }
+
+            if (KeyboardHasInput(keyboard)) _LastInputWasGamepad = false;
+        }
+
+        /// <summary>
+        /// Whether the pad is reporting anything the game would act on
+        /// </summary>
+        private Boolean PadHasInput(GamePadState pad)
+        {
+            if (!pad.IsConnected) return false;
+
+            if (pad.Buttons.IsAnyButtonPressed) return true;
+            if (pad.DPad.IsUp || pad.DPad.IsDown || pad.DPad.IsLeft || pad.DPad.IsRight) return true;
+            if (pad.Triggers.Left > TriggerThreshold || pad.Triggers.Right > TriggerThreshold) return true;
+
+            return pad.ThumbSticks.Left.Length > _Analog.InnerDeadzone
+                || pad.ThumbSticks.Right.Length > _Analog.InnerDeadzone;
+        }
+
+        /// <summary>
+        /// Whether any key the game binds is down
+        /// </summary>
+        private Boolean KeyboardHasInput(KeyboardState keyboard)
+        {
+            foreach (List<Key> keys in _ResolvedKeys.Values)
+            {
+                foreach (Key key in keys)
+                {
+                    if (keyboard.IsKeyDown(key)) return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Whether any input bound to the action is currently down
         /// </summary>
         private Boolean IsActionDown(ButtonData.Type action, KeyboardState keyboard, GamePadState pad)
@@ -176,8 +244,8 @@ namespace Type.Desktop.Source.Controllers
                 case GamepadButton.Y: return pad.Buttons.Y == ButtonState.Pressed;
                 case GamepadButton.LEFT_SHOULDER: return pad.Buttons.LeftShoulder == ButtonState.Pressed;
                 case GamepadButton.RIGHT_SHOULDER: return pad.Buttons.RightShoulder == ButtonState.Pressed;
-                case GamepadButton.LEFT_TRIGGER: return pad.Triggers.Left > 0.5f;
-                case GamepadButton.RIGHT_TRIGGER: return pad.Triggers.Right > 0.5f;
+                case GamepadButton.LEFT_TRIGGER: return pad.Triggers.Left > TriggerThreshold;
+                case GamepadButton.RIGHT_TRIGGER: return pad.Triggers.Right > TriggerThreshold;
                 case GamepadButton.LEFT_STICK: return pad.Buttons.LeftStick == ButtonState.Pressed;
                 case GamepadButton.RIGHT_STICK: return pad.Buttons.RightStick == ButtonState.Pressed;
                 case GamepadButton.START: return pad.Buttons.Start == ButtonState.Pressed;
