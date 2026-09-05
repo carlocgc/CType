@@ -64,7 +64,7 @@ namespace Type.Scenes
                 new MenuTextItem("QUIT", new Vector2(150, -100), onQuit),
             };
 
-            _ResumePrompt = new InputPrompt(ButtonData.Type.START, "RESUME", new Vector2(-880, -530));
+            _ResumePrompt = new InputPrompt(ButtonData.Type.PAUSE, "RESUME", new Vector2(-880, -530));
         }
 
         /// <summary>

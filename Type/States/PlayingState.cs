@@ -510,7 +510,7 @@ namespace Type.States
 
                         break;
                     }
-                case ButtonData.Type.START:
+                case ButtonData.Type.PAUSE:
                     {
                         if (data.State != ButtonData.State.PRESSED) return;
                         SetPaused(!_Paused);

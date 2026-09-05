@@ -133,6 +133,19 @@ namespace Type.Desktop.Source.Controllers
         /// </summary>
         private GamePadState GetActivePad()
         {
+            // A slot that reports connected is not necessarily a pad anyone is holding: this
+            // machine reports one whose triggers rest at half pull. So a pad that is actually
+            // producing input always wins, whichever slot it is in. Picking the lowest connected
+            // slot instead meant a real controller could be ignored in favour of a phantom.
+            for (Int32 i = 0; i < PadSlots; i++)
+            {
+                GamePadState state = GamePad.GetState(i);
+                if (!PadHasInput(state)) continue;
+
+                _ActivePad = i;
+                return state;
+            }
+
             if (_ActivePad >= 0)
             {
                 GamePadState current = GamePad.GetState(_ActivePad);

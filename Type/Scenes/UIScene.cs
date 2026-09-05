@@ -92,7 +92,7 @@ namespace Type.Scenes
                 Visible = false,
                 Colour = new Vector4(1, 1, 1, 0.4f)
             };
-            _PauseButton = new VirtualButton(Int32.MaxValue, pauseButton, ButtonData.Type.START);
+            _PauseButton = new VirtualButton(Int32.MaxValue, pauseButton, ButtonData.Type.PAUSE);
             InputService.Instance.RegisterButton(_PauseButton);
 
             Sprite resumeButton = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/playbutton.png"))
@@ -101,7 +101,7 @@ namespace Type.Scenes
                 Visible = false,
                 Colour = new Vector4(1, 1, 1, 0.4f)
             };
-            _ResumeButton = new VirtualButton(Int32.MaxValue, resumeButton, ButtonData.Type.START);
+            _ResumeButton = new VirtualButton(Int32.MaxValue, resumeButton, ButtonData.Type.PAUSE);
             InputService.Instance.RegisterButton(_ResumeButton);
 
             _VirtualAnalogStick = new VirtualAnalogStick(new Vector2(-620, -220), 110);
