@@ -16,6 +16,7 @@ using Type.Interfaces.Powerups;
 using Type.Scenes;
 using Type.Services;
 using Type.UI;
+using Type.UI.Navigation;
 
 namespace Type.States
 {
@@ -66,6 +67,19 @@ namespace Type.States
         /// <summary> amount of nukes the player has </summary>
         private Int32 _CurrentNukes;
 
+        /// <summary> The pause overlay, present only while paused </summary>
+        private PauseScene _PauseScene;
+        /// <summary> Moves focus between the pause commands </summary>
+        private MenuNavigator _PauseNavigator;
+        /// <summary> The settings shown over the paused game, present only while open </summary>
+        private OptionsScene _PauseOptionsScene;
+        /// <summary> Moves focus between the settings shown over the paused game </summary>
+        private MenuNavigator _PauseOptionsNavigator;
+        /// <summary> Whether the player asked to start the run again </summary>
+        private Boolean _Restarting;
+        /// <summary> Whether the player asked to abandon the run </summary>
+        private Boolean _Quitting;
+
         /// <summary> Whether or not the updatable is disposed </summary>
         public Boolean IsDisposed { get; set; }
 
@@ -111,6 +125,7 @@ namespace Type.States
             InputService.Instance.RegisterListener(this);
             InputService.Instance.OnInputDeviceLost = () => SetPaused(true);
             UpdateManager.Instance.AddUpdatable(this);
+
         }
 
         /// <summary>If true then this state is considered complete and control will be passed over to <see cref="State.NextState"/></summary>
@@ -119,9 +134,10 @@ namespace Type.States
         {
             if (_GameOver) ChangeState(new GameOverState());
             else if (_GameComplete) ChangeState(new GameCompleteState(_PlayerType));
+            else if (_Restarting) ChangeState(new PlayingState(_PlayerType));
+            else if (_Quitting) ChangeState(new MainMenuState());
 
-            Boolean gameEnded = _GameOver || _GameComplete;
-            return gameEnded;
+            return _GameOver || _GameComplete || _Restarting || _Quitting;
         }
 
         #region Player
@@ -272,6 +288,96 @@ namespace Type.States
             Game.GameTime.Multiplier = paused ? 0 : 1;
             _UIScene.SetPaused(paused);
             InputService.Instance.SetPaused(paused);
+
+            if (paused) ShowPauseMenu();
+            else ClosePauseMenu();
+        }
+
+        /// <summary>
+        /// Builds the pause overlay and gives it focus
+        /// </summary>
+        private void ShowPauseMenu()
+        {
+            _PauseScene = new PauseScene(
+                onResume: () => SetPaused(false),
+                onOptions: ShowPauseOptions,
+                onRestart: () => LeaveRun(() => _Restarting = true),
+                onQuit: () => LeaveRun(() => _Quitting = true))
+            {
+                Visible = true,
+            };
+
+            _PauseNavigator = new MenuNavigator { OnCancel = () => SetPaused(false) };
+            foreach (MenuTextItem item in _PauseScene.Items) _PauseNavigator.Add(item);
+            _PauseNavigator.FocusFirst();
+        }
+
+        /// <summary>
+        /// Tears down the pause overlay and anything opened from it
+        /// </summary>
+        private void ClosePauseMenu()
+        {
+            ClosePauseOptions();
+
+            _PauseNavigator?.Dispose();
+            _PauseNavigator = null;
+            _PauseScene?.Dispose();
+            _PauseScene = null;
+        }
+
+        /// <summary>
+        /// Shows the settings over the paused game, hiding the pause menu behind it
+        /// </summary>
+        private void ShowPauseOptions()
+        {
+            if (_PauseOptionsScene != null) return;
+
+            _PauseScene.SetVisible(false);
+            _PauseNavigator?.Dispose();
+            _PauseNavigator = null;
+
+            _PauseOptionsScene = new OptionsScene(overlay: true) { Visible = true };
+
+            _PauseOptionsNavigator = new MenuNavigator { OnCancel = ClosePauseOptions };
+            foreach (OptionRow row in _PauseOptionsScene.Rows) _PauseOptionsNavigator.Add(row);
+            _PauseOptionsNavigator.FocusFirst();
+        }
+
+        /// <summary>
+        /// Closes the settings and returns focus to the pause menu
+        /// </summary>
+        private void ClosePauseOptions()
+        {
+            if (_PauseOptionsScene == null) return;
+
+            _PauseOptionsNavigator?.Dispose();
+            _PauseOptionsNavigator = null;
+            _PauseOptionsScene.Dispose();
+            _PauseOptionsScene = null;
+
+            // Only rebuild the pause menu if the game is still paused; quitting from the
+            // settings would otherwise put a menu back on top of a state that is ending.
+            if (!_Paused) return;
+
+            _PauseScene.SetVisible(true);
+            _PauseNavigator = new MenuNavigator { OnCancel = () => SetPaused(false) };
+            foreach (MenuTextItem item in _PauseScene.Items) _PauseNavigator.Add(item);
+            _PauseNavigator.FocusFirst();
+        }
+
+        /// <summary>
+        /// Abandons the run, restoring the clock first so whatever comes next is not frozen
+        /// </summary>
+        /// <param name="markIntent"> Sets the flag that decides where to go </param>
+        private void LeaveRun(Action markIntent)
+        {
+            ClosePauseMenu();
+
+            _Paused = false;
+            Game.GameTime.Multiplier = 1;
+            InputService.Instance.SetPaused(false);
+
+            markIntent();
         }
 
         /// <summary>
@@ -424,6 +530,7 @@ namespace Type.States
 
             InputService.Instance.DeregisterListener(this);
             InputService.Instance.OnInputDeviceLost = null;
+            ClosePauseMenu();
             UpdateManager.Instance.RemoveUpdatable(this);
             CollisionController.Instance.IsActive = false;
             CollisionController.Instance.ClearObjects();

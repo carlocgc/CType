@@ -140,7 +140,6 @@ namespace Type.Scenes
             if (paused)
             {
                 Help.Show();
-                PauseIndicator.Visible = true;
 #if __ANDROID__
                 _PauseButton.Visible = false;
                 _PauseButton.TouchEnabled = false;
@@ -154,7 +153,6 @@ namespace Type.Scenes
             else
             {
                 Help.Hide();
-                PauseIndicator.Visible = false;
 #if __ANDROID__
                 _PauseButton.Visible = true;
                 _PauseButton.TouchEnabled = true;

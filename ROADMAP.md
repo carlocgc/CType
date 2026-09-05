@@ -262,8 +262,15 @@ Not glamorous, but these are store-page and refund-request items.
   them, so each is a row rather than a rewrite.
   This also unblocks **I6** — a rebinding editor now has somewhere to live, and `Settings`
   gives it a persistence pattern to follow.
-- **S4. A real pause menu.** Pause today freezes time and shows a powerup help overlay.
-  It needs Resume / Options / Restart / Quit.
+- **S4. A real pause menu.** **Done.** Pause froze time and showed a powerup help overlay
+  with no way out but unpausing. It now also puts up Resume, Options, Restart and Quit,
+  driven by the focus cursor from I5.
+  Pausing no longer silences all input, only the ship: the provider suppresses the gameplay
+  actions and lets the menu ones through, since a menu the pause put on screen has to be
+  navigable. Options opens the settings over the paused game rather than as its own screen,
+  by giving `OptionsScene` an overlay mode that omits the menu art. Restart and Quit restore
+  the clock before changing state, or whatever came next would start frozen.
+  Laid out to the right because the powerup help occupies the left edge and is worth keeping.
 - **S5. Settings persistence** through `DataLoader`.
 - **S6. Replace Google Play achievements and leaderboards** with Steamworks equivalents,
   behind the existing `AchievementController` / `LeaderboardController` facades. This is the
@@ -290,6 +297,15 @@ Not glamorous, but these are store-page and refund-request items.
   drawable reproduced the original crash exactly.* Harmless now, but it is a resource leak
   and the next one may not be. The quickest route is a Call Stack from the pre-`!25` build,
   or a debug tally of registered versus disposed drawables at shutdown.
+
+- **S10. A timed callback can fire into a state that is tearing down.**
+  `LevelDisplay.ShowLevel` schedules a `TimedCallback` that starts the enemy factory and
+  activates collision two seconds later. Nothing cancels it if the state is disposed first,
+  so quitting during the level intro can run it against fields `Dispose` has already nulled.
+  Observed once as a `NullReferenceException` on quit from a paused game during the intro,
+  and **not reproducible in fourteen further attempts**, so this is a suspected cause rather
+  than a confirmed one — but the callback genuinely is uncancelled, which is worth fixing on
+  its own terms. Every `TimedCallback` a state owns should be cancelled in its `Dispose`.
 
 ### Phase 3 — Graphics
 

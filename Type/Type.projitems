@@ -108,6 +108,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\GameScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\MainMenuScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\OptionsScene.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\PauseScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\SecretShipSelectScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\ShipSelectScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\UIScene.cs" />
@@ -123,6 +124,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)UI\Navigation\FocusableButton.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\Navigation\FocusRing.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\Navigation\MenuNavigator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\Navigation\MenuTextItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\Navigation\OptionRow.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\InputPrompt.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\FpsCounter.cs" />
