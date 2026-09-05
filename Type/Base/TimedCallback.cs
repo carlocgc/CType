@@ -34,18 +34,29 @@ namespace Type.Base
         /// </summary>
         public void CancelAndComplete()
         {
+            if (IsDisposed) return;
+
             _Callback?.Invoke();
             Dispose();
         }
 
         /// <summary> Called to update the object </summary>
         /// <param name="timeTilUpdate"></param>
+        /// <remarks>
+        /// Refuses to run once disposed. <see cref="Dispose"/> drops the callback, so an update
+        /// arriving after it would otherwise throw on the invoke. Nothing delivers one today —
+        /// `UpdateManager` skips anything already queued for removal — but that is the engine's
+        /// guarantee rather than this class's, and a timer that fires an action it was told to
+        /// forget is the wrong shape to leave lying around.
+        /// </remarks>
         public void Update(TimeSpan timeTilUpdate)
         {
+            if (IsDisposed) return;
+
             _Elapsed += timeTilUpdate;
 
             if (_Elapsed < _Duration && !_Complete) return;
-            _Callback.Invoke();
+            _Callback?.Invoke();
             _Complete = true;
             Dispose();
         }
@@ -54,7 +65,7 @@ namespace Type.Base
         /// <returns></returns>
         public Boolean CanUpdate()
         {
-            return true;
+            return !IsDisposed;
         }
 
         /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
