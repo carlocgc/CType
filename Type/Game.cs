@@ -20,7 +20,15 @@ namespace Type
         /// <summary> Main canvas for the UI elements </summary>
         public static Canvas UiCanvas;
 
-        public Game() : base("Test Game", 60)
+        /// <remarks>
+        /// The name reaches the engine only as the directory its key value store lives in, so it
+        /// is the filesystem-safe form rather than the one shown to the player. Renaming it from
+        /// "Test Game" moves the engine's achievement and leaderboard store, which is inert on
+        /// desktop because <c>CompetitiveManager</c> only loads under Android. The game's own
+        /// save is unaffected: it moved out of that store in S11, and the migration that reads
+        /// the old one looks for the previous name by literal.
+        /// </remarks>
+        public Game() : base(Constants.Global.STORE_NAME, 60)
         {
 
         }

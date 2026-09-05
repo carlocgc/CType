@@ -302,12 +302,30 @@ Not glamorous, but these are store-page and refund-request items.
   behind the existing `AchievementController` / `LeaderboardController` facades. This is the
   one place a new third-party dependency (Facepunch.Steamworks or Steamworks.NET) is
   unavoidable — flag it and get approval before adding it.
-- **S7. Window title, icon, and app metadata.** The window is currently titled `"Test Game"`,
-  and so is the `BaseGame` constructor argument. Renaming that argument was gated on **S11**,
-  which is now done: the game's saves no longer live in a directory named after it, and the
-  migration that reads the old ones looks for `"Test Game"` by literal so a rename cannot
-  affect it. The only thing still under that name is the engine's own achievement and
-  leaderboard store, which is inert on desktop.
+- **S7. Window title, icon, and app metadata.** *Title and metadata done; icon outstanding.*
+  The window was titled `"Game"` and the `BaseGame` argument `"Test Game"`. The window now
+  reads `C:Type`, and the assembly carries that as its title and product with a real
+  description, so the executable's file properties no longer say `Type.Desktop`.
+  The engine hardcodes `"Game"` as the window title in its own constructor, so the real one is
+  assigned from `Program.cs` afterwards rather than passed in — no engine change needed. The
+  argument that *is* passed is the engine's `AssemblyName` property, which nothing anywhere
+  reads.
+  The `BaseGame` name is now `Constants.Global.STORE_NAME`, which is `"CType"` and not
+  `"C:Type"`: the engine hands it straight to `IsolatedStorageFile.CreateDirectory`, and a
+  colon cannot appear in a Windows path. Renaming it was gated on **S11** and is now safe —
+  *verified that the save still reads back intact after the rename*, since it no longer lives
+  in a directory named after the game. Only the engine's achievement and leaderboard store
+  moved, which is inert on desktop.
+  **Still to do: an icon.** There is no `.ico` anywhere in the repository, so the window and
+  the executable both still show the default. This needs an actual asset rather than a code
+  change — one drawn for the purpose, or generated from existing ship art.
+  **Also open, and a decision rather than a task:** the game calls itself two things.
+  `C-Type` in the Android label and the README heading, `C:Type` in CLAUDE.md, this document
+  and the trailer. The desktop build now uses `C:Type` throughout, but the store page, the
+  Steam app name and the README should agree with whichever is chosen.
+  **Company and copyright are deliberately untouched.** `AssemblyCompany` is empty and
+  `AssemblyCopyright` still reads `Copyright ©  2019` with no holder. Those are identity and
+  legal fields; they need a decision, not a guess.
 - **S8. Drop the mobile in-app billing dependency from the desktop build.**
   **Done** — AmosEngine merge request !24, merged as `0a1204a`.
   `AmosShared/Base/PurchaseManager.cs` used `Plugin.InAppBilling` with no platform guard, so

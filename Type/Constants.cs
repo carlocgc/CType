@@ -19,6 +19,20 @@ namespace Type
         {                      
             public const String VERSION = "1.2.2";
 
+            /// <summary> The game's name, as shown to the player </summary>
+            public const String TITLE = "C:Type";
+
+            /// <summary>
+            /// The game's name where it has to be a directory name
+            /// </summary>
+            /// <remarks>
+            /// Not <see cref="TITLE"/>, because a colon cannot appear in a Windows path and the
+            /// engine passes this straight to <c>IsolatedStorageFile.CreateDirectory</c>. The
+            /// game's own save does not live here — see ROADMAP item S11 — but the engine's
+            /// achievement and leaderboard store still does.
+            /// </remarks>
+            public const String STORE_NAME = "CType";
+
 #if __ANDROID__
             /// <summary> AdMob application id, Android builds only </summary>
             public const String ADMOB_APP_ID = "ca-app-pub-4204969324853965~4341189590";
