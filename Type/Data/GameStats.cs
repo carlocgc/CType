@@ -1,6 +1,6 @@
 ﻿using AmosShared.Interfaces;
 using System;
-using AmosShared.Base;
+using Type.Services;
 using Type.Controllers;
 
 namespace Type.Data
@@ -57,9 +57,9 @@ namespace Type.Data
         {
             Score = 0;
             _StartTime = DateTime.Now;
-            _HighScore = Convert.ToInt32(DataLoader.GetValue("HIGH_SCORE"));
-            _AllTimeScore = Convert.ToInt32(DataLoader.GetValue("ALLTIME_SCORE"));
-            _AllTimeKills = Convert.ToInt32(DataLoader.GetValue("ALLTIME_KILLS"));
+            _HighScore = Convert.ToInt32(StorageService.Instance.GetValue("HIGH_SCORE"));
+            _AllTimeScore = Convert.ToInt32(StorageService.Instance.GetValue("ALLTIME_SCORE"));
+            _AllTimeKills = Convert.ToInt32(StorageService.Instance.GetValue("ALLTIME_KILLS"));
         }
 
         /// <summary>
@@ -76,13 +76,13 @@ namespace Type.Data
             // Save highscore
             if (Score > _HighScore)
             {
-                DataLoader.SetValue("HIGH_SCORE", Score);
+                StorageService.Instance.SetValue("HIGH_SCORE", Score);
                 IsNewHighScore = true;
             }
 
             // Save all-time data
-            DataLoader.SetValue("ALLTIME_SCORE", _AllTimeScore);
-            DataLoader.SetValue("ALLTIME_KILLS", _AllTimeKills);
+            StorageService.Instance.SetValue("ALLTIME_SCORE", _AllTimeScore);
+            StorageService.Instance.SetValue("ALLTIME_KILLS", _AllTimeKills);
 
             // Check achievement progress
             AchievementController.Instance.AllTimeScoreUpdated(_AllTimeScore);

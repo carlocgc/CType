@@ -303,9 +303,11 @@ Not glamorous, but these are store-page and refund-request items.
   one place a new third-party dependency (Facepunch.Steamworks or Steamworks.NET) is
   unavoidable — flag it and get approval before adding it.
 - **S7. Window title, icon, and app metadata.** The window is currently titled `"Test Game"`,
-  and so is the `BaseGame` constructor argument. **Do not rename that argument without
-  reading S11 first** — it names the save directory, so changing it orphans every existing
-  save.
+  and so is the `BaseGame` constructor argument. Renaming that argument was gated on **S11**,
+  which is now done: the game's saves no longer live in a directory named after it, and the
+  migration that reads the old ones looks for `"Test Game"` by literal so a rename cannot
+  affect it. The only thing still under that name is the engine's own achievement and
+  leaderboard store, which is inert on desktop.
 - **S8. Drop the mobile in-app billing dependency from the desktop build.**
   **Done** — AmosEngine merge request !24, merged as `0a1204a`.
   `AmosShared/Base/PurchaseManager.cs` used `Plugin.InAppBilling` with no platform guard, so
@@ -356,8 +358,33 @@ Not glamorous, but these are store-page and refund-request items.
     and worth tidying if that area is touched.
 
 - **S11. Saves are keyed to the executable's path, so a reinstall silently wipes progress.**
-  A release blocker, and the most damaging item in this phase: it loses player data rather
-  than merely annoying them.
+  **Done.** The game's own values now live in `%APPDATA%\CType\SavedData.txt`, reached through
+  a new `StorageService` and `IStorageProvider` rather than the engine's `DataLoader`, so the
+  path no longer moves with the executable. On first run with no save there, the desktop
+  provider searches every isolated storage store for the newest one this game wrote and brings
+  it across, so an existing player keeps their high score, totals and settings.
+  Android keeps `DataLoader` behind the same interface: an installed package's storage is keyed
+  to the application, not to a directory, so the problem does not arise there.
+  Two deliberate choices. The file is `key=value` lines rather than JSON, because
+  `Newtonsoft.Json` reaches the desktop *output* but not its *compilation* — it is a transitive
+  runtime dependency of `AmosDesktop` — and adding a package to `Type.Desktop` to read a file
+  the migration touches once was the worse trade. Every consumer already read through
+  `Convert`, so a text-only store needed no call site changes. The same single-byte
+  obfuscation is kept, so moving the file changes nothing about how readable it is; it was
+  never security, and S11's original note on that still stands.
+  *Verified end to end: migration brought all six existing keys across with their values
+  intact, and the game then run **from a different directory entirely** read a display mode
+  written by the copy in the install folder — the exact case that used to produce an empty
+  store.*
+  **Still in isolated storage:** the achievement and leaderboard values the engine writes from
+  `Achievement.cs` and `LeaderboardScore.cs`. Those are inert on desktop, since
+  `CompetitiveManager` only loads under Android, and they are engine-side rather than
+  game-side. R1 replaces them with Steam stats anyway.
+  **This unblocks S7.** Renaming the `BaseGame` argument no longer touches where saves live;
+  the migration search deliberately looks for the old `"Test Game"` folder by literal, so a
+  rename cannot move that needle.
+
+  The problem it fixed, for the record:
   `DataLoader.Initialise` opens the store with `IsolatedStorageFile.GetUserStoreForAssembly()`.
   For an assembly with no strong name that scope resolves through Url evidence — the codebase
   path of the running executable — which is why the store lands under

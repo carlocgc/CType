@@ -6,14 +6,14 @@ using Type.Services;
 namespace Type.Data
 {
     /// <summary>
-    /// Player settings that survive between sessions, held in the engine's key value store
+    /// Player settings that survive between sessions, held by <see cref="StorageService"/>
     /// alongside the high score.
     /// </summary>
     /// <remarks>
     /// Volumes are stored as whole percentages rather than the engine's 0 to 1 floats. The store
-    /// round trips through JSON, where a float would come back as a boxed Double and each read
-    /// would need to guess at the original type; an integer percentage is also what the options
-    /// screen shows, so there is one representation rather than two.
+    /// round trips values as text, so a float would have to be parsed back with a guess at its
+    /// original type; an integer percentage is also what the options screen shows, so there is
+    /// one representation rather than two.
     /// </remarks>
     public static class Settings
     {
@@ -62,7 +62,7 @@ namespace Type.Data
         public static void SetMasterVolume(Int32 percentage)
         {
             MasterVolume = Clamp(percentage);
-            DataLoader.SetValue(MasterVolumeKey, MasterVolume);
+            StorageService.Instance.SetValue(MasterVolumeKey, MasterVolume);
             Apply();
         }
 
@@ -73,7 +73,7 @@ namespace Type.Data
         public static void SetMusicVolume(Int32 percentage)
         {
             MusicVolume = Clamp(percentage);
-            DataLoader.SetValue(MusicVolumeKey, MusicVolume);
+            StorageService.Instance.SetValue(MusicVolumeKey, MusicVolume);
             Apply();
         }
 
@@ -84,7 +84,7 @@ namespace Type.Data
         public static void SetEffectVolume(Int32 percentage)
         {
             EffectVolume = Clamp(percentage);
-            DataLoader.SetValue(EffectVolumeKey, EffectVolume);
+            StorageService.Instance.SetValue(EffectVolumeKey, EffectVolume);
             Apply();
         }
 
@@ -95,7 +95,7 @@ namespace Type.Data
         public static void SetDisplayMode(DisplayMode mode)
         {
             DisplayMode = mode;
-            DataLoader.SetValue(DisplayModeKey, mode.ToString());
+            StorageService.Instance.SetValue(DisplayModeKey, mode.ToString());
             DisplayService.Instance.SetMode(mode);
         }
 
@@ -105,7 +105,7 @@ namespace Type.Data
         /// </summary>
         private static DisplayMode ReadDisplayMode()
         {
-            Object stored = DataLoader.GetValue(DisplayModeKey);
+            Object stored = StorageService.Instance.GetValue(DisplayModeKey);
             if (stored == null) return DisplayMode.WINDOWED;
 
             // Stored by name rather than ordinal, so reordering the enum cannot silently change
@@ -130,7 +130,7 @@ namespace Type.Data
         /// </summary>
         private static Int32 ReadPercentage(String key)
         {
-            Object stored = DataLoader.GetValue(key);
+            Object stored = StorageService.Instance.GetValue(key);
             if (stored == null) return DefaultVolume;
 
             try
