@@ -92,7 +92,7 @@ namespace Type.Scenes
                 Visible = false,
                 Colour = new Vector4(1, 1, 1, 0.4f)
             };
-            _PauseButton = new VirtualButton(Int32.MaxValue, pauseButton, ButtonData.Type.START);
+            _PauseButton = new VirtualButton(Int32.MaxValue, pauseButton, ButtonData.Type.PAUSE);
             InputService.Instance.RegisterButton(_PauseButton);
 
             Sprite resumeButton = new Sprite(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/Buttons/playbutton.png"))
@@ -101,7 +101,7 @@ namespace Type.Scenes
                 Visible = false,
                 Colour = new Vector4(1, 1, 1, 0.4f)
             };
-            _ResumeButton = new VirtualButton(Int32.MaxValue, resumeButton, ButtonData.Type.START);
+            _ResumeButton = new VirtualButton(Int32.MaxValue, resumeButton, ButtonData.Type.PAUSE);
             InputService.Instance.RegisterButton(_ResumeButton);
 
             _VirtualAnalogStick = new VirtualAnalogStick(new Vector2(-620, -220), 110);
@@ -132,15 +132,29 @@ namespace Type.Scenes
         }
 
         /// <summary>
+        /// Hides or shows the in game readouts
+        /// </summary>
+        /// <param name="visible"> Whether the readouts are shown </param>
+        private void SetHudVisible(Boolean visible)
+        {
+            ScoreDisplay.Visible = visible;
+            LifeMeter.SetVisible(visible);
+            NukeDisplay.SetVisible(visible);
+            LevelDisplay.SetVisible(visible);
+        }
+
+        /// <summary>
         /// Sets the UI scene to a paused state
         /// </summary>
         /// <param name="paused"></param>
         public void SetPaused(Boolean paused)
         {
+            // The pause overlay is centred, so the score, lives, bomb count and level banner
+            // would read straight through it. They are not useful while a menu is up.
+            SetHudVisible(!paused);
+
             if (paused)
             {
-                Help.Show();
-                PauseIndicator.Visible = true;
 #if __ANDROID__
                 _PauseButton.Visible = false;
                 _PauseButton.TouchEnabled = false;
@@ -154,7 +168,6 @@ namespace Type.Scenes
             else
             {
                 Help.Hide();
-                PauseIndicator.Visible = false;
 #if __ANDROID__
                 _PauseButton.Visible = true;
                 _PauseButton.TouchEnabled = true;

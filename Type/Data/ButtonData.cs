@@ -39,8 +39,8 @@
             /// <summary> Move menu focus right </summary>
             MENU_RIGHT,
 
-            /// <summary> Reveals the hidden craft on the ship select screen </summary>
-            SECRET,
+            /// <summary> Opens or closes the pause menu during play </summary>
+            PAUSE,
         }
     }
 }

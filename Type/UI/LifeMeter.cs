@@ -23,6 +23,19 @@ namespace Type.UI
         /// Shows the player lives
         /// </summary>
         /// <param name="playerId"> the type of player ship selected </param>
+        /// <summary>
+        /// Hides or shows the meter, used while a menu covers the game. Restoring shows only as
+        /// many icons as the player has lives.
+        /// </summary>
+        /// <param name="visible"> Whether the meter is shown </param>
+        public void SetVisible(Boolean visible)
+        {
+            for (Int32 i = 0; i < _LifeSprites.Count; i++)
+            {
+                _LifeSprites[i].Visible = visible && i < PlayerLives;
+            }
+        }
+
         public LifeMeter(Int32 playerId)
         {
             PlayerLives = 3;

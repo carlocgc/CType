@@ -1,4 +1,5 @@
-﻿using AmosShared.Graphics;
+﻿using System;
+using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
 using OpenTK;
 using System.Collections.Generic;
@@ -11,6 +12,15 @@ namespace Type.UI
     /// </summary>
     public class PowerUpHelp : GameObject
     {
+        /// <summary>
+        /// Left edge of the icon column. The guide used to hug the left of the screen, where it
+        /// sat under the pause menu; the block is now roughly centred instead.
+        /// </summary>
+        private const Single IconX = -300;
+
+        /// <summary> Left edge of the label column, clear of the icons </summary>
+        private const Single TextX = -230;
+
         private readonly List<Sprite> _Sprites = new List<Sprite>();
 
         private readonly List<TextDisplay> _TextDisplays = new List<TextDisplay>();
@@ -39,53 +49,53 @@ namespace Type.UI
         {
             _Sprites.Add(_PointsSprite = new Sprite(Game.MainCanvas, Constants.ZOrders.ABOVE_GAME, Texture.GetTexture("Content/Graphics/Powerups/points_powerup.png"))
             {
-                Position = new Vector2(-900, -50)
+                Position = new Vector2(IconX, 200)
             });
             _Sprites.Add(_ShieldSprite = new Sprite(Game.MainCanvas, Constants.ZOrders.ABOVE_GAME, Texture.GetTexture("Content/Graphics/Powerups/shield_powerup.png"))
             {
-                Position = new Vector2(-900, -150)
+                Position = new Vector2(IconX, 100)
             });
             _Sprites.Add(_AmmoSprite = new Sprite(Game.MainCanvas, Constants.ZOrders.ABOVE_GAME, Texture.GetTexture("Content/Graphics/Powerups/weapon_powerup.png"))
             {
-                Position = new Vector2(-900, -250)
+                Position = new Vector2(IconX, 0)
             });
             _Sprites.Add(_NukeSprite = new Sprite(Game.MainCanvas, Constants.ZOrders.ABOVE_GAME, Texture.GetTexture("Content/Graphics/Powerups/nuke_powerup.png"))
             {
-                Position = new Vector2(-900, -350)
+                Position = new Vector2(IconX, -100)
             });
             _Sprites.Add(_HeartSprite = new Sprite(Game.MainCanvas, Constants.ZOrders.ABOVE_GAME, Texture.GetTexture("Content/Graphics/Powerups/extralife_powerup.png"))
             {
-                Position = new Vector2(-900, -450)
+                Position = new Vector2(IconX, -200)
             });
 
             _TextDisplays.Add(_PointText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
                 Text = $"POINTS",
-                Position = new Vector2(-840, -40),
+                Position = new Vector2(TextX, 210),
                 Scale = new Vector2(2f, 2f)
             });
             _TextDisplays.Add(_ShieldText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
                 Text = $"INCREASES SHIELD",
-                Position = new Vector2(-840, -140),
+                Position = new Vector2(TextX, 110),
                 Scale = new Vector2(2f, 2f)
             });
             _TextDisplays.Add(_AmmoText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
                 Text = $"WEAPON PROBE",
-                Position = new Vector2(-840, -240),
+                Position = new Vector2(TextX, 10),
                 Scale = new Vector2(2f, 2f)
             });
             _TextDisplays.Add(_NukeText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
                 Text = $"NUKE",
-                Position = new Vector2(-840, -340),
+                Position = new Vector2(TextX, -90),
                 Scale = new Vector2(2f, 2f)
             });
             _TextDisplays.Add(_HeartText = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI, Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
             {
                 Text = $"EXTRA LIFE",
-                Position = new Vector2(-840, -440),
+                Position = new Vector2(TextX, -190),
                 Scale = new Vector2(2f, 2f)
             });
         }

@@ -31,25 +31,40 @@ namespace Type.Scenes
         /// <summary> The settings shown, in the order they are navigated </summary>
         public List<OptionRow> Rows { get; }
 
-        public OptionsScene()
+        /// <summary>
+        /// Builds the screen
+        /// </summary>
+        /// <param name="overlay">
+        /// True when shown over something already on screen, such as the paused game, in which
+        /// case the menu art is omitted and only the dark wash is drawn.
+        /// </param>
+        public OptionsScene(Boolean overlay = false)
         {
-            _Background = new Sprite(Game.MainCanvas, Constants.ZOrders.BACKGROUND,
-                Texture.GetTexture("Content/Graphics/Background/MainMenuBG-2.png"))
+            if (!overlay)
             {
-                Position = new Vector2(-960, -540),
-                Visible = true,
-            };
+                _Background = new Sprite(Game.MainCanvas, Constants.ZOrders.BACKGROUND,
+                    Texture.GetTexture("Content/Graphics/Background/MainMenuBG-2.png"))
+                {
+                    Position = new Vector2(-960, -540),
+                    Visible = true,
+                };
+            }
 
             // The menu art has a bright star at the top centre, exactly where the title and
             // the values sit. A flat dark wash over it keeps the text readable without
             // needing new art or moving the layout off centre.
-            _Scrim = new Sprite(Game.MainCanvas, Constants.ZOrders.MENU_SCRIM,
-                Texture.GetTexture("Content/Graphics/Engine/engine_background.png"))
+            // As an overlay the caller already darkened the screen, so a second wash would
+            // only make the settings harder to read.
+            if (!overlay)
             {
-                Position = new Vector2(-960, -600),
-                Colour = new Vector4(0, 0, 0, 0.65f),
-                Visible = true,
-            };
+                _Scrim = new Sprite(Game.MainCanvas, Constants.ZOrders.MENU_SCRIM,
+                    Texture.GetTexture("Content/Graphics/Engine/engine_background.png"))
+                {
+                    Position = new Vector2(-960, -600),
+                    Colour = new Vector4(0, 0, 0, 0.65f),
+                    Visible = true,
+                };
+            }
 
             _Title = new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI,
                 Texture.GetTexture("Content/Graphics/KenPixel/KenPixel.png"), Constants.Font.Map, 15, 15, "KenPixel")
@@ -114,9 +129,9 @@ namespace Type.Scenes
             foreach (OptionRow row in Rows) row.Dispose();
             Rows.Clear();
             _BackPrompt.Dispose();
-            _Scrim.Dispose();
+            _Scrim?.Dispose();
             _Title.Dispose();
-            _Background.Dispose();
+            _Background?.Dispose();
         }
     }
 }

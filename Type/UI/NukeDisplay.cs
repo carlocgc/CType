@@ -29,6 +29,15 @@ namespace Type.UI
 
         #endregion
 
+        /// <summary>
+        /// Hides or shows the counter, used while a menu covers the game
+        /// </summary>
+        /// <param name="visible"> Whether the counter is shown </param>
+        public void SetVisible(Boolean visible)
+        {
+            _Count.Visible = visible;
+        }
+
         /// <summary> The number of nukes to display </summary>
         public Int32 NukeCount
         {

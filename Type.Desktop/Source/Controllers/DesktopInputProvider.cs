@@ -113,15 +113,14 @@ namespace Type.Desktop.Source.Controllers
 
             TrackActiveDevice(keyboard, pad);
 
-            // Pause and unpause must work while paused; everything else is reported as released
-            // so that an action held at the moment of pausing does not resume when play does.
-            DispatchAction(ButtonData.Type.START, IsActionDown(ButtonData.Type.START, keyboard, pad));
-
             foreach (ActionBinding binding in _Bindings.All)
             {
-                if (binding.Action == ButtonData.Type.START) continue;
+                // While paused only the ship stops listening. The menu the pause put on screen
+                // still needs to be navigable, and an action held at the moment of pausing is
+                // reported as released so it does not resume firing when play does.
+                Boolean suppressed = Paused && IsGameplayAction(binding.Action);
+                Boolean isDown = !suppressed && IsActionDown(binding.Action, keyboard, pad);
 
-                Boolean isDown = !Paused && IsActionDown(binding.Action, keyboard, pad);
                 DispatchAction(binding.Action, isDown);
             }
 
@@ -134,6 +133,19 @@ namespace Type.Desktop.Source.Controllers
         /// </summary>
         private GamePadState GetActivePad()
         {
+            // A slot that reports connected is not necessarily a pad anyone is holding: this
+            // machine reports one whose triggers rest at half pull. So a pad that is actually
+            // producing input always wins, whichever slot it is in. Picking the lowest connected
+            // slot instead meant a real controller could be ignored in favour of a phantom.
+            for (Int32 i = 0; i < PadSlots; i++)
+            {
+                GamePadState state = GamePad.GetState(i);
+                if (!PadHasInput(state)) continue;
+
+                _ActivePad = i;
+                return state;
+            }
+
             if (_ActivePad >= 0)
             {
                 GamePadState current = GamePad.GetState(_ActivePad);
@@ -154,6 +166,19 @@ namespace Type.Desktop.Source.Controllers
             }
 
             return default(GamePadState);
+        }
+
+        /// <summary>
+        /// Whether an action drives the game rather than the interface, and so must stop while
+        /// the game is paused
+        /// </summary>
+        /// <remarks>
+        /// Everything else, including the menu actions and the pause button itself, keeps
+        /// flowing so that a menu opened by pausing can be used.
+        /// </remarks>
+        private static Boolean IsGameplayAction(ButtonData.Type action)
+        {
+            return action == ButtonData.Type.FIRE || action == ButtonData.Type.NUKE;
         }
 
         /// <summary>

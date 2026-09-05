@@ -11,15 +11,9 @@ namespace Type.Interfaces.Control
     public interface IShipSelectListener
     {
         /// <summary>
-        /// Invoked when a ship select buton is pressed
+        /// Invoked when a ship select button is released, which is what chooses a craft
         /// </summary>
         /// <param name="id"> ID of the selected ship </param>
-        void OnButtonPressed(Int32 id);
-
-        /// <summary>
-        /// Invoked when a ship select button is released
-        /// </summary>
-        /// <param name="id"></param>
         void OnButtonReleased(Int32 id);
     }
 }

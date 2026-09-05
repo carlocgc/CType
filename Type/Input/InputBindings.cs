@@ -99,6 +99,13 @@ namespace Type.Input
         /// B is bound to both NUKE and CANCEL. That is safe because no menu binds NUKE any
         /// more: ship select uses a focus cursor rather than one face button per craft, so the
         /// two actions can never both be listened for on the same screen.
+        /// <para>
+        /// PAUSE is its own action rather than a second meaning for START or CANCEL, and pad
+        /// Start is deliberately not bound to CONFIRM. It was, and the result was that pausing
+        /// built a menu which the same frame's CONFIRM immediately activated, resuming again,
+        /// so pausing appeared to do nothing at all. CANCEL cannot double as pause either,
+        /// because B is bound to NUKE while playing.
+        /// </para>
         /// </remarks>
         public static InputBindings CreateDefaults()
         {
@@ -121,8 +128,12 @@ namespace Type.Input
                     new[] { "Escape", "BackSpace" }),
 
                 new ActionBinding(ButtonData.Type.CONFIRM,
-                    new[] { GamepadButton.A, GamepadButton.START },
+                    new[] { GamepadButton.A },
                     new[] { "Enter", "Space" }),
+
+                new ActionBinding(ButtonData.Type.PAUSE,
+                    new[] { GamepadButton.START },
+                    new[] { "Escape", "P" }),
 
                 new ActionBinding(ButtonData.Type.CANCEL,
                     new[] { GamepadButton.B, GamepadButton.BACK },
@@ -143,14 +154,6 @@ namespace Type.Input
                 new ActionBinding(ButtonData.Type.MENU_RIGHT,
                     new[] { GamepadButton.DPAD_RIGHT },
                     new[] { "Right", "D" }),
-
-                // The secret craft was reached on touch by holding all three ship cards at
-                // once, a gesture with no cursor equivalent. Left stick click and V stand in
-                // for it: both are deliberate enough not to be hit by accident, which is the
-                // property the original gesture had.
-                new ActionBinding(ButtonData.Type.SECRET,
-                    new[] { GamepadButton.LEFT_STICK },
-                    new[] { "V" }),
             });
         }
     }
