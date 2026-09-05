@@ -231,9 +231,18 @@ keyboard, without touching the mouse.
 
 Not glamorous, but these are store-page and refund-request items.
 
-- **S1. Fullscreen and borderless windowed.** `AmosDesktop.GameWindow` derives from
-  `OpenTK.GameWindow`, so `WindowState` and `WindowBorder` are already reachable from
-  `Program.cs` — no engine change needed.
+- **S1. Fullscreen and borderless windowed.** **Done.** `AmosDesktop.GameWindow` derives from
+  `OpenTK.GameWindow`, so `WindowState` and `WindowBorder` were already reachable and no engine
+  change was needed. `DesktopDisplayProvider` sets them behind `IDisplayProvider`; the mode is
+  chosen on the options screen, saved by `Settings`, and reapplied during content loading.
+  *Verified by forcing each mode at startup and reading the window rect and style back through
+  Win32: windowed keeps `WS_CAPTION`; borderless clears it at 0,0; fullscreen clears it and
+  covers the full 1920×1080.*
+  **One caveat, worth fixing before release:** borderless is implemented as
+  `WindowState.Maximized`, which respects the desktop work area, so it comes out 1920×1032
+  with the taskbar still on top of it. Players expect borderless fullscreen to cover the
+  screen. Setting the window bounds to the monitor's directly would fix it — a few lines in
+  `DesktopDisplayProvider`, which is why it is recorded here rather than as its own item.
 - **S2. Resolution and aspect handling.** **Done** — AmosEngine merge request `!26`.
   The game assumed 1920×1080 and positions HUD elements at literal coordinates, and a window
   that was not 16:9 stretched everything: a circular star rendered as an ellipse.
@@ -274,7 +283,17 @@ Not glamorous, but these are store-page and refund-request items.
   permanently on top of the menu, where it collided with both the menu and the settings
   opened from it. Sub screens keep the pause overlay's dark wash instead of adding their
   own, and one that carries no prompt of its own borrows a BACK prompt from the overlay.
-- **S5. Settings persistence** through `DataLoader`.
+- **S5. Settings persistence** through `DataLoader`. **Done.** `Settings` reads and writes
+  master, music and effect volume plus the display mode, saving on every change and applying
+  them during content loading, before anything plays. Volumes are stored as whole percentages
+  rather than the engine's 0–1 floats, so a value cannot come back from JSON as a boxed double
+  that every read has to guess the type of.
+  *Verified by decoding the live save file: `MASTER_VOLUME`, `MUSIC_VOLUME` and `DISPLAY_MODE`
+  are all present and read back across restarts.* Keys are only written once changed, so a
+  setting left at its default is simply absent and falls back — `EFFECT_VOLUME` is missing on
+  this machine for that reason, not through any failure.
+  See **S11** for where that file lives, and why surviving a restart is not the same as
+  surviving a reinstall.
 - **S6. Replace Google Play achievements and leaderboards** with Steamworks equivalents,
   behind the existing `AchievementController` / `LeaderboardController` facades. This is the
   one place a new third-party dependency (Facepunch.Steamworks or Steamworks.NET) is
