@@ -238,11 +238,15 @@ Not glamorous, but these are store-page and refund-request items.
   *Verified by forcing each mode at startup and reading the window rect and style back through
   Win32: windowed keeps `WS_CAPTION`; borderless clears it at 0,0; fullscreen clears it and
   covers the full 1920×1080.*
-  **One caveat, worth fixing before release:** borderless is implemented as
-  `WindowState.Maximized`, which respects the desktop work area, so it comes out 1920×1032
-  with the taskbar still on top of it. Players expect borderless fullscreen to cover the
-  screen. Setting the window bounds to the monitor's directly would fix it — a few lines in
-  `DesktopDisplayProvider`, which is why it is recorded here rather than as its own item.
+  Borderless was briefly `WindowState.Maximized`, which respects the desktop work area and so
+  left the taskbar drawn over the bottom of the screen at 1920×1032. It now sizes the window
+  to the bounds of whichever display its centre falls on, which both covers the screen and
+  keeps it on the monitor the player put it on — maximising chose the display for free, and
+  sizing explicitly has to choose it explicitly. The windowed position is remembered on the
+  way out and restored on the way back, since leaving a maximised window used to restore it
+  and leaving a resized one does not.
+  *Verified at 1920×1080: borderless and fullscreen both fill the screen with no caption, and
+  borderless back to windowed returns to the original size and position.*
 - **S2. Resolution and aspect handling.** **Done** — AmosEngine merge request `!26`.
   The game assumed 1920×1080 and positions HUD elements at literal coordinates, and a window
   that was not 16:9 stretched everything: a circular star rendered as an ellipse.
