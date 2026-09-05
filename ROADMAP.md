@@ -303,14 +303,34 @@ Not glamorous, but these are store-page and refund-request items.
   and the next one may not be. The quickest route is a Call Stack from the pre-`!25` build,
   or a debug tally of registered versus disposed drawables at shutdown.
 
-- **S10. A timed callback can fire into a state that is tearing down.**
-  `LevelDisplay.ShowLevel` schedules a `TimedCallback` that starts the enemy factory and
-  activates collision two seconds later. Nothing cancels it if the state is disposed first,
-  so quitting during the level intro can run it against fields `Dispose` has already nulled.
-  Observed once as a `NullReferenceException` on quit from a paused game during the intro,
-  and **not reproducible in fourteen further attempts**, so this is a suspected cause rather
-  than a confirmed one — but the callback genuinely is uncancelled, which is worth fixing on
-  its own terms. Every `TimedCallback` a state owns should be cancelled in its `Dispose`.
+- **S10. A `NullReferenceException` on quit, cause unknown.** *Suspect ruled out; still open.*
+  Observed once as a `NullReferenceException` on quit from a paused game during the level
+  intro, and **not reproducible in fourteen further attempts**. This item originally blamed an
+  uncancelled `TimedCallback` from `LevelDisplay.ShowLevel`. **That hypothesis is wrong, and
+  the description asserting it was inaccurate rather than merely unproven:**
+  - `LevelDisplay.Dispose` cancels both `_ShownCallback` and `_CompleteCallback`, and has done
+    since `c87ca46`, long before the exception was seen.
+  - That `Dispose` is reached on every teardown path: `PlayingState.Dispose` disposes
+    `_UIScene`, and `UIScene.Dispose` disposes `LevelDisplay`.
+  - A callback cancelled part way through a frame cannot still fire in that frame.
+    `UpdateManager.RemoveUpdatable` only queues the removal, but the update loop skips
+    anything in `_UpdatablesToRemove` before calling it, so a disposal that happens *during*
+    a frame — which is exactly what a state change does — is honoured immediately.
+
+  So the callbacks are cancelled, and no ordering was found that lets one run against a
+  disposed state. The exception was real; its cause is not this. Whatever is found next should
+  be looked for on the quit path generally rather than in `LevelDisplay`, and it may be the
+  same root cause as S9, which is also a teardown-ordering problem on the menu and play paths.
+  Two things were noticed while ruling this out, neither of them the culprit:
+  - `TimedCallback` was safe only by leaning on `UpdateManager`'s behaviour: `Update` invoked
+    `_Callback` with no null check and `CanUpdate` ignored `IsDisposed`, so it depended on the
+    engine never delivering an update after removal. Hardened to refuse updates once disposed,
+    so the class holds on its own terms. **This is not a fix for the exception** — nothing
+    reaches the old code path.
+  - `PlayingState.GameOver` disposes `_LevelDisplay` directly, then `PlayingState.Dispose`
+    disposes it again by way of `_UIScene`. Harmless — `Drawable.Dispose` returns early when
+    already disposed, and the callback fields are nulled — but the double ownership is untidy
+    and worth tidying if that area is touched.
 
 - **S11. Saves are keyed to the executable's path, so a reinstall silently wipes progress.**
   A release blocker, and the most damaging item in this phase: it loses player data rather
