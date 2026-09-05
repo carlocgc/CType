@@ -234,10 +234,25 @@ Not glamorous, but these are store-page and refund-request items.
 - **S1. Fullscreen and borderless windowed.** `AmosDesktop.GameWindow` derives from
   `OpenTK.GameWindow`, so `WindowState` and `WindowBorder` are already reachable from
   `Program.cs` — no engine change needed.
-- **S2. Resolution and aspect handling.** The game assumes 1920×1080 and positions HUD
-  elements at literal coordinates. Verify 16:10 and 21:9; letterbox if the alternative is a
-  broken layout. **[ENGINE risk]** — `Renderer.UpdateSize` behaviour may constrain what is
-  possible here, so measure before promising ultrawide support.
+- **S2. Resolution and aspect handling.** **Done** — AmosEngine merge request `!26`.
+  The game assumed 1920×1080 and positions HUD elements at literal coordinates, and a window
+  that was not 16:9 stretched everything: a circular star rendered as an ellipse.
+  The engine risk turned out to be real but shallow. `Renderer.Init` already derived the
+  target height from the device aspect, but `UpdateSize` never repeated that on resize, and
+  on desktop `Init` is always handed the initial 16:9 window size, so the correction never
+  engaged at all. The viewport now fits the target dimensions inside the surface without
+  changing their shape and centres them, which keeps the scale equal on both axes and leaves
+  the target dimensions — and therefore every literal coordinate in the game — untouched.
+  The offset mechanism already existed for this: `CalculateExtraOffset` is an abstract hook,
+  and the Android and iOS touch mapping already added `ViewOffset`. Only the desktop mouse
+  mapping ignored it, and now does not.
+  *Verified at 16:9, 16:10, 21:9 and two deliberately wrong aspects: equal scale on both
+  axes, bars on the correct edges, no bars at all at 16:9, and clicks inside a bar mapping
+  outside the world so they cannot activate anything.*
+  **Still open:** the game draws its backgrounds at a fixed `(-960, -540)` sized for 1080,
+  so the world is still exactly 1920×1080 whatever the display. Bars rather than more visible
+  play area is the right default for a game balanced around a fixed field of view, but if
+  ultrawide play area is ever wanted, that is a content change, not a renderer one.
 - **S3. An options menu.** *Screen built; two rows still to come.* Reached from the main
   menu, navigable with the focus cursor, with master, music and effect volume adjustable in
   ten point steps and saved to the engine's key value store. Settings load and apply during
