@@ -535,6 +535,31 @@ no packages, and `AmosDesktop`, which has `Newtonsoft.Json` 13.0.3 and
 would be wasted effort, because a revival replaces the entire Xamarin stack anyway. Leave
 them until then.
 
+**The same debt also surfaces on GitHub, and there it looks worse than it is.** Dependabot
+raises `GHSA-5crp-9r3c-p9vr` (high) against `Type.Android/packages.config` on the default
+branch, which is `development`, not `master`. Its companion alert against
+`Type.Desktop/packages.config` is already marked fixed, because the `PackageReference`
+migration deleted that file. **Bumping the pin the open alert names would change nothing:**
+- `Type.Android.csproj` carries no `Newtonsoft.Json` reference at all, so the entry in its
+  `packages.config` is vestigial. The assembly would reach a built APK transitively from
+  `AmosAndroid`, which pins **11.0.2** — older than the 12.0.1 the alert names, and inside the
+  submodule where this repository cannot change it.
+- Editing the parent repo's pin therefore silences the alert while leaving what a revived
+  Android build actually links against exactly as it was.
+- `Type.Android/app.config` compounds it by redirecting Newtonsoft to `11.0.0.0` while
+  `packages.config` says 12.0.1. The two have disagreed for as long as the project has been
+  dormant.
+
+The advisory itself is a stack-overflow denial of service on deeply nested JSON. The game's
+only JSON inputs are the local save file and shipped spritesheet assets, with nothing arriving
+over a network, so the worst case is a player crashing their own game with a save they wrote
+themselves — which **S11** notes they can do more directly in any case.
+
+**So a revival has to bump both halves** — the pin here and the engine's, then reconcile the
+`app.config` redirect — rather than the one file Dependabot points at. Until then the alert is
+accurate but inert. Dismissing it is defensible provided the reason recorded is this
+paragraph, and not "not affected".
+
 Treat a revival as its own project with its own assessment, not as a Phase item.
 
 ## 5. Open questions
