@@ -15,11 +15,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\AchievementController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\CollisionController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\DisplayService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\InputService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\LeaderboardController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\PositionRelayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\ProbeController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\ButtonEventData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\DisplayMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\GameStats.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\LevelLoader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\ButtonData.cs" />
@@ -66,6 +68,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Probe\IProbe.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Probe\IProbeController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Service\IAdService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Service\IDisplayProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Weapons\IProjectile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Weapons\IProjectileShooter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Bosses\BossFighter.cs" />

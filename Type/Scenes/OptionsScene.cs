@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Type.Data;
 using Type.UI;
 using Type.UI.Navigation;
+using Type.Services;
 
 namespace Type.Scenes
 {
@@ -76,7 +77,29 @@ namespace Type.Scenes
                     step => Settings.SetEffectVolume(Settings.EffectVolume + step * VolumeStep)),
             };
 
+            // Platforms that are always fullscreen have nothing to offer here, so the row is
+            // omitted rather than shown doing nothing.
+            if (DisplayService.Instance.CanChangeMode)
+            {
+                Rows.Add(new OptionRow("DISPLAY MODE", new Vector2(-700, -150),
+                    () => Settings.DisplayMode.ToString(),
+                    CycleDisplayMode));
+            }
+
             _BackPrompt = new InputPrompt(ButtonData.Type.CANCEL, "BACK", new Vector2(-880, -480));
+        }
+
+        /// <summary>
+        /// Steps the display mode through the available modes, wrapping at both ends
+        /// </summary>
+        /// <param name="step"> -1 for the previous mode, 1 for the next </param>
+        private static void CycleDisplayMode(Int32 step)
+        {
+            Array modes = Enum.GetValues(typeof(DisplayMode));
+            Int32 index = Array.IndexOf(modes, Settings.DisplayMode);
+            Int32 next = ((index + step) % modes.Length + modes.Length) % modes.Length;
+
+            Settings.SetDisplayMode((DisplayMode)modes.GetValue(next));
         }
 
         /// <inheritdoc />

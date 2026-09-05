@@ -1,6 +1,7 @@
 using AmosShared.Audio;
 using AmosShared.Base;
 using System;
+using Type.Services;
 
 namespace Type.Data
 {
@@ -22,6 +23,8 @@ namespace Type.Data
         private const String MusicVolumeKey = "MUSIC_VOLUME";
         /// <summary> Store key for the effect volume percentage </summary>
         private const String EffectVolumeKey = "EFFECT_VOLUME";
+        /// <summary> Store key for the display mode </summary>
+        private const String DisplayModeKey = "DISPLAY_MODE";
 
         /// <summary> Volume percentage used when nothing has been saved </summary>
         private const Int32 DefaultVolume = 100;
@@ -35,6 +38,9 @@ namespace Type.Data
         /// <summary> Effect volume, 0 to 100 </summary>
         public static Int32 EffectVolume { get; private set; } = DefaultVolume;
 
+        /// <summary> How the game window fills the display </summary>
+        public static DisplayMode DisplayMode { get; private set; } = DisplayMode.WINDOWED;
+
         /// <summary>
         /// Reads the saved settings and applies them. Call once during content loading, before
         /// anything plays.
@@ -44,6 +50,7 @@ namespace Type.Data
             MasterVolume = ReadPercentage(MasterVolumeKey);
             MusicVolume = ReadPercentage(MusicVolumeKey);
             EffectVolume = ReadPercentage(EffectVolumeKey);
+            DisplayMode = ReadDisplayMode();
 
             Apply();
         }
@@ -82,6 +89,31 @@ namespace Type.Data
         }
 
         /// <summary>
+        /// Sets the display mode and saves it
+        /// </summary>
+        /// <param name="mode"> The mode to apply </param>
+        public static void SetDisplayMode(DisplayMode mode)
+        {
+            DisplayMode = mode;
+            DataLoader.SetValue(DisplayModeKey, mode.ToString());
+            DisplayService.Instance.SetMode(mode);
+        }
+
+        /// <summary>
+        /// Reads the stored display mode, falling back to a window if it is missing or names a
+        /// mode this build no longer has
+        /// </summary>
+        private static DisplayMode ReadDisplayMode()
+        {
+            Object stored = DataLoader.GetValue(DisplayModeKey);
+            if (stored == null) return DisplayMode.WINDOWED;
+
+            // Stored by name rather than ordinal, so reordering the enum cannot silently change
+            // what a saved setting means.
+            return Enum.TryParse(stored.ToString(), true, out DisplayMode mode) ? mode : DisplayMode.WINDOWED;
+        }
+
+        /// <summary>
         /// Pushes the current values onto the audio manager
         /// </summary>
         private static void Apply()
@@ -89,6 +121,7 @@ namespace Type.Data
             AudioManager.Instance.MasterVolume = MasterVolume / 100f;
             AudioManager.Instance.MusicVolume = MusicVolume / 100f;
             AudioManager.Instance.EffectVolume = EffectVolume / 100f;
+            DisplayService.Instance.SetMode(DisplayMode);
         }
 
         /// <summary>
