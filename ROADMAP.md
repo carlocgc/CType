@@ -1,6 +1,6 @@
-# C:Type — Roadmap to Steam
+# C-Type — Roadmap to Steam
 
-Assessment and plan for taking C:Type from a delisted 2019 Android title to a Steam
+Assessment and plan for taking C-Type from a delisted 2019 Android title to a Steam
 release. Written 2026-09-04 against `development` @ `5a7c47d`.
 
 **Constraint:** the AmosEngine submodule (`SupportingFiles/`) is out of scope. Everything
@@ -328,9 +328,11 @@ Not glamorous, but these are store-page and refund-request items.
   assigned from `Program.cs` afterwards rather than passed in — no engine change needed. The
   argument that *is* passed is the engine's `AssemblyName` property, which nothing anywhere
   reads.
-  The `BaseGame` name is now `Constants.Global.STORE_NAME`, which is `"CType"` and not
-  `"C:Type"`: the engine hands it straight to `IsolatedStorageFile.CreateDirectory`, and a
-  colon cannot appear in a Windows path. Renaming it was gated on **S11** and is now safe —
+  The `BaseGame` name is now `Constants.Global.STORE_NAME`, which is `"CType"` and deliberately
+  punctuation-free rather than the display name: the engine hands it straight to
+  `IsolatedStorageFile.CreateDirectory`, and the desktop save folder already uses that
+  spelling, so changing it would orphan saves that exist. Renaming it was gated on **S11** and
+  is now safe —
   *verified that the save still reads back intact after the rename*, since it no longer lives
   in a directory named after the game. Only the engine's achievement and leaderboard store
   moved, which is inert on desktop.
@@ -427,7 +429,7 @@ Not glamorous, but these are store-page and refund-request items.
   screen. The directory is also named from the `BaseGame` constructor argument, currently
   `"Test Game"`, so S7's rename orphans every save unless it migrates first.
   Two ways out. The durable one belongs with R1: Steam Cloud for the file, and Steam stats as
-  the source of truth for anything that must survive. Sooner and game-side, C:Type can stop
+  the source of truth for anything that must survive. Sooner and game-side, C-Type can stop
   routing its own data through `DataLoader` and keep a file at a stable location such as
   `%APPDATA%\CType\`, migrating from whichever isolated store still has content. Changing
   `GetUserStoreForAssembly` itself would be an engine change and is the weaker option — the

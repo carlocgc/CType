@@ -7,9 +7,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("C-Type")]
 [assembly: AssemblyDescription("A side scrolling space shooter.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("CarloCGC")]
 [assembly: AssemblyProduct("C-Type")]
-[assembly: AssemblyCopyright("Copyright ©  2019")]
+[assembly: AssemblyCopyright("Copyright © 2019-2026 CarloCGC")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
