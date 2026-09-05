@@ -302,10 +302,28 @@ Not glamorous, but these are store-page and refund-request items.
   behind the existing `AchievementController` / `LeaderboardController` facades. This is the
   one place a new third-party dependency (Facepunch.Steamworks or Steamworks.NET) is
   unavoidable — flag it and get approval before adding it.
-- **S7. Window title, icon, and app metadata.** *Title and metadata done; icon outstanding.*
+- **S7. Window title, icon, and app metadata.** **Done.**
   The window was titled `"Game"` and the `BaseGame` argument `"Test Game"`. The window now
-  reads `C:Type`, and the assembly carries that as its title and product with a real
+  reads `C-Type`, and the assembly carries that as its title and product with a real
   description, so the executable's file properties no longer say `Type.Desktop`.
+  **The name is `C-Type`**, settled as a play on R-Type, and the title screen, window, taskbar
+  and assembly metadata all now agree with the Android label and the README heading. The
+  bitmap font had no hyphen — the atlas was exactly full at 600×15 — so one was drawn in the
+  font's own weight and the sheet widened by a cell to 615.
+  **Beware `Constants.Font.Map` ordering.** `TextDisplay.GenerateCharacterMap` walks that
+  dictionary and hands each entry the next atlas cell in turn; the filenames and coordinates
+  in `KenPixel.json` are not consulted on this path. A character's position in the map is
+  therefore what decides which glyph it draws. Adding the hyphen after `colon` rather than at
+  the end silently shifted every symbol after it — spaces rendered as hyphens, dots as percent
+  signs — while letters and digits looked fine. Anything new must be appended to the map and
+  drawn in the matching new cell at the end of the sheet.
+  **The icon** is generated from the Alpha ship sprite: seven sizes from 16 to 256, the small
+  ones as BMP entries and 256 as PNG, since `System.Drawing.Icon` cannot decode PNG entries and
+  the window loads its icon through it. It is an `ApplicationIcon` build input rather than a
+  content asset, so there is one copy compiled into the executable and the window pulls it back
+  out with `ExtractAssociatedIcon` rather than shipping a second.
+  *Verified: the title screen reads `C-TYPE`, the window and taskbar show the ship, the
+  executable reports `C-Type`, and the version string and input prompts render unchanged.*
   The engine hardcodes `"Game"` as the window title in its own constructor, so the real one is
   assigned from `Program.cs` afterwards rather than passed in — no engine change needed. The
   argument that *is* passed is the engine's `AssemblyName` property, which nothing anywhere
@@ -316,13 +334,6 @@ Not glamorous, but these are store-page and refund-request items.
   *verified that the save still reads back intact after the rename*, since it no longer lives
   in a directory named after the game. Only the engine's achievement and leaderboard store
   moved, which is inert on desktop.
-  **Still to do: an icon.** There is no `.ico` anywhere in the repository, so the window and
-  the executable both still show the default. This needs an actual asset rather than a code
-  change — one drawn for the purpose, or generated from existing ship art.
-  **Also open, and a decision rather than a task:** the game calls itself two things.
-  `C-Type` in the Android label and the README heading, `C:Type` in CLAUDE.md, this document
-  and the trailer. The desktop build now uses `C:Type` throughout, but the store page, the
-  Steam app name and the README should agree with whichever is chosen.
   **Company and copyright are deliberately untouched.** `AssemblyCompany` is empty and
   `AssemblyCopyright` still reads `Copyright ©  2019` with no holder. Those are identity and
   legal fields; they need a decision, not a guess.

@@ -8,6 +8,9 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>Type.Desktop</RootNamespace>
     <AssemblyName>Type.Desktop</AssemblyName>
+    <!-- Compiled into the executable, so it is a build input rather than a Content asset and
+         does not need a matching entry in the Android project. -->
+    <ApplicationIcon>..\Assets\Graphics\Icon\ctype.ico</ApplicationIcon>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

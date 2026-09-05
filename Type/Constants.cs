@@ -20,7 +20,10 @@ namespace Type
             public const String VERSION = "1.2.2";
 
             /// <summary> The game's name, as shown to the player </summary>
-            public const String TITLE = "C:Type";
+            public const String TITLE = "C-Type";
+
+            /// <summary> The game's name for the bitmap font, which only carries capitals </summary>
+            public const String TITLE_UPPERCASE = "C-TYPE";
 
             /// <summary>
             /// The game's name where it has to be a directory name
@@ -220,6 +223,14 @@ namespace Type
                     map.Add('.', "dot");
                     map.Add('%', "percentage");
                     map.Add(' ', "space");
+
+                    // Order is layout, not taste. TextDisplay.GenerateCharacterMap walks this
+                    // dictionary and hands each entry the next cell of the atlas in turn, so a
+                    // character's position here is what decides which glyph it draws — the names
+                    // and the coordinates in KenPixel.json are not consulted. Anything new must
+                    // therefore be appended, and its glyph drawn in the matching new cell at the
+                    // end of the sheet. Inserting mid-list silently shifts every glyph after it.
+                    map.Add('-', "hyphen");
                     return map;
                 }
             }
