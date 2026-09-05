@@ -280,7 +280,9 @@ Not glamorous, but these are store-page and refund-request items.
   one place a new third-party dependency (Facepunch.Steamworks or Steamworks.NET) is
   unavoidable — flag it and get approval before adding it.
 - **S7. Window title, icon, and app metadata.** The window is currently titled `"Test Game"`,
-  and so is the `BaseGame` constructor argument.
+  and so is the `BaseGame` constructor argument. **Do not rename that argument without
+  reading S11 first** — it names the save directory, so changing it orphans every existing
+  save.
 - **S8. Drop the mobile in-app billing dependency from the desktop build.**
   **Done** — AmosEngine merge request !24, merged as `0a1204a`.
   `AmosShared/Base/PurchaseManager.cs` used `Plugin.InAppBilling` with no platform guard, so
@@ -309,6 +311,34 @@ Not glamorous, but these are store-page and refund-request items.
   and **not reproducible in fourteen further attempts**, so this is a suspected cause rather
   than a confirmed one — but the callback genuinely is uncancelled, which is worth fixing on
   its own terms. Every `TimedCallback` a state owns should be cancelled in its `Dispose`.
+
+- **S11. Saves are keyed to the executable's path, so a reinstall silently wipes progress.**
+  A release blocker, and the most damaging item in this phase: it loses player data rather
+  than merely annoying them.
+  `DataLoader.Initialise` opens the store with `IsolatedStorageFile.GetUserStoreForAssembly()`.
+  For an assembly with no strong name that scope resolves through Url evidence — the codebase
+  path of the running executable — which is why the store lands under
+  `%LOCALAPPDATA%\IsolatedStorage\...\Url.<hash>\AssemFiles\Test Game\SavedData.txt`. Two
+  copies of the same build at two paths get two unrelated stores.
+  *Verified: this machine holds nine `Test Game` stores, only one of which has a
+  `SavedData.txt`. Running the same build from a different directory created a fresh empty
+  store, with no error and no migration.*
+  On Steam that means a second library folder, a moved install, or any path change resets the
+  high score, the all-time totals, the settings, and the Omega unlock on the ship select
+  screen. The directory is also named from the `BaseGame` constructor argument, currently
+  `"Test Game"`, so S7's rename orphans every save unless it migrates first.
+  Two ways out. The durable one belongs with R1: Steam Cloud for the file, and Steam stats as
+  the source of truth for anything that must survive. Sooner and game-side, C:Type can stop
+  routing its own data through `DataLoader` and keep a file at a stable location such as
+  `%APPDATA%\CType\`, migrating from whichever isolated store still has content. Changing
+  `GetUserStoreForAssembly` itself would be an engine change and is the weaker option — the
+  isolated storage API has no scope that is stable across install paths without a strong name.
+  Worth recording while here, since it is the same subsystem: the file is obfuscated with a
+  single-byte XOR against `EngineConstants.ENCRYPTION_KEY`, carries no checksum, and on
+  desktop nothing corroborates it, because `CompetitiveManager` only loads under
+  `__ANDROID__`. Any value in it can be edited in a couple of lines. That is acceptable for a
+  single-player ship unlock, but `HIGH_SCORE` and the `ALLTIME_*` totals feed
+  `LeaderboardController` and become public under R1, which is where it starts to matter.
 
 ### Phase 3 — Graphics
 
