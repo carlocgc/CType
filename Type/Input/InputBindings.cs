@@ -282,15 +282,38 @@ namespace Type.Input
         /// mapping without swapping the instance the input provider holds
         /// </summary>
         /// <param name="bindings"> The mapping to adopt </param>
+        /// <remarks>
+        /// **Each action's inputs are replaced in place, and the set of actions is not
+        /// restructured.** This runs from inside an input dispatch — RESET DEFAULTS is a menu
+        /// item, and the provider activates it from within a loop over these bindings. Clearing
+        /// and refilling the dictionary invalidated that loop's enumerator, so resetting threw
+        /// `InvalidOperationException` on the next action it went to dispatch.
+        /// <para>
+        /// An action the current mapping does not have is still added, which does restructure.
+        /// That cannot happen while both sides come from <see cref="CreateDefaults"/>, which is
+        /// the only way this is called; it is here so a future action is not silently dropped.
+        /// </para>
+        /// </remarks>
         public void CopyFrom(InputBindings bindings)
         {
             if (bindings == null) return;
 
-            _Bindings.Clear();
-            foreach (ActionBinding binding in bindings.All)
+            foreach (ActionBinding source in bindings.All)
             {
-                _Bindings[binding.Action] = new ActionBinding(binding.Action,
-                    binding.PadButtons.ToArray(), binding.Keys.ToArray());
+                ActionBinding target = this[source.Action];
+
+                if (target == null)
+                {
+                    _Bindings[source.Action] = new ActionBinding(source.Action,
+                        source.PadButtons.ToArray(), source.Keys.ToArray());
+                    continue;
+                }
+
+                target.PadButtons.Clear();
+                foreach (GamepadButton button in source.PadButtons) target.PadButtons.Add(button);
+
+                target.Keys.Clear();
+                foreach (String key in source.Keys) target.Keys.Add(key);
             }
 
             Revision++;

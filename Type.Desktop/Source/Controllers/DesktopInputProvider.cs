@@ -55,6 +55,17 @@ namespace Type.Desktop.Source.Controllers
         private TimedCallback _VibrationCallback;
         /// <summary> Whether the most recent real input came from a gamepad rather than the keyboard </summary>
         private Boolean _LastInputWasGamepad;
+        /// <summary>
+        /// The bindings to dispatch each update, rebuilt whenever the mapping changes
+        /// </summary>
+        /// <remarks>
+        /// A snapshot rather than the live collection. A listener can change the mapping from
+        /// inside a dispatch — RESET DEFAULTS on the controls screen does exactly that — and
+        /// iterating the collection it is changing threw. <see cref="InputBindings.CopyFrom"/>
+        /// no longer restructures for that reason, but dispatching from an array means no
+        /// future change to the mapping can invalidate this loop either.
+        /// </remarks>
+        private ActionBinding[] _DispatchOrder = new ActionBinding[0];
         /// <summary> Reports the input a capture in progress collects, null when none is running </summary>
         private Action<InputSource> _OnCaptured;
         /// <summary> Whether a capture has seen everything released and may now take a press </summary>
@@ -99,10 +110,20 @@ namespace Type.Desktop.Source.Controllers
         /// Resolves the platform independent key names in the bindings to OpenTK keys, so that
         /// polling does not parse strings every update. Unrecognised names are skipped. Called
         /// once at construction and again whenever the player rebinds something.
+        /// <para>
+        /// **The tracked press states are deliberately not cleared.** They are keyed by action
+        /// rather than by input, so a mapping change cannot make them wrong — the next update
+        /// reads the new binding and reports a release if nothing is on it any more. Clearing
+        /// them made every held input read as freshly pressed, which meant holding confirm on
+        /// RESET DEFAULTS re-ran the reset every frame, and with it seven writes to the save
+        /// file per frame.
+        /// </para>
         /// </remarks>
         public void ReloadBindings()
         {
             _ResolvedKeys.Clear();
+
+            List<ActionBinding> order = new List<ActionBinding>();
 
             foreach (ActionBinding binding in _Bindings.All)
             {
@@ -114,11 +135,12 @@ namespace Type.Desktop.Source.Controllers
                 }
 
                 _ResolvedKeys[binding.Action] = keys;
+                order.Add(binding);
             }
 
-            // An action whose input changed while it was held would otherwise be reported as
-            // still down against its new binding.
-            _Tracker.Reset();
+            // Assigned rather than filled in place, so an update already iterating the previous
+            // array finishes against a set that is whole.
+            _DispatchOrder = order.ToArray();
         }
 
         /// <summary>
@@ -175,7 +197,7 @@ namespace Type.Desktop.Source.Controllers
                 return;
             }
 
-            foreach (ActionBinding binding in _Bindings.All)
+            foreach (ActionBinding binding in _DispatchOrder)
             {
                 // While paused only the ship stops listening. The menu the pause put on screen
                 // still needs to be navigable, and an action held at the moment of pausing is
@@ -204,7 +226,7 @@ namespace Type.Desktop.Source.Controllers
 
             // Listeners are told everything is released before the screen goes quiet, so an
             // action held at the moment the capture opened does not stay held for its duration.
-            foreach (ActionBinding binding in _Bindings.All) DispatchAction(binding.Action, false);
+            foreach (ActionBinding binding in _DispatchOrder) DispatchAction(binding.Action, false);
 
             for (Int32 i = _Listeners.Count - 1; i >= 0; i--) _Listeners[i].UpdateDirectionData(Vector2.Zero, 0);
 

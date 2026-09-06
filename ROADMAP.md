@@ -246,6 +246,16 @@ Recorded now, briefly, from the code as it stands.
   behind the middle column, and the `KEYBOARD` heading washed out against it at the tint the
   other labels use. The headings are now brighter than an unfocused row despite carrying less
   meaning, which is the wrong hierarchy on paper and the right one on screen.
+  **Playing it then found what neither had:** `RESET DEFAULTS` threw
+  `InvalidOperationException` every time. It is a menu item, so it runs from inside an input
+  dispatch, and the provider activates it from within a loop over the very bindings the reset
+  was rebuilding — clearing the dictionary invalidated that loop's enumerator. Fixed twice
+  over: the reset now replaces each action's inputs in place rather than restructuring, and the
+  provider dispatches from a snapshot rebuilt on change, so no future edit to the mapping can
+  invalidate the loop either. Removing a stale `Reset` on the press tracker at the same time
+  fixed a second fault hiding behind the first — holding confirm on that item would have re-run
+  the reset every frame, and with it seven writes to the save file per frame.
+  *Reproduced first, then fixed, then confirmed by driving the same call chain.*
   **Still open:** rebinding is one input per device per action, so the second binding cannot be
   set from the screen, only inherited from the defaults or a swap. Whether that matters is a
   question for the first person who plays it.
