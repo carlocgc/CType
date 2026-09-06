@@ -620,10 +620,27 @@ Not glamorous, but these are store-page and refund-request items.
 
 Your second stated priority. Ordered cheapest-impact-first.
 
-- **G1. Audit asset resolution — do this before anything else in the phase.** The art was
-  authored for phone screens and is now drawn on a 1080p+ desktop display. Establish whether
-  it holds up at 1:1 on a 27" monitor. The answer decides whether Phase 3 is "add effects"
-  or "re-art the game", and those differ by an order of magnitude in cost.
+- **G1. Audit asset resolution.** **Done. The verdict is "add effects", not "re-art the
+  game".** The art holds up, and the premise this item was written on turns out to be wrong in
+  a useful way.
+  **The art was never authored for a phone-sized coordinate space.** The engine's world has
+  always been a fixed 1920x1080 and the assets were drawn for it: the backgrounds are *exactly*
+  1920x1080, the bosses are 485x665 and 600x800, the enemies 63x102 to 113x129. The phone was
+  only ever the display; the canvas was desktop-sized all along.
+  **Nothing in gameplay is scaled.** No player ship, enemy, boss, pickup or background sets a
+  `Scale` — the only scaling anywhere is the bitmap font at 2 to 4, the explosion at 2, and a
+  few UI pieces. So at 1920x1080 every gameplay sprite draws **1:1, with no resampling at all**.
+  *Verified by capturing gameplay at native 1920x1080 in borderless and magnifying the result:
+  the ship, the enemies and the planet are clean, with no upscaling artefacts and no softness.*
+  Two things did come out of the audit, and neither is an art problem:
+  - **The text is the only thing that looks low resolution, and the art is not at fault** —
+    see G9.
+  - **Above 1080p the entire game is bilinearly upscaled** — see G10.
+
+  Also observed while looking, and belonging to other items rather than this one: the playfield
+  reads as very empty at 1080p — six enemies spread across the full width with large gaps —
+  and the HUD is small and clustered in the top-left corner. The first is L4's problem, the
+  second is G8's. Neither is about asset resolution, which is what this item asked.
 - **G2. A particle system.** There isn't one. Thrusters, muzzle flashes, impact sparks,
   debris on death. The single biggest visual return per line of code in the project.
 - **G3. Screen shake, hit-stop, and flash.** Enemies already flash white on hit; extend to
@@ -639,7 +656,32 @@ Your second stated priority. Ordered cheapest-impact-first.
 - **G7. Boss telegraphs.** Wind-up animations and warning indicators before attacks. As much
   a fairness fix as a visual one, and a prerequisite for making bosses harder.
 - **G8. Menu and HUD pass.** The HUD is mobile-scaled with touch-sized targets. Rebalance
-  for desktop viewing distance.
+  for desktop viewing distance. G1 confirmed this by eye at 1080p: the score, the life icons
+  and the bomb count sit small in the top-left corner and read as an afterthought on a desktop
+  monitor.
+- **G9. The text is blurred, and the font is not to blame.** Found by G1. `KenPixel.png` is a
+  hard-edged one-bit atlas of 15x15 cells — magnified eight times it is perfectly crisp, with
+  no anti-aliasing anywhere. In game it is drawn at scale 2 to 4 through
+  `TextureMagFilter.Linear`, so every letter gets soft gradient edges. **The blur is the
+  filter, not the art.** It is the one thing on screen that looks low resolution.
+  Two ways out, and the game-side one is preferred per the submodule rule:
+  - **Author the atlas at the size it is drawn.** A 30 or 60 pixel cell drawn at scale 1 is
+    crisp with any filter. It is mechanical art work and touches no engine code, but it means
+    redrawing the sheet — and note S7's warning that `Constants.Font.Map` ordering is what
+    decides which glyph draws, so the new sheet must keep the same cell order.
+  - **Nearest filtering for this texture only**, which is an engine change and therefore a
+    merge request. **It must not be global**: the ship and enemy art is smooth and
+    anti-aliased, and nearest would make it blocky the moment it is upscaled at 1440p or above.
+- **G10. Everything is bilinearly upscaled above 1080p, which is most desktop monitors.**
+  Found by G1, and **inferred from the code rather than observed** — this machine is 1080p, so
+  the case could not be reproduced here. The renderer fits the fixed 1920x1080 target into the
+  surface and centres it (S2), and magnification is `Linear`, so on a 1440p or 4K display the
+  whole game is resampled up and softens uniformly. At 1440p the factor is not even an integer.
+  Worth deciding deliberately rather than discovering in a review: accept it as a look, render
+  the world at the display resolution instead of a fixed target, or ship higher resolution art
+  and a larger target. The second and third are large and the second is engine work; the first
+  is free and may well be right for a game with this art style. **Confirm on a high-DPI display
+  before deciding** — the whole item rests on an inference.
 
 ### Phase 4 — Enemy behaviour
 
@@ -946,8 +988,11 @@ Treat a revival as its own project with its own assessment, not as a Phase item.
 
 ## 5. Open questions
 
-1. **Is the existing art the shipping art?** G1 answers this, and the answer changes the size
-   of Phase 3 by an order of magnitude.
+1. ~~**Is the existing art the shipping art?**~~ **Answered by G1: yes.** The world has always
+   been a fixed 1920x1080 and the art was drawn for it, so at 1080p every gameplay sprite draws
+   1:1 with no resampling. Phase 3 is the cheap version — add effects, not re-art the game.
+   What is left of the question is G10: whether the fixed target is the right one for displays
+   above 1080p, which is a renderer decision rather than an art one.
 2. **Is .NET Framework 4.8 + OpenTK 1.x acceptable to ship on?** It works, and it is what the
    engine targets. But it is Windows-only in practice, rules out a Linux-native build, and
    complicates Steam Deck. Migrating means engine work, which is out of scope — so this is
