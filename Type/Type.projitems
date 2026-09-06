@@ -21,6 +21,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\StorageService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\LeaderboardController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\PositionRelayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controllers\ParticleController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\ProbeController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\ButtonEventData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\DisplayMode.cs" />
@@ -29,6 +30,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Progress.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\ButtonData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\ControlSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Particles.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Rumble.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Settings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\WaveData.cs" />
@@ -100,6 +102,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Player\PlayerBeta.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Player\PlayerGamma.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Player\PlayerOmega.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Particles\Particle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Player\Shield.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Probes\LaserProbe.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Projectiles\Bullet.cs" />

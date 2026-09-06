@@ -579,6 +579,7 @@
     <AndroidAsset Include="Assets\Content\Graphics\Bosses\boss04.png" />
   </ItemGroup>
   <ItemGroup>
+    <AndroidAsset Include="Assets\Content\Graphics\Particles\particle.png" />
     <AndroidAsset Include="Assets\Content\Graphics\Powerups\nuke_powerup.png" />
   </ItemGroup>
   <ItemGroup>

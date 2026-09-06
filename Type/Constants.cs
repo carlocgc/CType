@@ -200,6 +200,9 @@ namespace Type
 
             public const Int32 ENEMIES_OVERLAY = 86;
 
+            /// <summary> Debris and sparks, above the enemies they came from and below the player </summary>
+            public const Int32 PARTICLES = 87;
+
             public const Int32 PLAYER = 90;
 
             public const Int32 SHIELD = 95;
