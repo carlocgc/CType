@@ -451,7 +451,23 @@ Not glamorous, but these are store-page and refund-request items.
   initialises against app 480 and reads back the persona name and app id from the live Steam
   client**, so the library is sound and only the bitness is wrong.
 
-  **Recommendation: make the desktop build x64 and use Facepunch.** The only thing standing in
+  **Decided (2026-09-06): the desktop build goes x64 and uses Facepunch.**
+  *Done so far, and the diagnosis held exactly:* `Type.Desktop` is `x64` with `Prefer32Bit`
+  false, `Facepunch.Steamworks` 2.3.3 restores and builds into the game, and
+  `Facepunch.Steamworks.Win64.dll` reaches the output. At x64 the build is clean and the **only**
+  runtime failure is `BadImageFormatException` from `OpenTK.Audio.AudioContext` loading the x86
+  `openal32.dll` — so that file really was the sole blocker, now proven rather than inferred.
+  **Blocked on the 64-bit OpenAL, which goes upstream rather than into the game.** The engine
+  ships it, so the engine should carry the fix: a merge request against `ctype_development`
+  swapping the three committed copies — `AmosDesktop/openal32.dll`, `Libraries/Desktop/openal32.dll`
+  and `TestProject/openal32.dll` — for the Win64 build of OpenAL Soft. That is cleaner than
+  having the game shadow the engine's native out of its own output directory, and it fixes the
+  same problem for anything else built on the engine.
+  Note that the parent cannot be merged before the engine is: an x64 `Type.Desktop` against an
+  x86 `openal32.dll` builds fine and dies on the first sound.
+  *One packaging job still outstanding on the game side:* `steam_api64.dll` has to be copied to
+  the output deliberately — see the note below on `content/`.
+  **The original recommendation, kept because the reasoning is the record:** The only thing standing in
   the way is one file. `OpenTK.dll` and `FarseerPhysics.dll` are both `MSIL` and run at either
   width; **`openal32.dll` is the sole native in the engine's `Libraries/Desktop`, and it is
   x86**. Swapping in a 64-bit OpenAL Soft build and clearing `Prefer32Bit` is the whole job.
