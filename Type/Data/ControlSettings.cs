@@ -50,15 +50,17 @@ namespace Type.Data
         }
 
         /// <summary>
-        /// Binds an action to one input and saves the result
+        /// Binds one slot of one device to an input and saves the result
         /// </summary>
         /// <param name="action"> The action to rebind </param>
+        /// <param name="gamepad"> Whether the slot holds a gamepad button rather than a key </param>
+        /// <param name="slot"> Which of the action's inputs for that device, from zero </param>
         /// <param name="source"> The input the player pressed </param>
         /// <returns> Whether the mapping changed; false if the input is not allowed to be bound </returns>
-        public static Boolean Rebind(ButtonData.Type action, InputSource source)
+        public static Boolean Rebind(ButtonData.Type action, Boolean gamepad, Int32 slot, InputSource source)
         {
             InputBindings bindings = InputService.Instance.Bindings;
-            if (bindings == null || !bindings.Rebind(action, source)) return false;
+            if (bindings == null || !bindings.Rebind(action, gamepad, slot, source)) return false;
 
             // Every rebindable action is written, not just this one. A rebind can move an input
             // off another action, so saving only the action the player chose would store a

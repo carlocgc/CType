@@ -86,7 +86,7 @@ namespace Type.Android.Source.Controllers
         /// Reports nothing captured straight away, so a caller is not left waiting on a screen
         /// this platform cannot offer.
         /// </remarks>
-        public void BeginCapture(Action<InputSource> onCaptured)
+        public void BeginCapture(Boolean gamepad, Action<InputSource> onCaptured)
         {
             onCaptured?.Invoke(null);
         }

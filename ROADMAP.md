@@ -221,15 +221,26 @@ Recorded now, briefly, from the code as it stands.
   has been released, so the confirm that opened the capture is never what gets bound, and the
   capture stays open until the chosen input is let go, so a key just bound to FIRE does not
   also fire as the screen closes. Escape backs out.
-  Three deliberate rules:
-  - **Rebinding replaces, it does not add.** An action bound to one key stops answering to its
-    other keys, so what the screen shows is the whole truth. The shipped defaults bind two of
-    each; rebinding one collapses it to the one chosen.
+  The screen shows **four cells per action** — two keyboard slots and two gamepad slots — with
+  left and right moving between them and confirm rebinding the one under the cursor. Only that
+  cell's device is listened for, so pressing a key at a gamepad cell leaves the prompt up rather
+  than binding something the cell cannot hold. Three rules:
+  - **A rebind changes one slot and leaves the rest alone.** This started out replacing the
+    whole device, on the reasoning that the screen should not show an input it could not edit.
+    That was the wrong trade: the defaults bind two of each, so touching one collapsed it to
+    one and the shipped state could not be got back except by resetting everything. Editing
+    per slot shows everything and can set everything, which was the actual goal.
   - **An input taken from another rebindable action is swapped, not stolen.** That action
-    inherits the input given up, so a rebind can never leave a second action unbound.
-  - **CONFIRM and CANCEL are not rebindable, and nothing bound to them may be taken.** They are
-    the only way off the controls screen, so a binding that made them ambiguous could leave a
-    mistake there impossible to undo. The screen says `RESERVED` and changes nothing.
+    inherits the input given up, so a rebind can never leave a second action unbound. Taking an
+    input the action already holds in its other slot swaps the two rather than duplicating it.
+  - **PAUSE and the four directions may not take an input bound to CONFIRM or CANCEL.** This
+    once applied to *every* action, which the defaults themselves disprove: A is FIRE and
+    CONFIRM both, B is NUKE and CANCEL both, so the rule forbade reproducing what the game
+    ships with, and anything rebound off A could never be put back. The collision is only real
+    where both are dispatched at once — PAUSE stays live while paused, since it is what
+    unpauses, and the directions are live alongside confirm and cancel on every menu. FIRE and
+    NUKE are suppressed while paused and no menu listens for them, so they share a face button
+    with a menu action by design. A refused input shows `TAKEN` and changes nothing.
   Bindings persist through `StorageService` as one `BIND_<ACTION>` key per action, keys before
   a semicolon and pad buttons after, written by name so reordering either enum cannot silently
   change what a save means. A key is only written once something has changed, matching S5, and
@@ -256,9 +267,20 @@ Recorded now, briefly, from the code as it stands.
   fixed a second fault hiding behind the first — holding confirm on that item would have re-run
   the reset every frame, and with it seven writes to the save file per frame.
   *Reproduced first, then fixed, then confirmed by driving the same call chain.*
-  **Still open:** rebinding is one input per device per action, so the second binding cannot be
-  set from the screen, only inherited from the defaults or a swap. Whether that matters is a
-  question for the first person who plays it.
+  **Playing it a second time found the three things above** — the collapsed second binding, the
+  over-broad reserved rule, and the analog stick. All three were reported from the screen, none
+  of them by reading the code, which is now three rounds running.
+  **Still open:** a cell cannot be emptied. Every cell can be *set*, and the swap can leave one
+  empty, but there is no way to deliberately unbind an input short of `RESET DEFAULTS`. Nobody
+  has asked for it yet, and adding it means deciding what the player presses to mean "nothing",
+  on a screen where every press is a binding.
+  **Also still open:** the four movement rows bind the D-pad only. The left stick is read
+  straight off the pad in `DispatchDirection`, outside the binding table entirely, and it takes
+  priority over the digital inputs — so rebinding `MOVE UP` changes the D-pad and leaves the
+  stick alone. The screen now says so rather than implying otherwise, which was the cheap half
+  of the fix. Making the stick selectable or rebindable is the other half, and it is a real
+  design question: a stick is an axis pair, not four buttons, so it fits the per-direction model
+  badly. An options row naming which pad device moves the ship is the likelier answer.
 - **I7. Contextual button prompts.** **Done.** `InputPrompt` names the input for an action and
   follows whichever device the player last actually used, not merely what is plugged in. It now
   also re-reads when the mapping's revision changes, so a prompt does not keep naming a key the

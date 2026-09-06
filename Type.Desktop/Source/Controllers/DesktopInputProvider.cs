@@ -70,6 +70,8 @@ namespace Type.Desktop.Source.Controllers
         private Action<InputSource> _OnCaptured;
         /// <summary> Whether a capture has seen everything released and may now take a press </summary>
         private Boolean _CaptureArmed;
+        /// <summary> Whether the capture in progress is waiting for a pad button rather than a key </summary>
+        private Boolean _CaptureGamepad;
         /// <summary> Whether a capture has decided, and is only waiting for the input to be let go </summary>
         private Boolean _CaptureResolved;
         /// <summary> The input a capture settled on, null when the player backed out </summary>
@@ -218,11 +220,12 @@ namespace Type.Desktop.Source.Controllers
         }
 
         /// <inheritdoc />
-        public void BeginCapture(Action<InputSource> onCaptured)
+        public void BeginCapture(Boolean gamepad, Action<InputSource> onCaptured)
         {
             if (onCaptured == null) return;
 
             CancelCapture();
+            _CaptureGamepad = gamepad;
 
             // Listeners are told everything is released before the screen goes quiet, so an
             // action held at the moment the capture opened does not stay held for its duration.
@@ -317,17 +320,22 @@ namespace Type.Desktop.Source.Controllers
         /// Returns the first input found pressed, or null if none is
         /// </summary>
         /// <remarks>
-        /// The gamepad is read first, so that a pad press is bound as a pad button even on a
-        /// machine whose driver also reports it as a key.
+        /// Only the device the capture was opened for is read. The screen binds one cell at a
+        /// time and a cell holds one device, so pressing the other one leaves the prompt up
+        /// rather than binding something the cell cannot hold.
         /// </remarks>
         private InputSource ReadPressedInput(KeyboardState keyboard, GamePadState pad)
         {
-            if (pad.IsConnected)
+            if (_CaptureGamepad)
             {
+                if (!pad.IsConnected) return null;
+
                 foreach (GamepadButton button in _CapturablePadButtons)
                 {
                     if (IsPadButtonDown(button, pad)) return InputSource.FromPad(button);
                 }
+
+                return null;
             }
 
             foreach (Key key in _CapturableKeys)

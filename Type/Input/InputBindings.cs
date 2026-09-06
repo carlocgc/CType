@@ -12,18 +12,16 @@ namespace Type.Input
     /// </summary>
     public sealed class InputBindings
     {
-        /// <summary> Shown in place of an input name when an action has nothing bound </summary>
+        /// <summary> Shown in place of an input name when a slot has nothing bound </summary>
         public const String Unbound = "NONE";
 
-        /// <summary>
-        /// Separates the inputs when an action has more than one bound to the same device
-        /// </summary>
+        /// <summary> How many inputs of each device an action can be bound to </summary>
         /// <remarks>
-        /// Spaces rather than a comma: the bitmap font has no comma, and adding one means
-        /// widening the atlas and appending to <c>Constants.Font.Map</c> in the same order. Not
-        /// worth it for a separator, and the atlas ordering is a trap — see ROADMAP item S7.
+        /// Two, because the defaults ship two of each — Space and Z both fire — and the controls
+        /// screen has to be able to express what the game ships with. It shows one cell per slot
+        /// per device, so this is also how wide that screen is.
         /// </remarks>
-        private const String InputSeparator = "  ";
+        public const Int32 Slots = 2;
 
         /// <summary>
         /// The actions the player may rebind, in the order the controls screen lists them
@@ -89,38 +87,23 @@ namespace Type.Input
         }
 
         /// <summary>
-        /// Lists every input bound to an action for one device, as the controls screen shows it
+        /// Names the input in one slot of one device, as the controls screen shows it
         /// </summary>
         /// <param name="action"> The action to describe </param>
-        /// <param name="gamepad"> Whether to list the gamepad buttons rather than the keys </param>
-        /// <returns> The input names separated by commas, or <see cref="Unbound"/> if there are none </returns>
-        public String DescribeAll(ButtonData.Type action, Boolean gamepad)
+        /// <param name="gamepad"> Whether to read the gamepad buttons rather than the keys </param>
+        /// <param name="slot"> Which of the action's inputs for that device, from zero </param>
+        /// <returns> The input's name, or <see cref="Unbound"/> if the slot is empty </returns>
+        public String DescribeSlot(ButtonData.Type action, Boolean gamepad, Int32 slot)
         {
             ActionBinding binding = this[action];
-            if (binding == null) return Unbound;
-
-            StringBuilder result = new StringBuilder();
+            if (binding == null || slot < 0) return Unbound;
 
             if (gamepad)
             {
-                foreach (GamepadButton button in binding.PadButtons) Append(result, DescribePad(button));
-            }
-            else
-            {
-                foreach (String key in binding.Keys) Append(result, DescribeKey(key));
+                return slot < binding.PadButtons.Count ? DescribePad(binding.PadButtons[slot]) : Unbound;
             }
 
-            return result.Length == 0 ? Unbound : result.ToString();
-        }
-
-        /// <summary>
-        /// Adds one input name to a separated list
-        /// </summary>
-        private static void Append(StringBuilder result, String label)
-        {
-            if (label.Length == 0) return;
-            if (result.Length > 0) result.Append(InputSeparator);
-            result.Append(label);
+            return slot < binding.Keys.Count ? DescribeKey(binding.Keys[slot]) : Unbound;
         }
 
         /// <summary>
@@ -147,21 +130,44 @@ namespace Type.Input
         }
 
         /// <summary>
-        /// Whether an input may not be rebound, because an action that has to stay unambiguous
-        /// already uses it
+        /// Whether an action may not take an input, because confirming or cancelling already
+        /// uses it and the two would be live at the same time
         /// </summary>
+        /// <param name="action"> The action being rebound </param>
         /// <param name="source"> The input the player pressed </param>
         /// <remarks>
-        /// Confirming and cancelling are how a player leaves the controls screen. If a rebind
-        /// could give either of those inputs a second meaning, a mistake made on that screen
-        /// might not be undoable from it.
+        /// **This applies to PAUSE and the movement directions only.** It used to apply to every
+        /// action, which was wrong in a way the defaults themselves prove: A is bound to FIRE
+        /// *and* CONFIRM, B to NUKE *and* CANCEL, so the rule forbade reproducing what the game
+        /// ships with. Anything the player rebound off A could never be put back.
+        /// <para>
+        /// The collision is only real where both actions are listened for at once. FIRE and NUKE
+        /// are suppressed while paused and no menu listens for them, so they can share a face
+        /// button with a menu action and do. PAUSE stays live while paused — it is what unpauses
+        /// — and the four directions are live alongside CONFIRM and CANCEL on every menu, so for
+        /// those the overlap would make the pause menu ambiguous or leave a mistake on this very
+        /// screen impossible to undo.
+        /// </para>
         /// </remarks>
-        public Boolean IsReserved(InputSource source)
+        public Boolean IsReserved(ButtonData.Type action, InputSource source)
         {
             if (source == null) return true;
+            if (!SharesAScreenWithMenuActions(action)) return false;
 
             return Holds(this[ButtonData.Type.CONFIRM], source)
                 || Holds(this[ButtonData.Type.CANCEL], source);
+        }
+
+        /// <summary>
+        /// Whether an action is ever dispatched at the same time as confirm and cancel
+        /// </summary>
+        private static Boolean SharesAScreenWithMenuActions(ButtonData.Type action)
+        {
+            return action == ButtonData.Type.PAUSE
+                || action == ButtonData.Type.MENU_UP
+                || action == ButtonData.Type.MENU_DOWN
+                || action == ButtonData.Type.MENU_LEFT
+                || action == ButtonData.Type.MENU_RIGHT;
         }
 
         /// <summary>
@@ -177,41 +183,57 @@ namespace Type.Input
         }
 
         /// <summary>
-        /// Binds an action to one input, replacing whatever it had bound for that device
+        /// Binds one slot of one device to an input, leaving the action's other slots alone
         /// </summary>
         /// <param name="action"> The action to rebind </param>
-        /// <param name="source"> The input the player pressed </param>
+        /// <param name="gamepad"> Whether the slot holds a gamepad button rather than a key </param>
+        /// <param name="slot"> Which of the action's inputs for that device, from zero </param>
+        /// <param name="source"> The input the player pressed, which must match the device </param>
         /// <returns> Whether the mapping changed </returns>
         /// <remarks>
-        /// The action loses its other inputs for that device rather than keeping them as
-        /// alternatives, so what the controls screen shows is the whole truth: an action bound
-        /// to one key does not quietly still answer to another.
+        /// Per slot rather than per device. Replacing the whole device meant that touching a
+        /// binding collapsed it to one input, so the two-of-each the game ships with could never
+        /// be got back except by resetting everything.
         /// <para>
-        /// An input taken from another rebindable action is swapped rather than merely removed —
-        /// that action inherits the input given up here — so a rebind can never leave a second
-        /// action with nothing bound. Overlaps with actions that are not rebindable are left
-        /// alone, <see cref="IsReserved"/> having already refused the ones that would matter.
+        /// Two rules keep an input from appearing twice. Taking one the action already holds in
+        /// its other slot swaps the two rather than duplicating it. Taking one from another
+        /// rebindable action removes it there, and if that leaves that action nothing on this
+        /// device it inherits the input given up here, so a rebind cannot silently unbind
+        /// something else. Overlaps with actions that are not rebindable are left alone, since
+        /// the defaults rely on them: A is FIRE and CONFIRM both.
         /// </para>
         /// </remarks>
-        public Boolean Rebind(ButtonData.Type action, InputSource source)
+        public Boolean Rebind(ButtonData.Type action, Boolean gamepad, Int32 slot, InputSource source)
         {
             ActionBinding target = this[action];
-            if (target == null || source == null || IsReserved(source)) return false;
+            if (target == null || source == null || slot < 0) return false;
+            if (source.IsGamepad != gamepad || IsReserved(action, source)) return false;
 
-            if (source.IsGamepad) RebindPad(action, target, source.Button);
-            else RebindKey(action, target, source.Key);
+            Boolean changed = gamepad
+                ? RebindPad(action, target, slot, source.Button)
+                : RebindKey(action, target, slot, source.Key);
 
-            Revision++;
-            return true;
+            if (changed) Revision++;
+            return changed;
         }
 
         /// <summary>
-        /// Gives an action one gamepad button, handing whatever it gives up to any rebindable
-        /// action that button is taken from
+        /// Puts a gamepad button in one of an action's slots
         /// </summary>
-        private void RebindPad(ButtonData.Type action, ActionBinding target, GamepadButton button)
+        private Boolean RebindPad(ButtonData.Type action, ActionBinding target, Int32 slot, GamepadButton button)
         {
-            GamepadButton surrendered = target.PadButtons.Count > 0 ? target.PadButtons[0] : GamepadButton.NONE;
+            GamepadButton surrendered = slot < target.PadButtons.Count ? target.PadButtons[slot] : GamepadButton.NONE;
+            if (surrendered == button) return false;
+
+            Int32 held = target.PadButtons.IndexOf(button);
+            if (held >= 0)
+            {
+                if (surrendered != GamepadButton.NONE) target.PadButtons[held] = surrendered;
+                else target.PadButtons.RemoveAt(held);
+
+                SetSlot(target.PadButtons, slot, button);
+                return true;
+            }
 
             foreach (ButtonData.Type other in Rebindable)
             {
@@ -222,17 +244,27 @@ namespace Type.Input
                 if (binding.PadButtons.Count == 0 && surrendered != GamepadButton.NONE) binding.PadButtons.Add(surrendered);
             }
 
-            target.PadButtons.Clear();
-            target.PadButtons.Add(button);
+            SetSlot(target.PadButtons, slot, button);
+            return true;
         }
 
         /// <summary>
-        /// Gives an action one key, handing whatever it gives up to any rebindable action that
-        /// key is taken from
+        /// Puts a key in one of an action's slots
         /// </summary>
-        private void RebindKey(ButtonData.Type action, ActionBinding target, String key)
+        private Boolean RebindKey(ButtonData.Type action, ActionBinding target, Int32 slot, String key)
         {
-            String surrendered = target.Keys.Count > 0 ? target.Keys[0] : null;
+            String surrendered = slot < target.Keys.Count ? target.Keys[slot] : null;
+            if (surrendered == key) return false;
+
+            Int32 held = target.Keys.IndexOf(key);
+            if (held >= 0)
+            {
+                if (surrendered != null) target.Keys[held] = surrendered;
+                else target.Keys.RemoveAt(held);
+
+                SetSlot(target.Keys, slot, key);
+                return true;
+            }
 
             foreach (ButtonData.Type other in Rebindable)
             {
@@ -243,8 +275,22 @@ namespace Type.Input
                 if (binding.Keys.Count == 0 && surrendered != null) binding.Keys.Add(surrendered);
             }
 
-            target.Keys.Clear();
-            target.Keys.Add(key);
+            SetSlot(target.Keys, slot, key);
+            return true;
+        }
+
+        /// <summary>
+        /// Writes a value into a slot, appending when the slot is past the end
+        /// </summary>
+        /// <remarks>
+        /// The lists are kept without gaps, so filling the second slot of an action that has
+        /// only one input appends. Filling the second slot of an action that has none puts the
+        /// input in the first, which is what the screen then shows.
+        /// </remarks>
+        private static void SetSlot<T>(List<T> list, Int32 slot, T value)
+        {
+            if (slot < list.Count) list[slot] = value;
+            else list.Add(value);
         }
 
         /// <summary>

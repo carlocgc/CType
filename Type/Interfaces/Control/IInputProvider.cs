@@ -29,8 +29,14 @@ namespace Type.Interfaces.Control
         Boolean Capturing { get; }
 
         /// <summary>
-        /// Waits for the player to press one input and reports it, for the rebinding screen
+        /// Waits for the player to press one input of a given device and reports it, for the
+        /// rebinding screen
         /// </summary>
+        /// <param name="gamepad">
+        /// Whether to wait for a gamepad button rather than a key. Input from the other device
+        /// is ignored rather than refused, because the screen binds one cell at a time and a
+        /// cell holds one device: waiting on is clearer than an error the player has to read.
+        /// </param>
         /// <param name="onCaptured">
         /// Invoked once with the input pressed, or with null if the player backed out. Capture
         /// ends either way.
@@ -40,7 +46,7 @@ namespace Type.Interfaces.Control
         /// capture is never the one taken. Platforms with no rebindable inputs report null
         /// immediately.
         /// </remarks>
-        void BeginCapture(Action<InputSource> onCaptured);
+        void BeginCapture(Boolean gamepad, Action<InputSource> onCaptured);
 
         /// <summary>
         /// Abandons a capture in progress without reporting an input. Does nothing if none is

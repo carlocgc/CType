@@ -76,14 +76,16 @@ namespace Type.Services
         }
 
         /// <summary>
-        /// Waits for the player to press one input and reports it, for the rebinding screen
+        /// Waits for the player to press one input of a given device and reports it, for the
+        /// rebinding screen
         /// </summary>
+        /// <param name="gamepad"> Whether to wait for a gamepad button rather than a key </param>
         /// <param name="onCaptured">
         /// Invoked once with the input pressed, or with null if the player backed out
         /// </param>
-        public void BeginCapture(Action<InputSource> onCaptured)
+        public void BeginCapture(Boolean gamepad, Action<InputSource> onCaptured)
         {
-            _InputProvider.BeginCapture(onCaptured);
+            _InputProvider.BeginCapture(gamepad, onCaptured);
         }
 
         /// <summary>
