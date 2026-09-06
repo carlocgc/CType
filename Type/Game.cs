@@ -49,6 +49,7 @@ namespace Type
             // Must come first: both of the below read through it.
             StorageService.Instance.Load();
             Settings.Load();
+            ControlSettings.Load();
             Progress.Load();
 
             SpritesheetLoader.LoadSheet("Content/Graphics/KenPixel/", "KenPixel.png", "KenPixel.json");

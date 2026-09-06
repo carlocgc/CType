@@ -27,6 +27,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\LevelLoader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Progress.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\ButtonData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\ControlSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Settings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\WaveData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Factories\EnemyFactory.cs" />
@@ -42,6 +43,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Input\AnalogProcessor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\GamepadButton.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\InputBindings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\InputSource.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Collisions\ICollidable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IBackButtonListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IInputProvider.cs" />
@@ -110,6 +112,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\GameOverScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\GameScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\MainMenuScene.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\ControlsScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\OptionsScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\PauseScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scenes\ShipSelectScene.cs" />
@@ -126,6 +129,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)UI\Navigation\FocusRing.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\Navigation\MenuNavigator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\Navigation\MenuTextItem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\Navigation\BindingRow.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\Navigation\OptionRow.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\InputPrompt.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\FpsCounter.cs" />

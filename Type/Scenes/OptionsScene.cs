@@ -11,8 +11,8 @@ using Type.Services;
 namespace Type.Scenes
 {
     /// <summary>
-    /// The options screen. Currently the audio levels; display mode joins it once the game can
-    /// change resolution, and rebinding once there is a binding editor.
+    /// The options screen: the audio levels, how the window fills the display, and the way in to
+    /// the controls screen.
     /// </summary>
     public class OptionsScene : Scene
     {
@@ -32,13 +32,22 @@ namespace Type.Scenes
         public List<OptionRow> Rows { get; }
 
         /// <summary>
+        /// Opens the controls screen, or null on a platform with nothing to rebind
+        /// </summary>
+        public MenuTextItem ControlsItem { get; }
+
+        /// <summary>
         /// Builds the screen
         /// </summary>
+        /// <param name="onControls">
+        /// Invoked when the player asks for the controls screen. The caller owns that screen,
+        /// because where it goes differs between the main menu and a paused game.
+        /// </param>
         /// <param name="overlay">
         /// True when shown over something already on screen, such as the paused game, in which
         /// case the menu art is omitted and only the dark wash is drawn.
         /// </param>
-        public OptionsScene(Boolean overlay = false)
+        public OptionsScene(Action onControls, Boolean overlay = false)
         {
             if (!overlay)
             {
@@ -101,7 +110,28 @@ namespace Type.Scenes
                     CycleDisplayMode));
             }
 
+            // A screen of its own rather than a row, because a binding is a list of inputs per
+            // device and there is one per action. A platform with nothing to rebind says so by
+            // having no bindings at all, and does not get the entry.
+            if (onControls != null && InputService.Instance.Bindings != null)
+            {
+                ControlsItem = new MenuTextItem("CONTROLS", new Vector2(-700, -250), onControls, false, 2);
+            }
+
             _BackPrompt = new InputPrompt(ButtonData.Type.CANCEL, "BACK", new Vector2(-880, -480));
+        }
+
+        /// <summary>
+        /// Hides or shows the settings, so a screen opened from here can have the space to
+        /// itself without the caller tearing this one down and rebuilding it
+        /// </summary>
+        /// <param name="visible"> Whether the settings are shown </param>
+        public void SetSettingsVisible(Boolean visible)
+        {
+            _Title.Visible = visible;
+            _BackPrompt.Visible = visible;
+            foreach (OptionRow row in Rows) row.SetVisible(visible);
+            ControlsItem?.SetVisible(visible);
         }
 
         /// <summary>
@@ -127,6 +157,7 @@ namespace Type.Scenes
         {
             base.Dispose();
             foreach (OptionRow row in Rows) row.Dispose();
+            ControlsItem?.Dispose();
             Rows.Clear();
             _BackPrompt.Dispose();
             _Scrim?.Dispose();

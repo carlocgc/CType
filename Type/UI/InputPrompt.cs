@@ -5,6 +5,7 @@ using AmosShared.Interfaces;
 using OpenTK;
 using System;
 using Type.Data;
+using Type.Input;
 using Type.Services;
 
 namespace Type.UI
@@ -30,6 +31,8 @@ namespace Type.UI
 
         /// <summary> Whether the label currently names a gamepad input </summary>
         private Boolean _ShowingGamepad;
+        /// <summary> Which version of the mapping the label was built from </summary>
+        private Int32 _ShowingRevision;
         /// <summary> Whether a label has been produced yet </summary>
         private Boolean _Initialised;
 
@@ -75,12 +78,14 @@ namespace Type.UI
         private void Refresh()
         {
             Boolean gamepad = InputService.Instance.GamepadActive;
-            String label = InputService.Instance.Bindings?.GetPromptLabel(_Action, gamepad) ?? String.Empty;
+            InputBindings bindings = InputService.Instance.Bindings;
+            String label = bindings?.GetPromptLabel(_Action, gamepad) ?? String.Empty;
 
             // An unbound action would otherwise show a caption with nothing to press.
             _Display.Text = label.Length == 0 ? String.Empty : $"{label}  {_Caption}";
 
             _ShowingGamepad = gamepad;
+            _ShowingRevision = bindings?.Revision ?? 0;
             _Initialised = true;
         }
 
@@ -89,8 +94,21 @@ namespace Type.UI
         /// <inheritdoc />
         public void Update(TimeSpan timeTilUpdate)
         {
-            if (_Initialised && InputService.Instance.GamepadActive == _ShowingGamepad) return;
-            Refresh();
+            if (!_Initialised)
+            {
+                Refresh();
+                return;
+            }
+
+            if (InputService.Instance.GamepadActive != _ShowingGamepad)
+            {
+                Refresh();
+                return;
+            }
+
+            // A rebind changes what the prompt should name without changing the device, so the
+            // mapping's version is checked as well as which device is driving it.
+            if ((InputService.Instance.Bindings?.Revision ?? 0) != _ShowingRevision) Refresh();
         }
 
         /// <inheritdoc />

@@ -33,6 +33,11 @@ namespace Type.Services
         public InputBindings Bindings => _InputProvider.Bindings;
 
         /// <summary>
+        /// Whether the provider is waiting for the player to press an input to bind
+        /// </summary>
+        public Boolean Capturing => _InputProvider.Capturing;
+
+        /// <summary>
         /// Whether a gamepad is currently driving input, so the interface can show the right
         /// prompts
         /// </summary>
@@ -68,6 +73,34 @@ namespace Type.Services
         public void SetPaused(Boolean paused)
         {
             _InputProvider.Paused = paused;
+        }
+
+        /// <summary>
+        /// Waits for the player to press one input and reports it, for the rebinding screen
+        /// </summary>
+        /// <param name="onCaptured">
+        /// Invoked once with the input pressed, or with null if the player backed out
+        /// </param>
+        public void BeginCapture(Action<InputSource> onCaptured)
+        {
+            _InputProvider.BeginCapture(onCaptured);
+        }
+
+        /// <summary>
+        /// Abandons a capture in progress without reporting an input
+        /// </summary>
+        public void CancelCapture()
+        {
+            _InputProvider.CancelCapture();
+        }
+
+        /// <summary>
+        /// Tells the provider that <see cref="Bindings"/> has changed, so it can rebuild
+        /// anything it derived from it
+        /// </summary>
+        public void ReloadBindings()
+        {
+            _InputProvider.ReloadBindings();
         }
 
         /// <summary>
