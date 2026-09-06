@@ -224,7 +224,13 @@ Recorded now, briefly, from the code as it stands.
   The screen shows **four cells per action** — two keyboard slots and two gamepad slots — with
   left and right moving between them and confirm rebinding the one under the cursor. Only that
   cell's device is listened for, so pressing a key at a gamepad cell leaves the prompt up rather
-  than binding something the cell cannot hold. Three rules:
+  than binding something the cell cannot hold.
+  **It navigates as a grid, not as a list of rows.** Moving down from the third cell of one row
+  lands on the third cell of the next rather than back at its start, which is what a table wants
+  and a list of values does not. `IGridFocusable` carries the column and `MenuNavigator` moves it
+  between items, remembering it rather than reading it back, so stepping over an entry with no
+  columns — `RESET DEFAULTS` at the foot of the screen — and returning lands on the column that
+  was left. Three rules:
   - **A rebind changes one slot and leaves the rest alone.** This started out replacing the
     whole device, on the reasoning that the screen should not show an input it could not edit.
     That was the wrong trade: the defaults bind two of each, so touching one collapsed it to

@@ -51,6 +51,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IShipSelectListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IAdjustable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IFocusable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IGridFocusable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IInputListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IVirtualButton.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Enemies\IEnemy.cs" />

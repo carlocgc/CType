@@ -19,7 +19,7 @@ namespace Type.UI.Navigation
     /// and Z both fire — and a screen that could only set one of them collapsed that the moment
     /// it was touched, with no way back short of resetting everything.
     /// </remarks>
-    public sealed class BindingRow : IAdjustable
+    public sealed class BindingRow : IGridFocusable
     {
         /// <summary> Tint applied while the row does not have focus </summary>
         private static readonly Vector4 UnfocusedTint = new Vector4(0.55f, 0.55f, 0.55f, 1);
@@ -60,6 +60,29 @@ namespace Type.UI.Navigation
 
         /// <inheritdoc />
         public Boolean CanFocus => true;
+
+        /// <inheritdoc />
+        public Int32 ColumnCount => CellCount;
+
+        /// <inheritdoc />
+        /// <remarks>
+        /// Ignored while a capture is open. The row is waiting on a press to bind, and moving
+        /// the cursor out from under it would bind the wrong cell.
+        /// </remarks>
+        public Int32 Column
+        {
+            get => _Selected;
+            set
+            {
+                if (_Capturing) return;
+
+                Int32 clamped = value < 0 ? 0 : value >= CellCount ? CellCount - 1 : value;
+                if (clamped == _Selected) return;
+
+                _Selected = clamped;
+                Refresh();
+            }
+        }
 
         /// <summary>
         /// Creates a row for one action
@@ -207,7 +230,7 @@ namespace Type.UI.Navigation
             _OnChanged?.Invoke();
         }
 
-        #region Implementation of IAdjustable
+        #region Implementation of IGridFocusable
 
         /// <inheritdoc />
         public void SetFocused(Boolean focused)
@@ -226,13 +249,7 @@ namespace Type.UI.Navigation
         /// </remarks>
         public void Adjust(Int32 direction)
         {
-            if (_Capturing) return;
-
-            Int32 next = _Selected + direction;
-            if (next < 0 || next >= CellCount) return;
-
-            _Selected = next;
-            Refresh();
+            Column = _Selected + direction;
         }
 
         /// <inheritdoc />
