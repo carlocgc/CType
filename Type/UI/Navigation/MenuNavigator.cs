@@ -41,6 +41,8 @@ namespace Type.UI.Navigation
         private Boolean _Repeating;
         /// <summary> Whether the stick was pushed past the threshold last update </summary>
         private Boolean _StickPushed;
+        /// <summary> The column focus was last on, carried between grid items as focus moves </summary>
+        private Int32 _Column;
 
         /// <summary> Invoked when the player backs out of the menu </summary>
         public Action OnCancel { get; set; }
@@ -120,15 +122,28 @@ namespace Type.UI.Navigation
         /// Applies the held direction: left and right adjust the focused item when it holds a
         /// value, and otherwise move focus along with up and down.
         /// </summary>
+        /// <remarks>
+        /// Moving between two grid items keeps the column, so a list of them reads as a table:
+        /// stepping down from the third cell of one row lands on the third cell of the next
+        /// rather than back at its start. The column is remembered rather than read from the
+        /// item arrived at, so passing over an entry that has no columns — the reset entry at
+        /// the foot of the controls screen — and coming back returns to the column left behind.
+        /// </remarks>
         private void Apply()
         {
             if (_HeldHorizontal && _Ring.Focused is IAdjustable adjustable)
             {
                 adjustable.Adjust(_HeldDirection);
+
+                // Read back rather than predicted, so a step refused at either end of a row does
+                // not leave a column remembered that the row never actually reached.
+                if (adjustable is IGridFocusable moved) _Column = moved.Column;
                 return;
             }
 
             _Ring.Move(_HeldDirection);
+
+            if (_Ring.Focused is IGridFocusable grid) grid.Column = _Column;
         }
 
         #region Implementation of IUpdatable

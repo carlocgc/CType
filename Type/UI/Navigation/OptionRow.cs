@@ -27,7 +27,17 @@ namespace Type.UI.Navigation
         private readonly Action<Int32> _OnAdjust;
 
         /// <inheritdoc />
-        public Boolean CanFocus => true;
+        public Boolean CanFocus => _Label.Visible;
+
+        /// <summary>
+        /// Hides or shows the row. A hidden row cannot take focus.
+        /// </summary>
+        /// <param name="visible"> Whether the row is shown </param>
+        public void SetVisible(Boolean visible)
+        {
+            _Label.Visible = visible;
+            _Value.Visible = visible;
+        }
 
         /// <summary>
         /// Creates a row for one setting

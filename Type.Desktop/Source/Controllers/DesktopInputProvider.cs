@@ -43,7 +43,11 @@ namespace Type.Desktop.Source.Controllers
         /// <summary> Applies the radial deadzone and response curve to stick readings </summary>
         private readonly AnalogProcessor _Analog;
         /// <summary> Keyboard keys bound to each action, resolved once from the binding names </summary>
-        private readonly Dictionary<ButtonData.Type, List<Key>> _ResolvedKeys;
+        private readonly Dictionary<ButtonData.Type, List<Key>> _ResolvedKeys = new Dictionary<ButtonData.Type, List<Key>>();
+        /// <summary> Every key a capture will consider, built once from the platform's key enum </summary>
+        private readonly Key[] _CapturableKeys = BuildCapturableKeys();
+        /// <summary> Every gamepad button a capture will consider </summary>
+        private readonly GamepadButton[] _CapturablePadButtons = BuildCapturablePadButtons();
 
         /// <summary> Index of the gamepad currently driving input, negative when none is connected </summary>
         private Int32 _ActivePad = -1;
@@ -51,12 +55,36 @@ namespace Type.Desktop.Source.Controllers
         private TimedCallback _VibrationCallback;
         /// <summary> Whether the most recent real input came from a gamepad rather than the keyboard </summary>
         private Boolean _LastInputWasGamepad;
+        /// <summary>
+        /// The bindings to dispatch each update, rebuilt whenever the mapping changes
+        /// </summary>
+        /// <remarks>
+        /// A snapshot rather than the live collection. A listener can change the mapping from
+        /// inside a dispatch — RESET DEFAULTS on the controls screen does exactly that — and
+        /// iterating the collection it is changing threw. <see cref="InputBindings.CopyFrom"/>
+        /// no longer restructures for that reason, but dispatching from an array means no
+        /// future change to the mapping can invalidate this loop either.
+        /// </remarks>
+        private ActionBinding[] _DispatchOrder = new ActionBinding[0];
+        /// <summary> Reports the input a capture in progress collects, null when none is running </summary>
+        private Action<InputSource> _OnCaptured;
+        /// <summary> Whether a capture has seen everything released and may now take a press </summary>
+        private Boolean _CaptureArmed;
+        /// <summary> Whether the capture in progress is waiting for a pad button rather than a key </summary>
+        private Boolean _CaptureGamepad;
+        /// <summary> Whether a capture has decided, and is only waiting for the input to be let go </summary>
+        private Boolean _CaptureResolved;
+        /// <summary> The input a capture settled on, null when the player backed out </summary>
+        private InputSource _Captured;
 
         /// <summary> Whether the provider is in pause mode </summary>
         public Boolean Paused { get; set; }
 
         /// <inheritdoc />
         public InputBindings Bindings => _Bindings;
+
+        /// <inheritdoc />
+        public Boolean Capturing => _OnCaptured != null;
 
         /// <inheritdoc />
         /// <remarks>
@@ -74,20 +102,32 @@ namespace Type.Desktop.Source.Controllers
             _Bindings = InputBindings.CreateDefaults();
             _Tracker = new ActionStateTracker();
             _Analog = new AnalogProcessor();
-            _ResolvedKeys = ResolveKeys(_Bindings);
+            ReloadBindings();
 
             UpdateManager.Instance.AddUpdatable(this);
         }
 
-        /// <summary>
-        /// Resolves the platform independent key names in the bindings to OpenTK keys once, so
-        /// that polling does not parse strings every update. Unrecognised names are skipped.
-        /// </summary>
-        private static Dictionary<ButtonData.Type, List<Key>> ResolveKeys(InputBindings bindings)
+        /// <inheritdoc />
+        /// <remarks>
+        /// Resolves the platform independent key names in the bindings to OpenTK keys, so that
+        /// polling does not parse strings every update. Unrecognised names are skipped. Called
+        /// once at construction and again whenever the player rebinds something.
+        /// <para>
+        /// **The tracked press states are deliberately not cleared.** They are keyed by action
+        /// rather than by input, so a mapping change cannot make them wrong — the next update
+        /// reads the new binding and reports a release if nothing is on it any more. Clearing
+        /// them made every held input read as freshly pressed, which meant holding confirm on
+        /// RESET DEFAULTS re-ran the reset every frame, and with it seven writes to the save
+        /// file per frame.
+        /// </para>
+        /// </remarks>
+        public void ReloadBindings()
         {
-            Dictionary<ButtonData.Type, List<Key>> resolved = new Dictionary<ButtonData.Type, List<Key>>();
+            _ResolvedKeys.Clear();
 
-            foreach (ActionBinding binding in bindings.All)
+            List<ActionBinding> order = new List<ActionBinding>();
+
+            foreach (ActionBinding binding in _Bindings.All)
             {
                 List<Key> keys = new List<Key>();
 
@@ -96,10 +136,50 @@ namespace Type.Desktop.Source.Controllers
                     if (Enum.TryParse(name, true, out Key key)) keys.Add(key);
                 }
 
-                resolved[binding.Action] = keys;
+                _ResolvedKeys[binding.Action] = keys;
+                order.Add(binding);
             }
 
-            return resolved;
+            // Assigned rather than filled in place, so an update already iterating the previous
+            // array finishes against a set that is whole.
+            _DispatchOrder = order.ToArray();
+        }
+
+        /// <summary>
+        /// Builds the set of keys a capture will consider, once, from the platform's key enum
+        /// </summary>
+        /// <remarks>
+        /// Escape is excluded because it backs out of a capture rather than being bound by it,
+        /// and the enum's placeholders name no key at all. Everything else is offered: a player
+        /// who wants to fire with a modifier or a numpad key is not talked out of it.
+        /// </remarks>
+        private static Key[] BuildCapturableKeys()
+        {
+            List<Key> keys = new List<Key>();
+
+            foreach (Key key in Enum.GetValues(typeof(Key)))
+            {
+                if (key == Key.Unknown || key == Key.LastKey || key == Key.Escape) continue;
+                if (!keys.Contains(key)) keys.Add(key);
+            }
+
+            return keys.ToArray();
+        }
+
+        /// <summary>
+        /// Builds the set of gamepad buttons a capture will consider, once, so that polling one
+        /// does not walk the enum every update
+        /// </summary>
+        private static GamepadButton[] BuildCapturablePadButtons()
+        {
+            List<GamepadButton> buttons = new List<GamepadButton>();
+
+            foreach (GamepadButton button in Enum.GetValues(typeof(GamepadButton)))
+            {
+                if (button != GamepadButton.NONE) buttons.Add(button);
+            }
+
+            return buttons.ToArray();
         }
 
         #region Implementation of IUpdatable
@@ -113,7 +193,13 @@ namespace Type.Desktop.Source.Controllers
 
             TrackActiveDevice(keyboard, pad);
 
-            foreach (ActionBinding binding in _Bindings.All)
+            if (Capturing)
+            {
+                PollCapture(keyboard, pad);
+                return;
+            }
+
+            foreach (ActionBinding binding in _DispatchOrder)
             {
                 // While paused only the ship stops listening. The menu the pause put on screen
                 // still needs to be navigable, and an action held at the moment of pausing is
@@ -122,9 +208,142 @@ namespace Type.Desktop.Source.Controllers
                 Boolean isDown = !suppressed && IsActionDown(binding.Action, keyboard, pad);
 
                 DispatchAction(binding.Action, isDown);
+
+                // A listener can open a capture from inside that dispatch — confirming a row on
+                // the controls screen does exactly that. The rest of this frame is abandoned so
+                // the actions not yet visited are not reported over the releases the capture
+                // has just sent out.
+                if (Capturing) return;
             }
 
             DispatchDirection(Paused ? default(GamePadState) : pad, keyboard);
+        }
+
+        /// <inheritdoc />
+        public void BeginCapture(Boolean gamepad, Action<InputSource> onCaptured)
+        {
+            if (onCaptured == null) return;
+
+            CancelCapture();
+            _CaptureGamepad = gamepad;
+
+            // Listeners are told everything is released before the screen goes quiet, so an
+            // action held at the moment the capture opened does not stay held for its duration.
+            foreach (ActionBinding binding in _DispatchOrder) DispatchAction(binding.Action, false);
+
+            for (Int32 i = _Listeners.Count - 1; i >= 0; i--) _Listeners[i].UpdateDirectionData(Vector2.Zero, 0);
+
+            _OnCaptured = onCaptured;
+            _CaptureArmed = false;
+            _CaptureResolved = false;
+            _Captured = null;
+        }
+
+        /// <inheritdoc />
+        public void CancelCapture()
+        {
+            if (!Capturing) return;
+
+            Action<InputSource> onCaptured = _OnCaptured;
+            EndCapture();
+            onCaptured(null);
+        }
+
+        /// <summary>
+        /// Clears the capture state without reporting anything
+        /// </summary>
+        private void EndCapture()
+        {
+            _OnCaptured = null;
+            _CaptureArmed = false;
+            _CaptureResolved = false;
+            _Captured = null;
+        }
+
+        /// <summary>
+        /// Advances a capture in progress by one update
+        /// </summary>
+        /// <remarks>
+        /// Three stages, each waiting on the player rather than on a timer. Nothing is taken
+        /// until every input has been released, so the press that opened the capture is not the
+        /// one bound. Escape backs out. Once an input has been chosen the capture stays open
+        /// until it is let go, which keeps that press out of the game: a key just bound to FIRE
+        /// must not also fire the instant the screen closes.
+        /// </remarks>
+        private void PollCapture(KeyboardState keyboard, GamePadState pad)
+        {
+            Boolean anythingDown = IsAnythingDown(keyboard, pad);
+
+            if (!_CaptureArmed)
+            {
+                _CaptureArmed = !anythingDown;
+                return;
+            }
+
+            if (!_CaptureResolved)
+            {
+                if (keyboard.IsKeyDown(Key.Escape))
+                {
+                    _CaptureResolved = true;
+                    return;
+                }
+
+                _Captured = ReadPressedInput(keyboard, pad);
+                _CaptureResolved = _Captured != null;
+                return;
+            }
+
+            if (anythingDown) return;
+
+            Action<InputSource> onCaptured = _OnCaptured;
+            InputSource captured = _Captured;
+            EndCapture();
+            onCaptured(captured);
+        }
+
+        /// <summary>
+        /// Whether any input a capture would consider is currently down
+        /// </summary>
+        private Boolean IsAnythingDown(KeyboardState keyboard, GamePadState pad)
+        {
+            if (keyboard.IsKeyDown(Key.Escape)) return true;
+
+            foreach (Key key in _CapturableKeys)
+            {
+                if (keyboard.IsKeyDown(key)) return true;
+            }
+
+            return PadHasInput(pad);
+        }
+
+        /// <summary>
+        /// Returns the first input found pressed, or null if none is
+        /// </summary>
+        /// <remarks>
+        /// Only the device the capture was opened for is read. The screen binds one cell at a
+        /// time and a cell holds one device, so pressing the other one leaves the prompt up
+        /// rather than binding something the cell cannot hold.
+        /// </remarks>
+        private InputSource ReadPressedInput(KeyboardState keyboard, GamePadState pad)
+        {
+            if (_CaptureGamepad)
+            {
+                if (!pad.IsConnected) return null;
+
+                foreach (GamepadButton button in _CapturablePadButtons)
+                {
+                    if (IsPadButtonDown(button, pad)) return InputSource.FromPad(button);
+                }
+
+                return null;
+            }
+
+            foreach (Key key in _CapturableKeys)
+            {
+                if (keyboard.IsKeyDown(key)) return InputSource.FromKey(key.ToString());
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -418,6 +637,7 @@ namespace Type.Desktop.Source.Controllers
         public void Dispose()
         {
             UpdateManager.Instance.RemoveUpdatable(this);
+            EndCapture();
             _VibrationCallback?.CancelAndComplete();
             _VibrationCallback?.Dispose();
             _Listeners.Clear();

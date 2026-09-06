@@ -75,6 +75,10 @@ namespace Type.States
         private OptionsScene _PauseOptionsScene;
         /// <summary> Moves focus between the settings shown over the paused game </summary>
         private MenuNavigator _PauseOptionsNavigator;
+        /// <summary> The controls screen shown over the settings, present only while open </summary>
+        private ControlsScene _PauseControlsScene;
+        /// <summary> Moves focus between the bindings shown over the paused game </summary>
+        private MenuNavigator _PauseControlsNavigator;
         /// <summary> Receives the cancel that closes the pickup guide </summary>
         private MenuNavigator _PauseHelpNavigator;
         /// <summary> Whether the pickup guide is open over the pause menu </summary>
@@ -406,10 +410,21 @@ namespace Type.States
 
             HidePauseMenu();
 
-            _PauseOptionsScene = new OptionsScene(overlay: true) { Visible = true };
+            _PauseOptionsScene = new OptionsScene(ShowPauseControls, overlay: true) { Visible = true };
+
+            FocusPauseOptions();
+        }
+
+        /// <summary>
+        /// Gives the settings shown over the paused game the focus cursor
+        /// </summary>
+        private void FocusPauseOptions()
+        {
+            _PauseOptionsScene.SetSettingsVisible(true);
 
             _PauseOptionsNavigator = new MenuNavigator { OnCancel = ClosePauseOptions };
             foreach (OptionRow row in _PauseOptionsScene.Rows) _PauseOptionsNavigator.Add(row);
+            _PauseOptionsNavigator.Add(_PauseOptionsScene.ControlsItem);
             _PauseOptionsNavigator.FocusFirst();
         }
 
@@ -420,12 +435,56 @@ namespace Type.States
         {
             if (_PauseOptionsScene == null) return;
 
+            DisposePauseControls();
+
             _PauseOptionsNavigator?.Dispose();
             _PauseOptionsNavigator = null;
             _PauseOptionsScene.Dispose();
             _PauseOptionsScene = null;
 
             ReturnToPauseMenu();
+        }
+
+        /// <summary>
+        /// Shows the bindings over the settings, hiding the settings behind them
+        /// </summary>
+        private void ShowPauseControls()
+        {
+            if (_PauseControlsScene != null) return;
+
+            _PauseOptionsNavigator?.Dispose();
+            _PauseOptionsNavigator = null;
+            _PauseOptionsScene.SetSettingsVisible(false);
+
+            _PauseControlsScene = new ControlsScene(overlay: true) { Visible = true };
+
+            _PauseControlsNavigator = new MenuNavigator { OnCancel = ClosePauseControls };
+            foreach (BindingRow row in _PauseControlsScene.Rows) _PauseControlsNavigator.Add(row);
+            _PauseControlsNavigator.Add(_PauseControlsScene.ResetItem);
+            _PauseControlsNavigator.FocusFirst();
+        }
+
+        /// <summary>
+        /// Closes the bindings and returns focus to the settings
+        /// </summary>
+        private void ClosePauseControls()
+        {
+            if (_PauseControlsScene == null) return;
+
+            DisposePauseControls();
+            FocusPauseOptions();
+        }
+
+        /// <summary>
+        /// Tears the bindings down without giving focus back, for the paths that are closing the
+        /// settings behind them too
+        /// </summary>
+        private void DisposePauseControls()
+        {
+            _PauseControlsNavigator?.Dispose();
+            _PauseControlsNavigator = null;
+            _PauseControlsScene?.Dispose();
+            _PauseControlsScene = null;
         }
 
         /// <summary>

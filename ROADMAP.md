@@ -186,41 +186,117 @@ Build with `/t:Restore` then `/t:Rebuild`; see CLAUDE.md.
 The goal: the game is playable start to finish with a gamepad alone and with a keyboard
 alone, and Steam's controller-support checkbox is honest.
 
-- **I1. Rewrite `DesktopInputProvider` around a binding table.** Replace the hardcoded
-  polling chain with an action enum (`Move`, `Fire`, `Nuke`, `Confirm`, `Cancel`, `Pause`)
-  mapped to a list of physical sources. Everything else in this phase hangs off it, so do
-  it first and do it properly.
-  - Extend `ButtonData.Type` with `CONFIRM`, `CANCEL`, `UP`, `DOWN`, `LEFT`, `RIGHT`. The
-    current enum leaks game meaning into input identity (`GAMMA_SELECT` is a *button type*),
-    which is exactly why ship select reads as "A selects Alpha".
-  - Emit edge-triggered `PRESSED` / `HELD` / `RELEASED` from one place instead of the
-    per-button `_XPressed` booleans scattered through the provider.
-- **I2. Proper analog handling.** Radial deadzone (the current one is per-axis, so diagonals
-  reach full speed sooner than cardinals), configurable inner/outer deadzone, response curve.
-  Feed `strength` through to `_MoveStrength` so analog movement is actually analog — keyboard
-  reports 1.0, stick reports magnitude.
-- **I3. D-pad, both sticks, triggers, and hot-plug.** Poll all four `GamePad` slots, bind to
-  the first connected, and auto-pause on mid-game disconnect.
-- **I4. Full keyboard support.** WASD and arrows simultaneously, Escape to pause/back,
-  Enter/Space to confirm. Normalise diagonal keyboard vectors — `(1,1)` currently yields
-  ~1.41× speed diagonally.
-- **I5. Menu navigation without a mouse.** Every menu needs a focus cursor driven by
-  D-pad/stick/arrows with confirm and cancel. This means a small focusable-widget
-  abstraction layered over the existing touch `Button`s — keep mouse and touch working, add
-  focus on top. Ship select in particular should become a real cursor selection rather than
-  three face-button shortcuts.
-- **I6. Rebinding UI and persistence.** Store bindings via the engine's `DataLoader`
-  key/value store, already used for high scores. Steam users expect this.
-  **Unblocked by S3**, which was brought forward for this reason. The options screen exists
-  and `Data/Settings.cs` establishes the load, clamp and save pattern to follow. Note that the
-  store round trips through JSON, so an integer returns as `Int64`; convert rather than cast.
-  The binding table already holds keys as names partly for this.
-- **I7. Contextual button prompts.** Show the player what to press: gamepad labels when a pad
-  is connected, keyboard keys otherwise. **Larger than "make the prompts contextual"** — the
-  menus contain no prompts at all today, only titles, so a pad player gets no indication of
-  what any button does. The prompts have to be added before they can be made contextual.
-  Text prompts using the existing bitmap font avoid new art; glyph sprites would need assets
-  adding to both csprojs and are a later polish step.
+**I1 to I5 and I7 landed in the first three pull requests but were never marked here.**
+Recorded now, briefly, from the code as it stands.
+
+- **I1. Rewrite `DesktopInputProvider` around a binding table.** **Done.** `InputBindings`
+  maps each `ButtonData.Type` to a list of `ActionBinding` sources, one entry per device, and
+  the provider resolves key names to OpenTK keys once rather than parsing per update.
+  `ActionStateTracker` turns the per update "is this down" reading into a single
+  `PRESSED` / `HELD` / `RELEASED` edge, replacing the `_XPressed` booleans. `ButtonData.Type`
+  gained `CONFIRM`, `CANCEL`, `PAUSE` and the four `MENU_` directions, and lost the members
+  that named a craft rather than an input.
+- **I2. Proper analog handling.** **Done.** `AnalogProcessor` applies a radial deadzone with a
+  configurable inner and outer edge and an exponent response curve, and reports direction and
+  strength separately, so a stick is analog and a key reports 1.
+- **I3. D-pad, both sticks, triggers, and hot-plug.** **Done.** All four slots are polled every
+  update, a pad that is actually producing input wins over one that merely reports connected —
+  this machine has a phantom pad whose triggers rest at half pull, which is why the trigger
+  threshold is 0.65 — and losing the pad mid-game invokes `OnInputDeviceLost`, which pauses
+  play rather than leaving the ship uncontrolled.
+- **I4. Full keyboard support.** **Done.** WASD and the arrows are bound together, Escape
+  pauses and backs out, Enter and Space confirm, and the digital vector is normalised so a
+  diagonal is no longer 1.41 times a cardinal.
+- **I5. Menu navigation without a mouse.** **Done.** `FocusRing` holds the order and
+  `MenuNavigator` drives it from the D-pad, stick and keyboard with hold-to-repeat. The
+  engine's touch `Button`s are untouched, so pointer input still works; `FocusableButton`
+  layers focus over one. Ship select is a cursor selection rather than one face button per
+  craft.
+- **I6. Rebinding UI and persistence.** **Done.** A controls screen, reached from the options
+  screen on the main menu and over a paused game alike, lists FIRE, NUKE, PAUSE and the four
+  movement directions against the inputs bound to them, and rebinds one by waiting for the
+  player to press something.
+  While a capture is open the provider reports nothing to listeners, so the press that chooses
+  a binding cannot also act on the menu that asked for it. Nothing is taken until every input
+  has been released, so the confirm that opened the capture is never what gets bound, and the
+  capture stays open until the chosen input is let go, so a key just bound to FIRE does not
+  also fire as the screen closes. Escape backs out.
+  The screen shows **four cells per action** — two keyboard slots and two gamepad slots — with
+  left and right moving between them and confirm rebinding the one under the cursor. Only that
+  cell's device is listened for, so pressing a key at a gamepad cell leaves the prompt up rather
+  than binding something the cell cannot hold.
+  **It navigates as a grid, not as a list of rows.** Moving down from the third cell of one row
+  lands on the third cell of the next rather than back at its start, which is what a table wants
+  and a list of values does not. `IGridFocusable` carries the column and `MenuNavigator` moves it
+  between items, remembering it rather than reading it back, so stepping over an entry with no
+  columns — `RESET DEFAULTS` at the foot of the screen — and returning lands on the column that
+  was left.
+  Only the focused row's **label and selected cell** are lifted; the rest of that row stays as
+  dim as any other. Lifting the whole row and then lifting the selected cell a little further
+  did not read — the step between the two was smaller than the step the eye was already using
+  to find the row, so the cursor was lost among the cells it was meant to stand out from.
+  Three rules:
+  - **A rebind changes one slot and leaves the rest alone.** This started out replacing the
+    whole device, on the reasoning that the screen should not show an input it could not edit.
+    That was the wrong trade: the defaults bind two of each, so touching one collapsed it to
+    one and the shipped state could not be got back except by resetting everything. Editing
+    per slot shows everything and can set everything, which was the actual goal.
+  - **An input taken from another rebindable action is swapped, not stolen.** That action
+    inherits the input given up, so a rebind can never leave a second action unbound. Taking an
+    input the action already holds in its other slot swaps the two rather than duplicating it.
+  - **PAUSE and the four directions may not take an input bound to CONFIRM or CANCEL.** This
+    once applied to *every* action, which the defaults themselves disprove: A is FIRE and
+    CONFIRM both, B is NUKE and CANCEL both, so the rule forbade reproducing what the game
+    ships with, and anything rebound off A could never be put back. The collision is only real
+    where both are dispatched at once — PAUSE stays live while paused, since it is what
+    unpauses, and the directions are live alongside confirm and cancel on every menu. FIRE and
+    NUKE are suppressed while paused and no menu listens for them, so they share a face button
+    with a menu action by design. A refused input shows `TAKEN` and changes nothing.
+  Bindings persist through `StorageService` as one `BIND_<ACTION>` key per action, keys before
+  a semicolon and pad buttons after, written by name so reordering either enum cannot silently
+  change what a save means. A key is only written once something has changed, matching S5, and
+  `RESET DEFAULTS` writes the defaults back explicitly because the store cannot delete a key.
+  **The bitmap font has no comma**, so multiple inputs are separated by spaces. `TextDisplay`
+  looks every character up in `Constants.Font.Map` without checking and throws on a miss, so
+  input names that come from a platform's key enum are filtered to what the font can draw —
+  found by running it, not by reading it.
+  *Verified by driving the model directly at startup: replace, swap, refusal of a reserved
+  input, a pad-only rebind leaving the keys alone, a reload from disk reproducing the mapping
+  exactly, and reset restoring the defaults.* *Also verified on screen, on both routes in: from
+  the options screen on the main menu and over a paused game.* Looking is what caught the font
+  crash, and then a second thing arithmetic could not: the menu art has a pale planet directly
+  behind the middle column, and the `KEYBOARD` heading washed out against it at the tint the
+  other labels use. The headings are now brighter than an unfocused row despite carrying less
+  meaning, which is the wrong hierarchy on paper and the right one on screen.
+  **Playing it then found what neither had:** `RESET DEFAULTS` threw
+  `InvalidOperationException` every time. It is a menu item, so it runs from inside an input
+  dispatch, and the provider activates it from within a loop over the very bindings the reset
+  was rebuilding — clearing the dictionary invalidated that loop's enumerator. Fixed twice
+  over: the reset now replaces each action's inputs in place rather than restructuring, and the
+  provider dispatches from a snapshot rebuilt on change, so no future edit to the mapping can
+  invalidate the loop either. Removing a stale `Reset` on the press tracker at the same time
+  fixed a second fault hiding behind the first — holding confirm on that item would have re-run
+  the reset every frame, and with it seven writes to the save file per frame.
+  *Reproduced first, then fixed, then confirmed by driving the same call chain.*
+  **Playing it a second time found the three things above** — the collapsed second binding, the
+  over-broad reserved rule, and the analog stick. All three were reported from the screen, none
+  of them by reading the code, which is now three rounds running.
+  **Still open:** a cell cannot be emptied. Every cell can be *set*, and the swap can leave one
+  empty, but there is no way to deliberately unbind an input short of `RESET DEFAULTS`. Nobody
+  has asked for it yet, and adding it means deciding what the player presses to mean "nothing",
+  on a screen where every press is a binding.
+  **Also still open:** the four movement rows bind the D-pad only. The left stick is read
+  straight off the pad in `DispatchDirection`, outside the binding table entirely, and it takes
+  priority over the digital inputs — so rebinding `MOVE UP` changes the D-pad and leaves the
+  stick alone. The screen now says so rather than implying otherwise, which was the cheap half
+  of the fix. Making the stick selectable or rebindable is the other half, and it is a real
+  design question: a stick is an axis pair, not four buttons, so it fits the per-direction model
+  badly. An options row naming which pad device moves the ship is the likelier answer.
+- **I7. Contextual button prompts.** **Done.** `InputPrompt` names the input for an action and
+  follows whichever device the player last actually used, not merely what is plugged in. It now
+  also re-reads when the mapping's revision changes, so a prompt does not keep naming a key the
+  player has just rebound. Text in the existing bitmap font rather than glyph sprites, which
+  would mean new art registered in both platform projects.
 - **I8. Rumble.** `InputService.Vibrate` exists and is already wired to death and nuke. Add
   hit, shield break, and boss impacts, plus an intensity slider in options.
 
@@ -266,15 +342,15 @@ Not glamorous, but these are store-page and refund-request items.
   so the world is still exactly 1920×1080 whatever the display. Bars rather than more visible
   play area is the right default for a game balanced around a fixed field of view, but if
   ultrawide play area is ever wanted, that is a content change, not a renderer one.
-- **S3. An options menu.** *Screen built; two rows still to come.* Reached from the main
-  menu, navigable with the focus cursor, with master, music and effect volume adjustable in
-  ten point steps and saved to the engine's key value store. Settings load and apply during
-  content loading, before anything plays.
-  **Still to add, each gated on other work:** display mode needs S1 and S2, rebinding needs
-  I6, and rumble intensity needs I8. The screen and its `OptionRow` widget are built to take
-  them, so each is a row rather than a rewrite.
-  This also unblocks **I6** — a rebinding editor now has somewhere to live, and `Settings`
-  gives it a persistence pattern to follow.
+- **S3. An options menu.** *One row still to come.* Reached from the main menu, navigable with
+  the focus cursor, with master, music and effect volume adjustable in ten point steps and
+  saved through `StorageService`. Settings load and apply during content loading, before
+  anything plays. Display mode joined it with S1 and S2, and controls with I6 — as an entry
+  opening a screen of its own rather than a row, because a binding is a list of inputs per
+  device and there is one per action.
+  **Still to add:** rumble intensity, gated on I8. That one is a row.
+  This unblocked **I6**, which is why it was brought forward: the rebinding editor had
+  somewhere to live, and `Settings` gave it a load, clamp and save pattern to follow.
 - **S4. A real pause menu.** **Done.** Pause froze time and showed a powerup help overlay
   with no way out but unpausing. It now also puts up Resume, Options, Restart and Quit,
   driven by the focus cursor from I5.

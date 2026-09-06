@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using Type.Buttons;
 using Type.Data;
+using Type.Input;
 using Type.Interfaces;
 using Type.Interfaces.Control;
 
@@ -75,6 +76,32 @@ namespace Type.Android.Source.Controllers
         /// <inheritdoc />
         /// <remarks> Touch controls are not driven by an action mapping. </remarks>
         public InputBindings Bindings => null;
+
+        /// <inheritdoc />
+        /// <remarks> There is nothing to rebind, so a capture never runs. </remarks>
+        public Boolean Capturing => false;
+
+        /// <inheritdoc />
+        /// <remarks>
+        /// Reports nothing captured straight away, so a caller is not left waiting on a screen
+        /// this platform cannot offer.
+        /// </remarks>
+        public void BeginCapture(Boolean gamepad, Action<InputSource> onCaptured)
+        {
+            onCaptured?.Invoke(null);
+        }
+
+        /// <inheritdoc />
+        /// <remarks> No capture can be running, so there is nothing to abandon. </remarks>
+        public void CancelCapture()
+        {
+        }
+
+        /// <inheritdoc />
+        /// <remarks> Nothing is derived from a mapping this platform does not have. </remarks>
+        public void ReloadBindings()
+        {
+        }
 
         /// <inheritdoc />
         /// <remarks> Touch only, so no gamepad is ever driving input. </remarks>
