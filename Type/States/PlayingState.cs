@@ -100,6 +100,10 @@ namespace Type.States
         {
             _CurrentLevel = Constants.Global.START_LEVEL;
 
+            // Before anything can ask for particles, and after the canvas exists, since every
+            // pooled particle registers a sprite with it.
+            ParticleController.Instance.Initialise();
+
             _EnemyFactory = new EnemyFactory();
             _EnemyFactory.RegisterListener(this);
             _EnemyFactory.ParentState = this;
@@ -188,6 +192,7 @@ namespace Type.States
             _LifeMeter.LoseLife();
             _GameScene.RemovePowerUps();
             Rumble.PlayerDeath();
+            Particles.PlayerDestroyed(position);
 
             if (_LifeMeter.PlayerLives > 0)
             {
@@ -256,7 +261,15 @@ namespace Type.States
 
             // Only a whole boss, not a station's individual cannons, which is why BossCannon is
             // deliberately not an IBoss.
-            if (enemy is IBoss) Rumble.BossDestroyed();
+            if (enemy is IBoss)
+            {
+                Rumble.BossDestroyed();
+                Particles.BossDestroyed(enemy.Position);
+            }
+            else
+            {
+                Particles.EnemyDestroyed(enemy.Position);
+            }
         }
 
         /// <inheritdoc />
@@ -665,6 +678,10 @@ namespace Type.States
             UpdateManager.Instance.RemoveUpdatable(this);
             CollisionController.Instance.IsActive = false;
             CollisionController.Instance.ClearObjects();
+
+            // Every pooled particle holds a sprite registered with the canvas, so leaving the
+            // pool behind is exactly the leak S9 went looking for.
+            ParticleController.Instance.Dispose();
 
             _LevelDisplay = null;
             _ScoreDisplay = null;

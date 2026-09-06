@@ -696,8 +696,33 @@ Your second stated priority. Ordered cheapest-impact-first.
   reads as very empty at 1080p — six enemies spread across the full width with large gaps —
   and the HUD is small and clustered in the top-left corner. The first is L4's problem, the
   second is G8's. Neither is about asset resolution, which is what this item asked.
-- **G2. A particle system.** There isn't one. Thrusters, muzzle flashes, impact sparks,
-  debris on death. The single biggest visual return per line of code in the project.
+- **G2. A particle system.** *Built, with debris on death wired up. Thrusters, muzzle flashes
+  and impact sparks still to come.*
+  `ParticleController` owns a fixed pool of 256 particles, built when a level starts and torn
+  down with it; `Data/Particles.cs` names the effects and holds their numbers, the same shape as
+  `Rumble` and for the same reason — relative weight is only visible when the values sit
+  together. Wired to enemy death, boss death and player death, all in `PlayingState` where the
+  events already were, so none of it touches the four duplicated ship classes or the eleven
+  enemy ones.
+  **Pooled rather than allocated, and the reason is the engine.** `Canvas` rebuilds its entire
+  vertex buffer whenever its drawable list changes, so creating and disposing sprites at the
+  rate an explosion wants them would rebuild it several times a frame. A pooled particle
+  registers its sprite once and afterwards only ever changes position, colour and visibility,
+  none of which touches the list. The pool size was checked against the buffer rather than
+  guessed: a sprite is four vertices of eight floats and six indices against caps of 900,000
+  and 6,000,000.
+  *Verified: 120 real frames per wall second, steady, with 50 to 90 particles alive — measured
+  by counting update calls against a stopwatch rather than trusting the on-screen counter, which
+  reports frames per second of **game** time and so reads 60 regardless. Seen on screen at
+  1920x1080, from the real death hook and from all three effects at known positions. The pool
+  is fully released on teardown: 256 drawables added at level start, 0 of them left after
+  `Dispose`, checked the same way S9 was.*
+  **The sizes are a first pass and want a second opinion.** They read as a diffuse cluster of
+  embers rather than something with weight, which is defensible for a fixed-field shooter but
+  is not obviously right. There is also no additive blending, which is what would make sparks
+  actually glow; whether the engine can express that per drawable has not been looked into.
+- **G3. Screen shake, hit-stop, and flash.** Enemies already flash white on hit; extend to
+  brief time dilation on boss kills and camera shake on nukes and player death.
 - **G3. Screen shake, hit-stop, and flash.** Enemies already flash white on hit; extend to
   brief time dilation on boss kills and camera shake on nukes and player death.
 - **G4. Fix the audio architecture.** Pool `AudioPlayer` instances instead of allocating per
