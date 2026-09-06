@@ -714,12 +714,31 @@ Your second stated priority. Ordered cheapest-impact-first.
   for desktop viewing distance. G1 confirmed this by eye at 1080p: the score, the life icons
   and the bomb count sit small in the top-left corner and read as an afterthought on a desktop
   monitor.
-- **G9. The text is blurred, and the font is not to blame.** Found by G1. `KenPixel.png` is a
-  hard-edged one-bit atlas of 15x15 cells — magnified eight times it is perfectly crisp, with
-  no anti-aliasing anywhere. In game it is drawn at scale 2 to 4 through
-  `TextureMagFilter.Linear`, so every letter gets soft gradient edges. **The blur is the
-  filter, not the art.** It is the one thing on screen that looks low resolution.
-  Two ways out, and the game-side one is preferred per the submodule rule:
+- **G9. Replace the font: it is blurred, and it also reads as placeholder.** Two problems that
+  happen to share one fix.
+  **The blur is the filter, not the art.** `KenPixel.png` is a hard-edged one-bit atlas of 15x15
+  cells — magnified eight times it is perfectly crisp, with no anti-aliasing anywhere. In game
+  it is drawn at scale 2 to 4 through `TextureMagFilter.Linear`, so every letter gets soft
+  gradient edges. Found by G1.
+  **The typeface reads as debug, and there is a structural reason.** Reported from playing it,
+  2026-09-06, and worth separating from the blur because it would survive a perfectly sharp
+  render. The ship, enemy and background art is smooth and anti-aliased; the font is one-bit
+  pixel art. **They are in different styles**, and that mismatch is what makes the text look
+  like programmer placeholder sitting on top of finished art rather than part of it.
+  **Decided: replace the atlas.** Authoring a new one at the size it is actually drawn fixes
+  the blur, and choosing a typeface that matches the art fixes the character, in a single piece
+  of work. Three constraints on what can be chosen:
+  - **It must be monospace on a uniform grid.** `TextDisplay` takes a fixed `characterWidth`
+    and `characterHeight` and walks a grid; proportional spacing would be engine work.
+  - **Cell order must match `Constants.Font.Map`**, not the filenames and not the atlas json.
+    That is S7's trap, which silently shifted every glyph when a hyphen was added in the wrong
+    place.
+  - **The licence must permit commercial redistribution.** CC0 or OFL. The current one is
+    Kenney's, which is CC0, so staying in that family is the safe default.
+
+  *Waiting on a typeface being chosen.* The rest — generating the atlas, wiring the map, and
+  registering the asset in both csprojs — is mechanical once there is one.
+  The two ways out of the blur alone, if the typeface is ever kept:
   - **Author the atlas at the size it is drawn.** A 30 or 60 pixel cell drawn at scale 1 is
     crisp with any filter. It is mechanical art work and touches no engine code, but it means
     redrawing the sheet — and note S7's warning that `Constants.Font.Map` ordering is what
