@@ -230,7 +230,12 @@ Recorded now, briefly, from the code as it stands.
   and a list of values does not. `IGridFocusable` carries the column and `MenuNavigator` moves it
   between items, remembering it rather than reading it back, so stepping over an entry with no
   columns — `RESET DEFAULTS` at the foot of the screen — and returning lands on the column that
-  was left. Three rules:
+  was left.
+  Only the focused row's **label and selected cell** are lifted; the rest of that row stays as
+  dim as any other. Lifting the whole row and then lifting the selected cell a little further
+  did not read — the step between the two was smaller than the step the eye was already using
+  to find the row, so the cursor was lost among the cells it was meant to stand out from.
+  Three rules:
   - **A rebind changes one slot and leaves the rest alone.** This started out replacing the
     whole device, on the reasoning that the screen should not show an input it could not edit.
     That was the wrong trade: the defaults bind two of each, so touching one collapsed it to

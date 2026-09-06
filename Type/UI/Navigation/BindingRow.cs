@@ -21,12 +21,10 @@ namespace Type.UI.Navigation
     /// </remarks>
     public sealed class BindingRow : IGridFocusable
     {
-        /// <summary> Tint applied while the row does not have focus </summary>
+        /// <summary> Tint applied to everything the cursor is not on </summary>
         private static readonly Vector4 UnfocusedTint = new Vector4(0.55f, 0.55f, 0.55f, 1);
-        /// <summary> Tint applied to the focused row, other than the cell the cursor is on </summary>
-        private static readonly Vector4 FocusedTint = new Vector4(0.8f, 0.8f, 0.8f, 1);
-        /// <summary> Tint applied to the cell the cursor is on </summary>
-        private static readonly Vector4 SelectedTint = new Vector4(1, 1, 1, 1);
+        /// <summary> Tint applied to the focused row's label and to the cell the cursor is on </summary>
+        private static readonly Vector4 FocusedTint = new Vector4(1, 1, 1, 1);
         /// <summary> Tint applied to the message refusing an input that may not be bound </summary>
         private static readonly Vector4 RefusedTint = new Vector4(1, 0.4f, 0.4f, 1);
 
@@ -170,22 +168,28 @@ namespace Type.UI.Navigation
         }
 
         /// <summary>
-        /// Colours the row for its focus state, picking out the cell the cursor is on
+        /// Colours the row, lifting only its label and the cell the cursor is on
         /// </summary>
+        /// <remarks>
+        /// The rest of the focused row stays as dim as an unfocused one. Lifting the whole row
+        /// and then lifting the selected cell a little further did not read: the step between
+        /// the two was smaller than the step the eye was already using to find the row, so the
+        /// cursor was lost among the cells it was meant to stand out from. Two levels rather
+        /// than three, and the pair that is lifted says both which row and which cell.
+        /// </remarks>
         private void ApplyTint()
         {
             _Label.Colour = _Focused ? FocusedTint : UnfocusedTint;
 
             for (Int32 cell = 0; cell < CellCount; cell++)
             {
-                if (!_Focused)
+                if (!_Focused || cell != _Selected)
                 {
                     _Cells[cell].Colour = UnfocusedTint;
                     continue;
                 }
 
-                if (cell != _Selected) _Cells[cell].Colour = FocusedTint;
-                else _Cells[cell].Colour = _Refused ? RefusedTint : SelectedTint;
+                _Cells[cell].Colour = _Refused ? RefusedTint : FocusedTint;
             }
         }
 
