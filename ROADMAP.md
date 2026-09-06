@@ -48,6 +48,10 @@ Each phase is a gate. Later work depends on earlier foundations — level design
 level format, enemy behaviour needs the enemy consolidation — so the ordering is not
 arbitrary.
 
+Phases 0 to 6 take the game to a Steam release. **Phases 7 and 8 add local and networked
+co-op** and were added on 2026-09-06, after the first six were already under way; §3 explains
+which parts of them want to move earlier than their numbers imply.
+
 ### Phase 0 — Unblock the desktop build
 
 Small, mechanical, and everything else depends on it.
@@ -426,9 +430,22 @@ Not glamorous, but these are store-page and refund-request items.
   See **S11** for where that file lives, and why surviving a restart is not the same as
   surviving a reinstall.
 - **S6. Replace Google Play achievements and leaderboards** with Steamworks equivalents,
-  behind the existing `AchievementController` / `LeaderboardController` facades. This is the
-  one place a new third-party dependency (Facepunch.Steamworks or Steamworks.NET) is
-  unavoidable — flag it and get approval before adding it.
+  behind the existing `AchievementController` / `LeaderboardController` facades.
+  **The Steamworks dependency is approved (2026-09-06).** Which binding is still open, and the
+  choice matters more than it looks, because Phase 8 needs the same SDK for matchmaking and
+  networking — so this decision is made once for both:
+  - **Steamworks.NET** is a thin binding over the C API. It states .NET Framework support
+    plainly, which is what this build is.
+  - **Facepunch.Steamworks** wraps the same API in a much friendlier C# shape, including
+    `SteamNetworkingSockets`, which is what Phase 8 wants.
+
+  **Verify the framework target before committing to either.** Facepunch 2.x targets
+  .NET Standard 2.0, which a 4.8 project can consume in principle, but "in principle" and "the
+  restore succeeds and the callbacks marshal" are different claims and only one of them is
+  checkable. A throwaway project that restores the package and calls `SteamClient.Init` settles
+  it in minutes; do that before writing anything against either API.
+  Keep the SDK plumbing — init, callback pumping, shutdown, the app id — in one place, because
+  R1 and all of Phase 8 build on it.
 - **S7. Window title, icon, and app metadata.** **Done.**
   The window was titled `"Game"` and the `BaseGame` argument `"Test Game"`. The window now
   reads `C-Type`, and the assembly carries that as its title and product with a real
@@ -685,19 +702,125 @@ Depends on D4 (parser fix) and E1–E5 (having things worth placing).
   is in scope, because retrofitting it is expensive.
 - **R6. Crash reporting and a public beta branch** before launch.
 
+### Phase 7 — Local co-op
+
+Two players, one machine, one screen. Added 2026-09-06.
+
+**The good news first, because it is unusually good.** This is a fixed-field shooter: the world
+is exactly 1920x1080, the camera never moves, and the background scrolls rather than the view.
+So shared-screen co-op needs **no camera work at all** — no split screen, no zoom-to-fit, no
+tether, none of what normally makes local co-op expensive. Two ships simply occupy the same
+field. That removes the single largest cost item from this phase before it starts.
+
+**The bad news is the input layer, which is the part just finished.** Phase 1 built input around
+one player throughout: `IInputListener.UpdateDirectionData(Vector2, Single)` carries no player
+identity, the provider tracks one `_ActivePad`, `GamepadActive` is a single boolean, and rumble
+goes to "the" pad. Every action is broadcast to every listener with no way to say who pressed
+it. That is not a flaw in Phase 1 — it was the right shape for the game as specified — but co-op
+invalidates it, and M1 is a rework of code that is three days old.
+
+- **M1. Give input a player identity.** A player index on every dispatched action and direction,
+  a device-to-player assignment table, and a binding set per player rather than one global set.
+  `ControlSettings` becomes per player, which the `BIND_<ACTION>` key naming will have to grow a
+  player segment for. Everything in this phase hangs off it, so do it first and do it properly —
+  the same advice I1 gave, for the same reason.
+- **M2. Make the player plural in the model.** `CollisionController` holds one `_Player` and
+  tests one hitbox; `GameScene` exposes one `Player`; `PlayingState` holds one. All become
+  collections. Watch `CollisionController.Dispose`, which disposes the player it was handed.
+- **M3. Drop in and drop out.** Locally this is cheap: an unassigned device pressing confirm
+  joins, and a player who leaves has their ship removed. It is worth building even for local
+  play alone, because it is the same seam Phase 8 needs and doing it here proves the shape on
+  the easy side of the problem.
+- **M4. Co-op HUD and ship select.** Two life meters, and a ship select that takes two choices
+  before starting. `LifeMeter` is built for one; ship select is one cursor over four cards.
+- **M5. The rules, which are design questions rather than engineering ones.** Shared lives or
+  one pool each. Whether a dead player waits for the level or revives on a timer. Whether score
+  is shared or attributed. **Whether a co-op run may set the high score or touch the
+  leaderboard at all** — it almost certainly should not, and `Progress`, `GameStats` and R1's
+  leaderboard need to know which mode produced a run.
+- **M6. Balance for two.** Twice the firepower against waves authored for one ship. This is why
+  the sequencing note below asks for M1 and M2 before Phase 5 rather than after it.
+
+**Gate:** two players complete a run on one machine, with the second joining and leaving
+mid-level and the game continuing correctly either way.
+
+### Phase 8 — Networked co-op over Steam
+
+Drop-in co-op with friends, through Steam matchmaking and invites. Added 2026-09-06.
+
+**This is the largest item on the roadmap by a wide margin** — plausibly larger than Phases 0
+to 7 put together. The game has no networking of any kind today, and nothing in it was written
+with a second machine in mind. Treat it as its own project with its own schedule, not as a
+phase that follows the others by a few weeks.
+
+- **N1. Choose the model. Do this before writing a line of it.**
+  **Recommendation: host-authoritative with client input forwarding.** The host runs the only
+  real simulation, clients send their inputs and render what the host reports.
+  The alternative, deterministic lockstep, is cheaper on bandwidth and much cheaper on state
+  replication, and **this codebase cannot support it without an audit of every moving object**.
+  ROADMAP already records that several classes do not multiply movement by `timeTilUpdate`,
+  which makes their motion frame-rate dependent and therefore machine dependent. Enemy spawning
+  is driven off accumulated deltas. Determinism would mean fixing all of that first and
+  guaranteeing it stays fixed forever. Host authority tolerates every bit of it.
+  It also makes N5 tractable: a joiner needs a state snapshot, and only the host has state.
+  Co-op has no competitive integrity to protect, so the usual argument against trusting the host
+  does not apply.
+- **N2. Steam lobbies, matchmaking and invites.** Create and join lobbies, invite a friend, join
+  from the friends list, and accept an invite that launches the game. Rich presence from R1
+  feeds this. Built on whichever binding S6 settles on.
+- **N3. Transport.** `SteamNetworkingSockets`, not the deprecated `SteamNetworking` P2P API.
+  It brings NAT traversal and relay through Steam Datagram Relay, plus authentication and
+  encryption, which is a large amount of networking nobody has to write.
+- **N4. Replicate the simulation.** Entity ids, a snapshot format, delta encoding, and
+  interpolation on the client. **This is where E1 pays for itself**: replicating one
+  data-driven enemy type is a different job from replicating eleven bespoke classes, so E1
+  should land first even though nothing else forces that order.
+- **N5. Drop in mid-run.** A full snapshot on join and a clean handover into the delta stream.
+  Straightforward under host authority, which is much of why N1 recommends it.
+- **N6. Latency, loss and disconnection.** Input delay or rollback for the client's own ship,
+  what happens when the host leaves, and whether that ends the run or migrates. **Recommend
+  ending the run** for a first version; host migration is a large feature on its own.
+- **N7. Test infrastructure.** Two instances on one machine, with artificial latency and loss.
+  Without this, every test needs two people and nothing gets tested. Build it early.
+
+**Gate:** two machines complete a run together, one having joined mid-level from a friend
+invite, and a mid-run disconnection ends cleanly rather than hanging or corrupting the save.
+
 ---
 
 ## 3. Sequencing
 
 ```
 Phase 0 ──> Phase 1 ──> Phase 2 ──┐
-   │                              ├──> Phase 6
+   │                              ├──> Phase 6 ──> Phase 7 ──> Phase 8
    ├──> Phase 3 (G1 gates it) ────┤
    └──> Phase 4 (E1 first) ──> Phase 5
+
+Two crossings that the numbering does not show:
+   M1 + M2 (the player becomes plural)  ──>  wanted before Phase 5
+   E1      (one data-driven enemy type) ──>  wanted before N4
 ```
 
 Phases 3 and 4 can run in parallel with 1 and 2 once Phase 0 lands. Phase 5 cannot start
-until D4 and E1–E5 are done. Phase 6 needs everything.
+until D4 and E1–E5 are done. Phase 6 needs everything up to it.
+
+**Two crossings are worth more than the phase numbers suggest.**
+
+**M1 and M2 should land before Phase 5, even though co-op ships after it.** Phase 5 redesigns
+all twenty levels, and levels tuned for one ship have to be retuned for two. Making the player
+plural first means that retune never happens, at the cost of doing the input and model rework
+earlier than the feature needs it. The alternative is authoring twenty levels twice.
+
+**E1 should land before N4.** Replicating one data-driven enemy type across a network is a
+different job from replicating eleven bespoke classes, each with its own fields and lifetime.
+Nothing else forces E1 before Phase 8, but doing Phase 8 first would mean writing the
+replication layer twice.
+
+**Phases 7 and 8 sit after release deliberately.** Co-op roughly doubles the QA surface of a
+game that has never been playtested end to end even in single player — the Phase 1 gate is
+still unmet. Shipping single player first gets the game in front of players and gives the co-op
+work a stable base to build on. The exception is the sequencing note above: the *refactor* moves
+earlier, the *feature* does not.
 
 ## 4. Android: dormant, not dead
 
