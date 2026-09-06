@@ -215,9 +215,10 @@ else's window instead of the game.
 or disconnected, `PrintWindow` succeeds and hands back a blank bitmap — white in windowed
 mode, where the frame is drawn but the GL surface is not, and black in borderless, where
 there is no frame either. The tell is `GetForegroundWindow()` returning `0`: check that
-before trusting a capture, and if it is zero, say the screen could not be checked rather than
-reading anything into a blank image. `CopyFromScreen` is no help here either — it captures
-the same nothing, and without the foreground check it does it silently.
+before trusting a capture, and if it is zero, **ask for the session to be unlocked** rather
+than reading anything into a blank image. `CopyFromScreen` is no help here either — it
+captures the same nothing, and without the foreground check it does it silently.
+*Confirmed both ways: blank while locked, the real frame immediately after unlocking.*
 
 To inspect a screen that needs input to reach, temporarily start the game on that state
 (`StateManager.Instance.StartState(new OptionsState(null))` in `Game.LoadContent`), capture,

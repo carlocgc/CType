@@ -113,6 +113,11 @@ namespace Type.Scenes
         /// <summary>
         /// Creates one column heading
         /// </summary>
+        /// <remarks>
+        /// Brighter than an unfocused row despite carrying less meaning. The menu art has a pale
+        /// planet behind the middle of this row, and at the dimmer tint the KEYBOARD heading
+        /// washed out against it — visible on screen, invisible in the code.
+        /// </remarks>
         private static TextDisplay CreateHeading(String text, Vector2 position)
         {
             return new TextDisplay(Game.UiCanvas, Constants.ZOrders.UI_OVERLAY,
@@ -122,7 +127,7 @@ namespace Type.Scenes
                 Position = position,
                 Visible = true,
                 Scale = new Vector2(1.5f, 1.5f),
-                Colour = new Vector4(0.45f, 0.45f, 0.45f, 1),
+                Colour = new Vector4(0.75f, 0.75f, 0.75f, 1),
             };
         }
 

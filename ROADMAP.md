@@ -240,10 +240,12 @@ Recorded now, briefly, from the code as it stands.
   found by running it, not by reading it.
   *Verified by driving the model directly at startup: replace, swap, refusal of a reserved
   input, a pad-only rebind leaving the keys alone, a reload from disk reproducing the mapping
-  exactly, and reset restoring the defaults.* **The layout was not verified on screen**: the
-  window capture returned blank in this session, for the reason now recorded under Testing in
-  [CLAUDE.md](CLAUDE.md). Column positions were checked by arithmetic against the 1920x1080
-  target instead, which catches an overflow but not an ugly one.
+  exactly, and reset restoring the defaults.* *Also verified on screen, on both routes in: from
+  the options screen on the main menu and over a paused game.* Looking is what caught the font
+  crash, and then a second thing arithmetic could not: the menu art has a pale planet directly
+  behind the middle column, and the `KEYBOARD` heading washed out against it at the tint the
+  other labels use. The headings are now brighter than an unfocused row despite carrying less
+  meaning, which is the wrong hierarchy on paper and the right one on screen.
   **Still open:** rebinding is one input per device per action, so the second binding cannot be
   set from the screen, only inherited from the defaults or a swap. Whether that matters is a
   question for the first person who plays it.
