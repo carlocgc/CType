@@ -1,10 +1,10 @@
 # CLAUDE.md
 
-Guidance for AI agents working in the C:Type repository.
+Guidance for AI agents working in the C-Type repository.
 
 ## What this is
 
-C:Type is a 2D side-scrolling space shooter written in C# on top of **AmosEngine**, a
+C-Type is a 2D side-scrolling space shooter written in C# on top of **AmosEngine**, a
 custom OpenGL/OpenTK engine. It shipped on Android in 2019 and was delisted in 2023.
 The current goal is a **Steam release for Windows desktop**.
 
@@ -19,12 +19,12 @@ desktop-native game.
    **Prefer a game-side solution**, and record any engine limitation you work around in
    [ROADMAP.md](ROADMAP.md).
    When an engine change is genuinely the better fix, it goes through a merge request
-   against the **`ctype_development`** branch — the C:Type-specific branch this repo's
+   against the **`ctype_development`** branch — the C-Type-specific branch this repo's
    submodule pointer tracks, which the maintainer can merge. Two have gone this route
    (`!22` and the 4.8 retarget). The workflow:
    - branch inside `SupportingFiles/` off `ctype_development`
    - keep the commit **small, self-contained, and about one thing**, so it can be
-     cherry-picked onto the engine's mainline independently of C:Type history
+     cherry-picked onto the engine's mainline independently of C-Type history
    - push with `-o merge_request.create -o merge_request.target=ctype_development`
    - **wait for the merge** before bumping the parent's submodule pointer — source branches
      are deleted on merge, so a pointer aimed at an unmerged branch commit gets orphaned

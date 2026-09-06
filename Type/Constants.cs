@@ -29,9 +29,10 @@ namespace Type
             /// The game's name where it has to be a directory name
             /// </summary>
             /// <remarks>
-            /// Not <see cref="TITLE"/>, because a colon cannot appear in a Windows path and the
-            /// engine passes this straight to <c>IsolatedStorageFile.CreateDirectory</c>. The
-            /// game's own save does not live here — see ROADMAP item S11 — but the engine's
+            /// Deliberately punctuation-free rather than <see cref="TITLE"/>. The engine passes
+            /// this straight to <c>IsolatedStorageFile.CreateDirectory</c>, and the desktop save
+            /// folder already uses this spelling, so changing it would orphan saves that exist.
+            /// The game's own save does not live here — see ROADMAP item S11 — but the engine's
             /// achievement and leaderboard store still does.
             /// </remarks>
             public const String STORE_NAME = "CType";

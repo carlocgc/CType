@@ -6,7 +6,7 @@ Released on Android 2019 and delisted in 2023.
 ## Demo - Youtube  
 
 [Gameplay Trailer HD](https://www.youtube.com/watch?v=kixFrAAmXPs)  
-[![C:Type - Gameplay HD](http://img.youtube.com/vi/kixFrAAmXPs/0.jpg)](http://www.youtube.com/watch?v=kixFrAAmXPs "C:Type - Gameplay HD")  
+[![C-Type - Gameplay HD](http://img.youtube.com/vi/kixFrAAmXPs/0.jpg)](http://www.youtube.com/watch?v=kixFrAAmXPs "C-Type - Gameplay HD")  
 
 ## Features
 
