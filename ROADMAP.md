@@ -304,8 +304,22 @@ Recorded now, briefly, from the code as it stands.
   them off at zero, applied in `InputService` so one place decides how much of the weight an
   event asks for the player actually wants, and read per call so the slider takes effect
   immediately — including from the pause menu mid-run.
-  **Two bugs in the existing implementation, both found by reading it rather than by feeling
-  it:**
+  **The reason none of it had ever worked: `GamePad.SetVibration` does nothing on Windows.**
+  OpenTK's Windows gamepad driver leaves the method unimplemented and returns false, which is
+  what it did here on a correctly mapped Xbox Series pad — reported by OpenTK as `XInput
+  Controller`, `Mapped`, `Connected`. The same pad accepts vibration through XInput directly,
+  returning `ERROR_SUCCESS` at full motor speed. So `XInputRumble` in `Type.Desktop` calls
+  `XInputSetState` itself. **Not a new dependency:** `xinput` is a Windows system library, the
+  one OpenTK would be calling if it implemented this. Three versions ship with different Windows
+  releases and the first that loads is used.
+  It finds the pad through XInput's slots rather than OpenTK's, because the two do not
+  correspond — this machine reports a **phantom second controller** that OpenTK sees and XInput
+  does not, the same one whose triggers rest at half pull and forced the 0.65 trigger threshold.
+  XInput enumerates only XInput devices, which is exactly the set that can rumble, so the
+  phantom cannot be picked by mistake.
+  **This was reported from a real pad, not found here.** No amount of reading the game's own
+  code would have turned it up: the bug is that a library call succeeds silently at nothing.
+  **Two further bugs in the existing implementation, found by reading it:**
   - `Vibrate` started the motors and *then* called `CancelAndComplete` on the previous timer,
     which invokes that timer's callback — and its callback sets the motors to zero. Any rumble
     landing inside another one therefore silenced itself instantly. Overlapping rumbles now take
@@ -325,12 +339,11 @@ Recorded now, briefly, from the code as it stands.
   in the enemy data.
   *Verified: the intensity setting clamps at both ends, persists, and reloads; every one of the
   six events reaches the provider and returns; the options row is on screen.*
-  **None of it has been felt.** There is no gamepad on this machine, so the six weights were
-  chosen by reasoning about which event should outweigh which and are a starting point rather
-  than a tuned set. Two of them are worth a second look by someone holding a pad: a shield
-  absorbing hits rumbles per hit, which under sustained fire will read as a continuous light
-  buzz, and whether that is right feedback or an annoyance is a question for the hand, not the
-  head.
+  **The six weights have still not been felt.** They were chosen by reasoning about which event
+  should outweigh which and are a starting point rather than a tuned set. One is worth a second
+  look by someone holding a pad: a shield absorbing hits rumbles per hit, which under sustained
+  fire will read as a continuous light buzz, and whether that is right feedback or an annoyance
+  is a question for the hand, not the head.
 
 **Gate:** complete a full 20-level run using only a gamepad, then again using only a
 keyboard, without touching the mouse.

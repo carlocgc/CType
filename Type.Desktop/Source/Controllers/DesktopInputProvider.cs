@@ -47,6 +47,8 @@ namespace Type.Desktop.Source.Controllers
         private readonly Key[] _CapturableKeys = BuildCapturableKeys();
         /// <summary> Every gamepad button a capture will consider </summary>
         private readonly GamepadButton[] _CapturablePadButtons = BuildCapturablePadButtons();
+        /// <summary> Drives the rumble motors, which OpenTK cannot </summary>
+        private readonly XInputRumble _Rumble = new XInputRumble();
 
         /// <summary> Index of the gamepad currently driving input, negative when none is connected </summary>
         private Int32 _ActivePad = -1;
@@ -372,10 +374,9 @@ namespace Type.Desktop.Source.Controllers
                 GamePadState current = GamePad.GetState(_ActivePad);
                 if (current.IsConnected) return current;
 
-                // Ordered so the motors are silenced while the pad index still names them. The
-                // pad is gone, but a controller that reappears must not come back mid-rumble.
-                StopVibration();
+                // A controller that reappears must not come back mid-rumble.
                 _VibrationStrength = 0;
+                StopVibration();
 
                 _ActivePad = -1;
                 _Tracker.Reset();
@@ -584,16 +585,22 @@ namespace Type.Desktop.Source.Controllers
         public VirtualAnalogStick VirtualAnalogStick { get; set; }
 
         /// <inheritdoc />
+        /// <remarks>
+        /// Not gated on a pad being the device currently driving input. A controller plugged in
+        /// while somebody plays on the keyboard will rumble on the desk, which is a smaller
+        /// problem than rumble silently doing nothing because the gate was not satisfied — and
+        /// the player has a slider that turns it off.
+        /// </remarks>
         public void Vibrate(Single strength, TimeSpan duration)
         {
-            if (_ActivePad < 0 || strength <= 0 || duration <= TimeSpan.Zero) return;
+            if (strength <= 0 || duration <= TimeSpan.Zero) return;
 
             DateTime until = DateTime.UtcNow + duration;
 
             if (strength > _VibrationStrength) _VibrationStrength = strength;
             if (until > _VibrationUntil) _VibrationUntil = until;
 
-            GamePad.SetVibration(_ActivePad, _VibrationStrength, _VibrationStrength);
+            _Rumble.Set(_VibrationStrength);
         }
 
         /// <summary>
@@ -615,13 +622,11 @@ namespace Type.Desktop.Source.Controllers
         }
 
         /// <summary>
-        /// Silences the motors of whichever pad is being driven
+        /// Silences the motors
         /// </summary>
         private void StopVibration()
         {
-            if (_ActivePad < 0) return;
-
-            GamePad.SetVibration(_ActivePad, 0, 0);
+            _Rumble.Set(0);
         }
 
         /// <summary>

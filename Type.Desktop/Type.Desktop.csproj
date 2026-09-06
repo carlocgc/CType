@@ -61,6 +61,7 @@
     <Compile Include="Source\Services\DesktopDisplayProvider.cs" />
     <Compile Include="Source\Services\DesktopStorageProvider.cs" />
     <Compile Include="Source\Controllers\DesktopInputProvider.cs" />
+    <Compile Include="Source\Controllers\XInputRumble.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\Assets\Audio\begin.wav">
