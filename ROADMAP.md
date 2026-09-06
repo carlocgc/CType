@@ -477,18 +477,45 @@ Not glamorous, but these are store-page and refund-request items.
   left referencing the package, its `PackageReference` was removed from `AmosDesktop`.
   *Verified: `Newtonsoft.Json` is now the only package assembly in the game's output.*
 
-- **S9. Find the leaked drawable.** Quitting after visiting the menus used to crash in
-  `Canvas.Dispose`, which AmosEngine `!25` fixed by making teardown tolerant of a drawable
-  the game never disposed. The engine no longer crashes, but the leak that exposed it is
-  still there: something on the menu or play path registers a drawable with a canvas and
-  never disposes it. *Verified that the condition is real — deliberately leaking one
-  drawable reproduced the original crash exactly.* Harmless now, but it is a resource leak
-  and the next one may not be. The quickest route is a Call Stack from the pre-`!25` build,
-  or a debug tally of registered versus disposed drawables at shutdown.
+- **S9. Find the leaked drawable.** **Closed: there is no longer a leak to find.** Quitting
+  after visiting the menus used to crash in `Canvas.Dispose`, which AmosEngine `!25` fixed by
+  making teardown tolerant of a drawable the game never disposed. This item then assumed the
+  leak itself was still there. It is not.
+  *Measured rather than reasoned:* a debug tally read `Canvas._Drawables` by reflection at
+  every state boundary and either side of every screen that opens over another. Every path
+  exercised returns the canvases to exactly the count they held before — splash to main menu,
+  the options screen and back, the controls screen and back, ship select and back, a run with
+  enemies and pickups, pause, the pickup guide, the settings and the bindings opened over the
+  paused game, resuming, game over, and the return to the menu after each. Opening the bindings
+  adds 45 drawables and closing them removes 45; leaving a run drops both canvases to zero.
+  The counts were logged at each step rather than only at the end, so a probe that had silently
+  failed to run could not have been mistaken for a clean result.
+  It was most likely fixed in passing by the double-dispose fix in I5 or the pause rework in
+  S4, both of which landed after this item was written and both of which touched disposal on
+  exactly the menu path it names.
+  **Not covered:** finishing all twenty levels to reach the game complete screen, restarting
+  from the pause menu, and the level-to-level transitions including the boss levels. Those need
+  a real playthrough rather than a scripted one.
+  **The method is worth repeating** if `Canvas.Dispose` ever complains again: reflect
+  `_Drawables` out of both canvases, log the count and the type of each entry at every state
+  boundary, and look for a pair that does not balance. It found nothing here in about an hour,
+  which is the cheapest possible answer to "is this still a problem".
 
-- **S10. A `NullReferenceException` on quit, cause unknown.** *Suspect ruled out; still open.*
-  Observed once as a `NullReferenceException` on quit from a paused game during the level
-  intro, and **not reproducible in fourteen further attempts**. This item originally blamed an
+- **S10. A `NullReferenceException` on quit.** **Found and fixed.** It was
+  `EnemyFactory.Dispose` calling `_LevelData.Clear()` on a list that was still null.
+  `_LevelData` is only assigned in `Start`, and `Start` is called from the completion callback
+  of the level intro, two seconds after the state is entered. The factory therefore exists with
+  a null `_LevelData` for exactly the length of that intro, and disposing inside that window
+  threw. The field is now empty rather than null from construction.
+  **That is why it looked unreproducible.** The window is two seconds wide in a normal run, so
+  hitting it by hand is luck — but pausing during the intro holds the window open indefinitely,
+  which is precisely what the original report described. Scripted to pause at one second and
+  quit at two, it threw on **six attempts out of six**, and after the fix ran clean on **eight
+  out of eight**. The original observation was exact; only the frequency was misleading.
+  `PowerupFactory` was checked for the same shape and does not have it, and
+  `EnemyFactory.Update` is guarded by `_Spawning`, so `Dispose` was the only unguarded reach.
+  The rest of this entry is kept because ruling the first suspect out was itself a finding, and
+  because the reasoning about `UpdateManager` remains true. This item originally blamed an
   uncancelled `TimedCallback` from `LevelDisplay.ShowLevel`. **That hypothesis is wrong, and
   the description asserting it was inaccurate rather than merely unproven:**
   - `LevelDisplay.Dispose` cancels both `_ShownCallback` and `_CompleteCallback`, and has done
@@ -501,10 +528,10 @@ Not glamorous, but these are store-page and refund-request items.
     a frame — which is exactly what a state change does — is honoured immediately.
 
   So the callbacks are cancelled, and no ordering was found that lets one run against a
-  disposed state. The exception was real; its cause is not this. Whatever is found next should
-  be looked for on the quit path generally rather than in `LevelDisplay`, and it may be the
-  same root cause as S9, which is also a teardown-ordering problem on the menu and play paths.
-  Two things were noticed while ruling this out, neither of them the culprit:
+  disposed state. That reasoning held up: the cause was on the quit path, as predicted, but in
+  `EnemyFactory` rather than anywhere near `LevelDisplay`. The guess that it shared a root cause
+  with S9 was wrong — S9 had no leak left to share.
+  Two things were noticed while ruling the first suspect out, neither of them the culprit:
   - `TimedCallback` was safe only by leaning on `UpdateManager`'s behaviour: `Update` invoked
     `_Callback` with no null check and `CanUpdate` ignored `IsDisposed`, so it depended on the
     engine never delivering an update after removal. Hardened to refuse updates once disposed,
