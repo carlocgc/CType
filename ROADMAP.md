@@ -432,19 +432,41 @@ Not glamorous, but these are store-page and refund-request items.
 - **S6. Replace Google Play achievements** with Steamworks equivalents, behind the existing
   `AchievementController` facade. **Achievements only — leaderboards were dropped, see R1.**
   `LeaderboardController` keeps its Android implementation and gains no desktop one.
-  **The Steamworks dependency is approved (2026-09-06).** Which binding is still open, and the
-  choice matters more than it looks, because Phase 8 needs the same SDK for matchmaking and
-  networking — so this decision is made once for both:
-  - **Steamworks.NET** is a thin binding over the C API. It states .NET Framework support
-    plainly, which is what this build is.
-  - **Facepunch.Steamworks** wraps the same API in a much friendlier C# shape, including
-    `SteamNetworkingSockets`, which is what Phase 8 wants.
+  **The Steamworks dependency is approved (2026-09-06).** The binding was spiked the same day
+  against Spacewar (app id 480), and **the answer is not about API ergonomics at all — it is
+  about process bitness.**
 
-  **Verify the framework target before committing to either.** Facepunch 2.x targets
-  .NET Standard 2.0, which a 4.8 project can consume in principle, but "in principle" and "the
-  restore succeeds and the callbacks marshal" are different claims and only one of them is
-  checkable. A throwaway project that restores the package and calls `SteamClient.Init` settles
-  it in minutes; do that before writing anything against either API.
+  **The game runs as a 32-bit process.** `Type.Desktop` is `AnyCPU`, and on .NET Framework an
+  `AnyCPU` executable defaults `Prefer32Bit` to true, so it launches as x86 on 64-bit Windows.
+  *Verified by reading `IsWow64Process` on the running game.* Steam's native `steam_api` has to
+  match the host process, which turns that default into the deciding constraint.
+
+  | Route | net48 | x86 | Result |
+  |---|---|---|---|
+  | Steamworks.NET, NuGet | **no** | — | Every published version, 15.0.1 to 2024.8.0, is `netstandard2.1` only. net48 cannot consume any of them. |
+  | Facepunch.Steamworks 2.3.3, NuGet | yes | **no** | Restores and builds on net48, but ships `Facepunch.Steamworks.Win64.dll` and `steam_api64.dll` with no x86 native at all. |
+
+  *Both verified by running, not by reading.* Facepunch at x86 throws
+  `BadImageFormatException` loading the 64-bit native. **The same spike rebuilt as x64
+  initialises against app 480 and reads back the persona name and app id from the live Steam
+  client**, so the library is sound and only the bitness is wrong.
+
+  **Recommendation: make the desktop build x64 and use Facepunch.** The only thing standing in
+  the way is one file. `OpenTK.dll` and `FarseerPhysics.dll` are both `MSIL` and run at either
+  width; **`openal32.dll` is the sole native in the engine's `Libraries/Desktop`, and it is
+  x86**. Swapping in a 64-bit OpenAL Soft build and clearing `Prefer32Bit` is the whole job.
+  It is a submodule change, so a merge request — but a binary swap is exactly the small,
+  self-contained shape that rule asks for. Going x64 is also the direction of travel for Steam
+  Deck and Proton, and a 32-bit game has no upside to defend.
+  *One packaging detail found while spiking:* Facepunch ships `steam_api64.dll` under
+  `content/`, which is a packages.config-era convention that `PackageReference` ignores, so the
+  native does **not** reach the output directory on its own. It has to be copied deliberately,
+  the same way the engine copies `openal32.dll`.
+
+  **If x64 is refused**, the remaining option is Steamworks.NET from its non-NuGet
+  distribution, which is believed to ship a .NET Framework assembly alongside both x86 and x64
+  natives. **That is unverified** — it needs a download, which was not done here — and it
+  should be checked before being relied on rather than assumed from the NuGet result.
   Keep the SDK plumbing — init, callback pumping, shutdown, the app id — in one place, because
   R1 and all of Phase 8 build on it.
 - **S7. Window title, icon, and app metadata.** **Done.**
@@ -993,17 +1015,24 @@ Treat a revival as its own project with its own assessment, not as a Phase item.
    1:1 with no resampling. Phase 3 is the cheap version — add effects, not re-art the game.
    What is left of the question is G10: whether the fixed target is the right one for displays
    above 1080p, which is a renderer decision rather than an art one.
-2. **Is .NET Framework 4.8 + OpenTK 1.x acceptable to ship on?** It works, and it is what the
+2. **Should the desktop build be 64-bit?** S6's spike says yes and found it cheap: the game is
+   x86 only because `AnyCPU` defaults `Prefer32Bit` to true, the managed dependencies are all
+   `MSIL`, and `openal32.dll` is the single native standing in the way. It is a submodule
+   change, so it needs the engine author, which is why this is a question rather than a task.
+   **It also decides S6**, because the only Steamworks binding that works on .NET Framework
+   ships an x64 native and nothing else. Worth asking together with the question below, since
+   both are really about the submodule's direction.
+3. **Is .NET Framework 4.8 + OpenTK 1.x acceptable to ship on?** It works, and it is what the
    engine targets. But it is Windows-only in practice, rules out a Linux-native build, and
    complicates Steam Deck. Migrating means engine work, which is out of scope — so this is
    really a question about the submodule's future rather than the game's. It is also the same
    question that gates an Android revival, so it is worth raising with the engine's author
    once rather than twice.
-3. **Target price and scope.** Twenty short levels reads as a £3–5 title. If the target is
+4. **Target price and scope.** Twenty short levels reads as a £3–5 title. If the target is
    higher, L5 stops being optional. Phases 7 and 8 move this: drop-in co-op with friends is a
    headline feature rather than a bullet point, and networked co-op in particular is a large
    enough investment that it should be priced for rather than added for free.
-4. **Which achievements may be earned in co-op?** The score question is settled — see M5, a
+5. **Which achievements may be earned in co-op?** The score question is settled — see M5, a
    co-op run keeps its own high score and never overwrites the single-player one — and
    leaderboards are gone entirely, so achievements are now **the only thing co-op can affect
    that is visible outside the player's own machine**. That makes this the question worth
@@ -1011,7 +1040,7 @@ Treat a revival as its own project with its own assessment, not as a Phase item.
    same for all of them: the Omega unlock is a progression gate rather than a boast, so earning
    it co-operatively is defensible in a way a score-based achievement is not. Needs deciding
    when R1 lands, per achievement rather than as a blanket rule.
-5. **Do the all-time totals count co-op runs?** Kills and shots fired record what the player
+6. **Do the all-time totals count co-op runs?** Kills and shots fired record what the player
    did rather than claim how good they are, so counting them is defensible where counting a
    high score is not. Cheap either way, but decide it rather than inheriting whichever branch
    was easier to write.
