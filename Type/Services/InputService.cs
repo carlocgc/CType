@@ -1,5 +1,6 @@
 ﻿using System;
 using Type.Buttons;
+using Type.Data;
 using Type.Interfaces.Control;
 using Type.Input;
 #if __ANDROID__
@@ -106,14 +107,22 @@ namespace Type.Services
         }
 
         /// <summary>
-        /// Vibrates a controller
+        /// Rumbles the device driving input, scaled by the player's rumble setting
         /// </summary>
-        /// <param name="index"> Index of the controller to vibrate </param>
-        /// <param name="strong"> Whether to use strong vibration </param>
-        /// <param name="duration"> How long the vbration should last </param>
-        public void Vibrate(Int32 index, Boolean strong, TimeSpan duration)
+        /// <param name="strength"> How hard the event should feel, from 0 to 1 </param>
+        /// <param name="duration"> How long it should last </param>
+        /// <remarks>
+        /// The setting is applied here rather than at each call site, so an event asks for the
+        /// weight it deserves and one place decides how much of that the player wants. Reading
+        /// it per call rather than caching means changing the slider takes effect immediately,
+        /// including from the pause menu mid-run.
+        /// </remarks>
+        public void Vibrate(Single strength, TimeSpan duration)
         {
-            _InputProvider.Vibrate(index, strong, duration);
+            Single scaled = strength * (Settings.RumbleIntensity / 100f);
+            if (scaled <= 0) return;
+
+            _InputProvider.Vibrate(scaled, duration);
         }
 
         /// <summary>
