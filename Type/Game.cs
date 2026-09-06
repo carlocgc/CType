@@ -46,6 +46,10 @@ namespace Type
             AdService.Instance.Initialise(Constants.Global.ADMOB_APP_ID);
 #endif // #if __ANDROID__
 
+            // Before anything that might ask the platform a question. Failing is normal - the
+            // client may simply not be running - and is not allowed to stop the game starting.
+            OnlineService.Instance.Initialise();
+
             // Must come first: both of the below read through it.
             StorageService.Instance.Load();
             Settings.Load();
@@ -69,7 +73,7 @@ namespace Type
 
         protected override void DisposeGameElements()
         {
-
+            OnlineService.Instance.Dispose();
         }
     }
 }

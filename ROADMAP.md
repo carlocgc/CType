@@ -465,8 +465,25 @@ Not glamorous, but these are store-page and refund-request items.
   same problem for anything else built on the engine.
   Note that the parent cannot be merged before the engine is: an x64 `Type.Desktop` against an
   x86 `openal32.dll` builds fine and dies on the first sound.
-  *One packaging job still outstanding on the game side:* `steam_api64.dll` has to be copied to
-  the output deliberately — see the note below on `content/`.
+  **The SDK lifecycle is built and verified.** `OnlineService` owns starting, ticking and
+  shutting down the platform's SDK, behind `IOnlineServicesProvider` with a Steam implementation
+  on desktop and a no-op on Android, following the same shape as the storage and display
+  services. Callbacks are pumped from the game loop rather than by a thread Facepunch would
+  start for itself, so they arrive in step with everything else. `steam_api64.dll` is copied to
+  the output by the project, because the package ships it under `content/`, which
+  `PackageReference` ignores — without that the game builds cleanly and fails to start.
+  *Verified both ways, which for this the second matters more than the first:* with Steam
+  running the game initialises against app 480 and reads back the signed-in user's name and the
+  app id; with the native removed it catches `DllNotFoundException`, reports itself unavailable
+  and **the game still starts and plays**. A single player game must never be held hostage by
+  the storefront being absent.
+  **Achievements are deliberately not done yet**, and cannot be until the game has an app id of
+  its own. Steam resolves achievement names against the id's own configured list, so a C-Type
+  name means nothing to Spacewar; the plumbing would be written blind and verified against
+  nothing. `AchievementController` still routes to the engine's Android `CompetitiveManager` and
+  is inert on desktop, exactly as before. When the id arrives it wants the same treatment the
+  SDK lifecycle just got: a provider per platform behind the existing facade, with the Google
+  Play opaque ids and the Steam API names living on their own sides of it.
   **The original recommendation, kept because the reasoning is the record:** The only thing standing in
   the way is one file. `OpenTK.dll` and `FarseerPhysics.dll` are both `MSIL` and run at either
   width; **`openal32.dll` is the sole native in the engine's `Libraries/Desktop`, and it is

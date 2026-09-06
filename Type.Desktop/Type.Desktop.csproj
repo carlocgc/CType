@@ -19,6 +19,9 @@
          ships an x64 native and nothing else. AnyCPU alone would not do it - on .NET Framework
          an AnyCPU executable defaults Prefer32Bit to true and launches as x86. See ROADMAP S6. -->
     <Prefer32Bit>false</Prefer32Bit>
+    <!-- Used by both the package reference and the copy of its native library, so they cannot
+         drift apart silently. -->
+    <FacepunchVersion>2.3.3</FacepunchVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x64</PlatformTarget>
@@ -49,8 +52,19 @@
       project is x64 rather than AnyCPU.
     -->
     <PackageReference Include="Facepunch.Steamworks">
-      <Version>2.3.3</Version>
+      <Version>$(FacepunchVersion)</Version>
     </PackageReference>
+    <!--
+      Steam's native library, copied by hand because the package puts it under content\, a
+      packages.config-era convention that PackageReference ignores - so nothing carries it to
+      the output on its own and the game would build cleanly and fail to start.
+      The path is version pinned, which is why the version is a property used in both places:
+      if they ever drift the copy fails loudly at build time rather than at the player's.
+    -->
+    <Content Include="$(NuGetPackageRoot)facepunch.steamworks\$(FacepunchVersion)\content\steam_api64.dll">
+      <Link>steam_api64.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FarseerPhysics">
@@ -75,6 +89,7 @@
     <Compile Include="Source\Services\DesktopAdService.cs" />
     <Compile Include="Source\Services\DesktopDisplayProvider.cs" />
     <Compile Include="Source\Services\DesktopStorageProvider.cs" />
+    <Compile Include="Source\Services\SteamOnlineServicesProvider.cs" />
     <Compile Include="Source\Controllers\DesktopInputProvider.cs" />
     <Compile Include="Source\Controllers\XInputRumble.cs" />
   </ItemGroup>

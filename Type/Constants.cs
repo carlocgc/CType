@@ -37,6 +37,28 @@ namespace Type
             /// </remarks>
             public const String STORE_NAME = "CType";
 
+            /// <summary>
+            /// Steam application id.
+            /// </summary>
+            /// <remarks>
+            /// **This is Spacewar, Valve's public test application, not C-Type.** It is here so
+            /// the Steam SDK can be started and exercised before the game has an id of its own,
+            /// which needs a paid Steamworks registration. Everything that only needs the client
+            /// to be up — starting, ticking, shutting down, reading the signed-in user — works
+            /// against it.
+            /// <para>
+            /// **Achievements will not.** Steam resolves them against the id's own configured
+            /// list, so a C-Type achievement name means nothing to Spacewar and will simply fail.
+            /// That is expected until this is replaced, and is the reason S6 stops at the SDK
+            /// lifecycle rather than going on to unlock anything.
+            /// </para>
+            /// <para>
+            /// **Must be replaced before release**, and a build that ships against 480 would
+            /// report itself to Steam as a different game entirely.
+            /// </para>
+            /// </remarks>
+            public const UInt32 STEAM_APP_ID = 480;
+
 #if __ANDROID__
             /// <summary> AdMob application id, Android builds only </summary>
             public const String ADMOB_APP_ID = "ca-app-pub-4204969324853965~4341189590";
