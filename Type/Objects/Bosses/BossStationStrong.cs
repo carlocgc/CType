@@ -16,7 +16,7 @@ namespace Type.Objects.Bosses
     /// <summary>
     /// Boss that has destroyable cannons
     /// </summary>
-    public sealed class BossStationStrong : GameObject, IEnemy, IEnemyListener
+    public sealed class BossStationStrong : GameObject, IBoss, IEnemyListener
     {
         /// <summary> List of <see cref="IEnemyListener"/>'s </summary>
         private readonly List<IEnemyListener> _Listeners;

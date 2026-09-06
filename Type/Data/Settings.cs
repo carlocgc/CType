@@ -25,6 +25,8 @@ namespace Type.Data
         private const String EffectVolumeKey = "EFFECT_VOLUME";
         /// <summary> Store key for the display mode </summary>
         private const String DisplayModeKey = "DISPLAY_MODE";
+        /// <summary> Store key for the rumble intensity percentage </summary>
+        private const String RumbleIntensityKey = "RUMBLE_INTENSITY";
 
         /// <summary> Volume percentage used when nothing has been saved </summary>
         private const Int32 DefaultVolume = 100;
@@ -42,6 +44,15 @@ namespace Type.Data
         public static DisplayMode DisplayMode { get; private set; } = DisplayMode.WINDOWED;
 
         /// <summary>
+        /// How hard the controller rumbles, 0 to 100, where 0 turns it off entirely
+        /// </summary>
+        /// <remarks>
+        /// A percentage like the volumes rather than an on and off switch. Rumble is one of the
+        /// first things a player turns down rather than off, and the row costs nothing extra.
+        /// </remarks>
+        public static Int32 RumbleIntensity { get; private set; } = DefaultVolume;
+
+        /// <summary>
         /// Reads the saved settings and applies them. Call once during content loading, before
         /// anything plays.
         /// </summary>
@@ -50,6 +61,7 @@ namespace Type.Data
             MasterVolume = ReadPercentage(MasterVolumeKey);
             MusicVolume = ReadPercentage(MusicVolumeKey);
             EffectVolume = ReadPercentage(EffectVolumeKey);
+            RumbleIntensity = ReadPercentage(RumbleIntensityKey);
             DisplayMode = ReadDisplayMode();
 
             Apply();
@@ -86,6 +98,20 @@ namespace Type.Data
             EffectVolume = Clamp(percentage);
             StorageService.Instance.SetValue(EffectVolumeKey, EffectVolume);
             Apply();
+        }
+
+        /// <summary>
+        /// Sets the rumble intensity and saves it
+        /// </summary>
+        /// <param name="percentage"> The new value, clamped to 0 to 100 </param>
+        /// <remarks>
+        /// Nothing to apply: <see cref="Services.InputService"/> reads this each time it is asked
+        /// to rumble, so there is no copy of it held anywhere to keep in step.
+        /// </remarks>
+        public static void SetRumbleIntensity(Int32 percentage)
+        {
+            RumbleIntensity = Clamp(percentage);
+            StorageService.Instance.SetValue(RumbleIntensityKey, RumbleIntensity);
         }
 
         /// <summary>

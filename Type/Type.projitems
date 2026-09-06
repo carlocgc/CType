@@ -28,6 +28,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Progress.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\ButtonData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\ControlSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Rumble.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Settings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\WaveData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Factories\EnemyFactory.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IGridFocusable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IInputListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Control\IVirtualButton.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Enemies\IBoss.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Enemies\IEnemy.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Enemies\IEnemyFactoryListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Enemies\IEnemyListener.cs" />

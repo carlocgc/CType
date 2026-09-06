@@ -173,8 +173,13 @@ namespace Type.States
         }
 
         /// <inheritdoc />
+        /// <remarks>
+        /// Only reached when the hit got through: a shield that absorbs one returns before
+        /// notifying, and rumbles for itself.
+        /// </remarks>
         public void OnPlayerHit(IPlayer player)
         {
+            Rumble.PlayerHit();
         }
 
         /// <inheritdoc />
@@ -182,7 +187,7 @@ namespace Type.States
         {
             _LifeMeter.LoseLife();
             _GameScene.RemovePowerUps();
-            InputService.Instance.Vibrate(0, true, TimeSpan.FromMilliseconds(200));
+            Rumble.PlayerDeath();
 
             if (_LifeMeter.PlayerLives > 0)
             {
@@ -248,6 +253,10 @@ namespace Type.States
             _EnemiesDestroyedThisLevel++;
             UpdateScore(enemy.Points);
             _PowerupFactory.Create(0, enemy.Position, _CurrentLevel);
+
+            // Only a whole boss, not a station's individual cannons, which is why BossCannon is
+            // deliberately not an IBoss.
+            if (enemy is IBoss) Rumble.BossDestroyed();
         }
 
         /// <inheritdoc />
@@ -626,7 +635,7 @@ namespace Type.States
 
                         _GameScene.ShowNukeEffect();
                         new AudioPlayer("Content/Audio/nuke.wav", false, AudioManager.Category.EFFECT, 1);
-                        InputService.Instance.Vibrate(0, true, TimeSpan.FromMilliseconds(500));
+                        Rumble.Nuke();
 
                         _NukePressed = true;
 

@@ -113,6 +113,11 @@ namespace Type.Objects.Player
             IsActive = _CurrentLevel > 0;
             UpdateSprites();
             new AudioPlayer("Content/Audio/shield_off.wav", false, AudioManager.Category.EFFECT, 1);
+
+            // Here rather than in the ships, which each hold a shield and each return early when
+            // it absorbs a hit. One place covers all four of them.
+            if (IsActive) Rumble.ShieldAbsorbed();
+            else Rumble.ShieldLost();
         }
 
         /// <summary>

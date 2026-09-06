@@ -4,7 +4,6 @@ using OpenTK;
 using OpenTK.Input;
 using System;
 using System.Collections.Generic;
-using Type.Base;
 using Type.Buttons;
 using Type.Data;
 using Type.Input;
@@ -51,8 +50,10 @@ namespace Type.Desktop.Source.Controllers
 
         /// <summary> Index of the gamepad currently driving input, negative when none is connected </summary>
         private Int32 _ActivePad = -1;
-        /// <summary> Call back to end controller vibration </summary>
-        private TimedCallback _VibrationCallback;
+        /// <summary> How hard the motors are being driven, zero when they are off </summary>
+        private Single _VibrationStrength;
+        /// <summary> Wall clock time the current rumble should stop at </summary>
+        private DateTime _VibrationUntil;
         /// <summary> Whether the most recent real input came from a gamepad rather than the keyboard </summary>
         private Boolean _LastInputWasGamepad;
         /// <summary>
@@ -192,6 +193,7 @@ namespace Type.Desktop.Source.Controllers
             GamePadState pad = GetActivePad();
 
             TrackActiveDevice(keyboard, pad);
+            UpdateVibration();
 
             if (Capturing)
             {
@@ -369,6 +371,11 @@ namespace Type.Desktop.Source.Controllers
             {
                 GamePadState current = GamePad.GetState(_ActivePad);
                 if (current.IsConnected) return current;
+
+                // Ordered so the motors are silenced while the pad index still names them. The
+                // pad is gone, but a controller that reappears must not come back mid-rumble.
+                StopVibration();
+                _VibrationStrength = 0;
 
                 _ActivePad = -1;
                 _Tracker.Reset();
@@ -576,23 +583,45 @@ namespace Type.Desktop.Source.Controllers
         /// <summary> Virtual analog stick, unused on desktop </summary>
         public VirtualAnalogStick VirtualAnalogStick { get; set; }
 
-        /// <summary>
-        /// Vibrates a controller
-        /// </summary>
-        /// <param name="index"> Index of the controller to vibrate </param>
-        /// <param name="strong"> Whether to use strong vibration </param>
-        /// <param name="duration"> How long the vbration should last </param>
-        public void Vibrate(Int32 index, Boolean strong, TimeSpan duration)
+        /// <inheritdoc />
+        public void Vibrate(Single strength, TimeSpan duration)
         {
-            Single left = strong ? 1f : 0.5f;
-            Single right = strong ? 1f : 0.2f;
+            if (_ActivePad < 0 || strength <= 0 || duration <= TimeSpan.Zero) return;
 
-            // Previously this returned early when SetVibration succeeded, so the callback that
-            // stops the motors was only ever scheduled when starting them had failed.
-            if (!GamePad.SetVibration(index, left, right)) return;
+            DateTime until = DateTime.UtcNow + duration;
 
-            _VibrationCallback?.CancelAndComplete();
-            _VibrationCallback = new TimedCallback(duration, () => GamePad.SetVibration(index, 0, 0));
+            if (strength > _VibrationStrength) _VibrationStrength = strength;
+            if (until > _VibrationUntil) _VibrationUntil = until;
+
+            GamePad.SetVibration(_ActivePad, _VibrationStrength, _VibrationStrength);
+        }
+
+        /// <summary>
+        /// Stops the motors once the current rumble has run its course
+        /// </summary>
+        /// <remarks>
+        /// Timed against the wall clock rather than <c>TimedCallback</c>, which runs on game
+        /// time. Pausing sets that clock's multiplier to zero, so a rumble started just before a
+        /// pause would have been left running until the game was unpaused — and quitting from
+        /// the pause menu would have left the motors on with nothing left to stop them.
+        /// </remarks>
+        private void UpdateVibration()
+        {
+            if (_VibrationStrength <= 0) return;
+            if (DateTime.UtcNow < _VibrationUntil) return;
+
+            _VibrationStrength = 0;
+            StopVibration();
+        }
+
+        /// <summary>
+        /// Silences the motors of whichever pad is being driven
+        /// </summary>
+        private void StopVibration()
+        {
+            if (_ActivePad < 0) return;
+
+            GamePad.SetVibration(_ActivePad, 0, 0);
         }
 
         /// <summary>
@@ -638,8 +667,12 @@ namespace Type.Desktop.Source.Controllers
         {
             UpdateManager.Instance.RemoveUpdatable(this);
             EndCapture();
-            _VibrationCallback?.CancelAndComplete();
-            _VibrationCallback?.Dispose();
+
+            // Nothing will tick this again, so the motors have to be silenced here or they run
+            // until the pad is unplugged.
+            _VibrationStrength = 0;
+            StopVibration();
+
             _Listeners.Clear();
         }
 

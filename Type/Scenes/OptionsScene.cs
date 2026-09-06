@@ -110,12 +110,16 @@ namespace Type.Scenes
                     CycleDisplayMode));
             }
 
+            Rows.Add(new OptionRow("RUMBLE", new Vector2(-700, -250),
+                () => Settings.RumbleIntensity.ToString(),
+                step => Settings.SetRumbleIntensity(Settings.RumbleIntensity + step * VolumeStep)));
+
             // A screen of its own rather than a row, because a binding is a list of inputs per
             // device and there is one per action. A platform with nothing to rebind says so by
             // having no bindings at all, and does not get the entry.
             if (onControls != null && InputService.Instance.Bindings != null)
             {
-                ControlsItem = new MenuTextItem("CONTROLS", new Vector2(-700, -250), onControls, false, 2);
+                ControlsItem = new MenuTextItem("CONTROLS", new Vector2(-700, -350), onControls, false, 2);
             }
 
             _BackPrompt = new InputPrompt(ButtonData.Type.CANCEL, "BACK", new Vector2(-880, -480));

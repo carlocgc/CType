@@ -297,11 +297,50 @@ Recorded now, briefly, from the code as it stands.
   also re-reads when the mapping's revision changes, so a prompt does not keep naming a key the
   player has just rebound. Text in the existing bitmap font rather than glyph sprites, which
   would mean new art registered in both platform projects.
-- **I8. Rumble.** `InputService.Vibrate` exists and is already wired to death and nuke. Add
-  hit, shield break, and boss impacts, plus an intensity slider in options.
+- **I8. Rumble.** **Done.** Six named events in `Data/Rumble.cs` rather than durations at the
+  call sites, so their weights can be compared with each other in one place: player death and
+  nuke as they were, plus a hit that gets through, a shield absorbing one, a shield going down,
+  and a boss destroyed. An intensity row on the options screen scales all of them and turns
+  them off at zero, applied in `InputService` so one place decides how much of the weight an
+  event asks for the player actually wants, and read per call so the slider takes effect
+  immediately — including from the pause menu mid-run.
+  **Two bugs in the existing implementation, both found by reading it rather than by feeling
+  it:**
+  - `Vibrate` started the motors and *then* called `CancelAndComplete` on the previous timer,
+    which invokes that timer's callback — and its callback sets the motors to zero. Any rumble
+    landing inside another one therefore silenced itself instantly. Overlapping rumbles now take
+    the stronger and the longer of the two.
+  - The stop was scheduled on a `TimedCallback`, which runs on game time. Pausing sets that
+    clock's multiplier to zero, so a rumble started just before a pause ran until the game was
+    unpaused, and quitting from the pause menu left the motors on with nothing left to stop
+    them. Timed against the wall clock now, and stopped on disconnect and on disposal too.
+
+  Two pieces of the old signature went with them. The controller index was a parameter that
+  every caller passed as zero, so a player on any other pad slot got nothing; the provider
+  already knows which pad is driving and now uses it. The strong-or-weak flag was set to strong
+  by every caller, so the weak branch had never once run; it is a strength from 0 to 1 instead.
+  `IBoss` is new: a marker with no members, because the only thing saying which enemies were
+  bosses was the folder they sat in. `BossCannon` is deliberately not one — it is a station's
+  gun, and marking it would have fired a boss kill for each gun. E1 replaces this with a field
+  in the enemy data.
+  *Verified: the intensity setting clamps at both ends, persists, and reloads; every one of the
+  six events reaches the provider and returns; the options row is on screen.*
+  **None of it has been felt.** There is no gamepad on this machine, so the six weights were
+  chosen by reasoning about which event should outweigh which and are a starting point rather
+  than a tuned set. Two of them are worth a second look by someone holding a pad: a shield
+  absorbing hits rumbles per hit, which under sustained fire will read as a continuous light
+  buzz, and whether that is right feedback or an annoyance is a question for the hand, not the
+  head.
 
 **Gate:** complete a full 20-level run using only a gamepad, then again using only a
 keyboard, without touching the mouse.
+**Every item in this phase is done; the gate is not met, and cannot be met from here.** It asks
+for two full playthroughs, and nothing in Phase 1 has been played — the work was verified by
+building, by driving the model directly, and by looking at the screen. The gamepad half is the
+weaker of the two: no pad has ever touched this code, so hot-plug, the stick, the triggers,
+every pad binding and all six rumble events are written and unfelt. Every defect found in
+Phase 1 so far was found by running or playing rather than by reading, which is the argument
+for the gate rather than against it.
 
 ### Phase 2 — Desktop shell
 
@@ -342,13 +381,12 @@ Not glamorous, but these are store-page and refund-request items.
   so the world is still exactly 1920×1080 whatever the display. Bars rather than more visible
   play area is the right default for a game balanced around a fixed field of view, but if
   ultrawide play area is ever wanted, that is a content change, not a renderer one.
-- **S3. An options menu.** *One row still to come.* Reached from the main menu, navigable with
-  the focus cursor, with master, music and effect volume adjustable in ten point steps and
-  saved through `StorageService`. Settings load and apply during content loading, before
-  anything plays. Display mode joined it with S1 and S2, and controls with I6 — as an entry
-  opening a screen of its own rather than a row, because a binding is a list of inputs per
-  device and there is one per action.
-  **Still to add:** rumble intensity, gated on I8. That one is a row.
+- **S3. An options menu.** **Done.** Reached from the main menu, navigable with the focus
+  cursor, with master, music and effect volume and rumble intensity adjustable in ten point
+  steps and saved through `StorageService`. Settings load and apply during content loading,
+  before anything plays. Display mode joined it with S1 and S2, rumble with I8, and controls
+  with I6 — as an entry opening a screen of its own rather than a row, because a binding is a
+  list of inputs per device and there is one per action.
   This unblocked **I6**, which is why it was brought forward: the rebinding editor had
   somewhere to live, and `Settings` gave it a load, clamp and save pattern to follow.
 - **S4. A real pause menu.** **Done.** Pause froze time and showed a powerup help overlay

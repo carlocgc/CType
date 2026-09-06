@@ -74,12 +74,20 @@ namespace Type.Interfaces.Control
         Action OnInputDeviceLost { get; set; }
 
         /// <summary>
-        /// Vibrates a controller
+        /// Rumbles the device driving input, if it can rumble
         /// </summary>
-        /// <param name="index"> Index of the controller to vibrate </param>
-        /// <param name="strong"> Whether to use strong vibration </param>
-        /// <param name="duration"> How long the vbration should last </param>
-        void Vibrate(Int32 index, Boolean strong, TimeSpan duration);
+        /// <param name="strength"> How hard, from 0 to 1 </param>
+        /// <param name="duration"> How long it should last </param>
+        /// <remarks>
+        /// The controller index is not a parameter: the provider already knows which pad is
+        /// driving the game, and every caller passed zero regardless, so a second pad rumbled
+        /// nothing. Strength replaces a strong-or-weak flag that every caller set to strong.
+        /// <para>
+        /// Overlapping calls take the stronger and the longer of the two rather than replacing,
+        /// so a light rumble landing during a heavy one cannot cut it short.
+        /// </para>
+        /// </remarks>
+        void Vibrate(Single strength, TimeSpan duration);
 
         /// <summary>
         /// Add a listener
