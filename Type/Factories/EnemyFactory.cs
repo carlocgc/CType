@@ -25,7 +25,14 @@ namespace Type.Factories
         /// <summary> Time that has passed since the last spawn </summary>
         private TimeSpan _TimeSinceLastSpawn;
         /// <summary> List of the levels wave data objects </summary>
-        private List<WaveData> _LevelData;
+        /// <remarks>
+        /// Empty rather than null until <see cref="Start"/> replaces it. The factory is built
+        /// when the level state is entered but only started when the level intro finishes two
+        /// seconds later, so between those two moments this field was null — and disposing in
+        /// that window threw, because <see cref="Dispose"/> clears it unconditionally. That is
+        /// ROADMAP item S10: quitting from a paused game during the level intro.
+        /// </remarks>
+        private List<WaveData> _LevelData = new List<WaveData>();
         /// <summary> The data for the current wave </summary>
         private WaveData _CurrentWave;
         /// <summary> Whether enemies are being created </summary>
