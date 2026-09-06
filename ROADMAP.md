@@ -689,6 +689,12 @@ Depends on D4 (parser fix) and E1–E5 (having things worth placing).
 ### Phase 6 — Steam release
 
 - **R1. Steamworks integration**: achievements, leaderboards, Cloud saves, rich presence.
+  Builds on the SDK plumbing S6 sets up, and Phase 8 builds on this in turn, so keep init,
+  callback pumping and shutdown in one place rather than one per feature.
+  **A co-op run must never reach the leaderboard** — see M5. Put that guard inside
+  `LeaderboardController` rather than at the call sites, so there is one place it can be got
+  wrong. It is worth building the guard even before co-op exists, because a leaderboard that
+  has already accepted submissions is far harder to add a rule to than one that never did.
 - **R2. Store assets**: capsule art, trailer, screenshots, description. Note the existing
   [gameplay trailer](https://www.youtube.com/watch?v=kixFrAAmXPs) is from the 2019 build and
   will misrepresent the release.
@@ -735,9 +741,29 @@ invalidates it, and M1 is a rework of code that is three days old.
   before starting. `LifeMeter` is built for one; ship select is one cursor over four cards.
 - **M5. The rules, which are design questions rather than engineering ones.** Shared lives or
   one pool each. Whether a dead player waits for the level or revives on a timer. Whether score
-  is shared or attributed. **Whether a co-op run may set the high score or touch the
-  leaderboard at all** — it almost certainly should not, and `Progress`, `GameStats` and R1's
-  leaderboard need to know which mode produced a run.
+  is shared or attributed.
+  **Decided (2026-09-06): a co-op run never touches the high score or the leaderboard.**
+  Two ships put out twice the firepower against waves authored for one, so a co-op score is not
+  comparable with a single-player one and a shared board would be worthless the day it opened.
+  This is a constraint on earlier work, not just on this phase:
+  - **The run needs to know its own mode**, and the mode has to reach every place a score is
+    recorded. `GameStats` and `Progress` are singletons written to from the play state, and
+    `HIGH_SCORE` and the `ALLTIME_*` totals are written without any notion of how the run was
+    played. The mode must be set when the run starts and read at every write, rather than
+    checked at the one site that looks obvious.
+  - **R1 must not submit a co-op run**, and the guard belongs behind `LeaderboardController`
+    where there is a single place to put it, not at the call sites.
+  - **Achievements need the same decision**, and it does not have to be the same answer. Some
+    are reasonable to earn co-operatively and some are not; the Omega unlock in particular is a
+    progression gate rather than a boast. Settle it per achievement when R1 lands rather than
+    blanket-refusing them here.
+  - **The all-time totals are a separate question from the high score.** Kills and shots fired
+    are a record of what the player did rather than a claim about skill, so counting them in
+    co-op is defensible. Decide it deliberately rather than by whichever branch is easier.
+
+  Worth stating plainly: the cheap version of this is one boolean threaded through the score
+  path, and it is much cheaper to thread it while the scoring code is being touched for co-op
+  anyway than to retrofit it after R1 has shipped a leaderboard that trusted every run.
 - **M6. Balance for two.** Twice the firepower against waves authored for one ship. This is why
   the sequencing note below asks for M1 and M2 before Phase 5 rather than after it.
 
@@ -908,4 +934,15 @@ Treat a revival as its own project with its own assessment, not as a Phase item.
    question that gates an Android revival, so it is worth raising with the engine's author
    once rather than twice.
 3. **Target price and scope.** Twenty short levels reads as a £3–5 title. If the target is
-   higher, L5 stops being optional.
+   higher, L5 stops being optional. Phases 7 and 8 move this: drop-in co-op with friends is a
+   headline feature rather than a bullet point, and networked co-op in particular is a large
+   enough investment that it should be priced for rather than added for free.
+4. **Which achievements may be earned in co-op?** The leaderboard question is settled — see M5,
+   a co-op run never touches it — but achievements are not, and the answer is probably not the
+   same for all of them. The Omega unlock is a progression gate rather than a boast, so earning
+   it co-operatively is defensible in a way that a score-based achievement is not. Needs
+   deciding when R1 lands, per achievement rather than as a blanket rule.
+5. **Do the all-time totals count co-op runs?** Kills and shots fired record what the player
+   did rather than claim how good they are, so counting them is defensible where counting a
+   high score is not. Cheap either way, but decide it rather than inheriting whichever branch
+   was easier to write.
