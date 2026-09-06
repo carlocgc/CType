@@ -429,8 +429,9 @@ Not glamorous, but these are store-page and refund-request items.
   this machine for that reason, not through any failure.
   See **S11** for where that file lives, and why surviving a restart is not the same as
   surviving a reinstall.
-- **S6. Replace Google Play achievements and leaderboards** with Steamworks equivalents,
-  behind the existing `AchievementController` / `LeaderboardController` facades.
+- **S6. Replace Google Play achievements** with Steamworks equivalents, behind the existing
+  `AchievementController` facade. **Achievements only — leaderboards were dropped, see R1.**
+  `LeaderboardController` keeps its Android implementation and gains no desktop one.
   **The Steamworks dependency is approved (2026-09-06).** Which binding is still open, and the
   choice matters more than it looks, because Phase 8 needs the same SDK for matchmaking and
   networking — so this decision is made once for both:
@@ -608,9 +609,12 @@ Not glamorous, but these are store-page and refund-request items.
   Worth recording while here, since it is the same subsystem: the file is obfuscated with a
   single-byte XOR against `EngineConstants.ENCRYPTION_KEY`, carries no checksum, and on
   desktop nothing corroborates it, because `CompetitiveManager` only loads under
-  `__ANDROID__`. Any value in it can be edited in a couple of lines. That is acceptable for a
-  single-player ship unlock, but `HIGH_SCORE` and the `ALLTIME_*` totals feed
-  `LeaderboardController` and become public under R1, which is where it starts to matter.
+  `__ANDROID__`. Any value in it can be edited in a couple of lines.
+  **This stopped mattering when leaderboards were dropped (see R1), and in fact helped decide
+  it.** The concern was only ever that `HIGH_SCORE` and the `ALLTIME_*` totals would become
+  public and comparable, so an editable save meant an unenforceable board. With nothing
+  submitted anywhere, an editable save affects only the player who edits it — which is the
+  definition of their own business. No checksum, no hardening, nothing to do here.
 
 ### Phase 3 — Graphics
 
@@ -683,18 +687,32 @@ Depends on D4 (parser fix) and E1–E5 (having things worth placing).
   deliberate difficulty curve — introduce one new enemy or mechanic at a time, with pacing
   that breathes between waves. The levels currently have no set pieces and no rhythm.
 - **L5. Extend length and variety.** Twenty levels is short for a paid desktop release.
-  Consider more levels, an endless/survival mode (leaderboard-friendly), and a boss rush.
+  Consider more levels, an endless/survival mode, and a boss rush. Endless was previously
+  argued for as leaderboard-friendly; with no leaderboards it has to earn its place on being
+  fun to replay, which is a fair test for it to pass on its own.
   Difficulty settings belong here too.
 
 ### Phase 6 — Steam release
 
-- **R1. Steamworks integration**: achievements, leaderboards, Cloud saves, rich presence.
+- **R1. Steamworks integration**: achievements, Cloud saves, rich presence.
+  **No leaderboards. Decided 2026-09-06, and this is a deliberate cut rather than an omission.**
+  A single-player score in a game with no server is whatever the client says it is. Steam
+  accepts the submission as given, there is nothing to validate it against, and this game's own
+  save is a single-byte XOR with a constant — so the number is editable in a couple of minutes
+  by anyone who wants to. A board that cannot reject a fabricated entry stops being a ranking
+  and becomes a list of who cared enough to cheat, which is worse than no board because it also
+  devalues the honest entries next to it.
+  The only form that survives that objection is a **friends-only** board, where the population
+  is small, self-selected and socially accountable. That is worth remembering if the question
+  ever comes back, but it is not worth building now — it is the same submission plumbing for a
+  fraction of the reach.
+  *What this saves:* the submission path, the co-op board split, and the mode plumbing that
+  existed to feed it. See M5, which shrinks to a local-only question.
   Builds on the SDK plumbing S6 sets up, and Phase 8 builds on this in turn, so keep init,
   callback pumping and shutdown in one place rather than one per feature.
-  **A co-op run must never reach the leaderboard** — see M5. Put that guard inside
-  `LeaderboardController` rather than at the call sites, so there is one place it can be got
-  wrong. It is worth building the guard even before co-op exists, because a leaderboard that
-  has already accepted submissions is far harder to add a rule to than one that never did.
+  `LeaderboardController` is not part of this. It stays as it is — an Android facade over the
+  engine's `CompetitiveManager`, which only loads under `__ANDROID__` and is therefore already
+  inert on desktop. Nothing needs deleting; it simply gains no Steam implementation.
 - **R2. Store assets**: capsule art, trailer, screenshots, description. Note the existing
   [gameplay trailer](https://www.youtube.com/watch?v=kixFrAAmXPs) is from the 2019 build and
   will misrepresent the release.
@@ -742,17 +760,24 @@ invalidates it, and M1 is a rework of code that is three days old.
 - **M5. The rules, which are design questions rather than engineering ones.** Shared lives or
   one pool each. Whether a dead player waits for the level or revives on a timer. Whether score
   is shared or attributed.
-  **Decided (2026-09-06): a co-op run never touches the high score or the leaderboard.**
-  Two ships put out twice the firepower against waves authored for one, so a co-op score is not
-  comparable with a single-player one and a shared board would be worthless the day it opened.
-  This is a constraint on earlier work, not just on this phase:
-  - **The run needs to know its own mode**, and the mode has to reach every place a score is
-    recorded. `GameStats` and `Progress` are singletons written to from the play state, and
-    `HIGH_SCORE` and the `ALLTIME_*` totals are written without any notion of how the run was
-    played. The mode must be set when the run starts and read at every write, rather than
-    checked at the one site that looks obvious.
-  - **R1 must not submit a co-op run**, and the guard belongs behind `LeaderboardController`
-    where there is a single place to put it, not at the call sites.
+  **Decided (2026-09-06): a co-op run never overwrites the single-player high score.**
+  Two ships put out twice the firepower against waves authored for one, so the two numbers are
+  not comparable and one list of them would be meaningless.
+  **This is now a local question only.** It was a much larger item when there were Steam
+  leaderboards to keep honest; dropping those (see R1) took the submission path, the co-op board
+  and most of the mode plumbing with them. What is left is the score the main menu shows:
+  - **The run still needs to know its own mode.** `GameStats` and `Progress` are singletons
+    written to from the play state, and `HIGH_SCORE` is written with no notion of how the run
+    was played. A flag set when the run starts and read where the high score is written.
+  - **A second key alongside `HIGH_SCORE`** in the save, so each mode keeps its own best and the
+    menu can show whichever is relevant.
+  - **Drop-in makes the mode a property of the run, not of the moment.** A run that starts solo
+    and picks up a friend for the last five levels is neither. **Rule: any run that was ever
+    co-op is a co-op run, and it never reverts** — the flag is set when a second player joins
+    and stays set if they leave. Deciding by player count at the start would be gameable in the
+    most obvious way available: start alone, invite immediately. This matters less without a
+    public board to protect, but it is the same one-line rule either way and an inconsistent
+    local best is still a bug.
   - **Achievements need the same decision**, and it does not have to be the same answer. Some
     are reasonable to earn co-operatively and some are not; the Omega unlock in particular is a
     progression gate rather than a boast. Settle it per achievement when R1 lands rather than
@@ -760,10 +785,6 @@ invalidates it, and M1 is a rework of code that is three days old.
   - **The all-time totals are a separate question from the high score.** Kills and shots fired
     are a record of what the player did rather than a claim about skill, so counting them in
     co-op is defensible. Decide it deliberately rather than by whichever branch is easier.
-
-  Worth stating plainly: the cheap version of this is one boolean threaded through the score
-  path, and it is much cheaper to thread it while the scoring code is being touched for co-op
-  anyway than to retrofit it after R1 has shipped a leaderboard that trusted every run.
 - **M6. Balance for two.** Twice the firepower against waves authored for one ship. This is why
   the sequencing note below asks for M1 and M2 before Phase 5 rather than after it.
 
@@ -937,11 +958,14 @@ Treat a revival as its own project with its own assessment, not as a Phase item.
    higher, L5 stops being optional. Phases 7 and 8 move this: drop-in co-op with friends is a
    headline feature rather than a bullet point, and networked co-op in particular is a large
    enough investment that it should be priced for rather than added for free.
-4. **Which achievements may be earned in co-op?** The leaderboard question is settled — see M5,
-   a co-op run never touches it — but achievements are not, and the answer is probably not the
-   same for all of them. The Omega unlock is a progression gate rather than a boast, so earning
-   it co-operatively is defensible in a way that a score-based achievement is not. Needs
-   deciding when R1 lands, per achievement rather than as a blanket rule.
+4. **Which achievements may be earned in co-op?** The score question is settled — see M5, a
+   co-op run keeps its own high score and never overwrites the single-player one — and
+   leaderboards are gone entirely, so achievements are now **the only thing co-op can affect
+   that is visible outside the player's own machine**. That makes this the question worth
+   spending thought on rather than a footnote to the score one. The answer is probably not the
+   same for all of them: the Omega unlock is a progression gate rather than a boast, so earning
+   it co-operatively is defensible in a way a score-based achievement is not. Needs deciding
+   when R1 lands, per achievement rather than as a blanket rule.
 5. **Do the all-time totals count co-op runs?** Kills and shots fired record what the player
    did rather than claim how good they are, so counting them is defensible where counting a
    high score is not. Cheap either way, but decide it rather than inheriting whichever branch
