@@ -15,9 +15,16 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
+    <!-- The desktop build is 64-bit: the only Steamworks binding that works on .NET Framework
+         ships an x64 native and nothing else. AnyCPU alone would not do it - on .NET Framework
+         an AnyCPU executable defaults Prefer32Bit to true and launches as x86. See ROADMAP S6. -->
+    <Prefer32Bit>false</Prefer32Bit>
+    <!-- Used by both the package reference and the copy of its native library, so they cannot
+         drift apart silently. -->
+    <FacepunchVersion>2.3.3</FacepunchVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -28,7 +35,7 @@
     <CodeAnalysisRuleSet>Type.Desktop.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -37,6 +44,28 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>Type.Desktop.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <ItemGroup>
+    <!--
+      The Steamworks binding. Facepunch rather than Steamworks.NET because every published
+      Steamworks.NET package is netstandard2.1, which .NET Framework 4.8 cannot consume; see
+      ROADMAP S6 for the spike. It ships an x64 native and nothing else, which is why this
+      project is x64 rather than AnyCPU.
+    -->
+    <PackageReference Include="Facepunch.Steamworks">
+      <Version>$(FacepunchVersion)</Version>
+    </PackageReference>
+    <!--
+      Steam's native library, copied by hand because the package puts it under content\, a
+      packages.config-era convention that PackageReference ignores - so nothing carries it to
+      the output on its own and the game would build cleanly and fail to start.
+      The path is version pinned, which is why the version is a property used in both places:
+      if they ever drift the copy fails loudly at build time rather than at the player's.
+    -->
+    <Content Include="$(NuGetPackageRoot)facepunch.steamworks\$(FacepunchVersion)\content\steam_api64.dll">
+      <Link>steam_api64.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <ItemGroup>
     <Reference Include="FarseerPhysics">
       <HintPath>..\SupportingFiles\Libraries\Desktop\FarseerPhysics.dll</HintPath>
@@ -60,6 +89,7 @@
     <Compile Include="Source\Services\DesktopAdService.cs" />
     <Compile Include="Source\Services\DesktopDisplayProvider.cs" />
     <Compile Include="Source\Services\DesktopStorageProvider.cs" />
+    <Compile Include="Source\Services\SteamOnlineServicesProvider.cs" />
     <Compile Include="Source\Controllers\DesktopInputProvider.cs" />
     <Compile Include="Source\Controllers\XInputRumble.cs" />
   </ItemGroup>
