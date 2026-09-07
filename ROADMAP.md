@@ -946,9 +946,15 @@ Your second stated priority. Ordered cheapest-impact-first.
   past the last frame therefore indexes off the end of the texture array, and
   `EndBehaviour.STOP` never gets a say because the setter throws before `IsEndReached` is
   consulted. **Every existing user survives only by disposing on the last frame**, which
-  unregisters them before the next step; a pooled sprite is reused instead, so it has to stop
-  itself. Worked around game-side by stopping the blast in its own frame action. The one line
-  engine fix is worth a merge request and has not been raised yet.
+  unregisters them before the next step; a pooled sprite is reused instead, so it reached the
+  exception on its first replay. **Fixed upstream as AmosEngine `!31`, merged, and the pointer
+  moved with it.** The game-side stop that worked around it is kept, but it is now a choice
+  rather than a requirement.
+  **The obvious one line fix would have been wrong**, which is worth recording because it looks
+  right: correcting the clamp to `Math.Max(_CurrentFrame, 0)` stops the crash and breaks end
+  detection, because `IsEndReached` is looking for exactly the one-past-the-end value the clamp
+  would hide. Animations would sit on their last frame forever and re-fire its actions every
+  tick. `!31` guards the texture lookup and leaves the sentinel alone instead.
   *Verified by capture, not by eye: the death event now reports **x=477**, on screen, where it
   reported 1262 before; blasts land across the hull; and the flash is measurable rather than
   asserted — mean frame brightness jumps from ~16 to **51.9**, a 3.2x lift, on the frame it

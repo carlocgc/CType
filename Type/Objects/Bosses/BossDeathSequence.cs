@@ -102,15 +102,10 @@ namespace Type.Objects.Bosses
                 };
 
                 // Added once and left in place: a repeat count of zero never runs out, so this
-                // runs at the end of every replay rather than only the first.
-                //
-                // Stopping it here is not tidiness, it is required. AnimatedSprite.CurrentFrame
-                // clamps with Math.Max(value, 0) where it means Math.Max(_CurrentFrame, 0), which
-                // throws away the upper clamp on the line above it, so stepping past the last
-                // frame indexes off the end of the texture array. EndBehaviour.STOP never gets a
-                // say, because the setter throws before IsEndReached is consulted. Every other
-                // user of this sheet survives by disposing on frame 8; a pooled sprite is reused
-                // instead, so it has to stop itself. See G6 in ROADMAP.md.
+                // runs at the end of every replay rather than only the first. It stops as well as
+                // hides: EndBehaviour.STOP would now do that too, since AmosEngine !31, but a
+                // pooled sprite that is replayed rather than disposed is clearer left in a state
+                // it put itself in. See G6 in ROADMAP.md.
                 blast.AddFrameAction(anim =>
                 {
                     anim.Playing = false;
