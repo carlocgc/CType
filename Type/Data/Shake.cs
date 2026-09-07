@@ -28,6 +28,15 @@ namespace Type.Data
             ScreenShakeController.Instance.Shake(26f, TimeSpan.FromMilliseconds(450));
         }
 
+        /// <summary>
+        /// One of the blasts running across a dying boss. Light, because a couple of dozen of
+        /// them land in a row and the big one still has to feel like the end of it.
+        /// </summary>
+        public static void BossDeathBlast()
+        {
+            ScreenShakeController.Instance.Shake(9f, TimeSpan.FromMilliseconds(160));
+        }
+
         /// <summary> A boss breaking up, the biggest single event in a level </summary>
         public static void BossDestroyed()
         {
