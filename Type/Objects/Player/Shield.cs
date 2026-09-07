@@ -2,7 +2,6 @@
 using OpenTK;
 using System;
 using System.Collections.Generic;
-using AmosShared.Audio;
 using AmosShared.Graphics;
 using Type.Base;
 using Type.Data;
@@ -53,7 +52,7 @@ namespace Type.Objects.Player
             IsActive = _CurrentLevel > 0;
             GameStats.Instance.ShieldsCreated++;
             UpdateSprites();
-            new AudioPlayer("Content/Audio/shield_on.wav", false, AudioManager.Category.EFFECT, 1);
+            Sounds.ShieldOn();
         }
 
         /// <summary>
@@ -112,7 +111,7 @@ namespace Type.Objects.Player
 
             IsActive = _CurrentLevel > 0;
             UpdateSprites();
-            new AudioPlayer("Content/Audio/shield_off.wav", false, AudioManager.Category.EFFECT, 1);
+            Sounds.ShieldOff();
 
             // Here rather than in the ships, which each hold a shield and each return early when
             // it absorbs a hit. One place covers all four of them.

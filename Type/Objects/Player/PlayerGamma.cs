@@ -1,5 +1,4 @@
-﻿using AmosShared.Audio;
-using AmosShared.Graphics;
+﻿using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
 using OpenTK;
 using System;
@@ -211,7 +210,7 @@ namespace Type.Objects.Player
             new Laser(Position + new Vector2(_Sprite.Width / 2, 0), new Vector2(1, 0), 1000, 0);
             _IsWeaponLocked = true;
             GameStats.Instance.BulletsFired++;
-            new AudioPlayer("Content/Audio/laser1.wav", false, AudioManager.Category.EFFECT, 0.5f);
+            Sounds.PlayerShot();
         }
 
         /// <inheritdoc />
@@ -226,7 +225,7 @@ namespace Type.Objects.Player
             if (_Invincible || Constants.Global.INVINCIBLE) return;
 
             HitPoints -= damage;
-            new AudioPlayer("Content/Audio/hurt3.wav", false, AudioManager.Category.EFFECT, 1);
+            Sounds.Hit();
 
             foreach (IPlayerListener listener in _Listeners)
             {
@@ -297,7 +296,7 @@ namespace Type.Objects.Player
                 {
                     listener.OnPointPickup(points);
                 }
-                new AudioPlayer("Content/Audio/points_instead.wav", false, AudioManager.Category.EFFECT, 1);
+                Sounds.PointsInstead();
                 return;
             }
 
@@ -313,7 +312,7 @@ namespace Type.Objects.Player
                 {
                     listener.OnPointPickup(points);
                 }
-                new AudioPlayer("Content/Audio/points_instead.wav", false, AudioManager.Category.EFFECT, 1);
+                Sounds.PointsInstead();
                 return;
             }
 
@@ -342,7 +341,7 @@ namespace Type.Objects.Player
                 listener.OnPointPickup(value);
             }
 
-            new AudioPlayer("Content/Audio/points_pickup.wav", false, AudioManager.Category.EFFECT, 1);
+            Sounds.PointsPickup();
         }
 
         private void AddNuke(Int32 points)

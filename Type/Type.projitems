@@ -14,6 +14,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Buttons\VirtualButton.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\AchievementController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controllers\AudioController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\CollisionController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DisplayService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\InputService.cs" />
@@ -36,6 +37,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\HitStop.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Rumble.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Shake.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Sounds.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Settings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\WaveData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Factories\EnemyFactory.cs" />
