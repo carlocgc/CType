@@ -493,11 +493,20 @@ Not glamorous, but these are store-page and refund-request items.
   **Expected to go away with an app id of our own**, which will not declare Steam Input support
   unless we ask it to — but that is an inference from how the setting works, so it is on the
   list to **re-verify the moment the id exists** rather than assumed.
-  **Until then `CTYPE_NO_STEAM` skips the init**, so a pad can be tested without turning off a
-  Steam client setting that would affect every other game on the machine. Set it and the
-  provider reports itself unavailable, which is the path Steam not running already takes.
   *Rumble is probably suppressed by the same hook*, being `XInputSetState` from inside the same
   process, but that has not been confirmed by feel.
+
+  **Decided (2026-09-07): Steam is off in code until the game has an id of its own.**
+  `Constants.Global.STEAM_APP_ID` is `0`, and zero means the provider reports itself unavailable
+  and never starts the SDK — the same state Steam not being installed produces, which everything
+  downstream already handles. The alternative was keeping 480 and adding a switch to turn it off,
+  which gets the polarity wrong: the borrowed id costs a working gamepad every day, and buys
+  nothing that is not already verified and written down here. **Putting the real id in that
+  constant turns everything back on; there is no second switch to remember.**
+  What that gives up until then, and it is deliberately little: the SDK lifecycle is proven and
+  recorded above, and achievements were already blocked on the id regardless. What comes back
+  with the id is a re-verification of the lifecycle against it — worth doing once, and cheaper
+  than losing the pad in every play test between now and then.
   **Achievements are deliberately not done yet**, and cannot be until the game has an app id of
   its own. Steam resolves achievement names against the id's own configured list, so a C-Type
   name means nothing to Spacewar; the plumbing would be written blind and verified against

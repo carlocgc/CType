@@ -14,16 +14,6 @@ namespace Type.Desktop.Source.Services
     /// </remarks>
     public sealed class SteamOnlineServicesProvider : IOnlineServicesProvider
     {
-        /// <summary>
-        /// Environment variable that suppresses Steam entirely
-        /// </summary>
-        /// <remarks>
-        /// Exists so a gamepad can be tested while the game still borrows an app id. Steam takes
-        /// the controller away from a game whose id is configured for Steam Input, and app 480 —
-        /// the SDK's own Steam Input sample — is. See ROADMAP S6.
-        /// </remarks>
-        private const String DisableVariable = "CTYPE_NO_STEAM";
-
         /// <inheritdoc />
         public Boolean Available { get; private set; }
 
@@ -36,9 +26,12 @@ namespace Type.Desktop.Source.Services
         /// </remarks>
         public void Initialise()
         {
-            // Deliberately before the try: an unavailable Steam is a state the rest of the game
-            // already handles, so opting out lands on the path Steam not running lands on.
-            if (Environment.GetEnvironmentVariable(DisableVariable) != null)
+            // No id of our own, no Steam. Borrowing one costs the gamepad, because Steam hands
+            // the controller to whatever the borrowed id's controller configuration says - see
+            // ROADMAP S6 - and none of the SDK is worth that until there is something to build
+            // on it. Deliberately before the try: this is not a failure, it is a decision, and
+            // it lands on the same unavailable state that Steam not running lands on.
+            if (Constants.Global.STEAM_APP_ID == 0)
             {
                 Available = false;
                 return;
