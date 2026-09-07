@@ -874,21 +874,26 @@ Your second stated priority. Ordered cheapest-impact-first.
   limit in one file replaced seven local ones that did not bound anything. It has **not** been
   judged by anyone listening to it, which is a separate question and still open, exactly as it is
   for the G3 magnitudes.
-  **Three things belong to the engine and are not fixed here:**
+  **Three things belong to the engine. Two are raised as merge requests and are waiting on
+  the maintainer; the submodule pointer is deliberately not bumped until they merge:**
   - **`AudioPlayer` cannot be pooled from the game side at all.** The constructor is what
     acquires the source and starts playback, there is no public way to re-arm an instance with a
     different buffer, and `Dispose` is `internal`. The item as originally written needs an engine
     change; whether it is worth one is doubtful given the premise above.
-  - **Eight sources is arbitrary and low.** OpenAL implementations typically allow far more.
-    Making the count configurable is small, self-contained and would raise the ceiling this whole
-    item is working under.
+  - **Eight sources is arbitrary and low** — AmosEngine `!30`. It now asks for up to thirty-two and
+    stops as soon as the device refuses one, so a backend that cannot provide that many keeps
+    whatever it can give. All thirty-two are granted by OpenAL Soft on Windows.
   - **A half-constructed `AudioPlayer` is a latent crash.** When `AddAudioPlayer` returns -1 the
     constructor returns early, leaving `Source` at 0 and the object unregistered. Music players
     *are* held and stopped later (`GameScene`, `GameOverScene`, `GameCompleteScene`,
     `ShipSelectState`), and `Stop` on one of those queues source 0 for removal, which
     `AudioManager.Update` then looks up in `_ActiveAudio` and throws on. Reachable whenever a
     scene changes while eight effects are playing. The six-source budget above makes it much
-    harder to reach from the game side, but it does not fix it.
+    harder to reach from the game side, but it does not fix it — AmosEngine `!29` does, by only
+    removing a player that actually holds the source it names.
+    *Reproduced before fixing and confirmed after: filling all eight sources, constructing one
+    more player and stopping it kills the process with a `KeyNotFoundException` in
+    `AudioManager.Update` on the next frame, and with the change the same sequence runs on.*
 
   **Compression is still untouched**, and also engine work: `AudioData` parses RIFF/WAVE and
   nothing else. 26 MB across 23 files, dominated by the four music tracks, is most of the
