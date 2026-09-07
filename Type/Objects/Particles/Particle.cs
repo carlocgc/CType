@@ -46,7 +46,7 @@ namespace Type.Objects.Particles
         /// </summary>
         public Particle()
         {
-            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.PARTICLES,
+            _Sprite = new Sprite(Game.ParticleCanvas, Constants.ZOrders.PARTICLES,
                 Texture.GetTexture("Content/Graphics/Particles/particle.png"))
             {
                 Visible = false,

@@ -20,8 +20,6 @@ namespace Type.Objects.Enemies
     public class SmallEnemyWeak : GameObject, IEnemy
     {
         private readonly IAccelerationProvider _MovementController;
-        /// <summary> Animation of an explosion, played on death </summary>
-        private readonly AnimatedSprite _Explosion;
         /// <summary> List of <see cref="IEnemyListener"/>'s </summary>
         private readonly List<IEnemyListener> _Listeners;
 
@@ -92,29 +90,8 @@ namespace Type.Objects.Enemies
 
             HitBox = GetRect();
 
-            _Explosion = new AnimatedSprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, new[]
-            {
-                Texture.GetTexture("Content/Graphics/Explosion2/pixelExplosion00.png"),
-                Texture.GetTexture("Content/Graphics/Explosion2/pixelExplosion01.png"),
-                Texture.GetTexture("Content/Graphics/Explosion2/pixelExplosion02.png"),
-                Texture.GetTexture("Content/Graphics/Explosion2/pixelExplosion03.png"),
-                Texture.GetTexture("Content/Graphics/Explosion2/pixelExplosion04.png"),
-                Texture.GetTexture("Content/Graphics/Explosion2/pixelExplosion05.png"),
-                Texture.GetTexture("Content/Graphics/Explosion2/pixelExplosion06.png"),
-                Texture.GetTexture("Content/Graphics/Explosion2/pixelExplosion07.png"),
-                Texture.GetTexture("Content/Graphics/Explosion2/pixelExplosion08.png"),
-            }, 9)
-            {
-                Visible = false,
-                Playing = false,
-                AnimEndBehaviour = AnimatedSprite.EndBehaviour.STOP,
-                CurrentFrame = 0,
-            };
-            _Explosion.Scale = new Vector2(2, 2);
-            _Explosion.Offset = new Vector2(_Explosion.Size.X / 2 * _Explosion.Scale.X, _Explosion.Size.Y / 2 * _Explosion.Scale.Y);
 
             Position = new Vector2(Renderer.Instance.TargetDimensions.X / 2 + _Sprite.Offset.X / 2 - 1, yPos);
-            _Explosion.Position = Position;
 
             _MovementController = moveController;
 
@@ -163,13 +140,8 @@ namespace Type.Objects.Enemies
             }
 
             Sounds.Destroyed();
-            _Explosion.AddFrameAction((anim) =>
-            {
-                Dispose();
-            }, 8);
             _Sprite.Visible = false;
-            _Explosion.Visible = true;
-            _Explosion.Playing = true;
+                Dispose();
         }
 
         /// <inheritdoc />
@@ -198,7 +170,6 @@ namespace Type.Objects.Enemies
             {
                 Position = _MovementController.ApplyAcceleration(Position, timeTilUpdate);
 
-                _Explosion.Position = Position;
                 HitBox = GetRect();
             }
 
@@ -250,7 +221,6 @@ namespace Type.Objects.Enemies
             _ColourCallback?.CancelAndComplete();
             base.Dispose();
 
-            if (!_Explosion.IsDisposed) _Explosion.Dispose();
             _Listeners.Clear();
             CollisionController.Instance.DeregisterEnemy(this);
             PositionRelayer.Instance.RemoveRecipient(this);

@@ -265,7 +265,6 @@ namespace Type.Objects.Bosses
             base.Dispose();
             _Listeners.Clear();
             foreach (BossCannon cannon in _Cannons) cannon.Dispose();
-            _DeathSequence.Dispose();
             _Cannons.Clear();
             _Body.Dispose();
             PositionRelayer.Instance.RemoveRecipient(this);

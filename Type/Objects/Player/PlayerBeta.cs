@@ -179,6 +179,8 @@ namespace Type.Objects.Player
                 Shoot();
             }
 
+            Rotation = Banking.Toward(Rotation, _Direction.Y * _MoveStrength, timeTilUpdate);
+
             Position += GetPositionModifier(timeTilUpdate);
             HitBox = GetRect();
 
