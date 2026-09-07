@@ -70,6 +70,14 @@ namespace Type.Scenes
                 new OptionRow("START LEVEL", new Vector2(-700, 0),
                     () => Cheats.StartLevel.ToString(),
                     step => Cheats.SetStartLevel(Cheats.StartLevel + step)),
+
+                new OptionRow("OMEGA UNLOCKED", new Vector2(-700, -100),
+                    () => Cheats.OmegaUnlocked ? "ON" : "OFF",
+                    step => Cheats.SetOmegaUnlocked(!Cheats.OmegaUnlocked)),
+
+                new OptionRow("INFINITE BOMBS", new Vector2(-700, -200),
+                    () => Cheats.InfiniteBombs ? "ON" : "OFF",
+                    step => Cheats.SetInfiniteBombs(!Cheats.InfiniteBombs)),
             };
 
             _BackPrompt = new InputPrompt(ButtonData.Type.CANCEL, "BACK", new Vector2(-880, -480));

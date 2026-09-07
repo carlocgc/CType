@@ -100,7 +100,7 @@ namespace Type.Scenes
             AlphaButton = new ShipSelectButton(0, CardPosition(0), CardScale, "Content/Graphics/Player/player-alpha.png", "ALPHA", 1, 100, 100, false);
             BetaButton = new ShipSelectButton(1, CardPosition(1), CardScale, "Content/Graphics/Player/player-beta.png", "BETA", 2, 80, 80, false);
             GammaButton = new ShipSelectButton(2, CardPosition(2), CardScale, "Content/Graphics/Player/player-gamma.png", "GAMMA", 3, 60, 60, false);
-            OmegaButton = new ShipSelectButton(3, CardPosition(3), CardScale, "Content/Graphics/Player/player_omega.png", "OMEGA", 1, 200, 120, !Progress.GameCompleted);
+            OmegaButton = new ShipSelectButton(3, CardPosition(3), CardScale, "Content/Graphics/Player/player_omega.png", "OMEGA", 1, 200, 120, !(Progress.GameCompleted || Cheats.OmegaUnlocked));
 
 #if __ANDROID__
             Sprite backButton = new Sprite(Game.MainCanvas, Constants.ZOrders.ABOVE_GAME, Texture.GetTexture("Content/Graphics/Buttons/exitbutton.png"))

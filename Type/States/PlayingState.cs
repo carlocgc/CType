@@ -127,6 +127,14 @@ namespace Type.States
             _LifeMeter = _UIScene.LifeMeter;
             _LevelDisplay = _UIScene.LevelDisplay;
             _UIScene.ShowOnScreenControls(true);
+
+            // Shown full rather than empty, so the count on screen agrees with what firing
+            // actually does. Nothing decrements it while the cheat is on.
+            if (Cheats.InfiniteBombs)
+            {
+                _CurrentNukes = _MaxNukes;
+                _UIScene.NukeDisplay.NukeCount = _CurrentNukes;
+            }
             _UIScene.Visible = true;
 
             _GameScene.StartBackgroundScroll();
@@ -643,12 +651,16 @@ namespace Type.States
                     {
                         if (data.State == ButtonData.State.RELEASED) _NukePressed = false;
 
-                        if (data.State != ButtonData.State.PRESSED || _CurrentNukes <= 0) return;
+                        if (data.State != ButtonData.State.PRESSED) return;
+                        if (!Cheats.InfiniteBombs && _CurrentNukes <= 0) return;
 
                         if (_NukePressed) return;
 
-                        _CurrentNukes--;
-                        _UIScene.NukeDisplay.NukeCount = _CurrentNukes;
+                        if (!Cheats.InfiniteBombs)
+                        {
+                            _CurrentNukes--;
+                            _UIScene.NukeDisplay.NukeCount = _CurrentNukes;
+                        }
                         CollisionController.Instance.ClearProjectiles();
 
                         foreach (IEnemy enemy in _GameScene.Enemies.Where(e => e.CanBeRoadKilled))

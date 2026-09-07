@@ -28,12 +28,29 @@ namespace Type.Data
         private const String InvincibleKey = "CHEAT_INVINCIBLE";
         /// <summary> Store key for the starting level cheat </summary>
         private const String StartLevelKey = "CHEAT_START_LEVEL";
+        /// <summary> Store key for the Omega unlock cheat </summary>
+        private const String OmegaUnlockedKey = "CHEAT_OMEGA_UNLOCKED";
+        /// <summary> Store key for the infinite bombs cheat </summary>
+        private const String InfiniteBombsKey = "CHEAT_INFINITE_BOMBS";
 
         /// <summary> Whether the player takes damage </summary>
         public static Boolean Invincible { get; private set; }
 
         /// <summary> The level a new run begins on </summary>
         public static Int32 StartLevel { get; private set; } = 1;
+
+        /// <summary>
+        /// Whether the Omega ship can be picked without having finished the game
+        /// </summary>
+        /// <remarks>
+        /// Deliberately separate from <see cref="Progress.GameCompleted"/> rather than setting
+        /// it. Marking the game complete to unlock a ship would also rewrite the player's real
+        /// progress, and there would be no way back from it.
+        /// </remarks>
+        public static Boolean OmegaUnlocked { get; private set; }
+
+        /// <summary> Whether firing a bomb uses one up </summary>
+        public static Boolean InfiniteBombs { get; private set; }
 
         /// <summary>
         /// Reads the saved cheats. Call once during content loading, alongside
@@ -43,6 +60,8 @@ namespace Type.Data
         {
             Invincible = ReadFlag(InvincibleKey);
             StartLevel = ReadStartLevel();
+            OmegaUnlocked = ReadFlag(OmegaUnlockedKey);
+            InfiniteBombs = ReadFlag(InfiniteBombsKey);
         }
 
         /// <summary>
@@ -63,6 +82,26 @@ namespace Type.Data
         {
             StartLevel = Clamp(level);
             StorageService.Instance.SetValue(StartLevelKey, StartLevel);
+        }
+
+        /// <summary>
+        /// Unlocks or relocks the Omega ship and saves it
+        /// </summary>
+        /// <param name="unlocked"> Whether Omega can be picked </param>
+        public static void SetOmegaUnlocked(Boolean unlocked)
+        {
+            OmegaUnlocked = unlocked;
+            StorageService.Instance.SetValue(OmegaUnlockedKey, OmegaUnlocked ? 1 : 0);
+        }
+
+        /// <summary>
+        /// Turns infinite bombs on or off and saves it
+        /// </summary>
+        /// <param name="infinite"> Whether firing a bomb uses one up </param>
+        public static void SetInfiniteBombs(Boolean infinite)
+        {
+            InfiniteBombs = infinite;
+            StorageService.Instance.SetValue(InfiniteBombsKey, InfiniteBombs ? 1 : 0);
         }
 
         /// <summary>
@@ -120,6 +159,12 @@ namespace Type.Data
 
         /// <summary> The level a new run begins on. Always the first, in a build without cheats </summary>
         public static Int32 StartLevel => 1;
+
+        /// <summary> Whether Omega is unlocked. Only by finishing the game, in a build without cheats </summary>
+        public static Boolean OmegaUnlocked => false;
+
+        /// <summary> Whether bombs are free. Never, in a build without cheats </summary>
+        public static Boolean InfiniteBombs => false;
 
         /// <summary>
         /// Does nothing. There is nothing stored to read, and nothing that could read it.
