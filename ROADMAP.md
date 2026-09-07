@@ -751,10 +751,37 @@ Your second stated priority. Ordered cheapest-impact-first.
   embers rather than something with weight, which is defensible for a fixed-field shooter but
   is not obviously right. There is also no additive blending, which is what would make sparks
   actually glow; whether the engine can express that per drawable has not been looked into.
-- **G3. Screen shake, hit-stop, and flash.** Enemies already flash white on hit; extend to
-  brief time dilation on boss kills and camera shake on nukes and player death.
-- **G3. Screen shake, hit-stop, and flash.** Enemies already flash white on hit; extend to
-  brief time dilation on boss kills and camera shake on nukes and player death.
+- **G3. Screen shake, hit-stop, and flash.** *Shake and hit stop built. The flash was already
+  there and needed nothing.*
+  **The flash half of this item was already done twice over**, which is worth recording because
+  the item asked for work that did not exist: enemies flash white on hit, and a nuke already
+  puts a full screen white sprite up and tweens it out over half a second in `GameScene`.
+  **Screen shake offsets the world camera, not the objects.** The game already draws through
+  two cameras — `MainCanvas` for the world, `UiCanvas` for the interface — so moving one of them
+  shakes the field and leaves the HUD nailed down, for the cost of a `Vector2` per frame.
+  Trauma decays squared rather than linearly, so it falls away sharply and settles instead of
+  rattling down to nothing.
+  **Hit stop needed the clock to get an owner.** Pausing and hit stop both slow
+  `Game.GameTime.Multiplier`, and both were writing it directly, which is a race as soon as
+  there are two of them: a hit stop ending while the game was paused would have unpaused the
+  game. `TimeScaleController` now derives the multiplier from every reason to change it, and
+  pause always wins.
+  **Both are timed against the wall clock, and neither could be otherwise.** The update they
+  receive has already been scaled by the multiplier one of them is setting, so a hit stop at a
+  seventh speed would take seven times too long to end itself, and a shake asked for alongside
+  one would be stretched to match. This is the same trap I8's rumble hit with `TimedCallback`,
+  which is the third time game time has been the wrong clock for a feedback effect — worth
+  remembering as the default rather than rediscovering.
+  Numbers live in `Data/Shake.cs` and `Data/HitStop.cs`, the same shape as `Rumble` and
+  `Particles`. Shake is on nukes, boss deaths and player deaths; hit stop only on boss and
+  player deaths, because it takes the controls away for as long as it lasts and a firefight
+  full of it would read as a bad connection.
+  *Verified by instrumenting the running game rather than by eye:* the multiplier drops to
+  0.150 on a boss kill and returns to 1.000 on its own; the camera offsets by up to ~30 units
+  and returns to exactly (0, 0); pausing mid-effect holds the clock at 0 and the camera still,
+  and resuming restores both. **Not verified by playing** — the magnitudes and durations were
+  reasoned about, not felt, exactly as the rumble table was, and they want a pass with hands on
+  the controls.
 - **G4. Fix the audio architecture.** Pool `AudioPlayer` instances instead of allocating per
   shot, then delete the `TODO FIXME` rate-limit hacks in all six enemy classes. Convert the
   WAVs to a compressed format if the engine supports it — 25 MB of uncompressed audio is
