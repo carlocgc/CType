@@ -38,26 +38,29 @@ namespace Type
             public const String STORE_NAME = "CType";
 
             /// <summary>
-            /// Steam application id.
+            /// Steam application id, zero while the game has none of its own.
             /// </summary>
             /// <remarks>
-            /// **This is Spacewar, Valve's public test application, not C-Type.** It is here so
-            /// the Steam SDK can be started and exercised before the game has an id of its own,
-            /// which needs a paid Steamworks registration. Everything that only needs the client
-            /// to be up — starting, ticking, shutting down, reading the signed-in user — works
-            /// against it.
+            /// **Zero disables Steam entirely** rather than standing in for an id. The provider
+            /// reports itself unavailable and never starts the SDK, which is a state everything
+            /// downstream already handles, because Steam not being installed lands there too.
             /// <para>
-            /// **Achievements will not.** Steam resolves them against the id's own configured
-            /// list, so a C-Type achievement name means nothing to Spacewar and will simply fail.
-            /// That is expected until this is replaced, and is the reason S6 stops at the SDK
-            /// lifecycle rather than going on to unlock anything.
+            /// It was 480 — Spacewar, Valve's public test application — so that the SDK could be
+            /// started and exercised before the game had an id of its own, and that is what
+            /// proved the lifecycle in S6. **Borrowing an id turned out to carry a cost that only
+            /// shows up with a pad in your hands:** Steam applies whatever controller
+            /// configuration the borrowed id is set up for, and 480 is the SDK's own Steam Input
+            /// sample, so the game loses the gamepad the moment it initialises. That is not worth
+            /// paying every day for plumbing that is already verified. See ROADMAP S6.
             /// </para>
             /// <para>
-            /// **Must be replaced before release**, and a build that ships against 480 would
-            /// report itself to Steam as a different game entirely.
+            /// **Put the real id here when it exists** and everything turns on with it; there is
+            /// no second switch. Achievements need it regardless — Steam resolves them against
+            /// the id's own configured list, which is why S6 stops at the SDK lifecycle rather
+            /// than going on to unlock anything.
             /// </para>
             /// </remarks>
-            public const UInt32 STEAM_APP_ID = 480;
+            public const UInt32 STEAM_APP_ID = 0;
 
 #if __ANDROID__
             /// <summary> AdMob application id, Android builds only </summary>

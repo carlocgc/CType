@@ -26,6 +26,17 @@ namespace Type.Desktop.Source.Services
         /// </remarks>
         public void Initialise()
         {
+            // No id of our own, no Steam. Borrowing one costs the gamepad, because Steam hands
+            // the controller to whatever the borrowed id's controller configuration says - see
+            // ROADMAP S6 - and none of the SDK is worth that until there is something to build
+            // on it. Deliberately before the try: this is not a failure, it is a decision, and
+            // it lands on the same unavailable state that Steam not running lands on.
+            if (Constants.Global.STEAM_APP_ID == 0)
+            {
+                Available = false;
+                return;
+            }
+
             try
             {
                 // Callbacks are pumped from the game loop rather than by a thread Facepunch
