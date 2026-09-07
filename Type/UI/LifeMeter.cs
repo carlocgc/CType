@@ -3,7 +3,7 @@ using AmosShared.Graphics.Drawables;
 using OpenTK;
 using System;
 using System.Collections.Generic;
-using AmosShared.Audio;
+using Type.Data;
 
 namespace Type.UI
 {
@@ -88,7 +88,7 @@ namespace Type.UI
         {
             PlayerLives--;
             UpdateSprites();
-            new AudioPlayer("Content/Audio/death.wav", false, AudioManager.Category.EFFECT, 1);
+            Sounds.LifeLost();
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace Type.UI
             if (PlayerLives >= 5) return;
             PlayerLives++;
             UpdateSprites();
-            new AudioPlayer("Content/Audio/lifeup.wav", false, AudioManager.Category.EFFECT, 1);
+            Sounds.LifeGained();
         }
 
         /// <summary>

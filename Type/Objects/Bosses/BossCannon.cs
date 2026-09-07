@@ -1,11 +1,11 @@
-﻿using AmosShared.Audio;
-using AmosShared.Graphics;
+﻿using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
 using OpenTK;
 using System;
 using System.Collections.Generic;
 using Type.Base;
 using Type.Controllers;
+using Type.Data;
 using Type.Interfaces;
 using Type.Interfaces.Collisions;
 using Type.Interfaces.Enemies;
@@ -16,13 +16,6 @@ namespace Type.Objects.Bosses
 {
     public class BossCannon : GameObject, IEnemy
     {
-        /// <summary> How long to wait before playing the hit sound</summary>
-        private readonly TimeSpan _HitSoundInterval = TimeSpan.FromSeconds(0.2f); // TODO FIXME Work around to stop so many sounds playing
-        /// <summary> How long since the last hit occured </summary>
-        private TimeSpan _TimeSinceLastSound; // TODO FIXME Work around to stop so many sounds playing
-        /// <summary> Whether a sound is playing </summary>
-        private Boolean _IsSoundPlaying; // TODO FIXME Work around to stop so many sounds playing
-
         /// <summary> List of <see cref="IEnemyListener"/>'s </summary>
         private readonly List<IEnemyListener> _Listeners;
         /// <summary> Animation of an explosion, played on death </summary>
@@ -169,7 +162,7 @@ namespace Type.Objects.Bosses
             if (bulletDirection != Vector2.Zero) bulletDirection.Normalize();
             new PlasmaBall(Position, bulletDirection, 1000, new Vector4(100, 0, 0, 1));
             _IsWeaponLocked = true;
-            new AudioPlayer("Content/Audio/laser2.wav", false, AudioManager.Category.EFFECT, 1);
+            Sounds.EnemyShot();
         }
 
         /// <summary> Called to update the object </summary>
@@ -177,16 +170,6 @@ namespace Type.Objects.Bosses
         public void Update(TimeSpan timeTilUpdate)
         {
             if (_IsDestroyed) return;
-
-            if (_IsSoundPlaying) // TODO FIXME Work around to limit sounds created
-            {
-                _TimeSinceLastSound += timeTilUpdate;
-                if (_TimeSinceLastSound >= _HitSoundInterval)
-                {
-                    _IsSoundPlaying = false;
-                    _TimeSinceLastSound = TimeSpan.Zero;
-                }
-            }
 
             if (AutoFire)
             {
@@ -215,12 +198,7 @@ namespace Type.Objects.Bosses
 
             HitPoints -= damage;
 
-            if (!_IsSoundPlaying)
-            {
-                new AudioPlayer("Content/Audio/hurt3.wav", false, AudioManager.Category.EFFECT, 1);
-                _IsSoundPlaying = true;
-                _TimeSinceLastSound = TimeSpan.Zero;
-            }
+            Sounds.Hit();
 
             _Gun.Colour = new Vector4(1.5f, 1.5f, 1.5f, 1);
             _ColourCallback?.CancelAndComplete();
@@ -246,7 +224,7 @@ namespace Type.Objects.Bosses
 
             _Gun.Visible = false;
 
-            new AudioPlayer("Content/Audio/explode.wav", false, AudioManager.Category.EFFECT, 1);
+            Sounds.Destroyed();
             _Explosion.AddFrameAction((anim) =>
             {
                 for (var i = _Listeners.Count - 1; i >= 0; i--)

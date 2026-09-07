@@ -1,5 +1,4 @@
-﻿using AmosShared.Audio;
-using AmosShared.Graphics.Drawables;
+﻿using AmosShared.Graphics.Drawables;
 using AmosShared.Interfaces;
 using OpenTK;
 using System;
@@ -167,7 +166,7 @@ namespace Type.States
             if (_LifeMeter.PlayerLives == 5)
             {
                 UpdateScore(points);
-                new AudioPlayer("Content/Audio/points_instead.wav", false, AudioManager.Category.EFFECT, 1);
+                Sounds.PointsInstead();
                 return;
             }
             _LifeMeter.AddLife();
@@ -221,12 +220,12 @@ namespace Type.States
             if (_CurrentNukes >= _MaxNukes)
             {
                 UpdateScore(points);
-                new AudioPlayer("Content/Audio/points_instead.wav", false, AudioManager.Category.EFFECT, 1);
+                Sounds.PointsInstead();
                 return;
             }
             _CurrentNukes++;
             _UIScene.NukeDisplay.NukeCount = _CurrentNukes;
-            new AudioPlayer("Content/Audio/nuke_pickup.wav", false, AudioManager.Category.EFFECT, 1);
+            Sounds.NukePickup();
         }
 
         #endregion
@@ -655,7 +654,7 @@ namespace Type.States
                         }
 
                         _GameScene.ShowNukeEffect();
-                        new AudioPlayer("Content/Audio/nuke.wav", false, AudioManager.Category.EFFECT, 1);
+                        Sounds.NukeDetonated();
                         Rumble.Nuke();
                         Shake.Nuke();
 

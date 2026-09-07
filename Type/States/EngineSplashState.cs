@@ -1,6 +1,6 @@
-﻿using AmosShared.Audio;
-using AmosShared.State;
+﻿using AmosShared.State;
 using System;
+using Type.Data;
 using Type.Scenes;
 #if __ANDROID__
 using Type.Android.States;
@@ -47,7 +47,7 @@ namespace Type.States
                 _TimeSinceBegan += timeSinceUpdate;
                 if (_TimeSinceBegan > _PlaySound && !_SoundPlayed)
                 {
-                    new AudioPlayer("Content/Audio/Hello.wav", false, AudioManager.Category.EFFECT, 1);
+                    Sounds.EngineSplash();
                     _SoundPlayed = true;
                 }
 
