@@ -23,7 +23,7 @@ namespace Type.States
     /// <summary>
     /// Game play state
     /// </summary>
-    public class PlayingState : State, IPlayerListener, IEnemyListener, IEnemyFactoryListener, IPowerupListener, IPowerupFactoryListener, IUpdatable, IInputListener
+    public class PlayingState : State, IPlayerListener, IEnemyListener, IEnemyFactoryListener, IPowerupListener, IPowerupFactoryListener, IInputListener
     {
         /// <summary> Max level of the game </summary>
         private readonly Int32 _MaxLevel = 20;
@@ -88,7 +88,7 @@ namespace Type.States
         /// <summary> Whether the player asked to abandon the run </summary>
         private Boolean _Quitting;
 
-        /// <summary> Whether or not the updatable is disposed </summary>
+        /// <summary> Whether or not this state has been disposed </summary>
         public Boolean IsDisposed { get; set; }
 
         public PlayingState(Int32 type)
@@ -140,8 +140,6 @@ namespace Type.States
             GameStats.Instance.GameStart();
             InputService.Instance.RegisterListener(this);
             InputService.Instance.OnInputDeviceLost = () => SetPaused(true);
-            UpdateManager.Instance.AddUpdatable(this);
-
         }
 
         /// <summary>If true then this state is considered complete and control will be passed over to <see cref="State.NextState"/></summary>
@@ -602,8 +600,12 @@ namespace Type.States
 
         }
 
-        /// <summary> Updates the state </summary>
-        /// <param name="timeTilUpdate"></param>
+        /// <summary> Updates the state.
+        /// Driven by <see cref="StateManager"/>, which is itself the registered <see cref="IUpdatable"/>
+        /// and calls this on every active state. Do not also register this state with the
+        /// <see cref="UpdateManager"/>: <see cref="UpdateManager.AddUpdatable"/> does not deduplicate,
+        /// so the state would then be updated twice per frame. </summary>
+        /// <param name="timeSinceUpdate"></param>
         public override void Update(TimeSpan timeSinceUpdate)
         {
             base.Update(timeSinceUpdate);
@@ -613,14 +615,6 @@ namespace Type.States
                 LevelComplete();
             }
         }
-
-        /// <summary> Whether or not the object can be updated </summary>
-        /// <returns></returns>
-        public Boolean CanUpdate()
-        {
-            return true;
-        }
-
 
         #region Implementation of IInputListener
 
@@ -686,7 +680,6 @@ namespace Type.States
             InputService.Instance.DeregisterListener(this);
             InputService.Instance.OnInputDeviceLost = null;
             ClosePauseMenu();
-            UpdateManager.Instance.RemoveUpdatable(this);
             CollisionController.Instance.IsActive = false;
             CollisionController.Instance.ClearObjects();
 

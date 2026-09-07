@@ -701,6 +701,46 @@ Not glamorous, but these are store-page and refund-request items.
   submitted anywhere, an editable save affects only the player who edits it — which is the
   definition of their own business. No checksum, no hardening, nothing to do here.
 
+- **S12. `PlayingState` was updated twice every frame.** **Fixed.** It implemented `IUpdatable`
+  and registered itself with `UpdateManager` in `OnEnter`, *and* it is a `State`, which
+  `StateManager` — itself the registered updatable, from `BaseGame` at startup — calls
+  `Update` on for every active state in its own loop. `AddUpdatable` does not deduplicate, so
+  both drivers landed on the same method. No other state does this; `PlayingState` was alone
+  in implementing `IUpdatable` at all.
+  *Measured, not inferred: a per-frame log in `Update`, booting straight into the state, over
+  the same eight seconds. Before, 774 entries; after, 409. In the "before" trace every run of
+  consecutive identical `timeSinceUpdate` values has an **even** length, which is the duplicate
+  call.*
+  **Nothing was actually broken by it — but only by accident, twice over**, and that is worth
+  recording, because the obvious reading of `Update` is that `LevelComplete` fired twice:
+  - Mid-campaign the first call sets `_EnemiesDestroyedThisLevel = 0` while `_EnemiesInLevel`
+    still holds the finished level's total, so the second call's `0 >= total` is false.
+  - On the last level `LevelComplete` reaches `GameCompleted`, and `StateManager` checks
+    `IsComplete()` immediately after the update it just made — so the state is ended and
+    disposed inside that same frame, and `PlayingState.Dispose` calls `RemoveUpdatable`, which
+    the update loop honours immediately (S10 covers why). The second call was skipped on
+    precisely the frame where it would have mattered: `GameStats.GameEnd` adds `Score` and
+    `EnemiesKilled` into the all-time totals *and writes them to storage*, so running it twice
+    would have doubled a player's persisted lifetime score and kills on the frame they
+    finished the game.
+  - Both of those depend on `StateManager` sitting earlier in the updatables list than
+    `PlayingState`, which it does — `StateManager.Init()` runs from `BaseGame` at startup and
+    `PlayingState` registers in `OnEnter` — but nothing enforces it.
+
+  The fix removes `IUpdatable` from `PlayingState` entirely — the registration, the
+  deregistration and `CanUpdate` — leaving `StateManager` the only driver, as it already was
+  for every other state. `IsDisposed` stays, since `Dispose` uses it as its re-entrancy guard.
+  **What is still fragile, and was deliberately not changed here:** `LevelComplete` leaves
+  `_LevelStarted` true for the two seconds the level banner is up, so `Update`'s guard rests
+  entirely on the counter reset above rather than on a flag that means "a level is in
+  progress". Setting `_LevelStarted = false` in `LevelComplete` and letting `OnLevelStarted`
+  set it back would make that an invariant instead of a coincidence. It is behaviour-preserving,
+  but it is a change to gameplay logic in a fix whose whole point was to delete a duplicate
+  call, so it is left as a separate decision.
+  *Verified: clean `Rebuild`, and the game boots to the main menu and plays. Not verified by
+  running a campaign through to level 20 — the double `GameEnd` was ruled out by reading the
+  ordering, and by the fact that the second call is now gone regardless.*
+
 ### Phase 3 — Graphics
 
 Your second stated priority. Ordered cheapest-impact-first.
