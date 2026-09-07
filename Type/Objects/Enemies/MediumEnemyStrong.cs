@@ -1,5 +1,4 @@
-﻿using AmosShared.Audio;
-using AmosShared.Base;
+﻿using AmosShared.Base;
 using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
 using OpenTK;
@@ -20,13 +19,6 @@ namespace Type.Objects.Enemies
     /// </summary>
     public class MediumEnemyStrong : GameObject, IEnemy
     {
-        /// <summary> How long to wait before playing the hit sound</summary>
-        private readonly TimeSpan _HitSoundInterval = TimeSpan.FromSeconds(0.2f); // TODO FIXME Work around to stop so many sounds playing
-        /// <summary> How long since the last hit occured </summary>
-        private TimeSpan _TimeSinceLastSound; // TODO FIXME Work around to stop so many sounds playing
-        /// <summary> Whether a sound is playing </summary>
-        private Boolean _IsSoundPlaying; // TODO FIXME Work around to stop so many sounds playing
-
         private readonly IAccelerationProvider _MovementController;
         /// <summary> Animation of an explosion, played on death </summary>
         private readonly AnimatedSprite _Explosion;
@@ -137,7 +129,7 @@ namespace Type.Objects.Enemies
             new PlasmaBall(Position, bulletDirection, 1050, new Vector4(100, 100, 0, 1));
 
             _IsWeaponLocked = true;
-            new AudioPlayer("Content/Audio/laser2.wav", false, AudioManager.Category.EFFECT, 1);
+            Sounds.EnemyShot();
         }
 
         /// <inheritdoc />
@@ -145,12 +137,7 @@ namespace Type.Objects.Enemies
         {
             HitPoints -= damage;
 
-            if (!_IsSoundPlaying)
-            {
-                new AudioPlayer("Content/Audio/hurt3.wav", false, AudioManager.Category.EFFECT, 1);
-                _IsSoundPlaying = true;
-                _TimeSinceLastSound = TimeSpan.Zero;
-            }
+            Sounds.Hit();
 
             _Sprite.Colour = new Vector4(1.5f, 1.5f, 1.5f, 1);
             _ColourCallback?.CancelAndComplete();
@@ -175,7 +162,7 @@ namespace Type.Objects.Enemies
                 listener.OnEnemyDestroyed(this);
             }
 
-            new AudioPlayer("Content/Audio/explode.wav", false, AudioManager.Category.EFFECT, 1);
+            Sounds.Destroyed();
             _Explosion.AddFrameAction((anim) =>
             {
                 Dispose();
@@ -215,16 +202,6 @@ namespace Type.Objects.Enemies
             }
 
             if (IsDestroyed) return;
-
-            if (_IsSoundPlaying) // TODO FIXME Work around to limit sounds created
-            {
-                _TimeSinceLastSound += timeTilUpdate;
-                if (_TimeSinceLastSound >= _HitSoundInterval)
-                {
-                    _IsSoundPlaying = false;
-                    _TimeSinceLastSound = TimeSpan.Zero;
-                }
-            }
 
             if (!_IsWeaponLocked)
             {

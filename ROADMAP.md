@@ -830,10 +830,74 @@ Your second stated priority. Ordered cheapest-impact-first.
   and resuming restores both. **Not verified by playing** — the magnitudes and durations were
   reasoned about, not felt, exactly as the rumble table was, and they want a pass with hands on
   the controls.
-- **G4. Fix the audio architecture.** Pool `AudioPlayer` instances instead of allocating per
-  shot, then delete the `TODO FIXME` rate-limit hacks in all six enemy classes. Convert the
-  WAVs to a compressed format if the engine supports it — 25 MB of uncompressed audio is
-  most of the download size.
+- **G4. Fix the audio architecture.** *Rate limiting rebuilt game-side and the seven hacks are
+  gone. Pooling and compression are engine work and are still open — see the bottom of this
+  entry.*
+  **The item's premise was wrong, and finding that out changed the work.** It asked to pool
+  `AudioPlayer` instances "instead of allocating per shot", on the reading that constructing one
+  per sound was the cost. It is not: `AudioData.GetData` already caches per filename and uploads
+  the OpenAL buffer once, so `new AudioPlayer(...)` re-reads nothing and re-decodes nothing. Per
+  shot it is a small object and a handful of AL calls.
+  **The real ceiling is eight sources.** `AudioManager` holds `new Int32[8]`, and when they are
+  all busy `AddAudioPlayer` returns -1, the `AudioPlayer` constructor gives up, and the sound is
+  dropped with a line on the console. Whoever asked last loses, so what goes quiet in a firefight
+  is whatever was most recent rather than whatever mattered least. *That* is what the seven
+  `TODO FIXME` rate limits were working around.
+  **The old limits were per-enemy, so they bounded one enemy and the game not at all.** Each
+  enemy allowed itself one hit sound every 0.2 seconds; twenty on screen is still up to a hundred
+  requests a second into eight sources. A limit has to be global to mean anything, which is why
+  the replacement is a controller rather than seven better timers.
+  `Controllers/AudioController.cs` is now the only thing that constructs an effect player. It
+  holds a global minimum interval per sound, a budget of six of the eight sources so music is
+  never the request that gets refused, and clip lengths worked out from the audio data so it
+  knows roughly how long each source stays busy. `Data/Sounds.cs` names the events and holds the
+  intervals, the same shape as `Rumble`, `Particles`, `Shake` and `HitStop`. Forty-nine call
+  sites across sixteen files now say what happened rather than which file to play; the four music
+  players are deliberately left alone, because scenes hold them and stop them by hand.
+  **Timed against the wall clock. This is the fourth time game time has been the wrong clock**
+  for a feedback effect, after I8's rumble and both halves of G3 — the update a game object gets
+  has already been scaled by `TimeScaleController`, so a limit in game time would stretch during
+  a hit stop, which is exactly when the most sounds are asked for. Worth treating as the default
+  rather than rediscovering a fifth time.
+  *Measured, at level 11 with the ship auto-firing, over 150 seconds each, counting inside the
+  engine's own `AddAudioPlayer` so both arms are counted the same way:*
+
+  | | sounds played | dropped by the engine |
+  |---|---|---|
+  | No limiting at all | — | **128** |
+  | The old per-enemy limits | 2286 | **1** |
+  | `AudioController` | 2344 | **0** |
+
+  The first row is why the hacks could not simply be deleted, and it is the pressure the
+  controller had to absorb. The gap between the other two rows is **within run-to-run noise, and
+  that is the result being claimed**: the game sounds the same, and the win is that one global
+  limit in one file replaced seven local ones that did not bound anything. It has **not** been
+  judged by anyone listening to it, which is a separate question and still open, exactly as it is
+  for the G3 magnitudes.
+  **Three things belong to the engine, and two of them were sent there.** `!29` is merged and
+  the pointer moved with it; `!30` is still open, and the pointer moves again when it lands:
+  - **`AudioPlayer` cannot be pooled from the game side at all.** The constructor is what
+    acquires the source and starts playback, there is no public way to re-arm an instance with a
+    different buffer, and `Dispose` is `internal`. The item as originally written needs an engine
+    change; whether it is worth one is doubtful given the premise above.
+  - **Eight sources is arbitrary and low** — AmosEngine `!30`, **open**. It now asks for up to
+    thirty-two and stops as soon as the device refuses one, so a backend that cannot provide
+    that many keeps whatever it can give. All thirty-two are granted by OpenAL Soft on Windows.
+  - **A half-constructed `AudioPlayer` is a latent crash.** When `AddAudioPlayer` returns -1 the
+    constructor returns early, leaving `Source` at 0 and the object unregistered. Music players
+    *are* held and stopped later (`GameScene`, `GameOverScene`, `GameCompleteScene`,
+    `ShipSelectState`), and `Stop` on one of those queues source 0 for removal, which
+    `AudioManager.Update` then looks up in `_ActiveAudio` and throws on. Reachable whenever a
+    scene changes while eight effects are playing. The six-source budget above makes it much
+    harder to reach from the game side, but it does not fix it — AmosEngine `!29`, **merged**,
+    does, by only removing a player that actually holds the source it names.
+    *Reproduced before fixing and confirmed after: filling all eight sources, constructing one
+    more player and stopping it kills the process with a `KeyNotFoundException` in
+    `AudioManager.Update` on the next frame, and with the change the same sequence runs on.*
+
+  **Compression is still untouched**, and also engine work: `AudioData` parses RIFF/WAVE and
+  nothing else. 26 MB across 23 files, dominated by the four music tracks, is most of the
+  download.
 - **G5. Deepen the parallax.** Three scrolling layers exist (stars, clusters, planets). Add
   a foreground layer and tie per-layer speed to player movement for a sense of depth.
 - **G6. Better explosions.** One shared 9-frame animation is used for every death from a
