@@ -477,6 +477,27 @@ Not glamorous, but these are store-page and refund-request items.
   app id; with the native removed it catches `DllNotFoundException`, reports itself unavailable
   and **the game still starts and plays**. A single player game must never be held hostage by
   the storefront being absent.
+  **Steam Input takes the gamepad away from the game, and the borrowed app id is why
+  (found 2026-09-07).** Once `SteamClient.Init` succeeds, all four `GamePad.GetState` slots
+  report disconnected for the rest of that process's life and the game is keyboard only.
+  *Diagnosed by A/B on one binary:* with the init skipped the pad is on slot 0 immediately, with
+  it run every slot is empty. Two measurements narrow it further. **It is not the x64 switch** —
+  a standalone probe against the engine's own `OpenTK.dll` reads the pad at x86 and x64 alike.
+  **And the device has not gone away, it is being hidden inside the game's own process** — that
+  same probe still reads the pad on slot 0 at the moment the game running beside it sees nothing.
+  This is Steam Input doing what it is built to do. Spacewar is the SDK's Steam Input sample, so
+  its configuration claims the controller for the Steam Input API and hides raw XInput from the
+  game — and this game does not implement that API, so the input arrives nowhere.
+  `SteamInput.Controllers` is empty too, which proves less than it appears to: Steam Input also
+  wants an action manifest the game does not ship.
+  **Expected to go away with an app id of our own**, which will not declare Steam Input support
+  unless we ask it to — but that is an inference from how the setting works, so it is on the
+  list to **re-verify the moment the id exists** rather than assumed.
+  **Until then `CTYPE_NO_STEAM` skips the init**, so a pad can be tested without turning off a
+  Steam client setting that would affect every other game on the machine. Set it and the
+  provider reports itself unavailable, which is the path Steam not running already takes.
+  *Rumble is probably suppressed by the same hook*, being `XInputSetState` from inside the same
+  process, but that has not been confirmed by feel.
   **Achievements are deliberately not done yet**, and cannot be until the game has an app id of
   its own. Steam resolves achievement names against the id's own configured list, so a C-Type
   name means nothing to Spacewar; the plumbing would be written blind and verified against

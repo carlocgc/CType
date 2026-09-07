@@ -192,6 +192,11 @@ Match the surrounding code exactly. The conventions in use:
   `// TODO FIXME` hack to rate-limit hit sounds because of this. Do not add more of these
   hacks; if you touch audio, fix it properly (ROADMAP item G4).
 - `Type/Glide/` is a vendored copy of the Glide tweening library. Leave it alone.
+- **The gamepad stops working when Steam is running.** Initialising the Steam SDK against the
+  borrowed app id 480 makes Steam Input claim the controller and hide XInput from the game's
+  own process, so every pad slot reads disconnected. Set `CTYPE_NO_STEAM` to skip the init and
+  the pad comes back. Not a bug in the input code, and not the x64 switch — both were ruled out
+  by measurement. See ROADMAP S6.
 
 ## Testing
 
