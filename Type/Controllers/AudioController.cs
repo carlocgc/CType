@@ -10,39 +10,20 @@ namespace Type.Controllers
     /// actually plays.
     /// </summary>
     /// <remarks>
-    /// **This exists because the engine has eight audio sources and no opinion about who gets
-    /// them.** <see cref="AudioManager"/> hands out one of eight, and when they are all busy the
-    /// <see cref="AudioPlayer"/> constructor gives up and writes a line to the console. Whichever
-    /// sound asked last loses, so in a firefight the thing that goes quiet is whatever happened
-    /// to be most recent rather than whatever mattered least.
+    /// The engine has a limited pool of audio sources and drops whatever asks once they are all
+    /// busy, so without a limit the sound that goes quiet in a firefight is whichever asked last.
+    /// This holds a global minimum interval per sound and a ceiling on how many effects run at
+    /// once; the numbers live in <see cref="Data.Sounds"/>.
     /// <para>
-    /// **The measurement, at level 11 with the ship auto-firing, over 150 seconds:** with the old
-    /// per-enemy rate limits in place the engine dropped **1** sound; with them removed it dropped
-    /// **128**. The limits were load bearing, which is why they could not simply be deleted, and
-    /// 128 is the pressure this controller has to absorb in their place. See G4 in ROADMAP.md.
+    /// Intervals are wall clock, not game time. The update a game object receives has already been
+    /// scaled by <see cref="TimeScaleController"/>, so a limit in game time would stretch during a
+    /// hit stop, which is exactly when the most sounds are asked for.
     /// </para>
     /// <para>
-    /// **Why this replaces seven copies of a per-enemy timer.** Each enemy used to hold its own
-    /// `_IsSoundPlaying` flag and allow itself one hit sound every 0.2 seconds. That bounds one
-    /// enemy and nothing else: twenty of them on screen is still up to a hundred requests a
-    /// second into eight sources. The limit has to be global to mean anything, and a global limit
-    /// needs somewhere global to live.
-    /// </para>
-    /// <para>
-    /// **Timed against the wall clock, not game time.** The same trap G3's shake and hit stop hit,
-    /// and I8's rumble before them: the update a game object receives has already been scaled by
-    /// <see cref="TimeScaleController"/>, so a limit measured in game time would stretch to
-    /// several times its length during a hit stop — exactly when the most sounds are being asked
-    /// for. This is the fourth time game time has been the wrong clock for a feedback effect.
-    /// </para>
-    /// <para>
-    /// **The budget is advisory, and deliberately so.** Clip lengths come from the audio data, so
-    /// the controller knows roughly how long each source stays busy, but it cannot see sources the
-    /// engine gave to anything else — music, or a caller that has not been routed through here
-    /// yet. It also over-admits after the game has been left unfocused, because
-    /// <see cref="AmosShared.Base.BaseGame.Pause"/> pauses the sources without stopping the wall
-    /// clock. Both cases fail into the engine's own behaviour, which is to drop the sound, so
-    /// being wrong here costs a dropped effect rather than a crash.
+    /// The budget is advisory: it cannot see sources the engine gave to anything else, and it
+    /// over-admits after the game has been left unfocused, because pausing stops the sources
+    /// without stopping the clock. Both cases fail into the engine dropping the sound rather than
+    /// into anything worse. See G4 in ROADMAP.md for the measurements behind the numbers.
     /// </para>
     /// </remarks>
     public class AudioController
@@ -51,10 +32,9 @@ namespace Type.Controllers
         private static AudioController _Instance;
 
         /// <summary>
-        /// How many of the engine's eight sources effects are allowed to hold at once.
-        /// The remainder is what keeps music off the failure path described in G4: a track
-        /// started while every source is busy comes back half constructed, and stopping it later
-        /// throws inside the engine.
+        /// How many effects may hold a source at once, leaving the rest of the engine's pool for
+        /// music. It refuses about 0.3% of requests, so it is a safety valve rather than the thing
+        /// shaping what is heard - the intervals do that.
         /// </summary>
         private const Int32 EFFECT_BUDGET = 6;
 
