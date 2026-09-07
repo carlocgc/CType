@@ -104,6 +104,10 @@ namespace Type.States
             // pooled particle registers a sprite with it.
             ParticleController.Instance.Initialise();
 
+            // Same ordering for the same reason: the shake takes hold of the canvas's camera.
+            ScreenShakeController.Instance.Initialise();
+            TimeScaleController.Instance.Initialise();
+
             _EnemyFactory = new EnemyFactory();
             _EnemyFactory.RegisterListener(this);
             _EnemyFactory.ParentState = this;
@@ -193,6 +197,8 @@ namespace Type.States
             _GameScene.RemovePowerUps();
             Rumble.PlayerDeath();
             Particles.PlayerDestroyed(position);
+            Shake.PlayerDeath();
+            HitStop.PlayerDeath();
 
             if (_LifeMeter.PlayerLives > 0)
             {
@@ -265,6 +271,8 @@ namespace Type.States
             {
                 Rumble.BossDestroyed();
                 Particles.BossDestroyed(enemy.Position);
+                Shake.BossDestroyed();
+                HitStop.BossDestroyed();
             }
             else
             {
@@ -315,7 +323,8 @@ namespace Type.States
             if (_Paused == paused) return;
 
             _Paused = paused;
-            Game.GameTime.Multiplier = paused ? 0 : 1;
+            TimeScaleController.Instance.Paused = paused;
+            ScreenShakeController.Instance.Paused = paused;
             _UIScene.SetPaused(paused);
             InputService.Instance.SetPaused(paused);
 
@@ -518,7 +527,8 @@ namespace Type.States
             ClosePauseMenu();
 
             _Paused = false;
-            Game.GameTime.Multiplier = 1;
+            TimeScaleController.Instance.Reset();
+            ScreenShakeController.Instance.Paused = false;
             InputService.Instance.SetPaused(false);
 
             markIntent();
@@ -649,6 +659,7 @@ namespace Type.States
                         _GameScene.ShowNukeEffect();
                         new AudioPlayer("Content/Audio/nuke.wav", false, AudioManager.Category.EFFECT, 1);
                         Rumble.Nuke();
+                        Shake.Nuke();
 
                         _NukePressed = true;
 
@@ -682,6 +693,11 @@ namespace Type.States
             // Every pooled particle holds a sprite registered with the canvas, so leaving the
             // pool behind is exactly the leak S9 went looking for.
             ParticleController.Instance.Dispose();
+
+            // Both outlive the level if they are left alone: the camera belongs to a canvas
+            // built when the game started, and the clock is the game's own.
+            ScreenShakeController.Instance.Dispose();
+            TimeScaleController.Instance.Dispose();
 
             _LevelDisplay = null;
             _ScoreDisplay = null;
