@@ -43,6 +43,8 @@ namespace Type.Objects.Player
         private Vector2 _Direction;
         /// <summary> Movement speed modifier </summary>
         private Single _MoveStrength;
+        /// <summary> How far the ship is rolled, as a vertical scale, 1 being level </summary>
+        private Single _Bank = 1f;
         /// <summary> Whether firing is allowed </summary>
         private Boolean _IsWeaponLocked;
         /// <summary> Whether the ship is autofiring </summary>
@@ -178,7 +180,8 @@ namespace Type.Objects.Player
                 Shoot();
             }
 
-            Rotation = Banking.Toward(Rotation, _Direction.Y * _MoveStrength, timeTilUpdate);
+            _Bank = Banking.Toward(_Bank, _Direction.Y * _MoveStrength, timeTilUpdate);
+            _Sprite.Scale = new Vector2(1f, _Bank);
 
             Position += GetPositionModifier(timeTilUpdate);
             HitBox = GetRect();

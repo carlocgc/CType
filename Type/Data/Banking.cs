@@ -3,42 +3,50 @@ using System;
 namespace Type.Data
 {
     /// <summary>
-    /// How far the player's ship tips as it climbs and dives, and how quickly it gets there.
+    /// How far the player's ship rolls as it climbs and dives, and how quickly it gets there.
     /// </summary>
     /// <remarks>
-    /// The ship art is a single sprite drawn side on, with no banked frames to swap to, so the
-    /// bank is a rotation of that one sprite. Small on purpose: past about fifteen degrees a flat
-    /// side view stops reading as a ship leaning and starts reading as a ship pointing the wrong
-    /// way, because none of the perspective the art would need is there.
+    /// **A roll, not a turn.** The ship is drawn from above with its wings across the screen, so
+    /// rolling about the fuselage swings one wing towards the viewer and the other away, and what
+    /// that does to a flat sprite is foreshorten it vertically. This returns that foreshortening
+    /// as a vertical scale: rotating the sprite instead reads as the ship steering, which is a
+    /// different manoeuvre and the wrong one.
     /// <para>
-    /// Eased rather than snapped, and eased on a rate rather than a fixed step, so the tip is
-    /// proportional to how far the stick is pushed. A digital key press reaches full deflection
-    /// and gets the full angle; a light analog nudge gets a little of it, which is most of what
-    /// makes this read as flying rather than as an animation being triggered.
+    /// **It cannot say which wing is nearer, and nothing here can.** The far wing should be
+    /// smaller than the near one, which is a shear the engine has no way to express, and there
+    /// is no banked art to swap to. So the squash is symmetric: climbing and diving look alike.
+    /// Banked frames for the four ships would fix it properly.
     /// </para>
     /// <para>
-    /// **These values have not been judged by eye** - see G6 in ROADMAP.md.
+    /// Eased on a rate rather than a fixed step, and scaled by how far the stick is pushed, so a
+    /// light analog nudge gets a little of it. **Not judged by eye** - see G6 in ROADMAP.md.
     /// </para>
     /// </remarks>
     public static class Banking
     {
-        /// <summary> Furthest the ship tips, in radians, at full deflection </summary>
-        private const Single MaxAngle = 0.20f;
+        /// <summary>
+        /// How much of the wingspan is left at full deflection. 0.68 is a roll of about
+        /// forty-seven degrees, which is enough to read without the ship looking damaged.
+        /// </summary>
+        private const Single MaxSquash = 0.68f;
 
-        /// <summary> How quickly the ship reaches the angle it is heading for, per second </summary>
+        /// <summary> How quickly the ship reaches the roll it is heading for, per second </summary>
         private const Single Rate = 8f;
 
         /// <summary>
-        /// Moves a rotation towards the one the current input asks for
+        /// Moves a roll towards the one the current input asks for
         /// </summary>
-        /// <param name="current"> The ship's rotation now, in radians </param>
+        /// <param name="current"> The ship's vertical scale now, 1 being level </param>
         /// <param name="vertical"> Vertical input, -1 to 1, already scaled by how hard it is pushed </param>
         /// <param name="timeTilUpdate"> Time since the last update </param>
-        /// <returns> The rotation to use this frame </returns>
-        public static Double Toward(Double current, Single vertical, TimeSpan timeTilUpdate)
+        /// <returns> The vertical scale to draw the ship at this frame </returns>
+        public static Single Toward(Single current, Single vertical, TimeSpan timeTilUpdate)
         {
-            Double target = vertical * MaxAngle;
-            Double step = Rate * timeTilUpdate.TotalSeconds;
+            Single amount = vertical < 0 ? -vertical : vertical;
+            if (amount > 1) amount = 1;
+
+            Single target = 1f - (1f - MaxSquash) * amount;
+            Single step = Rate * (Single)timeTilUpdate.TotalSeconds;
 
             // Clamped so a long frame cannot overshoot the target and oscillate around it.
             if (step > 1) step = 1;

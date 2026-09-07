@@ -26,7 +26,16 @@ namespace Type.Data
     /// </remarks>
     public static class Particles
     {
-        /// <summary> The flash at the centre of a detonation, effectively white </summary>
+        /// <summary>
+        /// The flash at the centre of a detonation, effectively white.
+        /// </summary>
+        /// <remarks>
+        /// Always spawned as a **single stationary particle**, never a handful. A flash is one
+        /// thing happening in one place: several of them, each sent off at its own random angle,
+        /// pile into a lopsided white blob whose centre is visibly not where the enemy was,
+        /// because ten random directions do not average out. The fade on scale and alpha is what
+        /// makes one particle read as a flash.
+        /// </remarks>
         private static readonly Vector4 Core = new Vector4(1f, 1f, 0.92f, 1f);
 
         /// <summary> Hot debris, close to white </summary>
@@ -38,7 +47,7 @@ namespace Type.Data
         /// <summary> A wave enemy breaking up </summary>
         public static void EnemyDestroyed(Vector2 position)
         {
-            ParticleController.Instance.Burst(position, 10, 20, 110, Core, 0.22f, 6f, 4.5f);
+            ParticleController.Instance.Burst(position, 1, 0, 0, Core, 0.18f, 6.5f, 0f);
             ParticleController.Instance.Burst(position, 26, 140, 460, Spark, 0.45f, 3.2f, 2.2f);
             ParticleController.Instance.Burst(position, 20, 60, 240, Ember, 0.9f, 2.6f, 1.4f);
         }
@@ -52,7 +61,7 @@ namespace Type.Data
         /// </remarks>
         public static void BossDeathBlast(Vector2 position)
         {
-            ParticleController.Instance.Burst(position, 6, 20, 90, Core, 0.18f, 4.5f, 4.5f);
+            ParticleController.Instance.Burst(position, 1, 0, 0, Core, 0.15f, 4.5f, 0f);
             ParticleController.Instance.Burst(position, 14, 110, 330, Spark, 0.4f, 2.6f, 2.4f);
             ParticleController.Instance.Burst(position, 10, 50, 180, Ember, 0.75f, 2.2f, 1.5f);
         }
@@ -60,7 +69,7 @@ namespace Type.Data
         /// <summary> A boss finally going up, at the end of the blasts </summary>
         public static void BossDestroyed(Vector2 position)
         {
-            ParticleController.Instance.Burst(position, 18, 30, 170, Core, 0.32f, 10f, 3.5f);
+            ParticleController.Instance.Burst(position, 1, 0, 0, Core, 0.3f, 13f, 0f);
             ParticleController.Instance.Burst(position, 48, 180, 620, Spark, 0.8f, 5.5f, 1.6f);
             ParticleController.Instance.Burst(position, 40, 80, 320, Ember, 1.4f, 4.5f, 1.0f);
         }
@@ -68,7 +77,7 @@ namespace Type.Data
         /// <summary> The player's ship exploding </summary>
         public static void PlayerDestroyed(Vector2 position)
         {
-            ParticleController.Instance.Burst(position, 14, 25, 140, Core, 0.28f, 7f, 4f);
+            ParticleController.Instance.Burst(position, 1, 0, 0, Core, 0.24f, 8f, 0f);
             ParticleController.Instance.Burst(position, 34, 160, 520, Spark, 0.7f, 4.5f, 1.8f);
             ParticleController.Instance.Burst(position, 28, 70, 280, Ember, 1.2f, 3.6f, 1.1f);
         }
