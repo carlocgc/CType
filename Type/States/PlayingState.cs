@@ -25,7 +25,7 @@ namespace Type.States
     public class PlayingState : State, IPlayerListener, IEnemyListener, IEnemyFactoryListener, IPowerupListener, IPowerupFactoryListener, IInputListener
     {
         /// <summary> Max level of the game </summary>
-        private readonly Int32 _MaxLevel = 20;
+        private readonly Int32 _MaxLevel = Constants.Global.MAX_LEVEL;
         /// <summary> Maximum amount of nukes the player can hold </summary>
         private readonly Int32 _MaxNukes = 3;
         /// <summary> THe type of player craft </summary>
@@ -98,7 +98,7 @@ namespace Type.States
 
         protected override void OnEnter()
         {
-            _CurrentLevel = Constants.Global.START_LEVEL;
+            _CurrentLevel = Cheats.StartLevel;
 
             // Before anything can ask for particles, and after the canvas exists, since every
             // pooled particle registers a sprite with it.
@@ -127,6 +127,14 @@ namespace Type.States
             _LifeMeter = _UIScene.LifeMeter;
             _LevelDisplay = _UIScene.LevelDisplay;
             _UIScene.ShowOnScreenControls(true);
+
+            // Shown full rather than empty, so the count on screen agrees with what firing
+            // actually does. Nothing decrements it while the cheat is on.
+            if (Cheats.InfiniteBombs)
+            {
+                _CurrentNukes = _MaxNukes;
+                _UIScene.NukeDisplay.NukeCount = _CurrentNukes;
+            }
             _UIScene.Visible = true;
 
             _GameScene.StartBackgroundScroll();
@@ -643,12 +651,16 @@ namespace Type.States
                     {
                         if (data.State == ButtonData.State.RELEASED) _NukePressed = false;
 
-                        if (data.State != ButtonData.State.PRESSED || _CurrentNukes <= 0) return;
+                        if (data.State != ButtonData.State.PRESSED) return;
+                        if (!Cheats.InfiniteBombs && _CurrentNukes <= 0) return;
 
                         if (_NukePressed) return;
 
-                        _CurrentNukes--;
-                        _UIScene.NukeDisplay.NukeCount = _CurrentNukes;
+                        if (!Cheats.InfiniteBombs)
+                        {
+                            _CurrentNukes--;
+                            _UIScene.NukeDisplay.NukeCount = _CurrentNukes;
+                        }
                         CollisionController.Instance.ClearProjectiles();
 
                         foreach (IEnemy enemy in _GameScene.Enemies.Where(e => e.CanBeRoadKilled))

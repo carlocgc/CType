@@ -100,7 +100,7 @@ namespace Type.Scenes
             AlphaButton = new ShipSelectButton(0, CardPosition(0), CardScale, "Content/Graphics/Player/player-alpha.png", "ALPHA", 1, 100, 100, false);
             BetaButton = new ShipSelectButton(1, CardPosition(1), CardScale, "Content/Graphics/Player/player-beta.png", "BETA", 2, 80, 80, false);
             GammaButton = new ShipSelectButton(2, CardPosition(2), CardScale, "Content/Graphics/Player/player-gamma.png", "GAMMA", 3, 60, 60, false);
-            OmegaButton = new ShipSelectButton(3, CardPosition(3), CardScale, "Content/Graphics/Player/player_omega.png", "OMEGA", 1, 200, 120, !Progress.GameCompleted);
+            OmegaButton = new ShipSelectButton(3, CardPosition(3), CardScale, "Content/Graphics/Player/player_omega.png", "OMEGA", 1, 200, 120, !OmegaUnlocked());
 
 #if __ANDROID__
             Sprite backButton = new Sprite(Game.MainCanvas, Constants.ZOrders.ABOVE_GAME, Texture.GetTexture("Content/Graphics/Buttons/exitbutton.png"))
@@ -114,6 +114,34 @@ namespace Type.Scenes
             _BackButton.TouchEnabled = true;
             _BackButton.Visible = true;
 #endif // #if __ANDROID__
+        }
+
+        /// <summary>
+        /// Whether the Omega ship can be picked.
+        /// </summary>
+        /// <remarks>
+        /// The campaign decides this unless a cheat says otherwise, and a cheat can say either
+        /// way. A build without cheats folds back to <see cref="Progress.GameCompleted"/> alone,
+        /// because <see cref="Cheats.OmegaUnlock"/> is then a literal the compiler resolves.
+        /// </remarks>
+        /// <returns> True when the card is selectable </returns>
+        private static Boolean OmegaUnlocked()
+        {
+            switch (Cheats.OmegaUnlock)
+            {
+                case CheatOverride.FORCED_ON:
+                    {
+                        return true;
+                    }
+                case CheatOverride.FORCED_OFF:
+                    {
+                        return false;
+                    }
+                default:
+                    {
+                        return Progress.GameCompleted;
+                    }
+            }
         }
 
         /// <summary>

@@ -83,21 +83,8 @@ namespace Type
             public const Boolean SHOW_SPRITE_AREAS = false;
 #endif // #if DEBUG
 
-            // Cheats are opt-in and Debug-only. To enable them locally, add CTYPE_CHEATS to
-            // DefineConstants for the Debug configuration, or build with
-            // /p:DefineConstants="TRACE;DEBUG;__DESKTOP__;CTYPE_CHEATS".
-            // Never commit CTYPE_CHEATS to a checked-in configuration.
-#if DEBUG && CTYPE_CHEATS
-            /// <summary> Player will not take damage when set to true </summary>
-            public const Boolean INVINCIBLE = true;
-            /// <summary> The level the game will start on </summary>
-            public const Int32 START_LEVEL = 11;
-#else // #if DEBUG && CTYPE_CHEATS
-            /// <summary> Player will not take damage when set to true </summary>
-            public const Boolean INVINCIBLE = false;
-            /// <summary> The level the game will start on </summary>
-            public const Int32 START_LEVEL = 1;
-#endif // #if DEBUG && CTYPE_CHEATS
+            /// <summary> How many levels the game has </summary>
+            public const Int32 MAX_LEVEL = 20;
 
             /// <summary> The top of the screen </summary>
             public static readonly Single ScreenTop = Renderer.Instance.TargetDimensions.Y / 2;

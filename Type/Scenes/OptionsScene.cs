@@ -37,17 +37,26 @@ namespace Type.Scenes
         public MenuTextItem ControlsItem { get; }
 
         /// <summary>
+        /// Opens the cheats screen, or null in a build without cheats
+        /// </summary>
+        public MenuTextItem CheatsItem { get; }
+
+        /// <summary>
         /// Builds the screen
         /// </summary>
         /// <param name="onControls">
         /// Invoked when the player asks for the controls screen. The caller owns that screen,
         /// because where it goes differs between the main menu and a paused game.
         /// </param>
+        /// <param name="onCheats">
+        /// Invoked when the player asks for the cheats screen. Null, and the entry absent, in any
+        /// build without <c>CTYPE_CHEATS</c>.
+        /// </param>
         /// <param name="overlay">
         /// True when shown over something already on screen, such as the paused game, in which
         /// case the menu art is omitted and only the dark wash is drawn.
         /// </param>
-        public OptionsScene(Action onControls, Boolean overlay = false)
+        public OptionsScene(Action onControls, Action onCheats = null, Boolean overlay = false)
         {
             if (!overlay)
             {
@@ -122,6 +131,14 @@ namespace Type.Scenes
                 ControlsItem = new MenuTextItem("CONTROLS", new Vector2(-700, -350), onControls, false, 2);
             }
 
+            // Only exists where CTYPE_CHEATS is defined, so a shipped build has no way in and
+            // no screen to reach. The entry is deliberately last, under everything a player is
+            // meant to use.
+            if (Cheats.Available && onCheats != null)
+            {
+                CheatsItem = new MenuTextItem("CHEATS", new Vector2(-700, -430), onCheats, false, 2);
+            }
+
             _BackPrompt = new InputPrompt(ButtonData.Type.CANCEL, "BACK", new Vector2(-880, -480));
         }
 
@@ -136,6 +153,7 @@ namespace Type.Scenes
             _BackPrompt.Visible = visible;
             foreach (OptionRow row in Rows) row.SetVisible(visible);
             ControlsItem?.SetVisible(visible);
+            CheatsItem?.SetVisible(visible);
         }
 
         /// <summary>
@@ -161,6 +179,7 @@ namespace Type.Scenes
         {
             base.Dispose();
             foreach (OptionRow row in Rows) row.Dispose();
+            CheatsItem?.Dispose();
             ControlsItem?.Dispose();
             Rows.Clear();
             _BackPrompt.Dispose();

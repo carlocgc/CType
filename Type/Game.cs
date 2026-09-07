@@ -53,6 +53,7 @@ namespace Type
             // Must come first: both of the below read through it.
             StorageService.Instance.Load();
             Settings.Load();
+            Cheats.Load();
             ControlSettings.Load();
             Progress.Load();
 

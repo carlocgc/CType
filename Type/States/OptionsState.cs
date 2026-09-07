@@ -17,6 +17,14 @@ namespace Type.States
         /// <summary> The controls screen when it is open, null when it is not </summary>
         private ControlsScene _ControlsScene;
 
+#if CTYPE_CHEATS
+        /// <summary> The cheats screen when it is open, null when it is not </summary>
+        private CheatsScene _CheatsScene;
+
+        /// <summary> Moves focus between the cheats while the cheats screen is open </summary>
+        private MenuNavigator _CheatsNavigator;
+#endif
+
         /// <summary> Menu music, carried through so it keeps playing across the screen </summary>
         private AudioPlayer _Music;
 
@@ -41,7 +49,7 @@ namespace Type.States
         /// <inheritdoc />
         protected override void OnEnter()
         {
-            _Scene = new OptionsScene(ShowControls) { Visible = true };
+            _Scene = new OptionsScene(ShowControls, ShowCheats) { Visible = true };
 
             FocusOptions();
         }
@@ -54,6 +62,7 @@ namespace Type.States
             _Navigator = new MenuNavigator { OnCancel = () => _IsComplete = true };
             foreach (OptionRow row in _Scene.Rows) _Navigator.Add(row);
             _Navigator.Add(_Scene.ControlsItem);
+            _Navigator.Add(_Scene.CheatsItem);
             _Navigator.FocusFirst();
         }
 
@@ -96,6 +105,45 @@ namespace Type.States
             FocusOptions();
         }
 
+        /// <summary>
+        /// Opens the cheats screen over the settings, the same way the controls screen is opened.
+        /// Does nothing in a build without cheats, where there is no entry to invoke it.
+        /// </summary>
+        private void ShowCheats()
+        {
+#if CTYPE_CHEATS
+            if (_CheatsScene != null) return;
+
+            _Navigator?.Dispose();
+            _Navigator = null;
+
+            _Scene.SetSettingsVisible(false);
+            _CheatsScene = new CheatsScene { Visible = true };
+
+            _CheatsNavigator = new MenuNavigator { OnCancel = CloseCheats };
+            foreach (OptionRow row in _CheatsScene.Rows) _CheatsNavigator.Add(row);
+            _CheatsNavigator.FocusFirst();
+#endif
+        }
+
+#if CTYPE_CHEATS
+        /// <summary>
+        /// Closes the cheats screen and returns focus to the settings
+        /// </summary>
+        private void CloseCheats()
+        {
+            if (_CheatsScene == null) return;
+
+            _CheatsNavigator?.Dispose();
+            _CheatsNavigator = null;
+            _CheatsScene.Dispose();
+            _CheatsScene = null;
+
+            _Scene.SetSettingsVisible(true);
+            FocusOptions();
+        }
+#endif
+
         /// <inheritdoc />
         public override Boolean IsComplete()
         {
@@ -112,6 +160,12 @@ namespace Type.States
         public override void Dispose()
         {
             base.Dispose();
+#if CTYPE_CHEATS
+            _CheatsNavigator?.Dispose();
+            _CheatsNavigator = null;
+            _CheatsScene?.Dispose();
+            _CheatsScene = null;
+#endif
             _ControlsNavigator?.Dispose();
             _ControlsNavigator = null;
             _ControlsScene?.Dispose();
