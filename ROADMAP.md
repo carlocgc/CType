@@ -730,16 +730,24 @@ Not glamorous, but these are store-page and refund-request items.
   The fix removes `IUpdatable` from `PlayingState` entirely — the registration, the
   deregistration and `CanUpdate` — leaving `StateManager` the only driver, as it already was
   for every other state. `IsDisposed` stays, since `Dispose` uses it as its re-entrancy guard.
-  **What is still fragile, and was deliberately not changed here:** `LevelComplete` leaves
-  `_LevelStarted` true for the two seconds the level banner is up, so `Update`'s guard rests
-  entirely on the counter reset above rather than on a flag that means "a level is in
-  progress". Setting `_LevelStarted = false` in `LevelComplete` and letting `OnLevelStarted`
-  set it back would make that an invariant instead of a coincidence. It is behaviour-preserving,
-  but it is a change to gameplay logic in a fix whose whole point was to delete a duplicate
-  call, so it is left as a separate decision.
-  *Verified: clean `Rebuild`, and the game boots to the main menu and plays. Not verified by
-  running a campaign through to level 20 — the double `GameEnd` was ruled out by reading the
-  ordering, and by the fact that the second call is now gone regardless.*
+  **The flag is now honest too, in a follow-up commit.** `LevelComplete` used to leave
+  `_LevelStarted` true for the two seconds the level banner is up, so `Update`'s guard rested
+  entirely on the counter reset rather than on a flag meaning "a level is in progress". It now
+  clears `_LevelStarted` when the level ends, and `OnLevelStarted` — which the factory already
+  called, and which `OnEnter`'s first level always relied on alone — is the single place that
+  sets it back. The redundant `_LevelStarted = true` in `LevelComplete`'s own banner callback
+  is gone with it. Behaviour is unchanged either way; the difference is that skipping the
+  second call is now an invariant rather than a coincidence.
+  *Verified by playing, not by reading: with cheats on, booting straight into level 11 and
+  leaving the pad alone, enemies leave the screen and the level completes itself. Level 11
+  advanced to 12 with exactly one `LevelComplete`, and with `_MaxLevel` temporarily capped at
+  11 so the last-level branch is reachable without shooting a boss, `LevelComplete`,
+  `GameCompleted` and `GameStats.GameEnd` each ran exactly once.*
+  *The same run against the **unfixed** code is what confirms the paragraph above: with the
+  double update still in place, `GameEnd` also ran only once, because the state is disposed
+  inside the frame. So the near-miss was real and it was, in fact, a miss.*
+  *Not verified: a campaign played by hand from level 1 to the level 20 boss. The boss cannot
+  be killed without input, and input cannot be driven from outside the process.*
 
 ### Phase 3 — Graphics
 

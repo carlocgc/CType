@@ -50,7 +50,8 @@ namespace Type.States
         private IPlayer _Player;
         /// <summary> Whether the game is paused </summary>
         private Boolean _Paused;
-        /// <summary> Whether the level has started </summary>
+        /// <summary> Whether a level is currently running. Set by <see cref="OnLevelStarted"/>
+        /// when the factory begins one, and cleared by <see cref="LevelComplete"/> when it ends </summary>
         private Boolean _LevelStarted;
         /// <summary> Whether the game is over </summary>
         private Boolean _GameOver;
@@ -549,6 +550,10 @@ namespace Type.States
         {
             if (_GameOver) return;
 
+            // The level is over from here until the factory says the next one has begun, so that
+            // Update stops testing the counters against a level that is no longer running.
+            _LevelStarted = false;
+
             AchievementController.Instance.LevelCompleted(_CurrentLevel);
 
             if (_CurrentLevel >= _MaxLevel) GameCompleted();
@@ -559,7 +564,6 @@ namespace Type.States
                 _LevelDisplay.ShowLevel(_CurrentLevel, TimeSpan.FromSeconds(2), () =>
                 {
                     _EnemyFactory.Start(LevelLoader.GetWaveData(_CurrentLevel));
-                    _LevelStarted = true;
                 });
             }
         }
