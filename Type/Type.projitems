@@ -27,7 +27,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\ScreenFlashController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\ScreenShakeController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\TimeScaleController.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\Banking.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\ButtonEventData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\CheatOverride.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Cheats.cs" />

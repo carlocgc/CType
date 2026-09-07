@@ -3,6 +3,7 @@
 using AmosShared.Competitive;
 #endif // #if __ANDROID__
 using AmosShared.Graphics;
+using AmosShared.GLWrapper;
 using AmosShared.State;
 using Engine.Shared.Graphics.Textures;
 using OpenTK;
@@ -52,10 +53,11 @@ namespace Type
                 new Shader());
             // Additive blending is what makes these read as light rather than as paint, and it
             // is measured rather than assumed: forty stacked particles at a quarter brightness
-            // come back as 64 normally and 255 additively. It needs AmosEngine !32, which is not
-            // merged, so the canvas exists now and the one line that switches it lands with the
-            // submodule bump. See G6 in ROADMAP.md.
-            ParticleCanvas = new Canvas(MainCanvas.Camera, 1, new Shader());
+            // come back as 64 normally and 255 additively.
+            ParticleCanvas = new Canvas(MainCanvas.Camera, 1, new Shader())
+            {
+                BlendDestination = GLEnums.BlendDestination.ONE,
+            };
 
             UiCanvas = new Canvas(new Camera(Vector2.Zero, new Vector2(1920, 1080)), 2,
                 new Shader());
