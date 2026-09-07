@@ -40,14 +40,13 @@ namespace Type.Data
         public static Int32 StartLevel { get; private set; } = 1;
 
         /// <summary>
-        /// Whether the Omega ship can be picked without having finished the game
+        /// Whether the Omega ship's unlock follows the campaign, or is forced either way
         /// </summary>
         /// <remarks>
         /// Deliberately separate from <see cref="Progress.GameCompleted"/> rather than setting
-        /// it. Marking the game complete to unlock a ship would also rewrite the player's real
-        /// progress, and there would be no way back from it.
+        /// it, and three states rather than a switch. See <see cref="CheatOverride"/>.
         /// </remarks>
-        public static Boolean OmegaUnlocked { get; private set; }
+        public static CheatOverride OmegaUnlock { get; private set; }
 
         /// <summary> Whether firing a bomb uses one up </summary>
         public static Boolean InfiniteBombs { get; private set; }
@@ -60,7 +59,7 @@ namespace Type.Data
         {
             Invincible = ReadFlag(InvincibleKey);
             StartLevel = ReadStartLevel();
-            OmegaUnlocked = ReadFlag(OmegaUnlockedKey);
+            OmegaUnlock = ReadOverride(OmegaUnlockedKey);
             InfiniteBombs = ReadFlag(InfiniteBombsKey);
         }
 
@@ -85,13 +84,13 @@ namespace Type.Data
         }
 
         /// <summary>
-        /// Unlocks or relocks the Omega ship and saves it
+        /// Sets how the Omega unlock is decided and saves it
         /// </summary>
-        /// <param name="unlocked"> Whether Omega can be picked </param>
-        public static void SetOmegaUnlocked(Boolean unlocked)
+        /// <param name="state"> Whether to follow the campaign or force a state </param>
+        public static void SetOmegaUnlock(CheatOverride state)
         {
-            OmegaUnlocked = unlocked;
-            StorageService.Instance.SetValue(OmegaUnlockedKey, OmegaUnlocked ? 1 : 0);
+            OmegaUnlock = state;
+            StorageService.Instance.SetValue(OmegaUnlockedKey, OmegaUnlock.ToString());
         }
 
         /// <summary>
@@ -121,6 +120,23 @@ namespace Type.Data
                 // A corrupt value must not stop the game starting, and must not turn a cheat on.
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Reads a stored override, falling back to leaving the game's own answer alone
+        /// </summary>
+        /// <remarks>
+        /// Stored by name rather than ordinal, the same as the display mode, so reordering
+        /// <see cref="CheatOverride"/> cannot silently change what a saved cheat means.
+        /// </remarks>
+        private static CheatOverride ReadOverride(String key)
+        {
+            Object stored = StorageService.Instance.GetValue(key);
+            if (stored == null) return CheatOverride.DEFAULT;
+
+            return Enum.TryParse(stored.ToString(), true, out CheatOverride state)
+                ? state
+                : CheatOverride.DEFAULT;
         }
 
         /// <summary>
@@ -160,8 +176,8 @@ namespace Type.Data
         /// <summary> The level a new run begins on. Always the first, in a build without cheats </summary>
         public static Int32 StartLevel => 1;
 
-        /// <summary> Whether Omega is unlocked. Only by finishing the game, in a build without cheats </summary>
-        public static Boolean OmegaUnlocked => false;
+        /// <summary> How Omega's unlock is decided. Always by the campaign, in a build without cheats </summary>
+        public static CheatOverride OmegaUnlock => CheatOverride.DEFAULT;
 
         /// <summary> Whether bombs are free. Never, in a build without cheats </summary>
         public static Boolean InfiniteBombs => false;

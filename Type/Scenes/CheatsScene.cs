@@ -71,9 +71,9 @@ namespace Type.Scenes
                     () => Cheats.StartLevel.ToString(),
                     step => Cheats.SetStartLevel(Cheats.StartLevel + step)),
 
-                new OptionRow("OMEGA UNLOCKED", new Vector2(-700, -100),
-                    () => Cheats.OmegaUnlocked ? "ON" : "OFF",
-                    step => Cheats.SetOmegaUnlocked(!Cheats.OmegaUnlocked)),
+                new OptionRow("OMEGA SHIP", new Vector2(-700, -100),
+                    () => Describe(Cheats.OmegaUnlock),
+                    step => Cheats.SetOmegaUnlock(Cycle(Cheats.OmegaUnlock, step))),
 
                 new OptionRow("INFINITE BOMBS", new Vector2(-700, -200),
                     () => Cheats.InfiniteBombs ? "ON" : "OFF",
@@ -81,6 +81,47 @@ namespace Type.Scenes
             };
 
             _BackPrompt = new InputPrompt(ButtonData.Type.CANCEL, "BACK", new Vector2(-880, -480));
+        }
+
+        /// <summary>
+        /// How an override reads on screen. "CAMPAIGN" rather than "DEFAULT" because what it
+        /// means here is that the ship is unlocked by finishing the game, as it is in a shipped
+        /// build, which is the thing a tester most needs to be able to get back to.
+        /// </summary>
+        /// <param name="state"> The override to describe </param>
+        /// <returns> The text for the row </returns>
+        private static String Describe(CheatOverride state)
+        {
+            switch (state)
+            {
+                case CheatOverride.FORCED_ON:
+                    {
+                        return "UNLOCKED";
+                    }
+                case CheatOverride.FORCED_OFF:
+                    {
+                        return "LOCKED";
+                    }
+                default:
+                    {
+                        return "CAMPAIGN";
+                    }
+            }
+        }
+
+        /// <summary>
+        /// Steps an override to the next state, wrapping at both ends
+        /// </summary>
+        /// <param name="state"> The override now </param>
+        /// <param name="step"> -1 for the previous state, 1 for the next </param>
+        /// <returns> The override to move to </returns>
+        private static CheatOverride Cycle(CheatOverride state, Int32 step)
+        {
+            Array states = Enum.GetValues(typeof(CheatOverride));
+            Int32 index = Array.IndexOf(states, state);
+            Int32 next = ((index + step) % states.Length + states.Length) % states.Length;
+
+            return (CheatOverride)states.GetValue(next);
         }
 
         /// <inheritdoc />
