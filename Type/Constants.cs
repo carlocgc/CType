@@ -206,9 +206,16 @@ namespace Type
             /// <summary> Debris and sparks, above the enemies they came from and below the player </summary>
             public const Int32 PARTICLES = 87;
 
+            /// <summary> Blasts running across a dying boss, above its hull and its debris </summary>
+            public const Int32 BOSS_DEATH_BLAST = 88;
+
             public const Int32 PLAYER = 90;
 
             public const Int32 SHIELD = 95;
+
+            /// <summary> Whites the field out. On the UI canvas so the shake cannot slide it
+            /// off its own edges, and under <see cref="UI"/> so the HUD stays readable </summary>
+            public const Int32 SCREEN_FLASH = 999;
 
             public const Int32 UI = 1000;
 

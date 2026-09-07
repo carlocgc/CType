@@ -24,6 +24,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\PositionRelayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\ParticleController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\ProbeController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controllers\ScreenFlashController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\ScreenShakeController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\TimeScaleController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\ButtonEventData.cs" />
@@ -34,6 +35,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\ButtonData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\ControlSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Particles.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Flash.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\HitStop.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Rumble.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Shake.cs" />
@@ -89,6 +91,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Service\IStorageProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Weapons\IProjectile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Weapons\IProjectileShooter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Bosses\BossDeathSequence.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Bosses\BossFighter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Bosses\BossCannon.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Bosses\BossFighterStrong.cs" />

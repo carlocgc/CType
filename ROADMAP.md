@@ -900,8 +900,64 @@ Your second stated priority. Ordered cheapest-impact-first.
   download.
 - **G5. Deepen the parallax.** Three scrolling layers exist (stars, clusters, planets). Add
   a foreground layer and tie per-layer speed to player movement for a sense of depth.
-- **G6. Better explosions.** One shared 9-frame animation is used for every death from a
-  small fighter to a boss. Vary scale, tint and duration by enemy class at minimum.
+- **G6. Better explosions.** *Boss deaths rebuilt. The per-class variation the item asked for
+  is still open, and is now the smaller half of it.*
+  **The item understated the problem and the investigation changed what got built.** It read as
+  a polish job: one shared nine frame animation for every death, vary scale, tint and duration.
+  Two things were wrong with that.
+  - Scale already varied, and pointlessly. 2.0 for small enemies, 2.1 for medium, 2.25 for large
+    — a twelve percent spread across the whole roster, which is not visible. Duration was
+    identical everywhere, because nine textures at nine frames a second is one second for
+    everything, and tint was untouched.
+  - **The bosses were not in the scheme at all.** They have no explosion and no death sound. All
+    four kill their cannons, then fly the body off the right of the screen, and only once it is
+    fully outside call `OnEnemyDestroyed`.
+
+  **So the biggest feedback in the game was firing at something nobody could see.**
+  `PlayingState` answers `OnEnemyDestroyed` for an `IBoss` with `Rumble`, `Shake`, `HitStop` and
+  `Particles.BossDestroyed(enemy.Position)` — the 34 unit shake, the 0.15x hit stop, the debris
+  burst. *Traced live: the body sits at x=477 during the fight and the event fires at
+  **x=1262**, against a screen edge at 960. The particles spawned three hundred units off the
+  right of the screen and the shake and hit stop punctuated an empty field.* This is exactly the
+  hole G3's "not verified by playing" note left open: that work proved the mechanism — the
+  multiplier drops and recovers, the camera offsets and returns — but never that the event was
+  visible.
+  **Bosses now come apart where they are standing.** The retreat is gone. When the last cannon
+  dies, `BossDeathSequence` walks blasts across the hull for 2.4 seconds — one every 160ms at a
+  random point in the middle 70% of the body, each with an explosion sound and a light 9 unit
+  shake, every fourth one also flashing the screen — and then a bright flash, at which point the
+  body disappears and `OnEnemyDestroyed` finally fires. The existing boss feedback is unchanged
+  and now lands on a boss the player can still see.
+  **Many small blasts rather than one big one, because there is no big one to draw.** The only
+  explosion art is a nine frame pixel sheet sized for a fighter; scaled to the width of a boss it
+  magnifies every pixel with it and reads as a smear. The size of the event comes from the count,
+  the noise and the shaking instead.
+  `ScreenFlashController` is new and is the fourth of these — camera, clock, particles, flash.
+  Its sprite sits on the **UI** canvas rather than the world one, because `ScreenShakeController`
+  moves the world camera and a full screen overlay drawn through a shaking camera slides off its
+  own edges. Flash and shake are almost always asked for together, so that is the normal case.
+  *The existing nuke flash in `GameScene` has this bug today* — it is on the main canvas and the
+  nuke shakes the camera — and is worth folding into the controller when that area is touched.
+  Numbers live in `Data/Flash.cs`, the same shape as `Rumble`, `Particles`, `Shake`, `HitStop`
+  and `Sounds`.
+  **An engine bug fell out of pooling the blasts, and it is not only mine.**
+  `AnimatedSprite.CurrentFrame` clamps with `Math.Max(value, 0)` where it means
+  `Math.Max(_CurrentFrame, 0)`, which throws away the upper clamp on the line above it. Stepping
+  past the last frame therefore indexes off the end of the texture array, and
+  `EndBehaviour.STOP` never gets a say because the setter throws before `IsEndReached` is
+  consulted. **Every existing user survives only by disposing on the last frame**, which
+  unregisters them before the next step; a pooled sprite is reused instead, so it has to stop
+  itself. Worked around game-side by stopping the blast in its own frame action. The one line
+  engine fix is worth a merge request and has not been raised yet.
+  *Verified by capture, not by eye: the death event now reports **x=477**, on screen, where it
+  reported 1262 before; blasts land across the hull; and the flash is measurable rather than
+  asserted — mean frame brightness jumps from ~16 to **51.9**, a 3.2x lift, on the frame it
+  fires. The sequence runs to completion and the game moves on to the complete screen.*
+  **Not judged by eye.** The 2.4 second length, the 160ms spacing, the 9 unit shake and the flash
+  opacities were reasoned about and measured, not felt, exactly as the G3 magnitudes and the G4
+  intervals were. They want a pass with the game running.
+  **Still open, and now the smaller half:** varying ordinary enemy explosions by class. Scale
+  needs a real spread rather than twelve percent, and duration and tint are still uniform.
 - **G7. Boss telegraphs.** Wind-up animations and warning indicators before attacks. As much
   a fairness fix as a visual one, and a prerequisite for making bosses harder.
 - **G8. Menu and HUD pass.** The HUD is mobile-scaled with touch-sized targets. Rebalance

@@ -106,6 +106,7 @@ namespace Type.States
 
             // Same ordering for the same reason: the shake takes hold of the canvas's camera.
             ScreenShakeController.Instance.Initialise();
+            ScreenFlashController.Instance.Initialise();
             TimeScaleController.Instance.Initialise();
 
             _EnemyFactory = new EnemyFactory();
@@ -323,6 +324,7 @@ namespace Type.States
             _Paused = paused;
             TimeScaleController.Instance.Paused = paused;
             ScreenShakeController.Instance.Paused = paused;
+            ScreenFlashController.Instance.Paused = paused;
             _UIScene.SetPaused(paused);
             InputService.Instance.SetPaused(paused);
 
@@ -527,6 +529,7 @@ namespace Type.States
             _Paused = false;
             TimeScaleController.Instance.Reset();
             ScreenShakeController.Instance.Paused = false;
+            ScreenFlashController.Instance.Paused = false;
             InputService.Instance.SetPaused(false);
 
             markIntent();
@@ -693,6 +696,7 @@ namespace Type.States
             // Both outlive the level if they are left alone: the camera belongs to a canvas
             // built when the game started, and the clock is the game's own.
             ScreenShakeController.Instance.Dispose();
+            ScreenFlashController.Instance.Dispose();
             TimeScaleController.Instance.Dispose();
 
             _LevelDisplay = null;

@@ -40,7 +40,8 @@ namespace Type.Objects.Bosses
         private Boolean _IsAdvancing;
 
         /// <summary> Whether the boss is moving off the screen </summary>
-        private Boolean _IsRetreating;
+        /// <summary> The blasts that take the boss apart once its guns are gone </summary>
+        private readonly BossDeathSequence _DeathSequence;
 
         /// <summary> Where the boss should stop when moving onto screen</summary>
         private Vector2 _StopPosition;
@@ -110,6 +111,7 @@ namespace Type.Objects.Bosses
         {
             _Listeners = new List<IEnemyListener>();
             _Cannons = new List<BossCannon>();
+            _DeathSequence = new BossDeathSequence();
 
             _Body = new Sprite(Game.MainCanvas, Constants.ZOrders.BOSS_BASE, Texture.GetTexture("Content/Graphics/Bosses/boss02.png")) {Visible = true,};
             Position = new Vector2(Renderer.Instance.TargetDimensions.X / 2 + _Body.Width / 2, 0);
@@ -183,19 +185,18 @@ namespace Type.Objects.Bosses
                 }
             }
 
-            if (_IsRetreating)
+            if (_DeathSequence.IsRunning)
             {
-                Position -= _MoveDirection * _Speed * (Single) timeTilUpdate.TotalSeconds;
+                _DeathSequence.Update(timeTilUpdate, Position, _Body.Size);
 
-                if (Position.X - _Body.Width / 2 > Renderer.Instance.TargetDimensions.X / 2 && _IsRetreating)
+                if (_DeathSequence.IsComplete)
                 {
-                    _IsRetreating = false;
+                    _Body.Visible = false;
                     for (var i = _Listeners.Count - 1; i >= 0; i--)
                     {
                         IEnemyListener listener = _Listeners[i];
                         listener.OnEnemyDestroyed(this);
                     }
-
                     Dispose();
                 }
             }
@@ -209,7 +210,7 @@ namespace Type.Objects.Bosses
         {
             _Cannons.Remove(enemy as BossCannon);
             if (_Cannons.Count != 0) return;
-            _IsRetreating = true;
+            _DeathSequence.Start();
         }
 
 #region Unusued Interfaces
@@ -269,6 +270,7 @@ namespace Type.Objects.Bosses
             base.Dispose();
             _Listeners.Clear();
             foreach (BossCannon cannon in _Cannons) cannon.Dispose();
+            _DeathSequence.Dispose();
             _Cannons.Clear();
             _Body.Dispose();
             PositionRelayer.Instance.RemoveRecipient(this);
