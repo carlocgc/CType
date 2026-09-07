@@ -218,7 +218,7 @@ namespace Type.Objects.Player
                 return;
             }
 
-            if (_Invincible || Constants.Global.INVINCIBLE) return;
+            if (_Invincible || Cheats.Invincible) return;
 
             HitPoints -= damage;
 

@@ -25,7 +25,7 @@ namespace Type.States
     public class PlayingState : State, IPlayerListener, IEnemyListener, IEnemyFactoryListener, IPowerupListener, IPowerupFactoryListener, IInputListener
     {
         /// <summary> Max level of the game </summary>
-        private readonly Int32 _MaxLevel = 20;
+        private readonly Int32 _MaxLevel = Constants.Global.MAX_LEVEL;
         /// <summary> Maximum amount of nukes the player can hold </summary>
         private readonly Int32 _MaxNukes = 3;
         /// <summary> THe type of player craft </summary>
@@ -98,7 +98,7 @@ namespace Type.States
 
         protected override void OnEnter()
         {
-            _CurrentLevel = Constants.Global.START_LEVEL;
+            _CurrentLevel = Cheats.StartLevel;
 
             // Before anything can ask for particles, and after the canvas exists, since every
             // pooled particle registers a sprite with it.
