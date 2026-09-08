@@ -185,33 +185,31 @@ Match the surrounding code exactly. The conventions in use:
   other setting. They used to be `const` fields edited by hand before a test run, which is why
   this entry exists: that edit had to be remembered and undone, and whatever was left behind is
   what shipped.
-  **Nothing survives a build without `CTYPE_CHEATS`.** The properties become literals the
-  compiler folds away, `CheatsScene` compiles to nothing, no menu entry is created, and the
-  stored values are never read — verified by running a build without the symbol against a save
-  that had both cheats turned on. Never commit `CTYPE_CHEATS` to a checked-in configuration; an
-  `#error` guard fails the build if it reaches Release.
-  To get a build that has them:
-
-  ```
-  MSBuild.exe Type.Desktop.slnf /t:Rebuild /p:Configuration=Debug /p:DefineConstants="TRACE;DEBUG;DESKTOP;__DESKTOP__;CTYPE_CHEATS"
-  ```
-
-  **`DESKTOP` has to be in that list, and it is easy to miss.** `DefineConstants` given on the
-  command line is a global property, so it flows into `AmosDesktop` and replaces *its* symbols
-  too. The engine selects its platform with `DESKTOP`, not the game's `__DESKTOP__`, so leaving
-  it out sends `AmosShared` down the `#else` branch and the build fails with
-  `CS0246: The type or namespace name 'AmosiOS' could not be found`. That error is about a
-  missing symbol, not a missing iOS project.
-  **In PowerShell, quote the whole argument**, or the `;` separators are parsed as statement
-  separators and MSBuild reports `MSB1006: Property is not valid`:
-
-  ```powershell
-  & $msb Type.Desktop.slnf /t:Rebuild /p:Configuration=Debug '/p:DefineConstants="TRACE;DEBUG;DESKTOP;__DESKTOP__;CTYPE_CHEATS"'
-  ```
-
-  The alternative, if you would rather not hand the engine a symbol list at all, is to build the
-  filter normally and then rebuild only the game project with
-  `/p:BuildProjectReferences=false` and the constants above.
+  **Debug always has them, Release never does, and nothing has to be remembered either way.**
+  `CTYPE_CHEATS` is in the Debug `DefineConstants` in `Type.Desktop.csproj`, so any Debug build
+  has the menu however it was started — F5 in Visual Studio included. Release does not define it:
+  the properties become literals the compiler folds away, `CheatsScene` compiles to nothing, no
+  menu entry is created, and the stored values are never read.
+  **The Release half is enforced by the compiler, not by convention.** `Constants.cs` carries
+  `#if !DEBUG && CTYPE_CHEATS` / `#error`, so a Release build that somehow acquires the symbol
+  fails rather than shipping. *Verified by forcing it: `CS1029: #error: 'CTYPE_CHEATS must never
+  be defined in a Release build.'*
+  **It is a build constant, not a `#define` in a source file.** A C# `#define` is scoped to the
+  file it appears in, so a `#if DEBUG` / `#define CTYPE_CHEATS` pair would have to be repeated at
+  the top of `Cheats.cs`, `CheatsScene.cs`, `OptionsState.cs`, `OptionsScene.cs` and every future
+  file that tests the symbol — and any file that forgot it would silently compile the feature out.
+  **This used to be a command-line-only symbol and that was the bug.** `/p:DefineConstants=...`
+  is a global property that lives for one invocation, so every build that did not repeat it —
+  every IDE build — silently produced a game with no cheats menu and no error saying why. If you
+  ever do pass `DefineConstants` on the command line for some other reason, note that it flows
+  into `AmosDesktop` and replaces *its* symbols too: the engine selects its platform with
+  `DESKTOP`, not the game's `__DESKTOP__`, so omitting it sends `AmosShared` down the `#else`
+  branch and fails with `CS0246: The type or namespace name 'AmosiOS' could not be found`. That
+  error is about a missing symbol, not a missing iOS project.
+  **Android does not define it**, which is deliberate rather than an oversight: the platform is
+  dormant, and `Cheats.cs` has an `#else` branch that supplies the folded literals, so the shared
+  code compiles there either way. Add it to `Type.Android.csproj`'s Debug constants if Android is
+  ever revived and wants the menu.
 - The engine's world origin is screen centre; `Constants.Global.ScreenTop/Bottom/Left/Right`
   are derived from a fixed 1920x1080 target. Backgrounds are positioned at `(-960, -540)`.
 - `new AudioPlayer(...)` is constructed per sound effect, per shot. Enemy classes carry a
