@@ -1,4 +1,4 @@
-﻿using AmosShared.Base;
+using AmosShared.Base;
 using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
 using OpenTK;
@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using Type.Base;
 using Type.Controllers;
+using Type.Data;
 using Type.Interfaces;
 using Type.Interfaces.Enemies;
 using static Type.Constants.Global;
@@ -13,9 +14,27 @@ using static Type.Constants.Global;
 namespace Type.Objects.Bosses
 {
     /// <summary>
-    /// Boss that has three destroyable cannons
+    /// A boss: a body that advances to a stop and a set of destroyable cannons. Which one it is
+    /// comes from its <see cref="BossDefinition"/>.
     /// </summary>
-    public sealed class BossFighter : GameObject, IBoss, IEnemyListener
+    /// <remarks>
+    /// This replaces <c>BossFighter</c>, <c>BossFighterStrong</c>, <c>BossStation</c> and
+    /// <c>BossStationStrong</c>, which were 273 to 278 lines each. Stripped of whitespace they
+    /// were the same file: the four differed in the body texture and the cannon list and in
+    /// nothing else - see E1 in ROADMAP.md.
+    /// <para>
+    /// **Deliberately not merged into <see cref="Objects.Enemies.Enemy"/>.** A wave enemy is a
+    /// sprite that moves and shoots; a boss is a hull that advances to a stop, carries guns that
+    /// are hit instead of it, and comes apart over three seconds when the last one dies. Its own
+    /// <see cref="Hit"/> does nothing and it has no hit points. Folding the two together would put
+    /// two behaviours in one class to save a file.
+    /// </para>
+    /// <para>
+    /// E6 is the item that gives bosses phases, per-phase attack patterns and telegraphed
+    /// transitions. It is one class and one table to change now rather than four files.
+    /// </para>
+    /// </remarks>
+    public sealed class Boss : GameObject, IBoss, IEnemyListener
     {
         /// <summary> List of <see cref="IEnemyListener"/>'s </summary>
         private readonly List<IEnemyListener> _Listeners;
@@ -27,14 +46,13 @@ namespace Type.Objects.Bosses
         private readonly Vector2 _MoveDirection;
         /// <summary> Sprite for the boss body </summary>
         private readonly Sprite _Body;
+        /// <summary> The blasts that take the boss apart once its guns are gone </summary>
+        private readonly BossDeathSequence _DeathSequence;
 
         /// <summary> Whether the boss is autofiring </summary>
         private Boolean _AutoFire;
         /// <summary> Whether the boss is moving onto screen </summary>
         private Boolean _IsAdvancing;
-        /// <summary> Whether the boss is moving off the screen </summary>
-        /// <summary> The blasts that take the boss apart once its guns are gone </summary>
-        private readonly BossDeathSequence _DeathSequence;
         /// <summary> Where the boss should stop when moving onto screen</summary>
         private Vector2 _StopPosition;
         /// <summary> The players current position </summary>
@@ -102,24 +120,27 @@ namespace Type.Objects.Bosses
         /// <summary> Amount of points this object is worth </summary>
         public Int32 Points { get; }
 
-        public BossFighter()
+        /// <summary>
+        /// Creates a new <see cref="Boss"/>
+        /// </summary>
+        /// <param name="definition"> Which boss this is </param>
+        public Boss(BossDefinition definition)
         {
             _Listeners = new List<IEnemyListener>();
             _Cannons = new List<BossCannon>();
             _DeathSequence = new BossDeathSequence();
 
-            _Body = new Sprite(Game.MainCanvas, Constants.ZOrders.BOSS_BASE, Texture.GetTexture("Content/Graphics/Bosses/boss01.png"))
+            _Body = new Sprite(Game.MainCanvas, Constants.ZOrders.BOSS_BASE, Texture.GetTexture(definition.Texture))
             {
                 Visible = true,
             };
             Position = new Vector2(Renderer.Instance.TargetDimensions.X / 2 + _Body.Width / 2, 0);
             _Body.Offset = _Body.Size / 2;
 
-            _Cannons.Add(new BossCannon(50, TimeSpan.FromMilliseconds(1500)) { Offset = new Vector2(113, -200) });
-            _Cannons.Add(new BossCannon(75, TimeSpan.FromMilliseconds(1200)) { Offset = new Vector2(102, -130) });
-            _Cannons.Add(new BossCannon(100, TimeSpan.FromMilliseconds(1000)) { Offset = new Vector2(-149, 0) });
-            _Cannons.Add(new BossCannon(75, TimeSpan.FromMilliseconds(1200)) { Offset = new Vector2(102, 130) });
-            _Cannons.Add(new BossCannon(50, TimeSpan.FromMilliseconds(1500)) { Offset = new Vector2(113, 200) });
+            foreach (BossCannonDefinition cannon in definition.Cannons)
+            {
+                _Cannons.Add(new BossCannon(cannon.HitPoints, cannon.FireRate) { Offset = cannon.Offset });
+            }
 
             foreach (BossCannon cannon in _Cannons)
             {
@@ -187,7 +208,7 @@ namespace Type.Objects.Bosses
                 if (_DeathSequence.IsComplete)
                 {
                     _Body.Visible = false;
-                    for (var i = _Listeners.Count - 1; i >= 0; i--)
+                    for (Int32 i = _Listeners.Count - 1; i >= 0; i--)
                     {
                         IEnemyListener listener = _Listeners[i];
                         listener.OnEnemyDestroyed(this);

@@ -34,6 +34,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\GameStats.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\LevelLoader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Progress.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\BossCannonDefinition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\BossDefinition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\BossDefinitions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\ButtonData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\ControlSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Particles.cs" />
@@ -96,11 +99,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Weapons\IProjectile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Weapons\IProjectileShooter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Bosses\BossDeathSequence.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Objects\Bosses\BossFighter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Bosses\Boss.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Bosses\BossCannon.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Objects\Bosses\BossFighterStrong.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Objects\Bosses\BossStation.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Objects\Bosses\BossStationStrong.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\Enemy.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\Movement\EllipseDecreaseMotion.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\Movement\EllipseIncreaseMotion.cs" />
