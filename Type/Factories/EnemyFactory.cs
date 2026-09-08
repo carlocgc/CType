@@ -130,39 +130,22 @@ namespace Type.Factories
                     }
             }
 
+            Int32 enemyType = _CurrentWave.EnemyTypes[_DataIndex];
+
             // Create enemy
-            // The bosses are the exceptions now: everything else is one Enemy driven by an
-            // EnemyDefinition, so ids 0 to 5 no longer need a case each. E6 is what gives the
-            // bosses the same treatment.
-            switch (_CurrentWave.EnemyTypes[_DataIndex])
+            // Two data-driven classes and a table each; the switch on ten ids is gone. A boss is
+            // a separate class rather than a flag on Enemy because it is a different object - a
+            // hull carrying guns that are hit instead of it - not a wave enemy with different
+            // numbers.
+            if (BossDefinitions.Exists(enemyType))
             {
-                case 20:
-                    {
-                        enemy = new BossFighter();
-                        break;
-                    }
-                case 21:
-                    {
-                        enemy = new BossStation();
-                        break;
-                    }
-                case 22:
-                    {
-                        enemy = new BossFighterStrong();
-                        break;
-                    }
-                case 23:
-                    {
-                        enemy = new BossStationStrong();
-                        break;
-                    }
-                default:
-                    {
-                        // Throws for an id that names neither a boss nor a definition, which is
-                        // the validation the old default did.
-                        enemy = new Enemy(EnemyDefinitions.Get(_CurrentWave.EnemyTypes[_DataIndex]), _CurrentWave.Ypositions[_DataIndex], accel);
-                        break;
-                    }
+                enemy = new Boss(BossDefinitions.Get(enemyType));
+            }
+            else
+            {
+                // Throws for an id that names neither, which is the validation the old switch's
+                // default did.
+                enemy = new Enemy(EnemyDefinitions.Get(enemyType), _CurrentWave.Ypositions[_DataIndex], accel);
             }
 
             enemy.RegisterListener(ParentState);

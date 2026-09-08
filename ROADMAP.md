@@ -1064,13 +1064,14 @@ Your second stated priority. Ordered cheapest-impact-first.
 
 ### Phase 4 — Enemy behaviour
 
-Your third stated priority. **E1 was the prerequisite for the rest, and its enemy half is done** —
-the six duplicated classes are one `Enemy` driven by an `EnemyDefinition`, so E2 to E7 are now
-edits to one class and one table rather than to six files each. The player half of E1 is still
-open, but nothing in this phase waits on it.
+Your third stated priority. **E1 was the prerequisite for the rest, and the enemies and bosses are
+done** — six duplicated enemy classes are one `Enemy` driven by an `EnemyDefinition`, and four
+duplicated boss classes are one `Boss` driven by a `BossDefinition`. E2 to E7 are edits to two
+classes and two tables rather than to ten files. The player half of E1 is still open, but nothing
+in this phase waits on it.
 
-- **E1. Collapse the enemy classes into one data-driven `Enemy` type.** *Enemies done. The four
-  player ships are still to do, and are now the whole of what is left.*
+- **E1. Collapse the enemy classes into one data-driven `Enemy` type.** *Enemies and bosses done.
+  The four player ships are still to do, and are now the whole of what is left.*
   **The premise was right and slightly understated.** The item said the six variants differ only
   in HP, points, fire rate and sprite. They differ in seven things — those four plus projectile
   speed, projectile colour and which shot sound plays — and in nothing else at all: a diff of
@@ -1104,6 +1105,51 @@ open, but nothing in this phase waits on it.
   **Not played by hand.** Nobody held the controls; the runs above were the game playing itself
   badly. What that leaves unproven is anything a person would notice rather than a log — but the
   static check covers the failure mode that actually threatened this change.
+  **The bosses went the same way, and the case for it was stronger than for the enemies.** They
+  were never in this item's scope - it said six enemy classes and four player ships - but they
+  were four more copies of one file: `BossFighter`, `BossFighterStrong`, `BossStation` and
+  `BossStationStrong` at 273 to 278 lines each. **Stripped of whitespace they were the same file.**
+  `Points` (20000), `_Speed` (250), `_MoveDirection` and the stop position were identical in all
+  four; only the body texture and the cannon list differed. A raw diff of a fighter against a
+  station reads as 49 changed lines and almost all of it is `using` ordering, blank lines, a
+  wrapped expression, `(Single)` versus `(Single) ` and `#region` indentation.
+  `Objects/Bosses/Boss.cs` is the one class; `Data/BossDefinition.cs` holds a texture and a list of
+  `Data/BossCannonDefinition.cs`; `Data/BossDefinitions.cs` is the table. **1,102 lines out, 365
+  in**, and with the enemies that is **2,298 lines out of the two together**.
+  **The campaign turns out to be two hulls, each in a weak and a strong version**, which was true
+  before and invisible: the Strong variants reuse their base's cannon offsets *exactly* and bump
+  each gun one tier - 50 to 75, 75 to 100, 100 to 125 hit points - while shaving the fire rate.
+  Nobody could see that across four files. It is four lines apart in one table now, and it is the
+  kind of thing E7's difficulty scalar wants to know.
+  **A `Boss` rather than an `Enemy` with a flag, which is the opposite of what `IBoss` predicted.**
+  That interface's own note said E1 would make being a boss a field in the data and delete it. Doing
+  the work argued the other way: a boss advances to a stop, carries guns that are hit *instead of*
+  it, has no hit points of its own, its `Hit` is empty, and it comes apart over three seconds when
+  the last gun dies. None of that is a wave enemy with different numbers. Two classes implement
+  `IEnemy` and `IBoss` says which is which, honestly rather than provisionally; the note there has
+  been corrected rather than left to mislead.
+  *Verified the same three ways, and this time the death path was reached.* **Statically:** every
+  value - texture, cannon count, and offset, hit points and fire rate per cannon, 80 in all -
+  extracted from the deleted classes at `HEAD` and compared against the table, resolving the named
+  `TimeSpan` constants to milliseconds so a mistyped alias would show as a mismatch. All match.
+  **Structurally:** the new class body diffed against the old `BossFighter` with comments and
+  whitespace stripped, to catch a line dropped in transcription. The only differences are the
+  intended ones - the definition parameter, the cannon loop, `using Type.Data`, a `var` corrected to
+  `Int32`, and the BOM dropped to match the newer files.
+  **By running all four:** booted into levels 5, 10, 15 and 20 with invincibility and auto-fire on.
+  Each boss arrives with the right texture, the right body size (485x665 fighters, 600x800
+  stations) and the right cannons, advances, stops, opens fire, and comes apart. *The stationary
+  auto-firing player can only reach the guns level with it*, so the last-cannon transition was
+  driven by killing one every two seconds through `BossCannon.Destroy` - the same call `Hit` makes
+  at zero hit points. All four ran cannons to zero, started the death sequence and fired
+  `OnEnemyDestroyed` at **x=476 to 478**, on screen, which is the value G6 established as correct
+  against the 1262 it used to report. Level 20 ran through to the complete screen with **SCORE
+  20000**, which is the boss's `Points` arriving intact. No exceptions on stderr on any run; Debug
+  and Release rebuild clean.
+  **Not played by hand**, the same caveat as the enemy half.
+  **E6 is cheaper than it was.** Phases, per-phase attack patterns and telegraphed transitions are
+  now one class and one table to change instead of four files, and the definition already has the
+  right shape to hang a phase list on.
   **Still open: the four player ships (~1,300 lines), and they are not the same shape.** The six
   enemies were seven values apart. The ships are not: they differ in projectile type and count
   (`Alpha` fires one `Laser`, `Omega` two `Bullet`s at ±24), in engine effect sprite count and
@@ -1143,7 +1189,9 @@ open, but nothing in this phase waits on it.
   concept (V, line, box, escorted) so groups arrive and manoeuvre coherently.
 - **E6. Rework the bosses.** Multi-phase fights with distinct attack patterns per phase,
   destructible sub-components (`BossCannon` is already a separate object — build on that),
-  and phase transitions telegraphed per G7.
+  and phase transitions telegraphed per G7. **E1 collapsed the four boss classes into one `Boss`
+  and a `BossDefinition`**, so this is one class and one table to change rather than four files,
+  and a phase list is a field on the definition rather than four copies of one.
 - **E7. Difficulty curve.** HP and fire rate are per-class constants today. Introduce a
   per-level scalar so one enemy definition can be tuned across the campaign.
 
