@@ -795,10 +795,22 @@ Your second stated priority. Ordered cheapest-impact-first.
   1920x1080, from the real death hook and from all three effects at known positions. The pool
   is fully released on teardown: 256 drawables added at level start, 0 of them left after
   `Dispose`, checked the same way S9 was.*
-  **The sizes are a first pass and want a second opinion.** They read as a diffuse cluster of
-  embers rather than something with weight, which is defensible for a fixed-field shooter but
-  is not obviously right. There is also no additive blending, which is what would make sparks
-  actually glow; whether the engine can express that per drawable has not been looked into.
+  **The sizes were a first pass and did want a second opinion. G6 gave them one, and the verdict
+  was that they were wrong.** They read as a diffuse cluster of embers rather than something with
+  weight. That is answered in G6 rather than here: the counts roughly doubled when the sprite
+  animation was removed and the particles became the whole explosion, and each effect is layered
+  — a bright core, fast sparks, slower embers — instead of one undifferentiated cloud. The pool
+  grew from 256 to 512 to match, because the bursts doubled and several enemies can die together.
+  **Additive blending exists now, and the answer to "can the engine express it per drawable" is
+  no — it is per canvas.** AmosEngine `!32`, merged, moves blending from once per frame to once
+  per canvas and adds `ONE` as a blend destination. Per canvas because the blend function is
+  fixed-function state: changing it per drawable would mean a state change inside the draw loop,
+  and that would break the texture batching the loop relies on. So the particles were given a
+  canvas of their own, sharing the world camera so a shake still moves them with the field, and
+  that canvas asks for additive.
+  *Measured rather than asserted, and through the shipped submodule pointer rather than a local
+  engine branch: forty stationary particles at a quarter brightness stacked at one point come
+  back as 64 under normal blending and **255** under additive.*
 - **G3. Screen shake, hit-stop, and flash.** *Shake and hit stop built. The flash was already
   there and needed nothing.*
   **The flash half of this item was already done twice over**, which is worth recording because
@@ -900,8 +912,9 @@ Your second stated priority. Ordered cheapest-impact-first.
   download.
 - **G5. Deepen the parallax.** Three scrolling layers exist (stars, clusters, planets). Add
   a foreground layer and tie per-layer speed to player movement for a sense of depth.
-- **G6. Better explosions.** *Boss deaths rebuilt. The per-class variation the item asked for
-  is still open, and is now the smaller half of it.*
+- **G6. Better explosions.** *Boss deaths rebuilt, then the sprite animation dropped entirely
+  and the particles made to carry every death on their own. The per-class variation the item
+  asked for is still open, and is now the smaller half of it.*
   **The item understated the problem and the investigation changed what got built.** It read as
   a polish job: one shared nine frame animation for every death, vary scale, tint and duration.
   Two things were wrong with that.
@@ -959,11 +972,47 @@ Your second stated priority. Ordered cheapest-impact-first.
   reported 1262 before; blasts land across the hull; and the flash is measurable rather than
   asserted — mean frame brightness jumps from ~16 to **51.9**, a 3.2x lift, on the frame it
   fires. The sequence runs to completion and the game moves on to the complete screen.*
-  **Not judged by eye.** The 2.4 second length, the 160ms spacing, the 9 unit shake and the flash
-  opacities were reasoned about and measured, not felt, exactly as the G3 magnitudes and the G4
-  intervals were. They want a pass with the game running.
-  **Still open, and now the smaller half:** varying ordinary enemy explosions by class. Scale
-  needs a real spread rather than twelve percent, and duration and tint are still uniform.
+  **Then it was judged by eye, and that changed it again.** Everything above was reasoned about
+  and measured rather than felt — the 2.4 second length, the 160ms spacing, the 9 unit shake,
+  the flash opacities — exactly as the G3 magnitudes and the G4 intervals were. Playing it
+  produced three findings, and the first is the one that mattered.
+  - **The nine frame animation and the debris were fighting each other.** A fireball sitting
+    still while particles flew out of it reads as two effects that happen to share a timestamp,
+    not as one explosion. **The animation is gone from all six enemy classes and from
+    `BossCannon`**, and the particle bursts roughly doubled to carry the death alone. Each effect
+    is layered now — a short bright core that reads as the flash, fast sparks that carry the
+    shape outwards, slower embers that linger — because a burst with one layer reads as confetti.
+    The boss blasts were that same animation, pooled; they are particles too, which leaves
+    `BossDeathSequence` owning **no drawables at all**. It is timing and nothing else.
+  - **The boss sequence was too short.** 2.4s to 3.12s, with a blast every 120ms rather than
+    every 160ms.
+  - **The white flash was ten particles and blobbed.** Each was sent off at its own random angle
+    with almost no speed, and ten random directions do not average out, so they piled into a
+    lopsided blob whose centre was visibly not where the enemy was. A flash is one thing
+    happening in one place, so it is **one stationary particle** now, in every effect that has
+    one; the fade on scale and alpha is what makes a single particle read as a flash.
+
+  **Dropping the animations also let a death dispose immediately** rather than waiting a second
+  for nine frames to finish. That is safe rather than lucky: every collision loop iterates a
+  `ToList` snapshot, and `DeregisterEnemy` already ran synchronously inside `Destroy`.
+  **A fourth change was tried, twice, and reverted.** The ships were made to bank as they climb
+  and dive — first as a sprite rotation, which reads as the ship *steering* rather than rolling,
+  then as a vertical foreshorten, which is the correct projection of a roll about the fuselage.
+  Neither convinced, and the reason is structural rather than a matter of tuning: **from one
+  sprite nothing can say which wing is nearer.** The far wing should be smaller than the near
+  one, which is a shear the engine cannot express, so the effect is symmetric and climbing looks
+  identical to diving. Banked frames for the four ships would do it properly; `kenney_simple-space`
+  has no rolled versions of these ships, only different ones. Recorded because the idea is
+  obvious enough to be had again, and it is the art that blocks it, not the code.
+  **Still open, and now the smaller half:** varying ordinary enemy explosions by class. It is a
+  different job now that the animation is gone — there is no scale, tint or duration to spread,
+  because there is no sprite. There is also nowhere for the variation to come from: the burst is
+  asked for from a **single call site**, `PlayingState.OnEnemyDestroyed`, which is handed an
+  `IEnemy` and knows the position and nothing else — so a large enemy dies in exactly the same
+  burst as a small one. Doing it means `IEnemy` carrying enough to choose an effect by, then
+  counts, speeds, lifetimes and colour per class in `Data/Particles.cs`. **E1 is the cheap way
+  to get there**: a data-driven enemy already has a definition to hang the effect on, and the
+  alternative is adding a member to six duplicated classes to describe six things that differ.
 - **G7. Boss telegraphs.** Wind-up animations and warning indicators before attacks. As much
   a fairness fix as a visual one, and a prerequisite for making bosses harder.
 - **G8. Menu and HUD pass.** The HUD is mobile-scaled with touch-sized targets. Rebalance
