@@ -1064,14 +1064,71 @@ Your second stated priority. Ordered cheapest-impact-first.
 
 ### Phase 4 — Enemy behaviour
 
-Your third stated priority. **E1 is a prerequisite for the rest** — do not add behaviours on
-top of six duplicated classes.
+Your third stated priority. **E1 was the prerequisite for the rest, and its enemy half is done** —
+the six duplicated classes are one `Enemy` driven by an `EnemyDefinition`, so E2 to E7 are now
+edits to one class and one table rather than to six files each. The player half of E1 is still
+open, but nothing in this phase waits on it.
 
-- **E1. Collapse the enemy classes into one data-driven `Enemy` type.** The six variants
-  differ only in HP, points, fire rate and sprite. Replace them with a single class plus an
-  `EnemyDefinition` loaded from a data file. This deletes ~1,400 lines and turns every
-  subsequent item in this phase into a data edit instead of six code edits. Do the same for
-  the four player ships (~1,300 lines).
+- **E1. Collapse the enemy classes into one data-driven `Enemy` type.** *Enemies done. The four
+  player ships are still to do, and are now the whole of what is left.*
+  **The premise was right and slightly understated.** The item said the six variants differ only
+  in HP, points, fire rate and sprite. They differ in seven things — those four plus projectile
+  speed, projectile colour and which shot sound plays — and in nothing else at all: a diff of
+  any two of the six 228-line files was those seven values, one doc comment, a shuffled member
+  ordering and a trailing blank line.
+  `Objects/Enemies/Enemy.cs` is the one class, `Data/EnemyDefinition.cs` holds the seven values,
+  and `Data/EnemyDefinitions.cs` is the table, the same shape as `Rumble`, `Particles`, `Shake`,
+  `HitStop`, `Sounds` and `Flash`. **1,196 lines out, 181 in.**
+  **A table in code rather than a data file, which is a deliberate departure from what this item
+  asked for.** Doing it from a file now means inventing a format, a parser and asset registration
+  in two csprojs ahead of L1 — which is the item that replaces the unvalidated pipe-delimited
+  level format with schema-validated JSON, and which has to build all of that anyway. Until then
+  a table in code is checked by the compiler, which the level files notably are not. Moving these
+  into the L1 format is the intended end state and nothing is shaped to prevent it.
+  **The level data did not change.** The definitions are keyed by the ids `Assets/Level` already
+  uses, so `type=0` through `type=5` mean exactly what they meant before. Boss ids 20 to 23 are
+  deliberately still bespoke classes — the factory's switch keeps a case each for them and every
+  other id falls through to a definition lookup, so the `ArgumentOutOfRangeException` a typo
+  produced before is still the `ArgumentOutOfRangeException` it produces now.
+  *Verified three ways, because a refactor this wide fails by transposing a number rather than by
+  failing to build.* **First, statically:** all 42 values — seven fields across six types — were
+  extracted from the deleted files at `HEAD` and compared against the new table. All 42 match.
+  **Second, by running it:** booted straight into level 8 and level 17, which between them use all
+  six types, logging each spawn. Every type arrives with the right texture, hit points, points,
+  fire rate, projectile speed and projectile colour, and the three sprites on screen at level 17
+  are three different sizes, so the textures resolve rather than silently falling back.
+  **Third, the whole loop:** with the player forced to auto-fire, 19 enemies were hit, destroyed,
+  scored — 50 points on screen for five kills of a ten point enemy — and dropped pickups, with
+  the death particles firing. No exceptions on stderr across any run, and Debug and Release both
+  rebuild clean.
+  **Not played by hand.** Nobody held the controls; the runs above were the game playing itself
+  badly. What that leaves unproven is anything a person would notice rather than a log — but the
+  static check covers the failure mode that actually threatened this change.
+  **Still open: the four player ships (~1,300 lines), and they are not the same shape.** The six
+  enemies were seven values apart. The ships are not: they differ in projectile type and count
+  (`Alpha` fires one `Laser`, `Omega` two `Bullet`s at ±24), in engine effect sprite count and
+  offsets, and in invincibility duration, so a definition for them has to describe structure and
+  not only numbers. Left as a separate change deliberately; M1 and M2 will want to touch them too.
+  **The duplication has already drifted into two real defects, both in `PlayerOmega` alone, and
+  they are the strongest argument for doing this half.** Found while sizing the job, not by
+  playing:
+  - **`PlayerOmega.Dispose` registers where it should deregister.** Line 411 is
+    `InputService.Instance.RegisterListener(this)`; `Alpha`, `Beta` and `Gamma` all call
+    `DeregisterListener` at the same point. The provider's `RegisterListener` guards duplicates,
+    so nothing accumulates per dispose — but a disposed Omega is **never removed** and keeps
+    receiving input for the life of the process. This breaks the codebase's own rule that every
+    `IDisposable` deregisters from everything it registered with. *What it looks like on screen
+    has not been established*; what is certain is the listener is never removed.
+  - **`PlayerOmega.StartInvincible` does not dispose the previous callback** before overwriting
+    `_InvincibleCallback`. The other three do. Overlapping invincibility therefore leaks the
+    earlier `TimedCallback`, and the stale one can still fire and clear `_Invincible` early.
+
+  A third difference looked like a third defect and is not, which is worth recording so it is not
+  re-reported: `Alpha`, `Beta` and `Gamma` set `HitBox = GetRect()` in `Update` and `Omega` does
+  not, but all four set it in the `Position` setter that `Update` assigns through. The three are
+  carrying a redundant line; Omega is not missing one.
+  **Neither defect is fixed here.** They are player bugs found during an enemy refactor, and
+  folding them in would make this change two things at once.
 - **E2. Split behaviour from movement.** `IAccelerationProvider` handles motion; add a
   parallel `IWeaponBehaviour` so firing patterns compose with movement patterns. Right now
   every enemy in the game shares one behaviour: rotate toward the player, fire a plasma ball

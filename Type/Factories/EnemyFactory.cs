@@ -131,38 +131,11 @@ namespace Type.Factories
             }
 
             // Create enemy
+            // The bosses are the exceptions now: everything else is one Enemy driven by an
+            // EnemyDefinition, so ids 0 to 5 no longer need a case each. E6 is what gives the
+            // bosses the same treatment.
             switch (_CurrentWave.EnemyTypes[_DataIndex])
             {
-                case 0:
-                    {
-                        enemy = new SmallEnemyWeak(_CurrentWave.Ypositions[_DataIndex], accel);
-                        break;
-                    }
-                case 1:
-                    {
-                        enemy = new MediumEnemyWeak(_CurrentWave.Ypositions[_DataIndex], accel);
-                        break;
-                    }
-                case 2:
-                    {
-                        enemy = new LargeEnemyWeak(_CurrentWave.Ypositions[_DataIndex], accel);
-                        break;
-                    }
-                case 3:
-                    {
-                        enemy = new SmallEnemyStrong(_CurrentWave.Ypositions[_DataIndex], accel);
-                        break;
-                    }
-                case 4:
-                    {
-                        enemy = new MediumEnemyStrong(_CurrentWave.Ypositions[_DataIndex], accel);
-                        break;
-                    }
-                case 5:
-                    {
-                        enemy = new LargeEnemyStrong(_CurrentWave.Ypositions[_DataIndex], accel);
-                        break;
-                    }
                 case 20:
                     {
                         enemy = new BossFighter();
@@ -185,7 +158,10 @@ namespace Type.Factories
                     }
                 default:
                     {
-                        throw new ArgumentOutOfRangeException();
+                        // Throws for an id that names neither a boss nor a definition, which is
+                        // the validation the old default did.
+                        enemy = new Enemy(EnemyDefinitions.Get(_CurrentWave.EnemyTypes[_DataIndex]), _CurrentWave.Ypositions[_DataIndex], accel);
+                        break;
                     }
             }
 

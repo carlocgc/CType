@@ -37,6 +37,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\ButtonData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\ControlSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Particles.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\EnemyDefinition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\EnemyDefinitions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Flash.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\HitStop.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Rumble.cs" />
@@ -99,12 +101,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Bosses\BossFighterStrong.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Bosses\BossStation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Bosses\BossStationStrong.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\LargeEnemyStrong.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\MediumEnemyStrong.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\SmallEnemyStrong.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\SmallEnemyWeak.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\MediumEnemyWeak.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\LargeEnemyWeak.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\Enemy.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\Movement\EllipseDecreaseMotion.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\Movement\EllipseIncreaseMotion.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Objects\Enemies\Movement\LinearMotion.cs" />
