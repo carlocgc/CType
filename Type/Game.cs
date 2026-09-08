@@ -3,6 +3,7 @@
 using AmosShared.Competitive;
 #endif // #if __ANDROID__
 using AmosShared.Graphics;
+using AmosShared.GLWrapper;
 using AmosShared.State;
 using Engine.Shared.Graphics.Textures;
 using OpenTK;
@@ -19,6 +20,17 @@ namespace Type
 
         /// <summary> Main canvas for the UI elements </summary>
         public static Canvas UiCanvas;
+
+        /// <summary>
+        /// Canvas the particles draw to, between the world and the interface.
+        /// </summary>
+        /// <remarks>
+        /// A canvas of its own because blending is per canvas: additive blending is what makes
+        /// sparks read as light rather than as paint, and the world cannot have it without every
+        /// sprite in the game glowing. It shares the world camera, so a screen shake moves the
+        /// particles with the field they came from.
+        /// </remarks>
+        public static Canvas ParticleCanvas;
 
         /// <remarks>
         /// The name reaches the engine only as the directory its key value store lives in, so it
@@ -39,7 +51,15 @@ namespace Type
         {
             MainCanvas = new Canvas(new Camera(Vector2.Zero, new Vector2(1920, 1080)), 0,
                 new Shader());
-            UiCanvas = new Canvas(new Camera(Vector2.Zero, new Vector2(1920, 1080)), 1,
+            // Additive blending is what makes these read as light rather than as paint, and it
+            // is measured rather than assumed: forty stacked particles at a quarter brightness
+            // come back as 64 normally and 255 additively.
+            ParticleCanvas = new Canvas(MainCanvas.Camera, 1, new Shader())
+            {
+                BlendDestination = GLEnums.BlendDestination.ONE,
+            };
+
+            UiCanvas = new Canvas(new Camera(Vector2.Zero, new Vector2(1920, 1080)), 2,
                 new Shader());
 
 #if __ANDROID__

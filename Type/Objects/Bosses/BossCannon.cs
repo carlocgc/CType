@@ -18,8 +18,6 @@ namespace Type.Objects.Bosses
     {
         /// <summary> List of <see cref="IEnemyListener"/>'s </summary>
         private readonly List<IEnemyListener> _Listeners;
-        /// <summary> Animation of an explosion, played on death </summary>
-        private readonly AnimatedSprite _Explosion;
         /// <summary> Sprite for the gun base </summary>
         private readonly Sprite _Base;
         /// <summary> Sprite for the cannon </summary>
@@ -66,7 +64,6 @@ namespace Type.Objects.Bosses
                 base.Position = value + Offset;
                 _Gun.Position = value + Offset;
                 _Base.Position = value + Offset;
-                _Explosion.Position = value + Offset;
             }
         }
 
@@ -124,26 +121,6 @@ namespace Type.Objects.Bosses
             _Base = new Sprite(Game.MainCanvas, Constants.ZOrders.BOSS_LOWER, Texture.GetTexture("Content/Graphics/Bosses/boss01-gun-base.png"));
             _Base.Offset = _Base.Size / 2;
 
-            _Explosion = new AnimatedSprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, new[]
-            {
-                Texture.GetTexture("Content/Graphics/Explosion2/pixelExplosion00.png"),
-                Texture.GetTexture("Content/Graphics/Explosion2/pixelExplosion01.png"),
-                Texture.GetTexture("Content/Graphics/Explosion2/pixelExplosion02.png"),
-                Texture.GetTexture("Content/Graphics/Explosion2/pixelExplosion03.png"),
-                Texture.GetTexture("Content/Graphics/Explosion2/pixelExplosion04.png"),
-                Texture.GetTexture("Content/Graphics/Explosion2/pixelExplosion05.png"),
-                Texture.GetTexture("Content/Graphics/Explosion2/pixelExplosion06.png"),
-                Texture.GetTexture("Content/Graphics/Explosion2/pixelExplosion07.png"),
-                Texture.GetTexture("Content/Graphics/Explosion2/pixelExplosion08.png"),
-            }, 8)
-            {
-                Visible = false,
-                Playing = false,
-                AnimEndBehaviour = AnimatedSprite.EndBehaviour.STOP,
-                CurrentFrame = 0,
-            };
-            _Explosion.Scale = new Vector2(2, 2);
-            _Explosion.Offset = new Vector2(_Explosion.Size.X / 2 * _Explosion.Scale.X, _Explosion.Size.Y / 2 * _Explosion.Scale.Y);
         }
 
         /// <summary> Whether or not the object can be updated </summary>
@@ -225,17 +202,14 @@ namespace Type.Objects.Bosses
             _Gun.Visible = false;
 
             Sounds.Destroyed();
-            _Explosion.AddFrameAction((anim) =>
+
+            for (var i = _Listeners.Count - 1; i >= 0; i--)
             {
-                for (var i = _Listeners.Count - 1; i >= 0; i--)
-                {
-                    IEnemyListener listener = _Listeners[i];
-                    listener.OnEnemyDestroyed(this);
-                }
-                Dispose();
-            }, 8);
-            _Explosion.Visible = true;
-            _Explosion.Playing = true;
+                IEnemyListener listener = _Listeners[i];
+                listener.OnEnemyDestroyed(this);
+            }
+
+            Dispose();
         }
 
         /// <inheritdoc />
@@ -265,7 +239,6 @@ namespace Type.Objects.Bosses
             base.Dispose();
 
             CollisionController.Instance.DeregisterEnemy(this);
-            if (!_Explosion.IsDisposed) _Explosion.Dispose();
             _Listeners.Clear();
             _Gun.Dispose();
             _Base.Dispose();

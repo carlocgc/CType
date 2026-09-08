@@ -32,7 +32,7 @@ namespace Type.Controllers
         /// each frame whether it is alive or not, which is why this is a few hundred and not a
         /// few thousand.
         /// </remarks>
-        private const Int32 Capacity = 256;
+        private const Int32 Capacity = 512;
 
         /// <summary> The instance of the ParticleController </summary>
         private static ParticleController _Instance;
