@@ -1,4 +1,4 @@
-﻿using AmosShared.Base;
+using AmosShared.Base;
 using AmosShared.Graphics;
 using AmosShared.Graphics.Drawables;
 using OpenTK;
@@ -15,10 +15,24 @@ using static Type.Constants.Global;
 namespace Type.Objects.Enemies
 {
     /// <summary>
-    /// Enemy of type beta
+    /// A wave enemy. What kind of one it is comes from its <see cref="EnemyDefinition"/>.
     /// </summary>
-    public class MediumEnemyStrong : GameObject, IEnemy
+    /// <remarks>
+    /// This replaces <c>SmallEnemyWeak</c>, <c>SmallEnemyStrong</c>, <c>MediumEnemyWeak</c>,
+    /// <c>MediumEnemyStrong</c>, <c>LargeEnemyWeak</c> and <c>LargeEnemyStrong</c>, which were
+    /// 228 lines each and differed only in the seven values now held by
+    /// <see cref="EnemyDefinition"/> - see E1 in ROADMAP.md.
+    /// <para>
+    /// Every enemy in the game still shares one behaviour: turn to face the player, fire a plasma
+    /// ball on a timer. That was true of the six classes too. E2 and E3 are what change it, and
+    /// they are much cheaper to do here than they were across six copies.
+    /// </para>
+    /// </remarks>
+    public class Enemy : GameObject, IEnemy
     {
+        /// <summary> What kind of enemy this is </summary>
+        private readonly EnemyDefinition _Definition;
+        /// <summary> Provider of this enemys motion, null if it does not move </summary>
         private readonly IAccelerationProvider _MovementController;
         /// <summary> List of <see cref="IEnemyListener"/>'s </summary>
         private readonly List<IEnemyListener> _Listeners;
@@ -27,8 +41,6 @@ namespace Type.Objects.Enemies
         private TimedCallback _ColourCallback;
         /// <summary> Time since the last bullet was fired </summary>
         private TimeSpan _TimeSinceLastFired;
-        /// <summary> Firerate of the enemy </summary>
-        private TimeSpan _FireRate;
         /// <summary> The players current position </summary>
         private Vector2 _PlayerPosition;
         /// <summary> Relative direction to the player from this enemy </summary>
@@ -37,17 +49,15 @@ namespace Type.Objects.Enemies
         private Boolean _IsWeaponLocked;
         /// <summary> Whether the enemy is moving </summary>
         private Boolean _IsMoving;
-        /// <summary> Whether the enemy has entered the game area </summary>
-        private Boolean InPlay;
 
         /// <summary> Whether the enemy has been destroyed  </summary>
         public Boolean IsDestroyed { get; set; }
 
-        /// <summary> Point valuie for this enemy </summary>
-        public Int32 Points { get; private set; }
-
         /// <inheritdoc />
         public Int32 HitPoints { get; private set; }
+
+        /// <summary> Point value for this enemy </summary>
+        public Int32 Points { get; private set; }
 
         /// <inheritdoc />
         public Boolean AutoFire { get; set; }
@@ -68,19 +78,25 @@ namespace Type.Objects.Enemies
         /// <summary> Whether the enemy is completely offscreen, used to destroy the object </summary>
         private Boolean OffScreen => Position.X + _Sprite.Offset.X <= ScreenLeft || Position.X - _Sprite.Offset.X >= ScreenRight;
 
-        public MediumEnemyStrong(Single yPos, IAccelerationProvider moveController)
+        /// <summary>
+        /// Creates a new <see cref="Enemy"/>
+        /// </summary>
+        /// <param name="definition"> What kind of enemy this is </param>
+        /// <param name="yPos"> Y position the enemy enters the screen at </param>
+        /// <param name="moveController"> Provider of this enemys motion, null if it does not move </param>
+        public Enemy(EnemyDefinition definition, Single yPos, IAccelerationProvider moveController)
         {
+            _Definition = definition;
             _Listeners = new List<IEnemyListener>();
 
             _IsMoving = true;
             _IsWeaponLocked = true;
-            _FireRate = TimeSpan.FromSeconds(1f);
 
-            HitPoints = 4;
-            Points = 100;
+            HitPoints = _Definition.HitPoints;
+            Points = _Definition.Points;
             CanBeRoadKilled = true;
 
-            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, Texture.GetTexture("Content/Graphics/Enemies/enemy6.png"))
+            _Sprite = new Sprite(Game.MainCanvas, Constants.ZOrders.ENEMIES, Texture.GetTexture(_Definition.Texture))
             {
                 Visible = true,
             };
@@ -89,7 +105,6 @@ namespace Type.Objects.Enemies
             AddSprite(_Sprite);
 
             HitBox = GetRect();
-
 
             Position = new Vector2(Renderer.Instance.TargetDimensions.X / 2 + _Sprite.Offset.X / 2 - 1, yPos);
 
@@ -103,10 +118,10 @@ namespace Type.Objects.Enemies
         {
             Vector2 bulletDirection = _DirectionTowardsPlayer;
             if (bulletDirection != Vector2.Zero) bulletDirection.Normalize();
-            new PlasmaBall(Position, bulletDirection, 1050, new Vector4(100, 100, 0, 1));
+            new PlasmaBall(Position, bulletDirection, _Definition.ProjectileSpeed, _Definition.ProjectileColour);
 
             _IsWeaponLocked = true;
-            Sounds.EnemyShot();
+            _Definition.ShotSound();
         }
 
         /// <inheritdoc />
@@ -141,7 +156,7 @@ namespace Type.Objects.Enemies
 
             Sounds.Destroyed();
             _Sprite.Visible = false;
-                Dispose();
+            Dispose();
         }
 
         /// <inheritdoc />
@@ -165,6 +180,7 @@ namespace Type.Objects.Enemies
         public override void Update(TimeSpan timeTilUpdate)
         {
             base.Update(timeTilUpdate);
+
             if (_IsMoving)
             {
                 Position = _MovementController.ApplyAcceleration(Position, timeTilUpdate);
@@ -181,7 +197,7 @@ namespace Type.Objects.Enemies
             else
             {
                 _TimeSinceLastFired += timeTilUpdate;
-                if (_TimeSinceLastFired >= _FireRate)
+                if (_TimeSinceLastFired >= _Definition.FireRate)
                 {
                     _IsWeaponLocked = false;
                     _TimeSinceLastFired = TimeSpan.Zero;

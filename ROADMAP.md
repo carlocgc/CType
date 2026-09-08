@@ -795,10 +795,22 @@ Your second stated priority. Ordered cheapest-impact-first.
   1920x1080, from the real death hook and from all three effects at known positions. The pool
   is fully released on teardown: 256 drawables added at level start, 0 of them left after
   `Dispose`, checked the same way S9 was.*
-  **The sizes are a first pass and want a second opinion.** They read as a diffuse cluster of
-  embers rather than something with weight, which is defensible for a fixed-field shooter but
-  is not obviously right. There is also no additive blending, which is what would make sparks
-  actually glow; whether the engine can express that per drawable has not been looked into.
+  **The sizes were a first pass and did want a second opinion. G6 gave them one, and the verdict
+  was that they were wrong.** They read as a diffuse cluster of embers rather than something with
+  weight. That is answered in G6 rather than here: the counts roughly doubled when the sprite
+  animation was removed and the particles became the whole explosion, and each effect is layered
+  — a bright core, fast sparks, slower embers — instead of one undifferentiated cloud. The pool
+  grew from 256 to 512 to match, because the bursts doubled and several enemies can die together.
+  **Additive blending exists now, and the answer to "can the engine express it per drawable" is
+  no — it is per canvas.** AmosEngine `!32`, merged, moves blending from once per frame to once
+  per canvas and adds `ONE` as a blend destination. Per canvas because the blend function is
+  fixed-function state: changing it per drawable would mean a state change inside the draw loop,
+  and that would break the texture batching the loop relies on. So the particles were given a
+  canvas of their own, sharing the world camera so a shake still moves them with the field, and
+  that canvas asks for additive.
+  *Measured rather than asserted, and through the shipped submodule pointer rather than a local
+  engine branch: forty stationary particles at a quarter brightness stacked at one point come
+  back as 64 under normal blending and **255** under additive.*
 - **G3. Screen shake, hit-stop, and flash.** *Shake and hit stop built. The flash was already
   there and needed nothing.*
   **The flash half of this item was already done twice over**, which is worth recording because
@@ -900,8 +912,9 @@ Your second stated priority. Ordered cheapest-impact-first.
   download.
 - **G5. Deepen the parallax.** Three scrolling layers exist (stars, clusters, planets). Add
   a foreground layer and tie per-layer speed to player movement for a sense of depth.
-- **G6. Better explosions.** *Boss deaths rebuilt. The per-class variation the item asked for
-  is still open, and is now the smaller half of it.*
+- **G6. Better explosions.** *Boss deaths rebuilt, then the sprite animation dropped entirely
+  and the particles made to carry every death on their own. The per-class variation the item
+  asked for is still open, and is now the smaller half of it.*
   **The item understated the problem and the investigation changed what got built.** It read as
   a polish job: one shared nine frame animation for every death, vary scale, tint and duration.
   Two things were wrong with that.
@@ -959,11 +972,47 @@ Your second stated priority. Ordered cheapest-impact-first.
   reported 1262 before; blasts land across the hull; and the flash is measurable rather than
   asserted — mean frame brightness jumps from ~16 to **51.9**, a 3.2x lift, on the frame it
   fires. The sequence runs to completion and the game moves on to the complete screen.*
-  **Not judged by eye.** The 2.4 second length, the 160ms spacing, the 9 unit shake and the flash
-  opacities were reasoned about and measured, not felt, exactly as the G3 magnitudes and the G4
-  intervals were. They want a pass with the game running.
-  **Still open, and now the smaller half:** varying ordinary enemy explosions by class. Scale
-  needs a real spread rather than twelve percent, and duration and tint are still uniform.
+  **Then it was judged by eye, and that changed it again.** Everything above was reasoned about
+  and measured rather than felt — the 2.4 second length, the 160ms spacing, the 9 unit shake,
+  the flash opacities — exactly as the G3 magnitudes and the G4 intervals were. Playing it
+  produced three findings, and the first is the one that mattered.
+  - **The nine frame animation and the debris were fighting each other.** A fireball sitting
+    still while particles flew out of it reads as two effects that happen to share a timestamp,
+    not as one explosion. **The animation is gone from all six enemy classes and from
+    `BossCannon`**, and the particle bursts roughly doubled to carry the death alone. Each effect
+    is layered now — a short bright core that reads as the flash, fast sparks that carry the
+    shape outwards, slower embers that linger — because a burst with one layer reads as confetti.
+    The boss blasts were that same animation, pooled; they are particles too, which leaves
+    `BossDeathSequence` owning **no drawables at all**. It is timing and nothing else.
+  - **The boss sequence was too short.** 2.4s to 3.12s, with a blast every 120ms rather than
+    every 160ms.
+  - **The white flash was ten particles and blobbed.** Each was sent off at its own random angle
+    with almost no speed, and ten random directions do not average out, so they piled into a
+    lopsided blob whose centre was visibly not where the enemy was. A flash is one thing
+    happening in one place, so it is **one stationary particle** now, in every effect that has
+    one; the fade on scale and alpha is what makes a single particle read as a flash.
+
+  **Dropping the animations also let a death dispose immediately** rather than waiting a second
+  for nine frames to finish. That is safe rather than lucky: every collision loop iterates a
+  `ToList` snapshot, and `DeregisterEnemy` already ran synchronously inside `Destroy`.
+  **A fourth change was tried, twice, and reverted.** The ships were made to bank as they climb
+  and dive — first as a sprite rotation, which reads as the ship *steering* rather than rolling,
+  then as a vertical foreshorten, which is the correct projection of a roll about the fuselage.
+  Neither convinced, and the reason is structural rather than a matter of tuning: **from one
+  sprite nothing can say which wing is nearer.** The far wing should be smaller than the near
+  one, which is a shear the engine cannot express, so the effect is symmetric and climbing looks
+  identical to diving. Banked frames for the four ships would do it properly; `kenney_simple-space`
+  has no rolled versions of these ships, only different ones. Recorded because the idea is
+  obvious enough to be had again, and it is the art that blocks it, not the code.
+  **Still open, and now the smaller half:** varying ordinary enemy explosions by class. It is a
+  different job now that the animation is gone — there is no scale, tint or duration to spread,
+  because there is no sprite. There is also nowhere for the variation to come from: the burst is
+  asked for from a **single call site**, `PlayingState.OnEnemyDestroyed`, which is handed an
+  `IEnemy` and knows the position and nothing else — so a large enemy dies in exactly the same
+  burst as a small one. Doing it means `IEnemy` carrying enough to choose an effect by, then
+  counts, speeds, lifetimes and colour per class in `Data/Particles.cs`. **E1 is the cheap way
+  to get there**: a data-driven enemy already has a definition to hang the effect on, and the
+  alternative is adding a member to six duplicated classes to describe six things that differ.
 - **G7. Boss telegraphs.** Wind-up animations and warning indicators before attacks. As much
   a fairness fix as a visual one, and a prerequisite for making bosses harder.
 - **G8. Menu and HUD pass.** The HUD is mobile-scaled with touch-sized targets. Rebalance
@@ -1015,14 +1064,71 @@ Your second stated priority. Ordered cheapest-impact-first.
 
 ### Phase 4 — Enemy behaviour
 
-Your third stated priority. **E1 is a prerequisite for the rest** — do not add behaviours on
-top of six duplicated classes.
+Your third stated priority. **E1 was the prerequisite for the rest, and its enemy half is done** —
+the six duplicated classes are one `Enemy` driven by an `EnemyDefinition`, so E2 to E7 are now
+edits to one class and one table rather than to six files each. The player half of E1 is still
+open, but nothing in this phase waits on it.
 
-- **E1. Collapse the enemy classes into one data-driven `Enemy` type.** The six variants
-  differ only in HP, points, fire rate and sprite. Replace them with a single class plus an
-  `EnemyDefinition` loaded from a data file. This deletes ~1,400 lines and turns every
-  subsequent item in this phase into a data edit instead of six code edits. Do the same for
-  the four player ships (~1,300 lines).
+- **E1. Collapse the enemy classes into one data-driven `Enemy` type.** *Enemies done. The four
+  player ships are still to do, and are now the whole of what is left.*
+  **The premise was right and slightly understated.** The item said the six variants differ only
+  in HP, points, fire rate and sprite. They differ in seven things — those four plus projectile
+  speed, projectile colour and which shot sound plays — and in nothing else at all: a diff of
+  any two of the six 228-line files was those seven values, one doc comment, a shuffled member
+  ordering and a trailing blank line.
+  `Objects/Enemies/Enemy.cs` is the one class, `Data/EnemyDefinition.cs` holds the seven values,
+  and `Data/EnemyDefinitions.cs` is the table, the same shape as `Rumble`, `Particles`, `Shake`,
+  `HitStop`, `Sounds` and `Flash`. **1,196 lines out, 181 in.**
+  **A table in code rather than a data file, which is a deliberate departure from what this item
+  asked for.** Doing it from a file now means inventing a format, a parser and asset registration
+  in two csprojs ahead of L1 — which is the item that replaces the unvalidated pipe-delimited
+  level format with schema-validated JSON, and which has to build all of that anyway. Until then
+  a table in code is checked by the compiler, which the level files notably are not. Moving these
+  into the L1 format is the intended end state and nothing is shaped to prevent it.
+  **The level data did not change.** The definitions are keyed by the ids `Assets/Level` already
+  uses, so `type=0` through `type=5` mean exactly what they meant before. Boss ids 20 to 23 are
+  deliberately still bespoke classes — the factory's switch keeps a case each for them and every
+  other id falls through to a definition lookup, so the `ArgumentOutOfRangeException` a typo
+  produced before is still the `ArgumentOutOfRangeException` it produces now.
+  *Verified three ways, because a refactor this wide fails by transposing a number rather than by
+  failing to build.* **First, statically:** all 42 values — seven fields across six types — were
+  extracted from the deleted files at `HEAD` and compared against the new table. All 42 match.
+  **Second, by running it:** booted straight into level 8 and level 17, which between them use all
+  six types, logging each spawn. Every type arrives with the right texture, hit points, points,
+  fire rate, projectile speed and projectile colour, and the three sprites on screen at level 17
+  are three different sizes, so the textures resolve rather than silently falling back.
+  **Third, the whole loop:** with the player forced to auto-fire, 19 enemies were hit, destroyed,
+  scored — 50 points on screen for five kills of a ten point enemy — and dropped pickups, with
+  the death particles firing. No exceptions on stderr across any run, and Debug and Release both
+  rebuild clean.
+  **Not played by hand.** Nobody held the controls; the runs above were the game playing itself
+  badly. What that leaves unproven is anything a person would notice rather than a log — but the
+  static check covers the failure mode that actually threatened this change.
+  **Still open: the four player ships (~1,300 lines), and they are not the same shape.** The six
+  enemies were seven values apart. The ships are not: they differ in projectile type and count
+  (`Alpha` fires one `Laser`, `Omega` two `Bullet`s at ±24), in engine effect sprite count and
+  offsets, and in invincibility duration, so a definition for them has to describe structure and
+  not only numbers. Left as a separate change deliberately; M1 and M2 will want to touch them too.
+  **The duplication has already drifted into two real defects, both in `PlayerOmega` alone, and
+  they are the strongest argument for doing this half.** Found while sizing the job, not by
+  playing:
+  - **`PlayerOmega.Dispose` registers where it should deregister.** Line 411 is
+    `InputService.Instance.RegisterListener(this)`; `Alpha`, `Beta` and `Gamma` all call
+    `DeregisterListener` at the same point. The provider's `RegisterListener` guards duplicates,
+    so nothing accumulates per dispose — but a disposed Omega is **never removed** and keeps
+    receiving input for the life of the process. This breaks the codebase's own rule that every
+    `IDisposable` deregisters from everything it registered with. *What it looks like on screen
+    has not been established*; what is certain is the listener is never removed.
+  - **`PlayerOmega.StartInvincible` does not dispose the previous callback** before overwriting
+    `_InvincibleCallback`. The other three do. Overlapping invincibility therefore leaks the
+    earlier `TimedCallback`, and the stale one can still fire and clear `_Invincible` early.
+
+  A third difference looked like a third defect and is not, which is worth recording so it is not
+  re-reported: `Alpha`, `Beta` and `Gamma` set `HitBox = GetRect()` in `Update` and `Omega` does
+  not, but all four set it in the `Position` setter that `Update` assigns through. The three are
+  carrying a redundant line; Omega is not missing one.
+  **Neither defect is fixed here.** They are player bugs found during an enemy refactor, and
+  folding them in would make this change two things at once.
 - **E2. Split behaviour from movement.** `IAccelerationProvider` handles motion; add a
   parallel `IWeaponBehaviour` so firing patterns compose with movement patterns. Right now
   every enemy in the game shares one behaviour: rotate toward the player, fire a plasma ball
