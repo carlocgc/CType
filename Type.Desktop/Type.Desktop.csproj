@@ -29,15 +29,6 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <!-- CTYPE_CHEATS is here rather than passed on the command line so that a Debug build always
-         has the cheats menu, however it was started - F5 in Visual Studio included. It used to be
-         supplied only as /p:DefineConstants, which meant every IDE build silently produced a game
-         with no menu and no error to say why.
-         Release must never have it. Nothing here puts it there, and Constants.cs fails the build
-         with #error if it ever arrives, so the guarantee does not rest on this line being read.
-         Assembly-wide rather than a #if DEBUG / #define pair at the top of a file, because a C#
-         #define is scoped to its own file: that shape would have to be repeated in every file
-         testing the symbol, and silently compiles the feature out of any file that forgets it. -->
     <DefineConstants>TRACE;DEBUG;__DESKTOP__;CTYPE_CHEATS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
